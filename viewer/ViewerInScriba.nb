@@ -1,0 +1,211 @@
+<notebook title="" engine="beanshell">
+    <output-cell-style borderColor="255,255,255" fgColor="0,128,0"/>
+    <cell-group index="0">
+        <cell index="91" initialization="true">
+            <data><![CDATA[import org.hypergraphdb.query.*;
+import org.hypergraphdb.viewer.*;
+import org.hypergraphdb.atom.*;
+import org.hypergraphdb.type.*;
+import org.hypergraphdb.viewer.painter.*;
+import org.hypergraphdb.viewer.view.*;
+import org.hypergraphdb.atom.*; 
+import org.hypergraphdb.viewer.visual.*;
+import org.hypergraphdb.*;
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+    <cell-group index="92">
+        <cell-group index="93">
+            <cell index="26">
+                <data><![CDATA[hg = new org.hypergraphdb.HyperGraph("c:/temp/xxx2");
+]]>                </data>
+                <output-cell>
+                    <data><![CDATA[org.hypergraphdb.HyperGraph@1eb1db2
+]]>                    </data>
+                </output-cell>
+            </cell>
+            <cell index="27">
+                <data><![CDATA[ts = hg.getTypeSystem();
+h = ts.getTypeHandle(org.hypergraphdb.atom.HGStats.class);
+hg.getPersistentHandle(h);
+]]>                </data>
+                <output-cell>
+                    <data><![CDATA[211c66b5-4b48-11dc-b9f0-0007e9760bc3
+]]>                    </data>
+                </output-cell>
+            </cell>
+            <cell index="43">
+                <data><![CDATA[AtomTypeCondition cond = new AtomTypeCondition(HGSubsumes.class);
+view = HGViewer.getStandaloneView(hg, h, 5, cond);
+view
+]]>                </data>
+                <output-cell>
+                    <data><![CDATA[org.hypergraphdb.viewer.view.HGVNetworkView@1fd25ce
+]]>                    </data>
+                </output-cell>
+            </cell>
+
+        </cell-group>
+        <cell index="21">
+            <data><![CDATA[//RightClick +Drag Down == Zoom In
+//RightClick +Drag Up == Zoom Out
+//Ctrl +F = Scale To Fit
+view.redrawGraph();
+c = view.getComponent();
+c.setPreferredSize(new java.awt.Dimension(600,400));
+c;
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[
+]]>                </data>
+            </output-cell>
+        </cell>
+        <cell index="48">
+            <data><![CDATA[//Retrieving Selected Node Value
+list = view.getSelectedNodes();
+node = list.get(0);
+hh = node.getNode().getHandle();
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[787bdd6b-8d29-11da-9641-f34293e5a85b
+]]>                </data>
+            </output-cell>
+        </cell>
+        <cell index="62">
+            <data><![CDATA[//adding generic painter function 
+public NodePainter makePainter(HyperGraph hg, Class cls, HGVNetworkView view)
+{
+    painter = new DefaultNodePainter();
+    typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(cls));
+    name = view.getVisualStyle().getName();
+   VisualManager.getInstance().getVisualStyle(name).addNodePainter(typeH, painter);
+    return painter;
+}
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+        <cell index="49">
+            <data><![CDATA[//adding few generic and persistent painters
+painter = makePainter(hg, HGSubsumes.class, view);
+painter.setColor(Color.YELLOW);
+painter.setShape(ShapeNodeRealizer.ROUND_RECT);
+painter1 = makePainter(hg, org.hypergraphdb.type.Top.class, view);
+painter1.setColor(Color.red);
+painter1.setShape(ShapeNodeRealizer.DIAMOND);
+painter1.setLabel("TOP");
+ view.redrawGraph();
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+        <cell index="100">
+            <data><![CDATA[//modifying existing painter
+typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(org.hypergraphdb.type.Top.class));
+pp = VisualManager.getInstance().getVisualStyle("default").getNodePaintersMap().get(typeH);
+pp.setColor(Color.YELLOW);
+ view.redrawGraph();
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+        <cell index="64">
+            <data><![CDATA[//selecting  nodes in the viewer based on some condition
+nodes = view.getNetwork().getNodeIndicesArray();
+nlist = new ArrayList();
+cond = new SubsumedCondition(ts.getTypeHandle(Top.class));
+for(int i = 0; i < nodes.length; i++)
+if(cond.satisfies(hg, view.getNetwork().getNode(nodes[i]).getHandle()))
+    nlist.add(view.getNetwork().getNode(nodes[i]));
+view.getNetwork().getFlagger().setFlaggedNodes(nlist, true);
+nlist.size();
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[75
+]]>                </data>
+            </output-cell>
+        </cell>
+        <cell index="65">
+            <data><![CDATA[//Copy selected nodes in a new viewer
+Set nodes = view.getNetwork().getFlagger().getFlaggedNodes();
+Collection nlist1 = new ArrayList(nodes.size());
+ for(Iterator it = nodes.iterator(); it.hasNext(); )
+            nlist1.add(it.next());
+edges = view.getNetwork().getConnectingEdges(nlist1);
+new_network = HGViewer.createNetwork(nlist1, edges, null,  view.getNetwork());
+new_view = HGViewer.getNetworkView(new_network);
+new_view.redrawGraph();
+c1 = new_view.getComponent();
+c1.setPreferredSize(new java.awt.Dimension(600,400));
+nlist1.size();
+c1;
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+    <cell-group index="104">
+        <cell index="98">
+            <data><![CDATA[//Non persistent inline painter, 
+class ClassNameLabelPainter extends org.hypergraphdb.viewer.painter.DefaultNodePainter{
+    private int i = 0;
+     public String getLabel(){
+        if(getNode() == null)
+            return NOT_EDITABLE;
+        String n = (getHG().get(getNode().getHandle())).getClass().getName();
+        return n.substring(n.lastIndexOf(".") + 1);
+     }
+}
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[class ClassNameLabelPainter
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+    <cell-group index="106">
+        <cell index="94">
+            <data><![CDATA[//Adding non persistent painter
+typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(org.hypergraphdb.type.Top.class));
+pp = new ClassNameLabelPainter();
+ VisualManager.getInstance().getVisualStyle(
+view.getVisualStyle().getName()).addNodePainter(typeH,pp);
+pp.setColor(Color.red);
+pp.setShape(org.hypergraphdb.viewer.visual.ShapeNodeRealizer.OCTAGON);
+pp.setLabelColor(Color.LIGHT_GRAY);
+view.redrawGraph();
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+    <cell-group index="114">
+        <cell index="115">
+            <data><![CDATA[hg.close();
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+</notebook>
