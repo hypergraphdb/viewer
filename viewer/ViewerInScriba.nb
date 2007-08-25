@@ -1,0 +1,169 @@
+<notebook title="" engine="beanshell">
+    <output-cell-style borderColor="255,255,255" fgColor="0,128,0"/>
+    <cell-group index="28">
+        <cell index="1" html-preview="true" engine="html">
+            <data><![CDATA[<h2 style="text-align:center;">Working with HyperGraph and HGViewer in Scriba
+</h2>
+<p style="text-align:left;">This is a short step-by-step tutorial describing some uses of HGViewer in Scriba. First let's write few import statements that we'll need later on and open an empty HyperGraph.
+</p>
+]]>            </data>
+        </cell>
+
+    </cell-group>
+    <cell-group index="30">
+        <cell index="3">
+            <data><![CDATA[import org.hypergraphdb.query.*; 
+import org.hypergraphdb.viewer.*;
+import org.hypergraphdb.atom.*;
+import org.hypergraphdb.type.*;
+import org.hypergraphdb.viewer.painter.*;
+import org.hypergraphdb.viewer.view.*;
+import org.hypergraphdb.atom.*; 
+import org.hypergraphdb.viewer.visual.*;
+import org.hypergraphdb.viewer.actions.*;
+
+hg = new org.hypergraphdb.HyperGraph("E:/temp/xxx2");
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[org.hypergraphdb.HyperGraph@affbf6
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+    <cell-group index="32">
+        <cell index="5" html-preview="true" engine="html">
+            <data><![CDATA[<p>Next we'll define some query condition to limit the number of displayed HyperGraph elements. In this case we are interested in 
+  <code>HGSumsumes 
+    </code>atoms and their incident sets in depth of 5, starting from Top handle.  
+  </p>
+]]>            </data>
+        </cell>
+
+    </cell-group>
+    <cell-group index="34">
+        <cell index="8">
+            <data><![CDATA[AtomTypeCondition cond = new AtomTypeCondition(HGSubsumes.class); 
+h = hg.getTypeSystem().getTypeHandle(Top.class);
+view = HGViewer.getStandaloneView(hg, h, 5, cond);
+c = view.getComponent();
+c.setPreferredSize(new java.awt.Dimension(600,400));
+c;
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+    <cell index="9" html-preview="true" engine="html">
+        <data><![CDATA[<p>Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:
+</p>
+<ul>
+  <li>Right Mouse Button Down + Drag Up = Zoom In  
+  </li>
+  <li>Right Mouse Button Down + Drag Down = Zoom Out  
+  </li>
+  <li>Ctrl + F = View is scaled to display all presented nodes  
+  </li>
+  <li>Ctrl + 1...4 Different layouts&#160;  
+  </li>
+</ul>
+<p>To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.
+</p>
+]]>        </data>
+    </cell>
+    <cell index="10">
+        <data><![CDATA[list = HGViewer.getCurrentView().getSelectedNodes(); 
+node = list.get(0);
+hh = node.getNode().getHandle();
+hg.get(hh)
+]]>        </data>
+        <output-cell>
+            <data><![CDATA[class java.lang.Enum
+]]>            </data>
+        </output-cell>
+    </cell>
+    <cell index="28" html-preview="true" engine="html">
+        <data><![CDATA[At this point the nodes in the viewer should look pretty ugly. So let's make them look better. We define few generic painters which are responsible for drawing the nodes of a given type.
+]]>        </data>
+    </cell>
+    <cell index="12">
+        <data><![CDATA[//helper function for adding generic painters  
+public NodePainter makePainter(HyperGraph hg, Class cls, HGVNetworkView view)
+{
+    painter = new DefaultNodePainter();
+    typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(cls));
+    name = view.getVisualStyle().getName();
+    VisualManager.getInstance().getVisualStyle(name).addNodePainter(typeH, painter);
+    return painter;
+}
+
+//adding generic and persistent painters 
+painter = makePainter(hg, HGSubsumes.class, view);
+painter.setColor(Color.YELLOW);
+painter.setShape(ShapeNodeRealizer.ROUND_RECT);
+//this is a very simple predefined painter, which returns the simple class name as a label and full class name as tooltip
+painter1 = new org.hypergraphdb.viewer.painter.SimpleLabelTooltipNodePainter(); 
+typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(Top.class));
+name = view.getVisualStyle().getName();
+VisualManager.getInstance().getVisualStyle(name).addNodePainter(typeH, painter1);
+painter1.setColor(Color.LIGHT_GRAY);
+painter1.setShape(ShapeNodeRealizer.DIAMOND);
+ view.redrawGraph();
+]]>        </data>
+    </cell>
+    <cell index="13" html-preview="true" engine="html">
+        <data><![CDATA[<html>
+  <body>
+    <p style="margin:0;">Other useful feature is the ability to select/hide desired nodes based on a concrete condition.    
+    </p>  
+  </body>
+</html>
+]]>        </data>
+    </cell>
+    <cell index="14" engine="beanshell">
+        <data><![CDATA[//selecting  nodes in the viewer based on some condition 
+nodes = view.getNetwork().getNodeIndicesArray();
+nlist = new ArrayList();
+cond = new SubsumedCondition(hg.getTypeSystem().getTypeHandle(Top.class));
+for(int i = 0; i < nodes.length; i++)
+ if(cond.satisfies(hg, view.getNetwork().getNode(nodes[i]).getHandle()))
+     nlist.add(view.getNetwork().getNode(nodes[i]));
+view.getNetwork().getFlagger().setFlaggedNodes(nlist, true);
+nlist.size();
+]]>        </data>
+        <output-cell>
+            <data><![CDATA[36
+]]>            </data>
+        </output-cell>
+    </cell>
+    <cell index="27" html-preview="true" engine="html">
+        <data><![CDATA[Now we could hide the selected nodes in the original view (without actually removing them from the underlying HyperGraph) or we could export them to a new viewer and work more easily there.
+]]>        </data>
+    </cell>
+    <cell-group index="47">
+        <cell index="48">
+            <data><![CDATA[//hide the selected nodes from view
+GinyUtils.hideSelectedNodes( HGViewer.getCurrentView() );
+]]>            </data>
+        </cell>
+
+    </cell-group>
+    <cell index="15">
+        <data><![CDATA[//Copy selected nodes in a new viewer 
+Set nodes = view.getNetwork().getFlagger().getFlaggedNodes(); 
+Collection nlist1 = new ArrayList(nodes.size());
+ for(Iterator it = nodes.iterator(); it.hasNext(); ) 
+            nlist1.add(it.next());
+edges = view.getNetwork().getConnectingEdges(nlist1); 
+new_network = HGViewer.createNetwork(nlist1, edges, null,  view.getNetwork());
+new_view = HGViewer.getNetworkView(new_network);
+c1 = new_view.getComponent();
+c1.setPreferredSize(new java.awt.Dimension(600,400));
+nlist1.size();
+c1;
+]]>        </data>
+    </cell>
+</notebook>
