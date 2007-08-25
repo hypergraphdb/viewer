@@ -1,0 +1,11 @@
+#HGViewer properties
+#Mon Feb 27 21:53:54 EET 2006
+viewThreshold=500
+viewType=tabbed
+hideSynsetLabel=true
+maxEdgesPerNodeToExpand=50
+maxDisplayNodes=100
+secondaryViewThreshold=2000
+RadialLayout.distance=60.0
+hideReflexiveEdges=true
+RadialLayout.scale=0.9
