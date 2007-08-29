@@ -28,8 +28,7 @@ public class NewWindowSelectedNodesOnlyAction extends HGVAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		// save the vizmapper catalog
-
+		
 		HGVNetwork current_network = HGViewer.getCurrentNetwork();
 		if(current_network == null || HGViewer.isEmbeded()) return;
 		HGVNetworkView current_network_view = null;

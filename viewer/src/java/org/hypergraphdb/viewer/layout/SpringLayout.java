@@ -1,10 +1,9 @@
 package org.hypergraphdb.viewer.layout;
 
-import org.hypergraphdb.viewer.HGViewer;
-import org.hypergraphdb.viewer.foo.GraphConverter;
+import org.hypergraphdb.viewer.foo.GraphConverter2;
+import org.hypergraphdb.viewer.foo.MutablePolyEdgeGraphLayout;
+import org.hypergraphdb.viewer.foo.SpringEmbeddedLayouter2;
 import org.hypergraphdb.viewer.util.GUIUtilities;
-import cytoscape.graph.legacy.layout.algorithm.MutablePolyEdgeGraphLayout;
-import cytoscape.graph.legacy.layout.impl.SpringEmbeddedLayouter2;
 import cytoscape.task.Task;
 import cytoscape.task.ui.JTaskConfig;
 import cytoscape.task.util.TaskManager;
@@ -18,8 +17,9 @@ public class SpringLayout implements Layout
 	
 	public void applyLayout()
 	{
-		final MutablePolyEdgeGraphLayout nativeGraph = GraphConverter
-				.getGraphCopy(0.0d, false, false);
+		final MutablePolyEdgeGraphLayout nativeGraph = 
+			//GraphConverter.getGraphCopy(0.0d, false, false);
+		  GraphConverter2.getGraphReference(0.0d, false, false);
 		Task task = new SpringEmbeddedLayouter2(nativeGraph);
 		// ////////////////////////////////////////////////////////
 		// BEGIN: The thread and process related code starts here.
@@ -40,10 +40,5 @@ public class SpringLayout implements Layout
 		// ////////////////////////////////////////////////////
 		// END: The thread and process related code ends here.
 		// ////////////////////////////////////////////////////
-		// Update the UI only if Task was Successful.
-		if (success)
-		{
-			GraphConverter.updateCytoscapeLayout(nativeGraph);
-		}
 	}
 }

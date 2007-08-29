@@ -1,23 +1,18 @@
 // $Id: GEM.java,v 1.1 2006/02/27 19:59:19 bizi Exp $
 package org.hypergraphdb.viewer.layout;
 
-import java.awt.event.ActionEvent;
 import java.util.*;
 
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGViewer;
-import org.hypergraphdb.viewer.visual.*;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
 import org.hypergraphdb.viewer.layout.util.Graph;
 
-import giny.util.SpringEmbeddedLayouter;
 import giny.view.NodeView;
 import giny.view.EdgeView;
 import giny.model.*;
-
-import java.awt.event.ActionListener;
 
 /**
  * Java implementation of the gem 2D layout.
@@ -38,11 +33,11 @@ public class GEM implements Layout
     public final static String Name = "GEM Force-directed";
    
     
-    private static Set nodes;
-    private static Set edges;
+    private static Set<Node> nodes;
+    private static Set<Edge> edges;
     
     private static int nodeCount;
-    private static int edgeCount;
+    //private static int edgeCount;
     
     //
     // GEM Constants
@@ -132,8 +127,6 @@ public class GEM implements Layout
     }
   
  
-    private static final String GEM2D = "GEM 2D Parameters";
-
     static class GemP {
 
 	public int x, y;       // position
@@ -159,7 +152,7 @@ public class GEM implements Layout
     private GemP gemProp[];
     private HGVNode invmap[];
     private ArrayList adjacent[];
-    private HashMap nodeNumbers;
+    private HashMap<HGVNode, Integer> nodeNumbers;
 
     public static int rand() {
 	return (int)(Math.random() * Integer.MAX_VALUE);
@@ -226,7 +219,7 @@ public class GEM implements Layout
 
     private int graph_center() {
 
-	Iterator nodeSet;
+	//Iterator nodeSet;
 	GemP p;
 	int  c, u, v, w;  // nodes
 	int  h;
@@ -252,7 +245,7 @@ public class GEM implements Layout
 
     private void vertexdata_init (final float starttemp) {
 
-	Iterator nodeSet;
+	//Iterator nodeSet;
 	GemP p;
 
 	temperature = 0;
@@ -681,8 +674,8 @@ public class GEM implements Layout
 	Integer nodeNr;
 	GemP p;
       
-	nodes = new HashSet();
-	edges = new HashSet();
+	nodes = new HashSet<Node>();
+	edges = new HashSet<Edge>();
 	Iterator it = HGViewer.getCurrentView().getNodeViewsIterator();
 	while(it.hasNext())
 	{
@@ -697,12 +690,12 @@ public class GEM implements Layout
 	}
       
 	nodeCount = nodes.size();
-	edgeCount = edges.size();
+	//edgeCount = edges.size();
       
 	gemProp = new GemP[nodeCount];
 	invmap  = new HGVNode[nodeCount];
 	adjacent = new ArrayList[nodeCount];
-	nodeNumbers = new HashMap();
+	nodeNumbers = new HashMap<HGVNode, Integer>();
 	
 	HGVNode n;
 	GraphPerspective graphPerspective = HGViewer.getCurrentView().getGraphPerspective();
@@ -711,9 +704,9 @@ public class GEM implements Layout
 	for (int i = 0; nodeSet.hasNext(); i++) {
 	    n = (HGVNode) nodeSet.next();
 	    gemProp[i] = new GemP(graphPerspective.neighborsList(n).size());
-	    System.out.println("GEM: " + n + "  adj: " + graphPerspective.neighborsList(n).size());
+	    //System.out.println("GEM: " + n + "  adj: " + graphPerspective.neighborsList(n).size());
 	    invmap[i]  = n;
-	    nodeNumbers.put(n,new Integer(i));
+	    nodeNumbers.put(n, i);
 	}
 	Iterator neighbors;
 	//Set nset;

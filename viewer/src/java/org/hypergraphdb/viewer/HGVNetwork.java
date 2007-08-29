@@ -1,150 +1,202 @@
 package org.hypergraphdb.viewer;
 
-import giny.model.Node;
-import giny.model.Edge;
-import giny.model.GraphPerspective;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import org.hypergraphdb.HyperGraph;
-
 import org.hypergraphdb.viewer.data.FlagFilter;
-import org.hypergraphdb.viewer.data.FlagEventListener;
+import cytoscape.util.intr.IntIterator;
+import fing.model.FGraphPerspective;
+import fing.model.FRootGraph;
+import giny.model.Edge;
+import giny.model.Node;
 
 /**
- *HGVNetwork is the primary class for algorithm writing.&nbsp; All
-algorithms should take a HGVNetwork as input, and do their best to only
-use the API of HGVNetwork.&nbsp; Plugins that want to affect the display
-of a graph can look into using HGVNetworkView as well.<br>
-<br>
-A HGVNetwork can create Nodes or Edges.&nbsp; Any Nodes or Edges that
-wish to be added to a HGVNetwork firt need to be created in <span
- style="font-style: italic;">org.hypergraphdb.viewer.</span>&nbsp; <br>
-<br>
-The methods that are defined by HGVNetwork mostly deal with data
-integration and flagging of nodes/edges.&nbsp; All methods that deal
-with graph traversal are part of the inherited API of the
-GraphPerspective class.&nbsp; Links to which can be found at the bottom
-of the methods list.&nbsp; <br>
-<br>
-In general, all methods are supported for working with Nodes/Edges as
-objects, and as indices.<br>
+ * HGVNetwork is the primary class for algorithm writing.&nbsp; All algorithms
+ * should take a HGVNetwork as input, and do their best to only use the API of
+ * HGVNetwork.&nbsp; Plugins that want to affect the display of a graph can look
+ * into using HGVNetworkView as well.<br>
+ * <br>
+ * A HGVNetwork can create Nodes or Edges.&nbsp; Any Nodes or Edges that wish to
+ * be added to a HGVNetwork first need to be created in <span style="font-style:
+ * italic;">org.hypergraphdb.viewer.HGViewer</span>&nbsp; <br>
+ * <br>
+ * The methods that are defined by HGVNetwork mostly deal with data integration
+ * and flagging of nodes/edges.&nbsp; All methods that deal with graph traversal
+ * are part of the inherited API of the GraphPerspective class.&nbsp; Links to
+ * which can be found at the bottom of the methods list.&nbsp; <br>
+ * <br>
+ * In general, all methods are supported for working with Nodes/Edges as
+ * objects.<br>
  */
-public interface HGVNetwork extends GraphPerspective {
+public class HGVNetwork extends FGraphPerspective
+{
+	private static int uid_counter = 0;
+	private String identifier;
+	protected String title;
+	/**
+	 * The ClientData map
+	 */
+	protected Map clientData;
+	/**
+	 * The default object for flagging graph objects
+	 */
+	protected FlagFilter flagger;
+	private HyperGraph hg;
 
-  /**
-   * Can Change
-   */
-  public String getTitle ();
+	// ----------------------------------------//
+	// Constructors
+	// ----------------------------------------//
+	/**
+	 * rootGraphNodeInx need not contain all endpoint nodes corresponding to
+	 * edges in rootGraphEdgeInx - this is calculated automatically by this
+	 * constructor. If any index does not correspond to an existing node or
+	 * edge, an IllegalArgumentException is thrown. The indices lists need not
+	 * be non-repeating - the logic in this constructor handles duplicate
+	 * filtering.
+	 */
+	public HGVNetwork(FRootGraph root, IntIterator rootGraphNodeInx,
+			IntIterator rootGraphEdgeInx)
+	{
+		super(root, rootGraphNodeInx, rootGraphEdgeInx);
+		initialize();
+	}
 
-  
-  /**
-   * Can Change
-   */
-  public void setTitle ( String new_id );
+	protected void initialize()
+	{
+		// TODO: get a better naming system in place
+		Integer i = new Integer(uid_counter);
+		identifier = i.toString();
+		uid_counter++;
+		clientData = new HashMap();
+		flagger = new FlagFilter(this);
+	}
 
-  /**
-   * Can't Change
-   */
-  public String getIdentifier ();
+	/**
+	 * Can Change
+	 */
+	public String getTitle()
+	{
+		if (title == null) return identifier;
+		return title;
+	}
 
-  
-  /**
-   * Can't Change
-   */
-  public String setIdentifier ( String new_id );
+	/**
+	 * Can Change
+	 */
+	public void setTitle(String new_id)
+	{
+		title = new_id;
+	}
 
+	public String getIdentifier()
+	{
+		return identifier;
+	}
 
+	public String setIdentifier(String new_id)
+	{
+		identifier = new_id;
+		return identifier;
+	}
 
-  //----------------------------------------//
-  // Network Methods
-  //----------------------------------------//
-  
-  /**
-   * Appends all of the nodes and edges in the given Network to 
-   * this Network
-   */
-  public void appendNetwork ( HGVNetwork network );
+	// ------------------------------//
+	// Client Data
+	// ------------------------------//
+	/**
+	 * Networks can support client data.
+	 * 
+	 * @param data_name the name of this client data
+	 */
+	public void putClientData(String data_name, Object data)
+	{
+		clientData.put(data_name, data);
+	}
 
- 
+	/**
+	 * Get a list of all currently available ClientData objects
+	 */
+	public Collection getClientDataNames()
+	{
+		return clientData.keySet();
+	}
 
-  public FlagFilter getFlagger ();
+	/**
+	 * Get Some client data
+	 * 
+	 * @param data_name the data to get
+	 */
+	public Object getClientData(String data_name)
+	{
+		return clientData.get(data_name);
+	}
 
+	// ------------------------------//
+	// Depercation
+	// ------------------------------//
+	/**
+	 * Appends all of the nodes and edges in teh given Network to this Network
+	 */
+	public void appendNetwork(HGVNetwork network)
+	{
+		int[] nodes = network.getNodeIndicesArray();
+		int[] edges = network.getEdgeIndicesArray();
+		restoreNodes(nodes);
+		restoreEdges(edges);
+	}
 
-  
-  /**
-   * Networks can support client data.
-   * @param data_name the name of this client data
-   */
-  public void putClientData ( String data_name, Object data );
+	/**
+	 * Returns the default object for flagging graph objects.
+	 */
+	public FlagFilter getFlagger()
+	{
+		return flagger;
+	}
 
-  /**
-   * Get a list of all currently available ClientData objects
-   */
-  public Collection getClientDataNames ();
-  
-  /**
-   * Get Some client data
-   * @param data_name the data to get
-   */
-  public Object getClientData ( String data_name );
-    
+	/**
+	 * Add a node to this Network that already exists in HGViewer
+	 * 
+	 * @return the Network Index of this node
+	 */
+	public HGVNode addNode(Node cytoscape_node)
+	{
+		return (HGVNode) restoreNode(cytoscape_node);
+	}
 
-  /**
-   * Add a node to this Network that already exists in 
-   * HGViewer
-   * @return the Network Index of this node
-   */
-  public int addNode ( int cytoscape_node );
+	
+	// --------------------//
+	// Edges
+	/**
+	 * This method will create a new edge.
+	 * 
+	 * @param source the source node
+	 * @param target the target node
+	 * @param directed weather the edge should be directed
+	 * @return the HGViewer index of the created edge
+	 */
+	public int createEdge(int source, int target, boolean directed)
+	{
+		return restoreEdge(HGViewer.getRootGraph().createEdge(source, target,
+				directed));
+	}
 
-  /**
-   * Add a node to this Network that already exists in 
-   * HGViewer
-   * @return the Network Index of this node
-   */
-  public HGVNode addNode ( Node cytoscape_node );
- 
-  /**
-   * This will remove this node from the Network. However,
-   * unless forced, it will remain in HGViewer to be possibly
-   * resused by another Network in the future.
-   * @param set_remove true removes this node from all of HGViewer, 
-   *                   false lets it be used by other CyNetworks
-   * @return true if the node is still present in HGViewer 
-   *          ( i.e. in another Network )
-   */
-  public boolean removeNode ( int node_index, boolean set_remove );
+	/**
+	 * Add a edge to this Network that already exists in HGViewer
+	 * 
+	 * @return the Network Index of this edge
+	 */
+	public HGVEdge addEdge(Edge cytoscape_edge)
+	{
+		return (HGVEdge) restoreEdge(cytoscape_edge);
+	}
 
-  
+	public HyperGraph getHyperGraph()
+	{
+		return hg;
+	}
 
-
-  //--------------------//
-  // Edges
-
-  /**
-   * Add a edge to this Network that already exists in 
-   * HGViewer
-   * @return the Network Index of this edge
-   */
-  public int addEdge ( int edge_index );
-
-  /**
-   * Add a edge to this Network that already exists in 
-   * HGViewer
-   * @return the Network Index of this edge
-   */
-  public HGVEdge addEdge ( Edge edge );
- 
-  /**
-   * This will remove this edge from the Network. However,
-   * unless forced, it will remain in HGViewer to be possibly
-   * resused by another Network in the future.
-   * @param set_remove true removes this edge from all of HGViewer, 
-   *                   false lets it be used by other CyNetworks
-   * @return true if the edge is still present in HGViewer 
-   *          ( i.e. in another Network )
-   */
-  public boolean removeEdge ( int edge_index, boolean set_remove );
-  
-  public HyperGraph getHyperGraph();
-  public void setHyperGraph(HyperGraph h);
- 
+	public void setHyperGraph(HyperGraph h)
+	{
+		hg = h;
+	}
 }

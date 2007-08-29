@@ -2,7 +2,7 @@ package org.hypergraphdb.viewer;
 
 import giny.model.*;
 import org.hypergraphdb.*;
-import org.hypergraphdb.viewer.giny.HGViewerFingRootGraph;
+import org.hypergraphdb.viewer.giny.HGVRootGraph;
 
 
 // Package visible class.
@@ -10,14 +10,14 @@ public class HGVNode implements HGVBaseElement, giny.model.Node
 {
 
   // Variables specific to public get/set methods.
-  HGViewerFingRootGraph m_rootGraph = null;
+  HGVRootGraph m_rootGraph = null;
   int m_rootGraphIndex = 0;
   HGHandle handle = null;
  
    
   public HGVNode(RootGraph root,
          int rootGraphIndex) { 
-    this.m_rootGraph = (HGViewerFingRootGraph) root;
+    this.m_rootGraph = (HGVRootGraph) root;
     this.m_rootGraphIndex = rootGraphIndex;
   }
 

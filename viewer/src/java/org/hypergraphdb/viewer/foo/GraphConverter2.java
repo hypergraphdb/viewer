@@ -1,10 +1,10 @@
 package org.hypergraphdb.viewer.foo;
 
+import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGViewer;
-import cytoscape.graph.fixed.FixedGraph;
-import cytoscape.graph.layout.algorithm.MutablePolyEdgeGraphLayout;
 import cytoscape.util.intr.IntEnumerator;
 import cytoscape.util.intr.IntIterator;
+
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import giny.view.EdgeView;
 import giny.view.NodeView;
@@ -82,11 +82,23 @@ public final class GraphConverter2
     final double xOff = minX - border;
     final double yOff = minY - border;
 
-    final FixedGraph fixedGraph = (FixedGraph) (graphView.getNetwork());
+    final HGVNetwork fixedGraph = graphView.getNetwork();
 
     return new MutablePolyEdgeGraphLayout()
       {
-        // FixedGraph methods.
+        public int getEdgeNodeIndex(int arg0, boolean arg1) {
+			return fixedGraph.getEdgeIndex(arg0);
+		}
+		public boolean isDirectedEdge(int arg0) {
+			return fixedGraph.isEdgeDirected(arg0);
+		}
+		public int getNumEdges() {
+			return fixedGraph.getNodeCount();
+		}
+		public int getNumNodes() {
+			return fixedGraph.getEdgeCount();
+		}
+		// FixedGraph methods.
         public IntEnumerator nodes() { return fixedGraph.nodes(); }
         public IntEnumerator edges() { return fixedGraph.edges(); }
         public boolean nodeExists(int node) {
@@ -112,8 +124,8 @@ public final class GraphConverter2
 
         // MutableGraphLayout methods.
         public boolean isMovableNode(int node) {
-          NodeView nodeView = getNodeView(node);
-          if (noNodesSelected) return true;
+        	if (noNodesSelected) return true;
+             NodeView nodeView = getNodeView(node);
           return nodeView.isSelected(); }
         public void setNodePosition(int node, double xPos, double yPos) {
           NodeView nodeView = getNodeView(node);

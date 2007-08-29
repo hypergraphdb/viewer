@@ -3,9 +3,10 @@ package org.hypergraphdb.viewer.actions;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.foo.GraphConverter2;
-import cytoscape.graph.layout.algorithm.MutablePolyEdgeGraphLayout;
-import cytoscape.graph.layout.impl.RotationLayouter;
-import cytoscape.graph.layout.impl.ScaleLayouter;
+import org.hypergraphdb.viewer.foo.MutablePolyEdgeGraphLayout;
+import org.hypergraphdb.viewer.foo.RotationLayouter;
+import org.hypergraphdb.viewer.foo.ScaleLayouter;
+
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
 import java.awt.BorderLayout;
