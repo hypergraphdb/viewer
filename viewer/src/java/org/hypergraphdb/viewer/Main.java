@@ -50,7 +50,7 @@ import java.util.logging.*;
  * This class monitors the set of windows that exist and exits the application
  * when the last window is closed.
  */
-public class Main implements WindowListener {
+public class Main implements WindowListener { 
   protected static Vector windows = new Vector ();
   protected Logger logger;
    
@@ -64,7 +64,7 @@ public class Main implements WindowListener {
    */
   public Main ( String [] args ) throws Exception {
     this.args = args;
-     HGViewer.getDesktop();
+     HGVKit.getDesktop();
   } 
 
 

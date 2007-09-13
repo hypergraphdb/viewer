@@ -140,15 +140,15 @@ public abstract class FileUtil {
 			File result = null;
 			// set the dialog type
 			if (load_save_custom == LOAD) {
-				if (chooser.showOpenDialog(HGViewer.getDesktop()) == JFileChooser.APPROVE_OPTION) {
+				if (chooser.showOpenDialog(HGVKit.getDesktop()) == JFileChooser.APPROVE_OPTION) {
 					result = chooser.getSelectedFile();
 				}
 			} else if (load_save_custom == SAVE) {
-				if (chooser.showSaveDialog(HGViewer.getDesktop()) == JFileChooser.APPROVE_OPTION) {
+				if (chooser.showSaveDialog(HGVKit.getDesktop()) == JFileChooser.APPROVE_OPTION) {
 					result = chooser.getSelectedFile();
 				}
 			} else {
-				if (chooser.showDialog(HGViewer.getDesktop(),
+				if (chooser.showDialog(HGVKit.getDesktop(),
 						custom_approve_text) == JFileChooser.APPROVE_OPTION) {
 					result = chooser.getSelectedFile();
 				}

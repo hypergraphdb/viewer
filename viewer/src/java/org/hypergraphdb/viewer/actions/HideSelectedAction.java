@@ -12,7 +12,7 @@ import giny.model.*;
 import giny.view.*;
 import java.util.*;
 
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 public class HideSelectedAction extends HGVAction  {
@@ -27,8 +27,8 @@ public class HideSelectedAction extends HGVAction  {
     }
     
     public void actionPerformed (ActionEvent e) {
-        GinyUtils.hideSelectedNodes( HGViewer.getCurrentView() );
-        GinyUtils.hideSelectedEdges( HGViewer.getCurrentView() );
+        GinyUtils.hideSelectedNodes( HGVKit.getCurrentView() );
+        GinyUtils.hideSelectedEdges( HGVKit.getCurrentView() );
     }//action performed
 }
 

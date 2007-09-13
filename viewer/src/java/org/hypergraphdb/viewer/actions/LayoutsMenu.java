@@ -2,7 +2,7 @@ package org.hypergraphdb.viewer.actions;
 
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
@@ -39,7 +39,7 @@ public class LayoutsMenu extends JMenu
   {
     super("Apply Layout");
     int i = 1;
-    for(Layout l : HGViewer.getLayouts())
+    for(Layout l : HGVKit.getLayouts())
     {
     	LayoutAction action = new LayoutAction(l, i);
     	ActionManager.getInstance().putAction(action);
@@ -62,7 +62,7 @@ public class LayoutsMenu extends JMenu
     public void actionPerformed(ActionEvent e)
     {
     	DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(
-    			HGViewer.getCurrentView().getComponent()), new SelectLayoutPanel(), 
+    			HGVKit.getCurrentView().getComponent()), new SelectLayoutPanel(), 
     			ActionManager.PREFERED_LAYOUT_ACTION);
         d.setModal(true);
         d.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);
@@ -91,7 +91,7 @@ public class LayoutsMenu extends JMenu
   	private void initialize()
   	{
   		
-  		Set<Layout> layouts = HGViewer.getLayouts(); 
+  		Set<Layout> layouts = HGVKit.getLayouts(); 
   		this.setLayout(new GridBagLayout());
   		int i = 0;
   		final Map<String,Layout> layoutMap = new HashMap<String,Layout>(); 
@@ -103,13 +103,13 @@ public class LayoutsMenu extends JMenu
   			gridBagConstraints.anchor = GridBagConstraints.WEST;
   			JRadioButton butt = new JRadioButton(l.getName());
   		    this.add(butt, gridBagConstraints);
-  		    butt.setSelected(l.equals(HGViewer.getPreferedLayout()));
+  		    butt.setSelected(l.equals(HGVKit.getPreferedLayout()));
   		    butt.setActionCommand(l.getName());
   		    layoutMap.put(l.getName(), l);
   		    butt.addActionListener(new ActionListener(){
   		    	public void actionPerformed(ActionEvent e) 
   		    	{
-  		    		HGViewer.setPreferedLayout(
+  		    		HGVKit.setPreferedLayout(
   		    				layoutMap.get(e.getActionCommand()));
   		    	}
   		    });

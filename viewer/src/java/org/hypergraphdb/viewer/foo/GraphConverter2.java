@@ -1,7 +1,7 @@
 package org.hypergraphdb.viewer.foo;
 
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import cytoscape.util.intr.IntEnumerator;
 import cytoscape.util.intr.IntIterator;
 
@@ -18,17 +18,17 @@ public final class GraphConverter2
   private GraphConverter2() {}
 
   /**
-   * Returns a representation of HGViewer's current network view.
+   * Returns a representation of HGVKit's current network view.
    * Returns a MutablePolyEdgeGraphLayout, which, when mutated,
-   * has a direct effect on the underlying HGViewer network view.  You'd
+   * has a direct effect on the underlying HGVKit network view.  You'd
    * sure as heck better be using the returned object from the AWT event
-   * dispatch thread!  Better yet, lock the HGViewer desktop somehow
+   * dispatch thread!  Better yet, lock the HGVKit desktop somehow
    * (with a modal dialog for example) while using this returned object.
-   * Movable nodes are defined to be selected nodes in HGViewer - if no
+   * Movable nodes are defined to be selected nodes in HGVKit - if no
    * nodes are selected then all nodes are movable.  If selected node
    * information changes while we have a reference to this return object,
    * then the movability of corresponding node also changes.  This is one
-   * reason why it's important to lock the HGViewer desktop while operating
+   * reason why it's important to lock the HGVKit desktop while operating
    * on this return object.
    **/
   public static MutablePolyEdgeGraphLayout getGraphReference
@@ -43,7 +43,7 @@ public final class GraphConverter2
     double maxX = Double.MIN_VALUE;
     double minY = Double.MAX_VALUE;
     double maxY = Double.MIN_VALUE;
-    final HGVNetworkView graphView = HGViewer.getCurrentView();
+    final HGVNetworkView graphView = HGVKit.getCurrentView();
     Iterator iter = graphView.getNodeViewsIterator();
     while (iter.hasNext())
     {
@@ -119,6 +119,7 @@ public final class GraphConverter2
         public double getMaxHeight() { return height; }
         public double getNodePosition(int node, boolean xPosition) {
           NodeView nodeView = getNodeView(node);
+          if(nodeView == null) return 0;
           if (xPosition) return nodeView.getXPosition() - xOff;
           return nodeView.getYPosition() - yOff; }
 
@@ -129,6 +130,7 @@ public final class GraphConverter2
           return nodeView.isSelected(); }
         public void setNodePosition(int node, double xPos, double yPos) {
           NodeView nodeView = getNodeView(node);
+          if(nodeView == null) return;
           checkPosition(xPos, yPos);
           if (!isMovableNode(node))
             throw new UnsupportedOperationException
@@ -185,11 +187,14 @@ public final class GraphConverter2
         // Helper methods.
         private NodeView getNodeView(int node) {
           NodeView nodeView = graphView.getNodeView(~node);
-          if (nodeView == null) throw new IllegalArgumentException
-                                  ("node " + node + " not in this graph");
+         // if (nodeView == null) 
+        	  //System.out.println("node " + ~node + " not in this graph " +
+        	//		  graphView.nodeCount());
+        	 // throw new IllegalArgumentException
+             //        ("node " + node + " not in this graph");
           return nodeView; }
         private EdgeView getEdgeView(int edge) {
-          EdgeView edgeView = graphView.getEdgeView(~edge);
+          EdgeView edgeView = graphView.getEdgeView(edge);
           if (edgeView == null) throw new IllegalArgumentException
                                   ("edge " + edge + " not in this graph");
           return edgeView; }

@@ -20,7 +20,7 @@ public class UnHideSelectedAction extends AbstractAction  {
       //GinyUtils.unHideSelectedNodes(networkView.getView());
       //GinyUtils.unHideSelectedEdges(networkView.getView());
       //networkView.redrawGraph(false, true);	
-      GinyUtils.unHideAll( HGViewer.getCurrentView() );
+      GinyUtils.unHideAll( HGVKit.getCurrentView() );
     }//action performed
 }
 

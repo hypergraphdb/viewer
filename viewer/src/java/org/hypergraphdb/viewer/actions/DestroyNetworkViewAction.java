@@ -1,7 +1,7 @@
 package org.hypergraphdb.viewer.actions;
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.*;
 import java.awt.event.*;
 
@@ -21,6 +21,6 @@ public class DestroyNetworkViewAction extends HGVAction {
   }
 
   public static void destroyViewFromCurrentNetwork () {
-  	HGViewer.destroyNetworkView( HGViewer.getCurrentNetwork() );
+  	HGVKit.destroyNetworkView( HGVKit.getCurrentNetwork() );
   }
 }

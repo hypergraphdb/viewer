@@ -12,7 +12,7 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
@@ -67,7 +67,7 @@ public class LoadWordNetAction extends HGVAction
     public static void loadHyperGraph(File file)
     {
     	if(file == null) throw new NullPointerException("HG file is null");
-    	HGVNetwork network = HGViewer.getNetworkByFile(file);
+    	HGVNetwork network = HGVKit.getNetworkByFile(file);
     	if (network == null)
        {
             //  Create LoadNetwork Task
@@ -76,7 +76,7 @@ public class LoadWordNetAction extends HGVAction
             TaskManager.executeTask(task, null); 
         }
     	//else
-    	//	HGViewer.getDesktop().setFocus(network);
+    	//	HGVKit.getDesktop().setFocus(network);
     }
     
        
@@ -209,7 +209,7 @@ public class LoadWordNetAction extends HGVAction
             //  the auto-creating of the HGVNetworkView.
             int realThreshold =AppConfig.getInstance().getViewThreshold();
             AppConfig.getInstance().setViewThreshold(0);
-            HGVNetwork network = HGViewer.createNetwork(nodes, edges,
+            HGVNetwork network = HGVKit.createNetwork(nodes, edges,
             		reader.getHyperGraph());
             
             network.setTitle(title);
@@ -304,10 +304,10 @@ public class LoadWordNetAction extends HGVAction
         
         /**
          * Creates the HGVNetworkView.
-         * Most of this code is copied directly from HGViewer.createHGVNetworkView.
+         * Most of this code is copied directly from HGVKit.createHGVNetworkView.
          * However, it requires a bit of a hack to actually hide the network
          * view from the user, and I didn't want to use this hack in the core
-         * HGViewer.java class.
+         * HGVKit.java class.
          */
         private HGVNetworkView createNetworkView(HGVNetwork network)
         {
@@ -319,23 +319,21 @@ public class LoadWordNetAction extends HGVAction
             pCanvas.setVisible(false);
             //  End of Hack
             
-            view.setIdentifier(network.getIdentifier());
-            HGViewer.getNetworkMap().put(network, view);
-            view.setTitle(network.getTitle());
+            HGVKit.getNetworkMap().put(network, view);
             
             // if Squiggle function enabled, enable squiggling on the created view
-            if (HGViewer.isSquiggleEnabled())
+            if (HGVKit.isSquiggleEnabled())
             {
                 view.getSquiggleHandler().beginSquiggling();
             }
             
             // set the selection mode on the view
-            HGViewer.setSelectionMode(HGViewer.getSelectionMode(), view);
+            HGVKit.setSelectionMode(HGVKit.getSelectionMode(), view);
             
-            HGViewer.firePropertyChange
+            HGVKit.firePropertyChange
             (HGVDesktop.NETWORK_VIEW_CREATED, null, view);
             
-            HGViewer.getPreferedLayout().applyLayout();
+            HGVKit.getPreferedLayout().applyLayout();
 			
             //  Instead of calling fitContent(), access PGraphView directly.
             view.getCanvas().getCamera().animateViewToCenterBounds

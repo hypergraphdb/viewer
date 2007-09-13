@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
 import giny.model.Edge;
 import giny.model.Node;
@@ -31,7 +31,7 @@ public class SelectFirstNeighborsAction extends HGVAction {
         setAcceleratorCombo( java.awt.event.KeyEvent.VK_F6,0 );
     }
     public void actionPerformed (ActionEvent e) {
-      HGVNetwork net = HGViewer.getCurrentNetwork();
+      HGVNetwork net = HGVKit.getCurrentNetwork();
       if(net == null) return;
       Set set = net.getFlagger().getFlaggedNodes();
       Set new_set = new HashSet();

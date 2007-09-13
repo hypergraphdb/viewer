@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 import phoebe.PGraphView;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 
 public class SquiggleAction extends JMenu {
   
@@ -20,12 +20,12 @@ public class SquiggleAction extends JMenu {
 	    // Do this in the GUI Event Dispatch thread...
 	    SwingUtilities.invokeLater( new Runnable() {
 	      public void run() {
-		    PGraphView view = (PGraphView)HGViewer.getCurrentView();
+		    PGraphView view = (PGraphView)HGVKit.getCurrentView();
 		    if (enabled) {
-              HGViewer.enableSquiggle();
+              HGVKit.enableSquiggle();
               squiggleMode.setText("Disable");
             } else {
-              HGViewer.disableSquiggle();
+              HGVKit.disableSquiggle();
               squiggleMode.setText("Enable");
             }
             clearSquiggle.setEnabled(enabled);
@@ -39,7 +39,7 @@ public class SquiggleAction extends JMenu {
         // Do this in the GUI Event Dispatch thread...
         SwingUtilities.invokeLater( new Runnable() {
           public void run() {
-            PGraphView view = (PGraphView)HGViewer.getCurrentView();
+            PGraphView view = (PGraphView)HGVKit.getCurrentView();
               view.getSquiggleHandler().clearSquiggles();
       } } ); } } );
     clearSquiggle.setEnabled(false);

@@ -15,7 +15,7 @@ import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.giny.*;
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.util.*;
 
@@ -29,7 +29,7 @@ public class PreferenceAction extends HGVAction  {
     	 AppConfigPanel p = new AppConfigPanel();
     	 DialogDescriptor dd = new DialogDescriptor(GUIUtilities
     				.getFrame(), p,
-    				"HGViewer Properties");
+    				"HGVKit Properties");
     	 DialogDisplayer.getDefault().notify(dd);
     	 return;
     } // actionPerformed

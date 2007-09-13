@@ -1,6 +1,6 @@
 package org.hypergraphdb.viewer.view;
 
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
 
 import org.hypergraphdb.viewer.actions.CreateNetworkViewAction;
@@ -129,7 +129,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		// System.out.println("NetworkPanel - onFlagEvent: " + event);
 		treeTable.getTree().updateUI();
 		if (event.getEventType())
-			HGViewer.getDesktop().updatePropsPanel();
+			HGVKit.getDesktop().updatePropsPanel();
 	}
 
 	public void addNetwork(HGVNetwork net, HGVNetwork par) {
@@ -190,16 +190,16 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 			return;
 		if (node.getUserObject() == null)
 			return;
-		fireFocus(HGViewer.getNetworkView(node.getNetworkID()));
+		fireFocus(HGVKit.getNetworkView(node.getNetworkID()));
    }
 
 	public void propertyChange(PropertyChangeEvent e) {
 
-		if (e.getPropertyName() == HGViewer.NETWORK_CREATED) {
+		if (e.getPropertyName() == HGVKit.NETWORK_CREATED) {
 			addNetwork((HGVNetwork) e.getNewValue(), (HGVNetwork) e.getOldValue());
 		}
 
-		if (e.getPropertyName() == HGViewer.NETWORK_DESTROYED) {
+		if (e.getPropertyName() == HGVKit.NETWORK_DESTROYED) {
 			removeNetwork((HGVNetwork) e.getNewValue());
 		}
 
@@ -266,7 +266,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 			if (column == 0)
 				return ((DefaultMutableTreeNode) node).getUserObject();
 			else if (column == 1) {
-				// return new Integer( HGViewer.getNetwork( ( ( NetworkTreeNode
+				// return new Integer( HGVKit.getNetwork( ( ( NetworkTreeNode
 				// )node).getNetworkID() ).getNodeCount() );
 				HGVNetwork net = (((NetworkTreeNode) node).getNetworkID());
 				if(net == null) return "";
@@ -382,7 +382,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 						// disable or enable specific options with respect to
 						// the actual network
 						// that is selected
-						if (HGViewer.viewExists(net))
+						if (HGVKit.viewExists(net))
 						{
 							// disable the view creation item
 							createViewItem.setEnabled(false);
@@ -434,13 +434,13 @@ class PopupActionListener implements ActionListener {
 		String label = ((JMenuItem) ae.getSource()).getText();
 		// Figure out the appropriate action
 		if (label == DESTROY_VIEW) {
-			HGViewer.destroyNetworkView(cyNetwork);
+			HGVKit.destroyNetworkView(cyNetwork);
 		} // end of if ()
 		else if (label == CREATE_VIEW) {
 			CreateNetworkViewAction.createViewFromCurrentNetwork(cyNetwork);
 		} // end of if ()
 		else if (label == DESTROY_NETWORK) {
-			HGViewer.destroyNetwork(cyNetwork);
+			HGVKit.destroyNetwork(cyNetwork);
 		} // end of if ()
 		else {
 			// throw an exception here?

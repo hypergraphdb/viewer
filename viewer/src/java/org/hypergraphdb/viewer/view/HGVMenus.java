@@ -40,7 +40,7 @@ import javax.help.CSH.*;
 import javax.help.CSH; // Context Sensitive Help convenience object...
 import javax.swing.KeyStroke;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.actions.*;
@@ -57,7 +57,7 @@ import org.hypergraphdb.viewer.util.RecentFilesProvider;
 
 //------------------------------------------------------------------------------
 /**
- * This class creates the menu and tool bars for a HGViewer window object. It
+ * This class creates the menu and tool bars for a HGVKit window object. It
  * also provides access to individual menus and items.
  */
 public class HGVMenus implements GraphViewChangeListener
@@ -242,8 +242,8 @@ public class HGVMenus implements GraphViewChangeListener
 	 */
 	public void setNodesRequiredItemsEnabled()
 	{
-		boolean newState = HGViewer.getCurrentNetwork() != null
-				&& HGViewer.getCurrentNetwork().getNodeCount() > 0;
+		boolean newState = HGVKit.getCurrentNetwork() != null
+				&& HGVKit.getCurrentNetwork().getNodeCount() > 0;
 		newState = true; // TODO: remove this once the
 		// GraphViewChangeListener system is working
 		if (newState == nodesRequiredItemsEnabled) return;
@@ -251,7 +251,7 @@ public class HGVMenus implements GraphViewChangeListener
 		// saveSubMenu.setEnabled(newState);
 		menuPrintAction.setEnabled(newState);
 		menuExportAction.setEnabled(newState);
-		if (!HGViewer.isEmbeded()) displayNWSubMenu.setEnabled(newState);
+		if (!HGVKit.isEmbeded()) displayNWSubMenu.setEnabled(newState);
 		nodesRequiredItemsEnabled = newState;
 	}
 
@@ -293,8 +293,8 @@ public class HGVMenus implements GraphViewChangeListener
 
 			public void menuSelected(MenuEvent e)
 			{
-				HGVNetworkView graphView = HGViewer.getCurrentView();
-				HGVNetwork graph = HGViewer.getCurrentNetwork();
+				HGVNetworkView graphView = HGVKit.getCurrentView();
+				HGVNetwork graph = HGVKit.getCurrentNetwork();
 				boolean inactive = false;
 				if (graphView == null || graphView.nodeCount() == 0)
 					inactive = true;
@@ -336,7 +336,7 @@ public class HGVMenus implements GraphViewChangeListener
 
 			public void menuSelected(MenuEvent e)
 			{
-				HGVNetworkView graphView = HGViewer.getCurrentView();
+				HGVNetworkView graphView = HGVKit.getCurrentView();
 				boolean inactive = false;
 				if (graphView == null || graphView.nodeCount() == 0)
 					inactive = true;
@@ -375,7 +375,7 @@ public class HGVMenus implements GraphViewChangeListener
 
 			public void menuSelected(MenuEvent e)
 			{
-				HGVNetwork graph = HGViewer.getCurrentNetwork();
+				HGVNetwork graph = HGVKit.getCurrentNetwork();
 				boolean inactive = false;
 				if (graph == null || graph.getNodeCount() == 0)
 					inactive = true;
@@ -409,7 +409,7 @@ public class HGVMenus implements GraphViewChangeListener
 
 			public void menuSelected(MenuEvent e)
 			{
-				HGVNetwork graph = HGViewer.getCurrentNetwork();
+				HGVNetwork graph = HGVKit.getCurrentNetwork();
 				boolean inactive = false;
 				if (graph == null || graph.getNodeCount() == 0)
 					inactive = true;
@@ -443,7 +443,7 @@ public class HGVMenus implements GraphViewChangeListener
 
 			public void menuSelected(MenuEvent e)
 			{
-				HGVNetworkView graphView = HGViewer.getCurrentView();
+				HGVNetworkView graphView = HGVKit.getCurrentView();
 				boolean inactive = false;
 				if (graphView == null || graphView.nodeCount() == 0)
 					inactive = true;
@@ -486,14 +486,14 @@ public class HGVMenus implements GraphViewChangeListener
 		{
 			menusInitialized = true;
 			fillMenuBar();
-			// if(!HGViewer.isEmbeded())
+			// if(!HGVKit.isEmbeded())
 			fillToolBar();
 			nodesRequiredItemsEnabled = false;
 			// saveButton.setEnabled(false);
 			// saveSubMenu.setEnabled(false);
 			menuPrintAction.setEnabled(false);
 			menuExportAction.setEnabled(false);
-			if (!HGViewer.isEmbeded()) displayNWSubMenu.setEnabled(false);
+			if (!HGVKit.isEmbeded()) displayNWSubMenu.setEnabled(false);
 			setNodesRequiredItemsEnabled();
 		}
 	}
@@ -537,7 +537,7 @@ public class HGVMenus implements GraphViewChangeListener
 		// addAction(new RecordExplorerAction());
 		// fill the Select menu
 		selectMenu.add(new SelectionModeAction());
-		if (!HGViewer.isEmbeded())
+		if (!HGVKit.isEmbeded())
 		{
 			displayNWSubMenu = new JMenu("To New Network");
 			selectMenu.add(displayNWSubMenu);
@@ -570,7 +570,7 @@ public class HGVMenus implements GraphViewChangeListener
 		layoutMenu.addSeparator();
 		// fill the Visualization menu
 		// TODO: move to a plugin, and/or fix
-		if (!HGViewer.isEmbeded()) 
+		if (!HGVKit.isEmbeded()) 
 			vizMenu.add(mi(ActionManager.TOGGLE_BIRDS_EYE_VIEW_ACTION));
 		vizMenu.add(mi(ActionManager.BACKGROUND_COLOR_ACTION));
 		vizMenu.add(mi(ActionManager.VISUAL_PROPERTIES_ACTION));
@@ -580,7 +580,7 @@ public class HGVMenus implements GraphViewChangeListener
 		helpAboutMenuItem = new JMenuItem(new HelpAboutAction());
 		// for Contents and Context Sensitive help, don't use *Action class
 		// since actions encapsulated by HelpBroker and need run-time data
-		if (HGViewer.isEmbeded()) return;
+		if (HGVKit.isEmbeded()) return;
 		helpContentsMenuItem = new JMenuItem("Contents...", KeyEvent.VK_C);
 		helpContentsMenuItem.setAccelerator(KeyStroke.getKeyStroke("F1"));
 		ImageIcon contextSensitiveHelpIcon = new ImageIcon(
@@ -777,7 +777,7 @@ public class HGVMenus implements GraphViewChangeListener
 		// but in this toolbar
 		/*
 		 * MDA - can't get this to work... can't get access to public method?
-		 * VizMapUI vizMapUI = HGViewer.getDesktop().getVizMapUI();
+		 * VizMapUI vizMapUI = HGVKit.getDesktop().getVizMapUI();
 		 * hb.enableHelp(vizMapUI.getToolbarComboBox(),
 		 * "toolbar-setVisProps",null);
 		 */

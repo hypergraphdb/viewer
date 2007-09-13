@@ -52,7 +52,7 @@ public class AppConfig
 				graph.add(instance, HGSystemFlags.MUTABLE);
 			}
 			instance.classLoader = new URLClassLoader(new URL[] {},
-					HGViewer.class.getClassLoader());
+					HGVKit.class.getClassLoader());
 			
 			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 				public void run()
@@ -131,7 +131,7 @@ public class AppConfig
 	}
 
 	/**
-	 * @return the directory of the HGViewer.jar.
+	 * @return the directory of the HGVKit.jar.
 	 */
 	public static File getConfigDirectory()
 	{

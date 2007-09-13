@@ -491,14 +491,13 @@ public class BasicGraphViewHandler implements GraphViewHandler {
       throw new IllegalStateException("Node " + node.getIdentifier() + " has a non-empty array " +
                                   " of children-node indices, but, it has no child GraphPerspective");
     }
-    List childrenNodeList = childGP.nodesList();
-    Iterator it = childrenNodeList.iterator();
+    Iterator it = childGP.nodesIterator(); 
     double x = 0.0;
     double y = 0.0;
     double viewableChildren = 0;
     while(it.hasNext()){
       Node childNode = (Node)it.next();
-      if(gp.containsNode(childNode, false)){
+      if(gp.getNode(childNode.getRootGraphIndex()) != null) {
         NodeView childNV = graphView.getNodeView(childNode.getRootGraphIndex());
         if(childNV != null){
           x += childNV.getXPosition();
@@ -527,8 +526,10 @@ public class BasicGraphViewHandler implements GraphViewHandler {
     GraphPerspective graphPerspective = graph_view.getGraphPerspective();
     
     IntArrayList gpNodeIndices = new IntArrayList(graphPerspective.getNodeIndicesArray());
-    IntArrayList gpEdgeIndices = new IntArrayList(graphPerspective.getEdgeIndicesArray());
-    
+    IntArrayList gpEdgeIndices = new IntArrayList();
+    for(Iterator it = graphPerspective.edgesIterator(); it.hasNext();)
+    	gpEdgeIndices.add(((Edge)it.next()).getRootGraphIndex());
+        
     IntArrayList gvNodeIndices = new IntArrayList(graph_view.getNodeViewCount());
     IntArrayList gvEdgeIndices = new IntArrayList(graph_view.getEdgeViewCount());
     

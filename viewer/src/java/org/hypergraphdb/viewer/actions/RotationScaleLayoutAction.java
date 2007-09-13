@@ -1,7 +1,7 @@
 package org.hypergraphdb.viewer.actions;
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.foo.GraphConverter2;
 import org.hypergraphdb.viewer.foo.MutablePolyEdgeGraphLayout;
 import org.hypergraphdb.viewer.foo.RotationLayouter;
@@ -38,9 +38,9 @@ public class RotationScaleLayoutAction extends HGVAction
 
   public void actionPerformed(ActionEvent e)
   {
-	  if(HGViewer.getCurrentView() == null) return;
+	  if(HGVKit.getCurrentView() == null) return;
     final boolean noNodesSelected =
-      (HGViewer.getCurrentView().getSelectedNodeIndices().length == 0);
+      (HGVKit.getCurrentView().getSelectedNodeIndices().length == 0);
     final MutablePolyEdgeGraphLayout[] nativeGraph =
       new MutablePolyEdgeGraphLayout[] {
         GraphConverter2.getGraphReference(16.0d, true, false) };

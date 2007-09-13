@@ -9,7 +9,7 @@ import giny.view.*;
 import java.util.*;
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
@@ -24,7 +24,7 @@ public class DestroySelectedAction extends HGVAction  {
     }
     
     public void actionPerformed (ActionEvent e) {
-	HGVNetwork gp =HGViewer.getCurrentNetwork();
+	HGVNetwork gp =HGVKit.getCurrentNetwork();
 	Set flaggedNodes = gp.getFlagger().getFlaggedNodes();
 	Set flaggedEdges = gp.getFlagger().getFlaggedEdges();
 	int [] hiddenNodeIndices = new int [flaggedNodes.size()];

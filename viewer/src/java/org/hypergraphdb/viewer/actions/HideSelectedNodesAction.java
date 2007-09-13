@@ -7,7 +7,7 @@ package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 import java.awt.event.ActionEvent;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 public class HideSelectedNodesAction extends HGVAction   {
@@ -23,8 +23,8 @@ public class HideSelectedNodesAction extends HGVAction   {
   }
 
     public void actionPerformed ( ActionEvent e ) {
-    	if(HGViewer.getCurrentView()!= null)
-      GinyUtils.hideSelectedNodes( HGViewer.getCurrentView() );
+    	if(HGVKit.getCurrentView()!= null)
+      GinyUtils.hideSelectedNodes( HGVKit.getCurrentView() );
     }
 
 }

@@ -5,7 +5,7 @@ import org.hypergraphdb.viewer.*;
 /**
  * A HGViewerPlugin is the new "Global" plugin. A HGViewerPlugin constructor
  * does not have any arguments, since it is Network agnostic.  Instead all
- * access to the HGViewer Data Structures is handled throught the static
+ * access to the HGVKit Data Structures is handled throught the static
  * methods provided by org.hypergraphdb.viewer.org.hypergraphdb.viewer.
  *
  * It is encouraged, but not mandatory, for plugins to override the

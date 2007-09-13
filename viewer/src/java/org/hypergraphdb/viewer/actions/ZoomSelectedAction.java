@@ -17,7 +17,7 @@ import java.util.Iterator;
 
 import giny.view.*;
 import org.hypergraphdb.viewer.giny.*;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 
@@ -34,7 +34,7 @@ public class ZoomSelectedAction extends HGVAction {
     }
 
   public static void zoomSelected () {
-      HGVNetworkView view = HGViewer.getCurrentView();
+      HGVNetworkView view = HGVKit.getCurrentView();
         List selected_nodes = view.getSelectedNodes();
 
         if ( selected_nodes.size() == 0 ) {return;}

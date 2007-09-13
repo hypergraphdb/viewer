@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
@@ -21,7 +21,7 @@ public class InvertSelectedNodesAction extends HGVAction {
     }
 
     public void actionPerformed (ActionEvent e) {
-	HGVNetwork net = HGViewer.getCurrentNetwork();
+	HGVNetwork net = HGVKit.getCurrentNetwork();
 	if(net == null) return;
 	Set set = net.getFlagger().getFlaggedNodes();
 	net.getFlagger().flagAllNodes();

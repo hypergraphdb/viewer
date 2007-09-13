@@ -10,7 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import javax.swing.*;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 
 //import org.openide.util.Utilities;
 
@@ -108,7 +108,7 @@ public abstract class DialogDisplayer {
             
             public StandardDialog(String title, boolean modal, NotifyDescriptor nd, Object[] closingOptions, ActionListener buttonListener) {
                 //we should pass a frame in standalone mode
-                super((Frame)null, /*HGViewer.getDesktop(),*/ title, modal);
+                super((Frame)null, /*HGVKit.getDesktop(),*/ title, modal);
                 this.nd = nd;
                 this.closingOptions = closingOptions;
                 this.buttonListener = buttonListener;

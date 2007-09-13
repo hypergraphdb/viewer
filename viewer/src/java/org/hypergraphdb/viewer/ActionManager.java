@@ -1,5 +1,6 @@
 package org.hypergraphdb.viewer;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Action;
@@ -98,6 +99,10 @@ public class ActionManager
 
 	public Action getAction(String name){
 		return actions.get(name);
+	}
+	
+	public Collection<Action> getActions(){
+		return actions.values();
 	}
 	
 	public Action putAction(Action a)

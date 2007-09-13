@@ -186,7 +186,7 @@ public abstract class NetworkData {
 
   /**
    * Attempts to set the value for a node, for a given attribute. However, there a few checks that happen along the way. First the Node must be part of the HGViewerRootGraph, also the value must match the attribute type, which must match the overall attribute type. No problem if the attribute is not initialized, but if has been initialized, and the types don't match, then you have a problem.
-   * @param node the node who should be part of HGViewer
+   * @param node the node who should be part of HGVKit
    * @param attribute the name of this attribute
    * @param value the value, which must match the attribute type
    * @param attribute_type if this attribute has been previosly initialized, then this musht match that type. Otherwise the attribute will get initialized with this type.

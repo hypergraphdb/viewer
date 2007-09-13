@@ -23,7 +23,7 @@ public class RecentFilesProvider implements PropertyChangeListener
     
     private RecentFilesProvider()
     {
-    	  HGViewer.getSwingPropertyChangeSupport().addPropertyChangeListener(this);
+    	  HGVKit.getSwingPropertyChangeSupport().addPropertyChangeListener(this);
     }
     
     public static RecentFilesProvider getInstance()
@@ -38,12 +38,12 @@ public class RecentFilesProvider implements PropertyChangeListener
     public void propertyChange( PropertyChangeEvent e )
     {
         
-        if (//e.getPropertyName() == HGViewer.NETWORK_CREATED ||
-        e.getPropertyName() == HGViewer.NETWORK_DESTROYED
+        if (//e.getPropertyName() == HGVKit.NETWORK_CREATED ||
+        e.getPropertyName() == HGVKit.NETWORK_DESTROYED
         )
         {
            // System.out.println("RecentFilesProvider: - propertyChange: " + e.getNewValue());
-           // if(HGViewer.getCurrentNetwork() == null)
+           // if(HGVKit.getCurrentNetwork() == null)
             //    return;
             String f = ((HGVNetwork) e.getNewValue()).getHyperGraph().getStore().getDatabaseLocation();
             System.out.println("RecentFilesProvider: - propertyChange - f: " + f + " net: " + e.getNewValue());
@@ -52,8 +52,8 @@ public class RecentFilesProvider implements PropertyChangeListener
             	AppConfig.getInstance().getMRUF().add(f);
                 update(menu);
             }
-        }else if (e.getPropertyName() == HGViewer.EXIT){
-        	for(HGVNetwork net: HGViewer.getNetworkMap().keySet())
+        }else if (e.getPropertyName() == HGVKit.EXIT){
+        	for(HGVNetwork net: HGVKit.getNetworkMap().keySet())
         		AppConfig.getInstance().getMRUF().add(
         				net.getHyperGraph().getStore().getDatabaseLocation());
         }
@@ -123,7 +123,7 @@ public class RecentFilesProvider implements PropertyChangeListener
                 && i != 0)
                 {
                     JMenu newMenu = new JMenu(
-                    HGViewer.getProperty("common.more"));
+                    HGVKit.getProperty("common.more"));
                     menu.add(newMenu);
                     menu = newMenu;
                 }

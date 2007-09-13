@@ -49,7 +49,7 @@ public TextJarReader (String URI) throws IOException {
   sb = new StringBuffer ();
   filename = URI.substring (6);
   //we've created a new class loader that is used to load plugins and also
-  //should bootstrap to the class loader that loads the HGViewer core classes
+  //should bootstrap to the class loader that loads the HGVKit core classes
   //However, we can't use it until it's been instantiated, so if we get a null
   //reference then we'll fall back to the class loader that loaded this class
   ClassLoader cl = AppConfig.getInstance().getClassLoader();

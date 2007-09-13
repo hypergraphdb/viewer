@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 import giny.view.GraphView;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 
 public class SelectionModeAction extends JMenu
 {
@@ -20,7 +20,7 @@ public class SelectionModeAction extends JMenu
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
 					{
-						HGViewer.setSelectionMode(HGViewer.SELECT_NODES_ONLY);
+						HGVKit.setSelectionMode(HGVKit.SELECT_NODES_ONLY);
 					}
 				});
 			}
@@ -36,7 +36,7 @@ public class SelectionModeAction extends JMenu
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
 					{
-						HGViewer.setSelectionMode(HGViewer.SELECT_EDGES_ONLY);
+						HGVKit.setSelectionMode(HGVKit.SELECT_EDGES_ONLY);
 					}
 				});
 			}
@@ -52,8 +52,8 @@ public class SelectionModeAction extends JMenu
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run()
 							{
-								HGViewer
-										.setSelectionMode(HGViewer.SELECT_NODES_AND_EDGES);
+								HGVKit
+										.setSelectionMode(HGVKit.SELECT_NODES_AND_EDGES);
 							}
 						});
 					}
@@ -68,7 +68,7 @@ public class SelectionModeAction extends JMenu
 		add(edges);
 		add(nodesAndEdges);
 		nodes.setSelected(true);
-		//GraphView view = HGViewer.getCurrentNetworkView();
+		//GraphView view = HGVKit.getCurrentNetworkView();
 		//view.enableNodeSelection();
 		//view.disableEdgeSelection();
 	}

@@ -20,7 +20,7 @@ import org.hypergraphdb.atom.HGSubsumes;
 import org.hypergraphdb.query.AtomTypeCondition;
 import org.hypergraphdb.query.HGQueryCondition;
 import org.hypergraphdb.type.BonesOfBeans;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.dialogs.AppConfigPanel;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 
@@ -53,7 +53,7 @@ public class Test
         HGHandle h = hg.getTypeSystem().getTypeHandle(HGStats.class);
         h = hg.getPersistentHandle(h);
         AtomTypeCondition cond = new AtomTypeCondition(HGSubsumes.class);
-       // HGVNetworkView view = HGViewer.getStandaloneView(hg, h, 3, cond);
+       // HGVNetworkView view = HGVKit.getStandaloneView(hg, h, 3, cond);
         //view.redrawGraph();
         //fr.getContentPane().add(view.getComponent());
         fr.getContentPane().add(new AppConfigPanel());

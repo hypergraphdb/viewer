@@ -10,7 +10,7 @@ import org.hypergraphdb.viewer.view.HGVNetworkView;
 import phoebe.event.BirdsEyeView;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 import java.beans.*;
 
@@ -31,9 +31,9 @@ public class BirdsEyeViewAction extends HGVAction implements
 				|| e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUS) {
 			bev.disconnect();
 			try {
-				bev.connect(HGViewer
+				bev.connect(HGVKit
 						.getCurrentView().getCanvas(),
-						new PLayer[] { HGViewer.getCurrentView().getCanvas()
+						new PLayer[] { HGVKit.getCurrentView().getCanvas()
 								.getLayer() });
 				bev.updateFromViewed();
 			} catch (Exception ex) {
@@ -44,9 +44,9 @@ public class BirdsEyeViewAction extends HGVAction implements
 		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED) {
 			bev.disconnect();
 			try {
-				bev.connect(HGViewer
+				bev.connect(HGVKit
 						.getCurrentView().getCanvas(),
-						new PLayer[] { HGViewer
+						new PLayer[] { HGVKit
 								.getCurrentView().getCanvas()
 								.getLayer() });
 				bev.updateFromViewed();
@@ -61,14 +61,14 @@ public class BirdsEyeViewAction extends HGVAction implements
 
 		if (!on) {
 			bev = new BirdsEyeView();
-			bev.connect(HGViewer.getCurrentView()
-					.getCanvas(), new PLayer[] { HGViewer
+			bev.connect(HGVKit.getCurrentView()
+					.getCanvas(), new PLayer[] { HGVKit
 					.getCurrentView().getCanvas().getLayer() });
 
 			bev.setMinimumSize(new Dimension(180, 180));
 			bev.setSize(new Dimension(180, 180));
-			HGViewer.getDesktop().getNetworkPanel().setNavigator(bev);
-			HGViewer.getDesktop().getSwingPropertyChangeSupport()
+			HGVKit.getDesktop().getNetworkPanel().setNavigator(bev);
+			HGVKit.getDesktop().getSwingPropertyChangeSupport()
 					.addPropertyChangeListener(this);
 			bev.updateFromViewed();
 			on = true;
@@ -77,11 +77,11 @@ public class BirdsEyeViewAction extends HGVAction implements
 				bev.disconnect();
 				bev = null;
 			}
-			HGViewer.getDesktop().getNetworkPanel()
+			HGVKit.getDesktop().getNetworkPanel()
 					.setNavigator(
-							HGViewer.getDesktop().getNetworkPanel()
+							HGVKit.getDesktop().getNetworkPanel()
 									.getNavigatorPanel());
-			HGViewer.getDesktop().getSwingPropertyChangeSupport()
+			HGVKit.getDesktop().getSwingPropertyChangeSupport()
 					.removePropertyChangeListener(this);
 			on = false;
 		}

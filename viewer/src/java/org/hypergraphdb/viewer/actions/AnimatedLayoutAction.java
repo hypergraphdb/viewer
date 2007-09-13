@@ -3,7 +3,7 @@ package org.hypergraphdb.viewer.actions;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 
 import phoebe.*;
@@ -33,7 +33,7 @@ public class AnimatedLayoutAction extends AbstractAction {
             // Do this in the GUI Event Dispatch thread...
             SwingUtilities.invokeLater( new Runnable() {
                 public void run() {
-                  PGraphView gv = ( PGraphView )HGViewer.getCurrentView();
+                  PGraphView gv = ( PGraphView )HGVKit.getCurrentView();
                   ISOM3DLayout isom = new ISOM3DLayout( gv );
                   isom.doLayout();
 
@@ -49,7 +49,7 @@ public class AnimatedLayoutAction extends AbstractAction {
                   double maxZ = Double.MAX_VALUE;
                   double minZ = Double.MAX_VALUE;
 
-                  PGraphView gv = ( PGraphView )HGViewer.getCurrentView();
+                  PGraphView gv = ( PGraphView )HGVKit.getCurrentView();
                   Iterator nvi = gv.getNodeViewsIterator();
                   while ( nvi.hasNext() ) {
                     NodeView nv = ( NodeView )nvi.next();

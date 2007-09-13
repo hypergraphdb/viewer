@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FilenameFilter;
 
-/* Automatically generates HGViewer manifest file (writes it to System.out).
+/* Automatically generates HGVKit manifest file (writes it to System.out).
  * Manifest File is automatically based on all JAR Files in lib directory.
  * Lib directory name is defined in first parameter passwd to main() method. */
 public class ManifestCreator

@@ -8,7 +8,7 @@ package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
@@ -29,22 +29,22 @@ public class NewWindowSelectedNodesOnlyAction extends HGVAction {
 
 	public void actionPerformed(ActionEvent e) {
 		
-		HGVNetwork current_network = HGViewer.getCurrentNetwork();
-		if(current_network == null || HGViewer.isEmbeded()) return;
+		HGVNetwork current_network = HGVKit.getCurrentNetwork();
+		if(current_network == null || HGVKit.isEmbeded()) return;
 		HGVNetworkView current_network_view = null;
-		if (HGViewer.viewExists(current_network)) {
-			current_network_view = HGViewer.getNetworkView(current_network);
+		if (HGVKit.viewExists(current_network)) {
+			current_network_view = HGVKit.getNetworkView(current_network);
 		} // end of if ()
 
 		Set nodes = current_network.getFlagger().getFlaggedNodes();
 		List nlist = new ArrayList(nodes.size());
 		for(Object o: nodes)
 			nlist.add(o);
-		HGVNetwork new_network = HGViewer.createNetwork(nodes, current_network
+		HGVNetwork new_network = HGVKit.createNetwork(nodes, current_network
 				.getConnectingEdges(nlist), null, current_network);
 		new_network.setTitle(HGVNetworkNaming
 				.getSuggestedSubnetworkTitle(current_network));
-		HGVNetworkView new_view = HGViewer.getNetworkView(new_network);
+		HGVNetworkView new_view = HGVKit.getNetworkView(new_network);
 		if (new_view == null)
 			return;
 

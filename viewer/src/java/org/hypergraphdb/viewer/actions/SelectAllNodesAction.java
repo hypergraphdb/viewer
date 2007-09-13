@@ -7,7 +7,7 @@ package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 import java.awt.event.ActionEvent;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 public class SelectAllNodesAction extends HGVAction  {
@@ -19,8 +19,8 @@ public class SelectAllNodesAction extends HGVAction  {
 
     public void actionPerformed (ActionEvent e) {		
       //GinyUtils.selectAllNodes( org.hypergraphdb.viewer.getCurrentNetworkView() );
-    	if(HGViewer.getCurrentNetwork() != null)
-    	   HGViewer.getCurrentNetwork().getFlagger().flagAllNodes();
+    	if(HGVKit.getCurrentNetwork() != null)
+    	   HGVKit.getCurrentNetwork().getFlagger().flagAllNodes();
     }//action performed
 }
 

@@ -40,7 +40,7 @@
 package org.hypergraphdb.viewer.layout;
 
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import giny.view.NodeView;
 import giny.view.EdgeView;
@@ -104,14 +104,11 @@ public class HierarchicalLayout implements Layout
 	 public void applyLayout ()
     {
         //get the graph view object from the window.
-        HGVNetworkView networkView = HGViewer.getCurrentView();
-        //get the network object; this contains the graph
-        HGVNetwork network = HGViewer.getCurrentNetwork();
-        //can't continue if either of these is null
-        if (networkView == null || network == null)
-        {
-            return;
-        }
+        HGVNetworkView networkView = HGVKit.getCurrentView();
+        if (networkView == null) return;
+        HGVNetwork network = networkView.getNetwork();
+        if (network == null)   return;
+        
         //and the view should be a view on this structure
         if (networkView.getNetwork() != network)
         {

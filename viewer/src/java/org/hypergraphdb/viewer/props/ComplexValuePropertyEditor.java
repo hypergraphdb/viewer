@@ -13,7 +13,7 @@ import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 
 
 

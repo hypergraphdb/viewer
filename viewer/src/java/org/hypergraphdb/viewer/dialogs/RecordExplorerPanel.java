@@ -14,7 +14,7 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.handle.HGLiveHandle;
 import org.hypergraphdb.type.*;
 import org.hypergraphdb.viewer.HGVLogger;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.hg.HGUtils;
 import org.hypergraphdb.viewer.props.*;
 
@@ -39,7 +39,7 @@ public class RecordExplorerPanel extends javax.swing.JPanel
 
 	private void initComponents2()
 	{
-		hg = HGViewer.getCurrentNetwork().getHyperGraph();
+		hg = HGVKit.getCurrentNetwork().getHyperGraph();
 		recordTypeHandles = HGUtils.getAllRecordTypes(hg);
 		recordTypes = new HGCompositeType[recordTypeHandles.length];
 		recordTypeNames = new String[recordTypeHandles.length];

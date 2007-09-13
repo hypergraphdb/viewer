@@ -21,7 +21,7 @@ import org.hypergraphdb.viewer.HGVNode;
 
 import org.hypergraphdb.viewer.util.*;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVEdge;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
@@ -41,9 +41,9 @@ public class AddLinkAction extends HGVAction
     
     public void actionPerformed( ActionEvent ev )
     {
-        HGVNetworkView view = HGViewer.getCurrentView();
+        HGVNetworkView view = HGVKit.getCurrentView();
         if(view == null) return;
-        HGVNetwork net = HGViewer.getCurrentNetwork();
+        HGVNetwork net = HGVKit.getCurrentNetwork();
         //GraphPerspective perspective = view.getGraphPerspective();
         int[] node_indicies = view.getSelectedNodeIndices();
         
@@ -57,7 +57,7 @@ public class AddLinkAction extends HGVAction
         HGHandle[] handles = new HGHandle[node_indicies.length];
         for(int i = 0; i<node_indicies.length; i++)
         {
-        	handles[i]  = ((HGVNode) HGViewer.getRootGraph().getNode(node_indicies[i])).getHandle();
+        	handles[i]  = ((HGVNode) HGVKit.getRootGraph().getNode(node_indicies[i])).getHandle();
         }
         
         NotifyDescriptor d =
@@ -75,7 +75,7 @@ public class AddLinkAction extends HGVAction
         		net.getHyperGraph().add(new HGValueLink(name, handles)));
         for(int i = 0; i< handles.length; i++)
         {
-            HGVEdge edge = HGViewer.getHGVEdge(node, (HGVNode) HGViewer.getRootGraph().getNode(node_indicies[i]),
+            HGVEdge edge = HGVKit.getHGVEdge(node, (HGVNode) HGVKit.getRootGraph().getNode(node_indicies[i]),
             true);
             net.addEdge(edge);
         }

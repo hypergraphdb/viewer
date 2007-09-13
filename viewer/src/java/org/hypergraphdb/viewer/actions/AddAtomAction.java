@@ -27,7 +27,7 @@ import org.hypergraphdb.viewer.HGVNode;
 
 import org.hypergraphdb.viewer.util.*;
 import org.hypergraphdb.viewer.dialogs.*;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.hg.HGUtils;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 
@@ -43,7 +43,7 @@ public class AddAtomAction extends HGVAction
     
     public void actionPerformed( ActionEvent ev )
     {
-        HyperGraph hg = HGViewer.getCurrentNetwork().getHyperGraph(); 
+        HyperGraph hg = HGVKit.getCurrentNetwork().getHyperGraph(); 
         List<String> list = new LinkedList<String>();
         for(Iterator<HGAtomType> it = HGUtils.getAllAtomTypes(hg).iterator(); it.hasNext();)
         {
@@ -56,7 +56,7 @@ public class AddAtomAction extends HGVAction
         NameListPanel panel = new NameListPanel("Type: ", "Value: ", list);
         DialogDescriptor d = new DialogDescriptor(
         		GUIUtilities.getFrame(
-        				HGViewer.getCurrentView().getComponent()), panel, "Add atom to hypergraph");
+        				HGVKit.getCurrentView().getComponent()), panel, "Add atom to hypergraph");
         d.setModal(true);
         d.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);
         if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION)
@@ -82,7 +82,7 @@ public class AddAtomAction extends HGVAction
                 return;
             }
             HGUtils.addNode(hg, hg.add(obj));
-            HGViewer.getCurrentView().redrawGraph();
+            HGVKit.getCurrentView().redrawGraph();
         }
         
     }//action performed

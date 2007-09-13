@@ -5,7 +5,8 @@ import java.util.*;
 
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNode;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.hg.HGUtils;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
 import org.hypergraphdb.viewer.layout.util.Graph;
@@ -150,9 +151,9 @@ public class GEM implements Layout
     }
 
     private GemP gemProp[];
-    private HGVNode invmap[];
+    private Node invmap[];
     private ArrayList adjacent[];
-    private HashMap<HGVNode, Integer> nodeNumbers;
+    private HashMap<Node, Integer> nodeNumbers;
 
     public static int rand() {
 	return (int)(Math.random() * Integer.MAX_VALUE);
@@ -582,7 +583,7 @@ public class GEM implements Layout
 	iY += (centerY / nodeCount - pY) * p.mass * o_gravity;
 
 	edgeSet = edges.iterator();
-	HGVNetwork net = HGViewer.getCurrentNetwork();
+	HGVNetwork net = HGVKit.getCurrentNetwork();
 	while (edgeSet.hasNext()) {
 	    e = (Graph.Edge)edgeSet.next();
 	    //??? int or Node key
@@ -665,7 +666,7 @@ public class GEM implements Layout
    */
    public void applyLayout() {
 //	 giny.util.SpringEmbeddedLayouter layout = 
-   	//	new giny.util.SpringEmbeddedLayouter(HGViewer.getCurrentNetworkView());
+   	//	new giny.util.SpringEmbeddedLayouter(HGVKit.getCurrentNetworkView());
    	//layout.doLayout();
 	long startTime, endTime;
       
@@ -676,13 +677,13 @@ public class GEM implements Layout
       
 	nodes = new HashSet<Node>();
 	edges = new HashSet<Edge>();
-	Iterator it = HGViewer.getCurrentView().getNodeViewsIterator();
+	Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
 	while(it.hasNext())
 	{
 	    NodeView view = (NodeView) it.next();
 	    nodes.add(view.getNode());
 	}
-	it = HGViewer.getCurrentView().getEdgeViewsIterator();
+	it = HGVKit.getCurrentView().getEdgeViewsIterator();
 	while(it.hasNext())
 	{
 	    EdgeView view = (EdgeView) it.next();
@@ -693,29 +694,31 @@ public class GEM implements Layout
 	//edgeCount = edges.size();
       
 	gemProp = new GemP[nodeCount];
-	invmap  = new HGVNode[nodeCount];
+	invmap  = new Node[nodeCount];
 	adjacent = new ArrayList[nodeCount];
-	nodeNumbers = new HashMap<HGVNode, Integer>();
+	nodeNumbers = new HashMap<Node, Integer>();
 	
-	HGVNode n;
-	GraphPerspective graphPerspective = HGViewer.getCurrentView().getGraphPerspective();
+	Node n;
+	GraphPerspective graphPerspective = HGVKit.getCurrentView().getGraphPerspective();
 	
 	Iterator nodeSet = nodes.iterator();
 	for (int i = 0; nodeSet.hasNext(); i++) {
 	    n = (HGVNode) nodeSet.next();
-	    gemProp[i] = new GemP(graphPerspective.neighborsList(n).size());
+	    gemProp[i] = new GemP(graphPerspective.getAdjacentEdgeIndicesArray(
+	    		n.getRootGraphIndex(), true, true, true).length);
 	    //System.out.println("GEM: " + n + "  adj: " + graphPerspective.neighborsList(n).size());
 	    invmap[i]  = n;
 	    nodeNumbers.put(n, i);
 	}
-	Iterator neighbors;
+	
 	//Set nset;
 	for (int i = 0; i < nodeCount; i++) {
-	    //nset = invmap[i].getNeighbors();
-	    neighbors = graphPerspective.neighborsList(invmap[i]).iterator();
+	    int [] neighbors = graphPerspective.getAdjacentEdgeIndicesArray(
+	    		       invmap[i].getRootGraphIndex(), true, true, true);
 	    adjacent[i] = new ArrayList( ); //nset.size() );
-	    for (int j=0; neighbors.hasNext(); j++) {
-		n = (HGVNode)neighbors.next();
+	    for (int j=0; j < neighbors.length; j++) {
+		Edge e = graphPerspective.getEdge(neighbors[j]);
+		n = HGUtils.getOppositeNode(invmap[i], e);
 		nodeNr = (Integer)nodeNumbers.get(n);
 		adjacent[i].add( nodeNr );
 	    }
@@ -753,7 +756,7 @@ public class GEM implements Layout
 					int pad,
 					Map locations) {
 
-    int nNodes = HGViewer.getCurrentNetwork().getNodeCount();
+    int nNodes = HGVKit.getCurrentNetwork().getNodeCount();
 	if (nNodes <= 1) {
 	    return;
 	}
@@ -767,7 +770,7 @@ public class GEM implements Layout
 	double xMin = Double.MAX_VALUE;
 	double yMin = Double.MAX_VALUE;
 	
-	Iterator it = HGViewer.getCurrentView().getNodeViewsIterator();
+	Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
 	int i = 0;
 	NodeView[] views = new NodeView[nNodes];
 	while(it.hasNext()) {

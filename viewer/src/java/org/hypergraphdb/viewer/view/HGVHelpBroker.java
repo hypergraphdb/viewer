@@ -1,11 +1,11 @@
 package org.hypergraphdb.viewer.view;
 
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import javax.help.*;
 import java.net.*;
 
 /**
- * This class creates the HGViewer Help Broker for managing the JavaHelp
+ * This class creates the HGVKit Help Broker for managing the JavaHelp
  * system and help set access
  */
 public class HGVHelpBroker {
@@ -19,7 +19,7 @@ public class HGVHelpBroker {
     hs = null;
     URL hsURL = getClass().getResource("/org/hypergraphdb/viewer/help/org.hypergraphdb.viewer.hs");
 
-    ClassLoader cl = HGViewer.class.getClassLoader();
+    ClassLoader cl = HGVKit.class.getClassLoader();
     try {
 	hs = new HelpSet(null, hsURL);
 	hb = hs.createHelpBroker();

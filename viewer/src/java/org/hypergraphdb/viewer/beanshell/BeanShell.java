@@ -47,7 +47,7 @@ import org.hypergraphdb.viewer.dialogs.ShellPanel;
 /**
  * BeanShell is based on jEdit's extension language.<p>
  *
- * When run from HGViewer, BeanShell code has access to the following predefined
+ * When run from HGVKit, BeanShell code has access to the following predefined
  * variables:
  *
  * <ul>
@@ -439,7 +439,7 @@ public class BeanShell
         catch(Exception e)
         {
             Log.log(Log.ERROR,BeanShell.class,"You have BeanShell version " + getVersion() + " in your CLASSPATH.");
-            Log.log(Log.ERROR,BeanShell.class,"Please remove it from the CLASSPATH since HGViewer can only run with the bundled BeanShell version " + REQUIRED_VERSION);
+            Log.log(Log.ERROR,BeanShell.class,"Please remove it from the CLASSPATH since HGVKit can only run with the bundled BeanShell version " + REQUIRED_VERSION);
             System.exit(1);
         }
         
@@ -447,7 +447,7 @@ public class BeanShell
         classManager.setClassLoader(new JARClassLoader());
         
         global = new NameSpace(classManager,
-        "HGViewer embedded BeanShell interpreter");
+        "HGVKit embedded BeanShell interpreter");
         global.importPackage("org.hypergraphdb");
         global.importPackage("org.hypergraphdb.handle");
         global.importPackage("org.hypergraphdb.type");
@@ -489,9 +489,9 @@ public class BeanShell
     private static void setupDefaultVariables(NameSpace namespace)
     throws UtilEvalError
     {
-        namespace.setVariable("view", HGViewer.getCurrentView());
-        namespace.setVariable("network",HGViewer.getCurrentNetwork());
-        namespace.setVariable("hg",HGViewer.getCurrentNetwork().getHyperGraph());
+        namespace.setVariable("view", HGVKit.getCurrentView());
+        namespace.setVariable("network",HGVKit.getCurrentNetwork());
+        namespace.setVariable("hg",HGVKit.getCurrentNetwork().getHyperGraph());
     }
     
     private static void resetDefaultVariables(NameSpace namespace)
@@ -531,8 +531,8 @@ public class BeanShell
     
     private static void handleException(String path, Throwable t)
     {
-    	Component c = (HGViewer.getCurrentView()!= null) ?
-    			HGViewer.getCurrentView().getComponent() : null;
+    	Component c = (HGVKit.getCurrentView()!= null) ?
+    			HGVKit.getCurrentView().getComponent() : null;
        
         if(t instanceof IOException)
         {

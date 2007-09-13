@@ -15,7 +15,7 @@ import org.hypergraphdb.type.BonesOfBeans;
 import org.hypergraphdb.type.Record;
 import org.hypergraphdb.type.RecordType;
 import org.hypergraphdb.type.Slot;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.props.editors.ArrayListModel;
 
 /**

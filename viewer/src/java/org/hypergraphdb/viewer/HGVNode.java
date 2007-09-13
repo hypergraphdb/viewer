@@ -1,12 +1,12 @@
 package org.hypergraphdb.viewer;
 
+import java.util.Iterator;
 import giny.model.*;
 import org.hypergraphdb.*;
 import org.hypergraphdb.viewer.giny.HGVRootGraph;
 
 
-// Package visible class.
-public class HGVNode implements HGVBaseElement, giny.model.Node 
+public class HGVNode implements giny.model.Node 
 {
 
   // Variables specific to public get/set methods.
@@ -33,11 +33,10 @@ public class HGVNode implements HGVBaseElement, giny.model.Node
   {
     if (gp.getRootGraph() != m_rootGraph) return false;
     final int[] nodeInx = gp.getNodeIndicesArray();
-    final int[] edgeInx = gp.getEdgeIndicesArray();
     for (int i = 0; i < nodeInx.length; i++)
       m_rootGraph.addNodeMetaChild(m_rootGraphIndex, nodeInx[i]);
-    for (int i = 0; i < edgeInx.length; i++)
-      m_rootGraph.addEdgeMetaChild(m_rootGraphIndex, edgeInx[i]);
+    for(Iterator it = gp.edgesIterator(); it.hasNext();)	
+        m_rootGraph.addEdgeMetaChild(m_rootGraphIndex, ((Edge)it.next()).getRootGraphIndex());
     return true;
   }
 

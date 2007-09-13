@@ -8,7 +8,7 @@ package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
@@ -41,14 +41,14 @@ public class BackgroundColorAction extends HGVAction {
             public void run() {
                 JColorChooser color = new JColorChooser();
                 Color newPaint = color.showDialog( 
-                		HGViewer.getCurrentView().getComponent(),
+                		HGVKit.getCurrentView().getComponent(),
                                                   "Choose a Background Color",
-                                                  (java.awt.Color)HGViewer.getCurrentView().
+                                                  (java.awt.Color)HGVKit.getCurrentView().
                                                   getBackgroundPaint() );
 
             //  Update the Current Background Color
             //  and Synchronize with current Visual Style
-                HGViewer.getCurrentView().setBackgroundPaint(newPaint);
+                HGVKit.getCurrentView().setBackgroundPaint(newPaint);
             synchronizeVisualStyle(newPaint);
             }
         });
@@ -59,7 +59,7 @@ public class BackgroundColorAction extends HGVAction {
      * @param newColor New Color
      */
     private void synchronizeVisualStyle(Color newColor) {
-       VisualStyle style = HGViewer.getCurrentView().getVisualStyle();
+       VisualStyle style = HGVKit.getCurrentView().getVisualStyle();
        style.setBackgroundColor(newColor);
     }
 }

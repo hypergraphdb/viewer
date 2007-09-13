@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 public class DeSelectAllEdgesAction extends HGVAction  {
@@ -21,8 +21,8 @@ public class DeSelectAllEdgesAction extends HGVAction  {
 
     public void actionPerformed (ActionEvent e) {
       //GinyUtils.deselectAllEdges( org.hypergraphdb.viewer.getCurrentNetworkView() );
-    	if(HGViewer.getCurrentNetwork() != null)
-    	  HGViewer.getCurrentNetwork().getFlagger().unflagAllEdges();
+    	if(HGVKit.getCurrentNetwork() != null)
+    	  HGVKit.getCurrentNetwork().getFlagger().unflagAllEdges();
     }//action performed
 }
 

@@ -10,7 +10,7 @@ import javax.swing.AbstractAction;
 
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 //-------------------------------------------------------------------------
 public class DeSelectAllNodesAction extends HGVAction  {
 
@@ -20,8 +20,8 @@ public class DeSelectAllNodesAction extends HGVAction  {
     }
 
     public void actionPerformed (ActionEvent e) {
-    	if(HGViewer.getCurrentNetwork() != null)
-          HGViewer.getCurrentNetwork().getFlagger().unflagAllNodes();
+    	if(HGVKit.getCurrentNetwork() != null)
+          HGVKit.getCurrentNetwork().getFlagger().unflagAllNodes();
     }
 }
 

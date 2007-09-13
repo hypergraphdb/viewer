@@ -11,7 +11,7 @@ import javax.swing.AbstractAction;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 //-------------------------------------------------------------------------
 public class InvertSelectedEdgesAction extends HGVAction {
     
@@ -21,7 +21,7 @@ public class InvertSelectedEdgesAction extends HGVAction {
     }
 
     public void actionPerformed (ActionEvent e) {
-	HGVNetwork cyNetwork = HGViewer.getCurrentNetwork();
+	HGVNetwork cyNetwork = HGVKit.getCurrentNetwork();
 	Set flaggedEdgeIndices = cyNetwork.getFlagger().getFlaggedEdges();
 	cyNetwork.getFlagger().flagAllEdges();
 	cyNetwork.getFlagger().setFlaggedEdges(flaggedEdgeIndices,false);

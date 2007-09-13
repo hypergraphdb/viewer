@@ -15,7 +15,7 @@ import java.awt.print.PrinterJob;
 import org.hypergraphdb.viewer.giny.*;
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.util.*;
 
@@ -28,7 +28,7 @@ public class PrintAction extends HGVAction  {
 
     public void actionPerformed(ActionEvent e) {
 
-    	HGVNetworkView phoebeView = HGViewer.getCurrentView();
+    	HGVNetworkView phoebeView = HGVKit.getCurrentView();
     	if(phoebeView != null)
 	      phoebeView.getCanvas().getLayer().print();
      	

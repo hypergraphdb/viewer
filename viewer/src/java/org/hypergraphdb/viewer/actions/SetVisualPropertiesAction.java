@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.*;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.ui.PainterPropsPanel;
@@ -35,7 +35,7 @@ public class SetVisualPropertiesAction extends HGVAction   {
   }
     
   public void actionPerformed (ActionEvent e) {
-	 HGVNetworkView view = HGViewer.getCurrentView();
+	 HGVNetworkView view = HGVKit.getCurrentView();
 	 if(view == null) return;
 	 PaintersPanel p = new PaintersPanel();
 	 p.setHyperGraph(view.getNetwork().getHyperGraph());

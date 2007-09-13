@@ -1,5 +1,5 @@
 // $Id: Radial.java,v 1.1 2006/02/27 19:59:19 bizi Exp $
-package org.hypergraphdb.viewer.layout;
+package org.hypergraphdb.viewer.layout; 
 
 import giny.model.Edge;
 import giny.model.GraphPerspective;
@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.*;
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 
@@ -97,7 +97,7 @@ public class Radial implements Layout
 
 	public void applyLayout()
 	{
-		HGVNetworkView view = HGViewer.getCurrentView();
+		HGVNetworkView view = HGVKit.getCurrentView();
 		clear();
 		int[] node_indicies = view.getSelectedNodeIndices();
 		NodeView center_view = null;
@@ -129,20 +129,12 @@ public class Radial implements Layout
 
 	private Collection<Edge> getOutEdges(Node node)
 	{
-		HGVNetwork net = HGViewer.getCurrentNetwork();
+		HGVNetwork net = HGVKit.getCurrentNetwork();
 		Set<Edge> totalEdges = new HashSet<Edge>();
-		List neighbours = net.neighborsList(node);
-		for (Object ob : neighbours)
-		{
-			Node out = (Node) ob;
-			List edges = net.edgesList(node.getRootGraphIndex(), out
-					.getRootGraphIndex(), true);
-			// add the reverse edges too
-			edges.addAll(net.edgesList(out.getRootGraphIndex(), node
-					.getRootGraphIndex(), true));
-			for (Object edge : edges)
-				totalEdges.add((Edge) edge);
-		}
+		int[] e = net.getAdjacentEdgeIndicesArray(
+				node.getRootGraphIndex(), true, true, true);
+		for (int i = 0; i < e.length; i++)
+			totalEdges.add(net.getEdge(e[i]));
 		return totalEdges;
 	}
 
@@ -201,7 +193,7 @@ public class Radial implements Layout
 		}
 		seen.clear();
 		// Iterator it = tree.getNodes().iterator();
-		Iterator it = HGViewer.getCurrentView().getNodeViewsIterator();
+		Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
 		while (it.hasNext())
 		{
 			NodeView n = (NodeView) it.next();
@@ -236,7 +228,7 @@ public class Radial implements Layout
 			alpha1 = alpha2;
 		}
 		// it = tree.getNodes().iterator();
-		it = HGViewer.getCurrentView().getNodeViewsIterator();
+		it = HGVKit.getCurrentView().getNodeViewsIterator();
 		while (it.hasNext())
 		{
 			NodeView n = (NodeView) it.next();

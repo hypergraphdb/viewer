@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 //-------------------------------------------------------------------------
 public class UnHideSelectedNodesAction extends HGVAction  {
 
@@ -21,8 +21,8 @@ public class UnHideSelectedNodesAction extends HGVAction  {
     public void actionPerformed (ActionEvent e) {		
       //GinyUtils.unHideSelectedNodes( org.hypergraphdb.viewer.getCurrentNetworkView() );
       //GinyUtils.unHideSelectedEdges( org.hypergraphdb.viewer.getCurrentNetworkView() );
-      if(HGViewer.getCurrentView() != null)
-    	 GinyUtils.unHideAll( HGViewer.getCurrentView() );
+      if(HGVKit.getCurrentView() != null)
+    	 GinyUtils.unHideAll( HGVKit.getCurrentView() );
     }//action performed
 }
 

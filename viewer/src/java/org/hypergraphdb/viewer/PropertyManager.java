@@ -26,7 +26,7 @@ class PropertyManager
     void saveProps(OutputStream out)
     throws IOException
     {
-    	getProperties().store(out,"HGViewer properties");
+    	getProperties().store(out,"HGVKit properties");
         out.close();
     }
     

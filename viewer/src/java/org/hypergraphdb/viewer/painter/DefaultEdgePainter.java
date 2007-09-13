@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Stroke;
 import org.hypergraphdb.HGPersistentHandle;
-import org.hypergraphdb.viewer.HGVEdge;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.Arrow;
 import org.hypergraphdb.viewer.visual.LineType;
@@ -179,6 +178,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 			edgeView.setUnselectedPaint(newUnselectedPaint);
 		}
 		Stroke existingStroke = edgeView.getStroke();
+		//System.out.println("Edge: " + edgeView + ":" + existingStroke);
 		Stroke newStroke = getLineType().getStroke();
 		if (!newStroke.equals(existingStroke))
 		{

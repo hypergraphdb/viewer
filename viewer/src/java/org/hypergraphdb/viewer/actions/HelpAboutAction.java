@@ -17,7 +17,7 @@ public class HelpAboutAction extends AbstractAction   {
           // Do this in the GUI Event Dispatch thread...
           SwingUtilities.invokeLater( new Runnable() {
               public void run() {
-		          lines.append("\n HGViewer is a collaboration \n" );
+		          lines.append("\n HGVKit is a collaboration \n" );
                   lines.append("between the Institute for Systems\n" );
                   lines.append("Biology, University of California,\n" );
                   lines.append("San Diego, Memorial Sloan Kettering\n" );

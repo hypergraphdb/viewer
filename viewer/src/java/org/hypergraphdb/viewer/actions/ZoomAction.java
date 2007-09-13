@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.hypergraphdb.viewer.view.HGVNetworkView;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 
 public class ZoomAction extends HGVAction {
@@ -22,11 +22,11 @@ public class ZoomAction extends HGVAction {
     }
     
   public void zoom () {
-  	HGViewer.getCurrentView().setZoom( factor );
+  	HGVKit.getCurrentView().setZoom( factor );
   }
 
     public void actionPerformed (ActionEvent e) {
-    	HGViewer.getCurrentView().setZoom( factor );
+    	HGVKit.getCurrentView().setZoom( factor );
     }
 }
 

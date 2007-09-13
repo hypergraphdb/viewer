@@ -24,11 +24,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVEdge;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNode;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.actions.GinyUtils;
 import org.hypergraphdb.viewer.data.HGVNetworkUtilities;
@@ -54,7 +56,7 @@ import giny.view.NodeView;
  * HGVNetworkView is responsible for actually getting a graph to show up on the
  * screen.<BR>
  * <BR>
- * HGViewer does not currently define specific classes for NodeViews and
+ * HGVKit does not currently define specific classes for NodeViews and
  * EdgeViews, the deafults from the GINY graph library ( namely phoebe.PNodeView
  * and phoebe.PEdgeView ) are most commonly used. Making custom nodes is easy
  * and fun. One must implement the giny.view.NodeView interface and inherit from
@@ -70,11 +72,6 @@ import giny.view.NodeView;
 
 public class HGVNetworkView extends PGraphView
 {
-	/**
-	 * This is the title of the NetworkView, it will be displayed in a Tab, or
-	 * in a Window.
-	 */
-	protected String title;
 	/**
 	 * This is the label that tells how many node/edges are in a HGVNetworkView
 	 * and how many are selected/hidden
@@ -93,7 +90,7 @@ public class HGVNetworkView extends PGraphView
 	public HGVNetworkView(HGVNetwork network, String title)
 	{
 		super((GraphPerspective) network);
-		this.title = title;
+		this.setIdentifier(title);
 		initialize();
 	}
 
@@ -238,7 +235,7 @@ public class HGVNetworkView extends PGraphView
 		
 		status.add(statusLabel, gbg);
 		//status.add(statusLabel, BorderLayout.WEST);
-		if(HGViewer.isEmbeded())
+		if(HGVKit.isEmbeded())
 		{
 			gbg = new GridBagConstraints();
 			gbg.gridy = 0;
@@ -290,10 +287,10 @@ public class HGVNetworkView extends PGraphView
 				{
 					search_string = typeBuffer.toString() + "*";
 				}
-				GinyUtils.deselectAllNodes(HGViewer.getCurrentView());
+				GinyUtils.deselectAllNodes(HGVKit.getCurrentView());
 				typeAheadNode.setText(typeBuffer.toString());
-				HGVNetworkUtilities.selectNodesStartingWith(HGViewer
-						.getCurrentNetwork(), search_string, HGViewer
+				HGVNetworkUtilities.selectNodesStartingWith(HGVKit
+						.getCurrentNetwork(), search_string, HGVKit
 						.getCurrentView());
 				org.hypergraphdb.viewer.actions.ZoomSelectedAction
 						.zoomSelected();
@@ -400,16 +397,6 @@ public class HGVNetworkView extends PGraphView
 	public HGVNetwork getNetwork()
 	{
 		return (HGVNetwork) getGraphPerspective();
-	}
-
-	public String getTitle()
-	{
-		return title;
-	}
-
-	public void setTitle(String new_title)
-	{
-		this.title = new_title;
 	}
 
 	public void redrawGraph()
@@ -592,6 +579,23 @@ public class HGVNetworkView extends PGraphView
 		public Canvas()
 		{
 			super();
+			addKeyBindings();
+		}
+		
+		private void addKeyBindings()
+		{
+			for (Action a : ActionManager.getInstance().getActions())
+			{
+				KeyStroke key = (KeyStroke) a.getValue(Action.ACCELERATOR_KEY);
+				if (key != null)
+				{
+					String name = (String) a.getValue(Action.NAME);
+					getInputMap().put(key, name);
+					getActionMap().put(name, a);
+					//System.out.println("Action: " + name + ":" + key);
+				}// else
+				// System.out.println("Action: " + name + ":" + key);
+			}
 		}
 
 		public HGVNetworkView getView()
@@ -606,7 +610,7 @@ public class HGVNetworkView extends PGraphView
 
 		public void focusGained(FocusEvent e)
 		{
-			HGViewer.setCurrentView(getView());
+			HGVKit.setCurrentView(getView());
 		}
 
 		public void focusLost(FocusEvent e)
@@ -627,7 +631,7 @@ public class HGVNetworkView extends PGraphView
 			super.removeNotify();
 			removeFocusListener(this);
 			//HGVNetwork network = this.getView().getNetwork();
-			//HGViewer.getNetworkSet()
+			//HGVKit.getNetworkSet()
 		}
 	};
 

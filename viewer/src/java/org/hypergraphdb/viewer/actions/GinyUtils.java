@@ -28,8 +28,8 @@ public class GinyUtils {
             
             int[] na = view.getGraphPerspective().neighborsArray( nview.getGraphPerspectiveIndex() );
             for ( int i2 = 0; i2 < na.length; ++i2 ) {
-                int[] edges = view.getGraphPerspective().
-                getEdgeIndicesArray( nview.getGraphPerspectiveIndex(), na[i2], true, true );
+                int[] edges = view.getGraphPerspective().getAdjacentEdgeIndicesArray(
+                 nview.getGraphPerspectiveIndex(), true, true, true);
                 if( edges != null )
                     //System.out.println( "There are: "+edges.length+" edge between "+nview.getGraphPerspectiveIndex()+" and "+na[i2] );
                     for ( int j = 0; j < edges.length; ++j ) {
@@ -51,8 +51,8 @@ public class GinyUtils {
             int[] na = view.getGraphPerspective().neighborsArray( nview.getGraphPerspectiveIndex() );
             for ( int i2 = 0; i2 < na.length; ++i2 ) {
                 int[] edges = view.
-                getGraphPerspective().
-                getEdgeIndicesArray( nview.getGraphPerspectiveIndex(), na[i2], true, true );
+                getGraphPerspective().getAdjacentEdgeIndicesArray( 
+                		nview.getGraphPerspectiveIndex(), true, true, true );
                 //if( edges != null )
                 //System.out.println( "There are: "+edges.length+" edge between "+nview.getGraphPerspectiveIndex()+" and "+na[i2] );
                 for ( int j = 0; j < edges.length; ++j ) {
@@ -85,7 +85,8 @@ public class GinyUtils {
             view.showGraphObject( nview );
             int[] na = view.getGraphPerspective().neighborsArray( nview.getGraphPerspectiveIndex() );
             for ( int i2 = 0; i2 < na.length; ++i2 ) {
-                int[] edges = view.getGraphPerspective().getEdgeIndicesArray( nview.getGraphPerspectiveIndex(), na[i2], true );
+                int[] edges = view.getGraphPerspective().getAdjacentEdgeIndicesArray( 
+                		nview.getGraphPerspectiveIndex(), true, true, true);
                 if( edges != null )
                 for ( int j = 0; j < edges.length; ++j ) {
                     EdgeView ev = view.getEdgeView( edges[j] );
@@ -134,25 +135,25 @@ public class GinyUtils {
         }
     }
     
-    public static void selectFirstNeighbors(GraphView view) {
-        if (view == null) {return;}
-        
-        GraphPerspective graphPerspective = view.getGraphPerspective();
-        Set nodeViewsToSelect = new HashSet();
-        for (Iterator i = view.getSelectedNodes().iterator(); i.hasNext(); ) {
-            NodeView nview =(NodeView) i.next();
-            Node n = nview.getNode();
-            for (Iterator ni = graphPerspective.neighborsList(n).iterator(); ni.hasNext(); ) {
-                Node neib =(Node) ni.next();
-                NodeView neibview = view.getNodeView(neib);
-                nodeViewsToSelect.add(neibview);
-            }
-        }
-        for (Iterator si = nodeViewsToSelect.iterator(); si.hasNext(); ) {
-            NodeView nview = (NodeView)si.next();
-            nview.setSelected(true);
-        }
-    }
+//    public static void selectFirstNeighbors(GraphView view) {
+//        if (view == null) {return;}
+//        
+//        GraphPerspective graphPerspective = view.getGraphPerspective();
+//        Set nodeViewsToSelect = new HashSet();
+//        for (Iterator i = view.getSelectedNodes().iterator(); i.hasNext(); ) {
+//            NodeView nview =(NodeView) i.next();
+//            Node n = nview.getNode();
+//            for (Iterator ni = graphPerspective.neighborsList(n).iterator(); ni.hasNext(); ) {
+//                Node neib =(Node) ni.next();
+//                NodeView neibview = view.getNodeView(neib);
+//                nodeViewsToSelect.add(neibview);
+//            }
+//        }
+//        for (Iterator si = nodeViewsToSelect.iterator(); si.hasNext(); ) {
+//            NodeView nview = (NodeView)si.next();
+//            nview.setSelected(true);
+//        }
+//    }
     
     public static void selectAllNodes(GraphView view) {
         if (view == null) {return;}

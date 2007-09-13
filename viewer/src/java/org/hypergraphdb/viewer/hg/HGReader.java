@@ -83,7 +83,7 @@ public class HGReader //implements GraphReader
     		HGPersistentHandle handle = hypergraph.getPersistentHandle(si
 					.next());
 			//System.out.println("Node: " + handle);
-			HGVNode node = (HGVNode) HGViewer.getHGVNode(handle, true);
+			HGVNode node = (HGVNode) HGVKit.getHGVNode(handle, true);
 			node.setHandle(handle);
 			node_indices.add(node.getRootGraphIndex());
 		}
@@ -100,7 +100,7 @@ public class HGReader //implements GraphReader
 			{
 				HGPersistentHandle handle = hypergraph.getPersistentHandle(link
 						.getTargetAt(l));
-				HGVEdge edge = HGViewer.getHGVEdge(link_handle, handle);
+				HGVEdge edge = HGVKit.getHGVEdge(link_handle, handle);
 				edges.put(edge.getRootGraphIndex(), 0);
 			} // for t
 		} // for i

@@ -34,7 +34,7 @@ public class DeleteSelectedAction extends AbstractAction {
     
     public void actionPerformed(ActionEvent e) {
                        
-    	HGVNetworkView view = HGViewer.getCurrentView();
+    	HGVNetworkView view = HGVKit.getCurrentView();
         GraphPerspective perspective = view.getGraphPerspective();
         // get the Selected node and edge indices
         int[] node_indicies = view.getSelectedNodeIndices();

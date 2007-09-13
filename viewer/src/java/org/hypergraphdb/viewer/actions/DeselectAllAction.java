@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 public class DeselectAllAction extends HGVAction {
@@ -22,9 +22,9 @@ public class DeselectAllAction extends HGVAction {
     public void actionPerformed(ActionEvent e) {
       //GinyUtils.deselectAllNodes( org.hypergraphdb.viewer.getCurrentNetworkView() );
       //GinyUtils.deselectAllEdges( org.hypergraphdb.viewer.getCurrentNetworkView() );
-     if(HGViewer.getCurrentNetwork() == null) return;
-    	HGViewer.getCurrentNetwork().getFlagger().unflagAllEdges();
-      HGViewer.getCurrentNetwork().getFlagger().unflagAllNodes();
+     if(HGVKit.getCurrentNetwork() == null) return;
+    	HGVKit.getCurrentNetwork().getFlagger().unflagAllEdges();
+      HGVKit.getCurrentNetwork().getFlagger().unflagAllNodes();
     }
 }
 

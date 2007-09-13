@@ -1,7 +1,7 @@
 package org.hypergraphdb.viewer.util;
 
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -25,7 +25,7 @@ public class HGVNetworkNaming
 
   private static boolean isNetworkTitleTaken(String titleCandidate)
   {
-    Set existingNetworks = HGViewer.getNetworkSet();
+    Set existingNetworks = HGVKit.getNetworkSet();
     Iterator iter = existingNetworks.iterator();
     while (iter.hasNext()) {
       HGVNetwork existingNetwork = (HGVNetwork) iter.next();

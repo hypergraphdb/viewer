@@ -63,7 +63,7 @@ public class HGWNReader
 		Object obj = hg.get(handle);
 		if (obj instanceof HGLink && HGUtils.isDirectedLink(hg, handle))
 			return addDirectedNode(hg, handle, level, cond, nodes, edges);
-		HGVNode node = HGViewer
+		HGVNode node = HGVKit
 				.getHGVNode(hg.getPersistentHandle(handle), true);
 		nodes.add(node.getRootGraphIndex());
 		if (level > 0)
@@ -78,7 +78,7 @@ public class HGWNReader
 					addNode(hg, h_links[i], level - 1, cond, nodes, edges);
 					continue;
 				}
-				HGVEdge edge = HGViewer.getHGVEdge(addNode(hg, h_links[i],
+				HGVEdge edge = HGVKit.getHGVEdge(addNode(hg, h_links[i],
 						level - 1, cond, nodes, edges), node, true);
 				edges.add(edge.getRootGraphIndex());
 			}
@@ -89,9 +89,9 @@ public class HGWNReader
 			HGLink link = ((HGLink) obj);
 			for (int i = 0; i < link.getArity(); i++)
 			{
-				HGVEdge edge = HGViewer.getHGVEdge(node, addNode(hg, link
+				HGVEdge edge = HGVKit.getHGVEdge(node, addNode(hg, link
 						.getTargetAt(i), level - 1, cond, nodes, edges), true);
-				//HGViewer.getCurrentNetwork().addEdge(edge);
+				//HGVKit.getCurrentNetwork().addEdge(edge);
 				edges.add(edge.getRootGraphIndex());
 			}
 		}
@@ -106,7 +106,7 @@ public class HGWNReader
 		HGHandle trg = ((HGLink) obj).getTargetAt(1);
 		HGVNode src_n = addNode(hg, src, level - 1, cond,  nodes, edges);
 		HGVNode trg_n = addNode(hg, trg, level - 1, cond, nodes, edges);
-		HGVEdge edge = HGViewer.getHGVEdge(src_n, trg_n, true);
+		HGVEdge edge = HGVKit.getHGVEdge(src_n, trg_n, true);
 		edges.add(edge.getRootGraphIndex());
 		return trg_n;
 	}

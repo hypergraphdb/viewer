@@ -22,7 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JComponent;
 import org.hypergraphdb.viewer.HGVLogger;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 

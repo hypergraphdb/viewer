@@ -8,7 +8,7 @@ package org.hypergraphdb.viewer.actions;
 
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 
 import java.awt.event.ActionEvent;
@@ -21,15 +21,15 @@ public class CloneGraphInNewWindowAction extends HGVAction {
 
   public void actionPerformed(ActionEvent e) {
 
-    HGVNetwork current_network = HGViewer.getCurrentNetwork();
-    if(current_network == null || HGViewer.isEmbeded()) return;
+    HGVNetwork current_network = HGVKit.getCurrentNetwork();
+    if(current_network == null || HGVKit.isEmbeded()) return;
 	
-    HGVNetwork new_network = HGViewer.createNetwork( current_network.getNodeIndicesArray(),
+    HGVNetwork new_network = HGVKit.createNetwork( current_network.getNodeIndicesArray(),
                                                      current_network.getEdgeIndicesArray(),
                                                      current_network.getHyperGraph());
     new_network.setTitle(current_network.getTitle() + " copy");
     String title = " selection";
-    HGViewer.createNetworkView( new_network, title );
+    HGVKit.createNetworkView( new_network, title );
   }
 
 }

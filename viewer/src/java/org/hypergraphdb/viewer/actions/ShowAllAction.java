@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 //-------------------------------------------------------------------------
 public class ShowAllAction extends HGVAction {
        
@@ -18,7 +18,7 @@ public class ShowAllAction extends HGVAction {
     }
     
     public void actionPerformed(ActionEvent e) {
-      GinyUtils.unHideAll( HGViewer.getCurrentView() );
+      GinyUtils.unHideAll( HGVKit.getCurrentView() );
         //networkView.redrawGraph(false, true);
     }
 }

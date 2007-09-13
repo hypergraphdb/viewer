@@ -19,7 +19,7 @@ import giny.model.Node;
  * <br>
  * A HGVNetwork can create Nodes or Edges.&nbsp; Any Nodes or Edges that wish to
  * be added to a HGVNetwork first need to be created in <span style="font-style:
- * italic;">org.hypergraphdb.viewer.HGViewer</span>&nbsp; <br>
+ * italic;">org.hypergraphdb.viewer.HGVKit</span>&nbsp; <br>
  * <br>
  * The methods that are defined by HGVNetwork mostly deal with data integration
  * and flagging of nodes/edges.&nbsp; All methods that deal with graph traversal
@@ -135,7 +135,7 @@ public class HGVNetwork extends FGraphPerspective
 	// Depercation
 	// ------------------------------//
 	/**
-	 * Appends all of the nodes and edges in teh given Network to this Network
+	 * Appends all of the nodes and edges in the given Network to this Network
 	 */
 	public void appendNetwork(HGVNetwork network)
 	{
@@ -154,9 +154,9 @@ public class HGVNetwork extends FGraphPerspective
 	}
 
 	/**
-	 * Add a node to this Network that already exists in HGViewer
+	 * Add a node to this Network
 	 * 
-	 * @return the Network Index of this node
+	 * @return the node
 	 */
 	public HGVNode addNode(Node cytoscape_node)
 	{
@@ -164,26 +164,10 @@ public class HGVNetwork extends FGraphPerspective
 	}
 
 	
-	// --------------------//
-	// Edges
 	/**
-	 * This method will create a new edge.
+	 * Add a edge to this Network
 	 * 
-	 * @param source the source node
-	 * @param target the target node
-	 * @param directed weather the edge should be directed
-	 * @return the HGViewer index of the created edge
-	 */
-	public int createEdge(int source, int target, boolean directed)
-	{
-		return restoreEdge(HGViewer.getRootGraph().createEdge(source, target,
-				directed));
-	}
-
-	/**
-	 * Add a edge to this Network that already exists in HGViewer
-	 * 
-	 * @return the Network Index of this edge
+	 * @return the edge
 	 */
 	public HGVEdge addEdge(Edge cytoscape_edge)
 	{

@@ -457,10 +457,10 @@ public class GUIUtilities
     
     public static Frame getFrame()
     {
-    	if(!HGViewer.isEmbeded()) return HGViewer.getDesktop();
-    	if(HGViewer.getCurrentView() == null)
+    	if(!HGVKit.isEmbeded()) return HGVKit.getDesktop();
+    	if(HGVKit.getCurrentView() == null)
     		return null; 
-    	return getFrame(HGViewer.getCurrentView().getComponent());
+    	return getFrame(HGVKit.getCurrentView().getComponent());
     } 
  
 }

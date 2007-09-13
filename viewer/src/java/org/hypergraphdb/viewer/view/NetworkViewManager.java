@@ -1,6 +1,6 @@
 package org.hypergraphdb.viewer.view;
 
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGVEdge;
@@ -160,7 +160,7 @@ public class NetworkViewManager implements PropertyChangeListener,
 			return;
 		}
 		// put the CyNetworkViews Component into the Tabbed Pane
-		container.addTab(view.getTitle(), view.getComponent());
+		container.addTab(view.getIdentifier(), view.getComponent());
 		networkViewMap.put(view, view.getComponent());
 		componentMap.put(view.getComponent(), view);
 		//for(PropertyChangeListener l: pcs.getPropertyChangeListeners())

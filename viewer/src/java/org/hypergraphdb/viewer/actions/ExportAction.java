@@ -15,7 +15,7 @@ import org.hypergraphdb.viewer.giny.*;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.freehep.util.export.ExportDialog;
 
 //-------------------------------------------------------------------------
@@ -30,7 +30,7 @@ public class ExportAction extends HGVAction
 
 	public void actionPerformed(ActionEvent e)
 	{
-		HGVNetworkView view = HGViewer.getCurrentView();
+		HGVNetworkView view = HGVKit.getCurrentView();
 		if (view == null) return;
 		view.getCanvas().getCamera().addClientProperty(
 				PrintingFixTextNode.PRINTING_CLIENT_PROPERTY_KEY, "true");

@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import phoebe.PGraphView;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 public class FitContentAction extends HGVAction {
@@ -19,7 +19,7 @@ public class FitContentAction extends HGVAction {
     }
     
     public void actionPerformed(ActionEvent e) {
-      PGraphView view =(PGraphView) HGViewer.getCurrentView();
+      PGraphView view =(PGraphView) HGVKit.getCurrentView();
       if(view != null)
         view.getCanvas().getCamera().animateViewToCenterBounds( view.getCanvas().getLayer().getFullBounds(), true, 50l );
    }

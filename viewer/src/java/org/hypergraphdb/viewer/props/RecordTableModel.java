@@ -10,7 +10,7 @@ import org.hypergraphdb.type.Record;
 import org.hypergraphdb.type.RecordType;
 import org.hypergraphdb.type.Slot;
 import org.hypergraphdb.viewer.HGVLogger;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 
 /**
  *
@@ -26,7 +26,7 @@ public class RecordTableModel  extends PropertiesTableModel
 	{
          this.rec = (Record) bean;
          type = (RecordType)
-         HGViewer.getCurrentNetwork().getHyperGraph().get(rec.getTypeHandle());
+         HGVKit.getCurrentNetwork().getHyperGraph().get(rec.getTypeHandle());
         
         AbstractProperty[][] data0 = new AbstractProperty[2][type.slotCount()];
         //for (int i = 0; i < type.slotCount(); i++)

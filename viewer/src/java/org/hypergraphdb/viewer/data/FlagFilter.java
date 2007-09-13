@@ -115,7 +115,8 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
     public boolean setFlagged(Node node, boolean newState) {
         if (newState == true) {//set flag to on
             //don't flag the node if it's not in the graph
-            if (!graph.containsNode(node)) {return false;}
+        	if (graph.getNode(node.getRootGraphIndex()) == null)
+        	   return false;
             boolean setChanged = flaggedNodes.add(node);
             if (setChanged) {fireEvent(node, true);}
             return setChanged;
@@ -137,7 +138,8 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
     public boolean setFlagged(Edge edge, boolean newState) {
         if (newState == true) {//set flag to on
             //don'tflagthe edge if it's not in the graph
-            if (!graph.containsEdge(edge)) {return false;}
+            if (graph.getEdge(edge.getRootGraphIndex()) == null) 
+                return false;
             boolean setChanged = flaggedEdges.add(edge);
             if (setChanged) {fireEvent(edge, true);}
             return setChanged;
@@ -172,7 +174,8 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
 
                 //System.out.println( "Flagging node"+node );
 
-                if (node == null || !graph.containsNode(node)) {continue;}
+                if (node == null || graph.getNode(node.getRootGraphIndex()) == null)
+                    continue;
                 boolean setChanged = flaggedNodes.add(node);
                 if (setChanged) {returnSet.add(node);}
             }
@@ -209,7 +212,8 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
         if (newState == true) {
             for (Iterator i = edgesToSet.iterator(); i.hasNext(); ) {
                 Edge edge = (Edge)i.next();
-                if (!graph.containsEdge(edge)) {continue;}
+                if (graph.getEdge(edge.getRootGraphIndex()) == null) 
+                    continue;
                 boolean setChanged = flaggedEdges.add(edge);
                 if (setChanged) {returnSet.add(edge);}
             }

@@ -3,7 +3,7 @@ package org.hypergraphdb.viewer.actions;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
 
@@ -24,7 +24,7 @@ public class CreateNetworkViewAction extends HGVAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        HGVNetwork cyNetwork = HGViewer.getCurrentNetwork();
+        HGVNetwork cyNetwork = HGVKit.getCurrentNetwork();
         createViewFromCurrentNetwork(cyNetwork);
     }
 
@@ -42,13 +42,13 @@ public class CreateNetworkViewAction extends HGVAction {
                     + "Do you wish to proceed?", "Rendering Large Network",
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
-            	HGViewer.createNetworkView(cyNetwork);
+            	HGVKit.createNetworkView(cyNetwork);
             } else {
-                JOptionPane.showMessageDialog(HGViewer.getDesktop(),
+                JOptionPane.showMessageDialog(HGVKit.getDesktop(),
                         "Create View Request Cancelled by User.");
             }
         } else {
-        	HGViewer.createNetworkView(cyNetwork);            
+        	HGVKit.createNetworkView(cyNetwork);            
         }
     }
 }

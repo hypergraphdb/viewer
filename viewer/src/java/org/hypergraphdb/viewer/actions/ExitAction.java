@@ -8,7 +8,7 @@ package org.hypergraphdb.viewer.actions;
 import java.awt.event.ActionEvent;
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 
 
@@ -20,7 +20,7 @@ public class ExitAction extends HGVAction {
   }
     
   public void actionPerformed (ActionEvent e) {
-  	HGViewer.exit();
+  	HGVKit.exit();
   }
 }
 

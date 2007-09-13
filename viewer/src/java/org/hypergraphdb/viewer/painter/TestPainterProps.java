@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.atom.HGStats;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
 import com.l2fprod.common.beans.editor.DirectoryPropertyEditor;
@@ -44,7 +44,7 @@ public class TestPainterProps extends PropertySheetPanel
 		HGHandle h = hg.getTypeSystem().getTypeHandle(HGStats.class);
 		Component c = null;
 		try{
-		HGVNetworkView view = HGViewer.getStandaloneView(hg, h, 3, null);
+		HGVNetworkView view = HGVKit.getStandaloneView(hg, h, 3, null);
 		view.redrawGraph();
 		c = view.getComponent();
 		c.setPreferredSize(new java.awt.Dimension(600,400));

@@ -39,7 +39,7 @@ import giny.model.*;
 import giny.view.*;
 
 import org.hypergraphdb.viewer.HGVNode;
-import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.*;
@@ -74,7 +74,7 @@ public static boolean selectNodesStartingWith(HGVNetwork network, String key,
     for (Iterator i = theGraph.nodesIterator(); i.hasNext(); ) {
         HGVNode node = (HGVNode)i.next();
         
-        HyperGraph hg = HGViewer.getCurrentNetwork().getHyperGraph();
+        HyperGraph hg = HGVKit.getCurrentNetwork().getHyperGraph();
         String nodeLabel = "" + hg.get(node.getHandle());
         //TODO: ???maybe we should call the calculator 
         //or search based on a class in this action too;
