@@ -1,4 +1,4 @@
-package org.hypergraphdb.viewer.view;
+package org.hypergraphdb.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -26,14 +26,16 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGVEdge;
-import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGVNode;
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.VisualManager;
+import org.hypergraphdb.HGPersistentHandle;
+import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.actions.GinyUtils;
 import org.hypergraphdb.viewer.data.HGVNetworkUtilities;
+import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
+import org.hypergraphdb.viewer.painter.DefaultNodePainter;
+import org.hypergraphdb.viewer.painter.EdgePainter;
+import org.hypergraphdb.viewer.painter.NodePainter;
+import org.hypergraphdb.viewer.view.FlagAndSelectionHandler;
+import org.hypergraphdb.viewer.view.HGVMenus;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import org.hypergraphdb.viewer.visual.ui.DropDownButton;
 import phoebe.PGraphView;
@@ -72,6 +74,9 @@ import giny.view.NodeView;
 
 public class HGVNetworkView extends PGraphView
 {
+	 private static EdgePainter def_edge_painter = new DefaultEdgePainter();
+	 private static NodePainter def_node_painter = new DefaultNodePainter();
+	  
 	/**
 	 * This is the label that tells how many node/edges are in a HGVNetworkView
 	 * and how many are selected/hidden
@@ -84,6 +89,7 @@ public class HGVNetworkView extends PGraphView
 	 */
 	protected FlagAndSelectionHandler flagAndSelectionHandler;
 	protected VisualStyle style;
+	VisualStyle self_style = new VisualStyle("self");
 	protected PBasicInputEventHandler keyEventHandler;
 	protected PCanvas canvas;
 
@@ -402,15 +408,79 @@ public class HGVNetworkView extends PGraphView
 	public void redrawGraph()
 	{
 		getCanvas().setInteracting(true);
-		VisualManager.getInstance().applyAppearances(this);
-		// getCanvas().paintImmediately();
+		applyAppearances();
 		getCanvas().setInteracting(false);
+	}
+	
+	public void applyAppearances()
+	{
+		//Date start = new Date();
+		if(getVisualStyle()== null)
+			setVisualStyle(VisualManager.getInstance().getDefaultVisualStyle());
+		setBackgroundPaint(getVisualStyle().getBackgroundColor());
+		applyNodeAppearances();
+		applyEdgeAppearances();
+		//Date stop = new Date();
+		// System.out.println("Time to apply node styles: " + (stop.getTime() -
+		// start.getTime()));
+	}
+	
+	/**
+	 * Recalculates and reapplies all of the node appearances. The visual
+	 * attributes are calculated by delegating to the NodePainter
+	 * member of the current visual style.
+	 */
+	public void applyNodeAppearances()
+	{
+		for (Iterator i = getNodeViewsIterator(); i.hasNext();)
+		{
+			NodeView nodeView = (NodeView) i.next();
+			if(nodeView == null)
+			{
+				System.out.println("VM - applyNodeAppearances - NULL NODE");
+				continue;
+			}
+			HGVNode node = (HGVNode) nodeView.getNode();
+			HyperGraph hg = getNetwork().getHyperGraph();
+			HGPersistentHandle h = hg.getPersistentHandle(
+					hg.getTypeSystem().getTypeHandle(node.getHandle()));
+			NodePainter p = self_style.getNodePainter(h);
+			if(p == null)
+				p = getVisualStyle().getNodePainter(h);
+			if(p == null)
+				p = def_node_painter;
+			p.paintNode(nodeView, this);
+		}
+	}
+	
+	/**
+	 * Recalculates and reapplies all of the edge appearances. The visual
+	 * attributes are calculated by delegating to the EdgePainter
+	 * member of the current visual style.
+	 */
+	public void applyEdgeAppearances()
+	{
+		 for (Iterator i = getEdgeViewsIterator(); i.hasNext(); )
+		 { 
+			 EdgeView edgeView = (EdgeView)i.next();
+			 if(edgeView == null)
+			 {
+				System.out.println("VMM -applyNodeAppearances - NULL NODE");
+				continue;
+			 }
+			 HGVNode node = (HGVNode) ((HGVEdge) edgeView.getEdge()).getSource();
+			 HyperGraph hg = getNetwork().getHyperGraph();
+			 HGPersistentHandle h = hg.getPersistentHandle(
+						hg.getTypeSystem().getTypeHandle(node.getHandle()));
+			 EdgePainter p = self_style.getEdgePainter(h);
+			 if(p == null)	getVisualStyle().getEdgePainter(h);
+			 if(p == null)	p = def_edge_painter;
+			 p.paintEdge(edgeView, this);
+		}
 	}
 
 	public VisualStyle getVisualStyle()
 	{
-		// if (style == null)
-		// style = VisualManager.getInstance().getDefaultVisualStyle();
 		return style;
 	}
 

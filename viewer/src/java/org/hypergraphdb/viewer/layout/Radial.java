@@ -12,8 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.geom.*;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 
 /**
  * The layout computePositions method follows the algorithm as given by Eades in

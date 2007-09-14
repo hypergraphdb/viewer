@@ -10,10 +10,9 @@ import javax.swing.AbstractAction;
 import java.util.*;
 
 import giny.model.GraphPerspective;
-import giny.view.GraphView;
 
 import org.hypergraphdb.viewer.*;
-import org.hypergraphdb.viewer.view.*;
+
 
 //-------------------------------------------------------------------------
 /**
@@ -32,7 +31,7 @@ public class DeleteSelectedAction extends AbstractAction {
         super("Delete Selected Nodes and Edges");
     }
     
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) { 
                        
     	HGVNetworkView view = HGVKit.getCurrentView();
         GraphPerspective perspective = view.getGraphPerspective();

@@ -18,8 +18,8 @@ import java.util.Iterator;
 import giny.view.*;
 import org.hypergraphdb.viewer.giny.*;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 
 //-------------------------------------------------------------------------
 public class ZoomSelectedAction extends HGVAction {

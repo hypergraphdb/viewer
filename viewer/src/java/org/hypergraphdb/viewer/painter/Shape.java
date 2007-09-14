@@ -29,15 +29,15 @@
 // $Date: 2005/12/25 01:22:42 $
 // $Author: bobo $
 //----------------------------------------------------------------------------
-package org.hypergraphdb.viewer.visual;
+package org.hypergraphdb.viewer.painter;
 //----------------------------------------------------------------------------
 import giny.view.NodeView;
 //----------------------------------------------------------------------------
 /**
- * This class is a replacement for the yFiles ShapeNodeRealizer class.
+ * This class is a replacement for the yFiles Shape class.
  * It defines byte constants specifying shape types.
  */
-public class ShapeNodeRealizer {
+public class Shape {
     
     public static final byte RECT = (byte)0;
     public static final byte ROUND_RECT = (byte)1;
@@ -60,29 +60,29 @@ public class ShapeNodeRealizer {
         nstext = nstext.replaceAll("_",""); // ditch all underscores
         
         if(nstext.equalsIgnoreCase("rect")) {
-            return ShapeNodeRealizer.RECT;
+            return Shape.RECT;
         } else if(nstext.equalsIgnoreCase("roundrect")) {
-            return ShapeNodeRealizer.ROUND_RECT;
+            return Shape.ROUND_RECT;
         } else if(nstext.equalsIgnoreCase("rect3d")) {
-            return ShapeNodeRealizer.RECT_3D;
+            return Shape.RECT_3D;
         } else if(nstext.equalsIgnoreCase("trapezoid")) {
-            return ShapeNodeRealizer.TRAPEZOID;
+            return Shape.TRAPEZOID;
         } else if(nstext.equalsIgnoreCase("trapezoid2")) {
-            return ShapeNodeRealizer.TRAPEZOID_2;
+            return Shape.TRAPEZOID_2;
         } else if(nstext.equalsIgnoreCase("triangle")) {
-            return ShapeNodeRealizer.TRIANGLE;
+            return Shape.TRIANGLE;
         } else if(nstext.equalsIgnoreCase("parallelogram")) {
-            return ShapeNodeRealizer.PARALLELOGRAM;
+            return Shape.PARALLELOGRAM;
         } else if(nstext.equalsIgnoreCase("diamond")) {
-            return ShapeNodeRealizer.DIAMOND;
+            return Shape.DIAMOND;
         } else if(nstext.equalsIgnoreCase("ellipse") || nstext.equalsIgnoreCase("circle")) {
-            return ShapeNodeRealizer.ELLIPSE;
+            return Shape.ELLIPSE;
         } else if(nstext.equalsIgnoreCase("hexagon")) {
-            return ShapeNodeRealizer.HEXAGON;
+            return Shape.HEXAGON;
         } else if(nstext.equalsIgnoreCase("octagon")) {
-            return ShapeNodeRealizer.OCTAGON;
+            return Shape.OCTAGON;
         } else {
-            return ShapeNodeRealizer.RECT;
+            return Shape.RECT;
         }
     }
     

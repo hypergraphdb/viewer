@@ -79,7 +79,7 @@ public class AppConfigPanel extends JPanel
 	{
 		NameValuePanel panel = new NameValuePanel("Property Name: ",
 				"Property Value: ");
-		DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(this), panel,
+		DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(), panel,
 				"Add New Config Property");
 		d.setModal(true);
 		d.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);

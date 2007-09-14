@@ -17,12 +17,12 @@ import org.hypergraphdb.query.*;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGVEdge;
 import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.util.GUIUtilities;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import static org.hypergraphdb.HGQuery.hg;
 
 /**
@@ -230,8 +230,7 @@ public class HGUtils
 		if(edges_count > 50)
 		{
 			NotifyDescriptor d = new NotifyDescriptor.Confirmation(
-					GUIUtilities.getFrame(
-							HGVKit.getCurrentView().getComponent()), "The node contains " + edges_count + " edges. Are you sure that you want to expand them?", 
+					GUIUtilities.getFrame(), "The node contains " + edges_count + " edges. Are you sure that you want to expand them?", 
 					NotifyDescriptor.OK_CANCEL_OPTION);
 			if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.CANCEL_OPTION)
 			{

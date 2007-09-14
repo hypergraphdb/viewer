@@ -23,13 +23,13 @@ import org.hypergraphdb.handle.HGLiveHandle;
 import org.hypergraphdb.type.HGAtomType;
 import org.hypergraphdb.type.RecordType;
 import org.hypergraphdb.type.Slot;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVNode;
 
 import org.hypergraphdb.viewer.util.*;
 import org.hypergraphdb.viewer.dialogs.*;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.hg.HGUtils;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 
 public class AddAtomAction extends HGVAction
 {
@@ -55,8 +55,7 @@ public class AddAtomAction extends HGVAction
         Collections.sort(list);
         NameListPanel panel = new NameListPanel("Type: ", "Value: ", list);
         DialogDescriptor d = new DialogDescriptor(
-        		GUIUtilities.getFrame(
-        				HGVKit.getCurrentView().getComponent()), panel, "Add atom to hypergraph");
+        		GUIUtilities.getFrame(), panel, "Add atom to hypergraph");
         d.setModal(true);
         d.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);
         if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION)

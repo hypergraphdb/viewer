@@ -56,7 +56,7 @@ comp.focus(h);
     </cell-group>
     <cell-group index="9">
         <cell index="51" html-preview="true" engine="html">
-            <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it readsall the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
+            <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
 ]]>            </data>
         </cell>
         <cell index="52">
@@ -99,7 +99,7 @@ hg.get(hh)
         </output-cell>
     </cell>
     <cell index="28" html-preview="true" engine="html">
-        <data><![CDATA[At this point the nodes in the viewer should look pretty ugly. So let's make them look better. We define few generic painters which are responsible for drawing the nodes of a given type.
+        <data><![CDATA[At this point the nodes in the viewer should look pretty ugly. So let's make them look better (For more information on painters and styles you could look at &quot;Painters And Styles.nb&quot;). We define few generic painters which are responsible for drawing the nodes of a given type.
 ]]>        </data>
     </cell>
     <cell index="12">

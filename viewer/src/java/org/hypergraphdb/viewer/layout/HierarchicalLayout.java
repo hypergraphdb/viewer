@@ -41,7 +41,7 @@ package org.hypergraphdb.viewer.layout;
 
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import giny.view.NodeView;
 import giny.view.EdgeView;
 import java.awt.event.ActionEvent;

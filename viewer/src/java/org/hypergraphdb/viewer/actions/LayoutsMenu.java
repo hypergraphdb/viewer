@@ -61,8 +61,7 @@ public class LayoutsMenu extends JMenu
 
     public void actionPerformed(ActionEvent e)
     {
-    	DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(
-    			HGVKit.getCurrentView().getComponent()), new SelectLayoutPanel(), 
+    	DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(), new SelectLayoutPanel(), 
     			ActionManager.PREFERED_LAYOUT_ACTION);
         d.setModal(true);
         d.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);

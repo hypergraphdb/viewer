@@ -32,8 +32,10 @@ import javax.swing.event.ListSelectionListener;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.handle.UUIDPersistentHandle;
 import org.hypergraphdb.type.HGAtomType;
 import org.hypergraphdb.type.JavaBeanBinding;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
@@ -43,6 +45,7 @@ import org.hypergraphdb.viewer.painter.DefaultNodePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.VisualStyle;
+import org.safehaus.uuid.UUID;
 
 public class PaintersPanel extends JPanel
 {
@@ -50,6 +53,7 @@ public class PaintersPanel extends JPanel
 	private JComboBox stylesCombo;
 	private PainterPropsPanel propsPanel;
 	private HyperGraph hg;
+	private HGVNetworkView view;
 
 	/**
 	 * Create the propsPanel
@@ -282,7 +286,7 @@ public class PaintersPanel extends JPanel
 	{
 		NameValuePanel panel = new NameValuePanel("Painter Type: ",
 				"Painter Class: ");
-		DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(this), panel,
+		DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(), panel,
 				"Add atom to hypergraph");
 		d.setModal(true);
 		d.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);
@@ -295,30 +299,35 @@ public class PaintersPanel extends JPanel
 
 	private void addPainter()
 	{
-		NotifyDescriptor d = new NotifyDescriptor.InputLine(null, "",
-				"Specify painter's type", NotifyDescriptor.PLAIN_MESSAGE,
+		NotifyDescriptor.InputLine d = new NotifyDescriptor.InputLine(
+				GUIUtilities.getFrame(), "ClassName/TypeHandle:",
+				"Specify painter's type class or handle", NotifyDescriptor.PLAIN_MESSAGE,
 				NotifyDescriptor.OK_CANCEL_OPTION);
 		if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION)
 		{
+			HGPersistentHandle h = null;
+			try{
+				h = UUIDPersistentHandle.makeHandle(d.getInputText());
+			}catch(NumberFormatException ex){}
 			try
 			{
 				ClassLoader cl = Thread.currentThread().getContextClassLoader();
-				Class clazz = cl.loadClass(((NotifyDescriptor.InputLine) d)
-						.getInputText());
-				HGPersistentHandle h = hg.getPersistentHandle(hg
+				Class clazz = cl.loadClass(d.getInputText());
+				h = hg.getPersistentHandle(hg
 						.getTypeSystem().getTypeHandle(clazz));
-				NodePainter p = new DefaultNodePainter();
-				VisualStyle vs = ((VisualStyle) stylesCombo.getSelectedItem());
-				vs.addNodePainter(h, p);
-				populatePaintersList(vs);
 			}
 			catch (Exception ex)
 			{
-				NotifyDescriptor dex = new NotifyDescriptor.Exception(null, ex,
-						"Unable to create painter");
+				NotifyDescriptor dex = new NotifyDescriptor.Exception(
+						GUIUtilities.getFrame(), ex, "Unable to create painter");
 				DialogDisplayer.getDefault().notify(dex);
 				ex.printStackTrace();
 			}
+			if(h == null) return;
+			NodePainter p = new DefaultNodePainter();
+			VisualStyle vs = ((VisualStyle) stylesCombo.getSelectedItem());
+			vs.addNodePainter(h, p);
+			populatePaintersList(vs);
 		}
 	}
 
@@ -383,6 +392,12 @@ public class PaintersPanel extends JPanel
 	public void setHyperGraph(HyperGraph hg)
 	{
 		this.hg = hg;
+	}
+	
+	public void setView(HGVNetworkView v){
+		view = v;
+		hg = v.getNetwork().getHyperGraph();
+		stylesCombo.setSelectedItem(view.getVisualStyle());
 	}
 
 	class CustomCellRenderer extends DefaultListCellRenderer

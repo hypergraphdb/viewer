@@ -10,6 +10,7 @@ import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import cytoscape.task.*;
 import cytoscape.task.ui.*;
 import cytoscape.task.util.*;
@@ -17,7 +18,6 @@ import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.util.FileUtil;
 import org.hypergraphdb.viewer.view.HGVMenus;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

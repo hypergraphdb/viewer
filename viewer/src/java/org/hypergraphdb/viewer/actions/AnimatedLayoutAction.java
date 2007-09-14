@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 import phoebe.*;
 import phoebe.util.*;

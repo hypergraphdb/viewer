@@ -9,7 +9,7 @@ import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.atom.HGStats;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import com.l2fprod.common.demo.BeanBinder;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 

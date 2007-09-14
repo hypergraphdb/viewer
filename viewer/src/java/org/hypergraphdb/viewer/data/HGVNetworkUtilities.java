@@ -38,9 +38,9 @@ import javax.swing.JOptionPane;
 import giny.model.*;
 import giny.view.*;
 
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.*;
 import ViolinStrings.Strings;

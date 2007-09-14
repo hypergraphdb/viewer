@@ -7,7 +7,7 @@ import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Stroke;
 import org.hypergraphdb.HGPersistentHandle;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.Arrow;
 import org.hypergraphdb.viewer.visual.LineType;
 

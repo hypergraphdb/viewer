@@ -42,7 +42,7 @@ import javax.swing.KeyStroke;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.actions.*;
 //import org.hypergraphdb.viewer.data.annotation.AnnotationGui;
 import org.hypergraphdb.viewer.util.HGVAction;
@@ -743,7 +743,7 @@ public class HGVMenus implements GraphViewChangeListener
 		hideSelectedButton.setToolTipText("Hide Selected Region");
 		hideSelectedButton.setBorderPainted(false);
 		toolBar.addSeparator();
-		vizButton = toolBar.add(new SetVisualPropertiesAction(false));
+		vizButton = toolBar.add(man.getAction(ActionManager.VISUAL_PROPERTIES_ACTION));
 		vizButton
 				.setIcon(new ImageIcon(getImgResource("new/color_wheel36.gif")));
 		vizButton.setToolTipText("Set Visual Properties");

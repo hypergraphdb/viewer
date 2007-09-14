@@ -24,7 +24,6 @@ import org.hypergraphdb.viewer.layout.*;
 import org.hypergraphdb.viewer.layout.SpringLayout;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 import org.hypergraphdb.viewer.view.GraphViewController;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 import org.hypergraphdb.*;
 

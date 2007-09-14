@@ -3,9 +3,9 @@ package org.hypergraphdb.viewer.visual.ui;
 //--------------------------------------------------------------------------------------
 import java.net.URL;
 import javax.swing.*;
+import org.hypergraphdb.viewer.painter.Shape;
 import org.hypergraphdb.viewer.visual.Arrow;
 import org.hypergraphdb.viewer.visual.LineType;
-import org.hypergraphdb.viewer.visual.ShapeNodeRealizer;
 
 //------------------------------------------------------------------------------
 public class EditorConstants
@@ -86,27 +86,27 @@ public class EditorConstants
 	static
 	{
 		// Array of icons for the list
-		shapeIcons[ShapeNodeRealizer.ELLIPSE] = new ImageIcon(
+		shapeIcons[Shape.ELLIPSE] = new ImageIcon(
 				locateImage("ellipse.jpg"), "ELLIPSE");
-		shapeIcons[ShapeNodeRealizer.ROUND_RECT] = new ImageIcon(
+		shapeIcons[Shape.ROUND_RECT] = new ImageIcon(
 				locateImage("round_rect.jpg"), "ROUND_RECT");
-		shapeIcons[ShapeNodeRealizer.RECT_3D] = new ImageIcon(
+		shapeIcons[Shape.RECT_3D] = new ImageIcon(
 				locateImage("rect_3d.jpg"), "RECT_3D");
-		shapeIcons[ShapeNodeRealizer.RECT] = new ImageIcon(
+		shapeIcons[Shape.RECT] = new ImageIcon(
 				locateImage("rect.jpg"), "RECTANGLE");
-		shapeIcons[ShapeNodeRealizer.DIAMOND] = new ImageIcon(
+		shapeIcons[Shape.DIAMOND] = new ImageIcon(
 				locateImage("diamond.jpg"), "DIAMOND");
-		shapeIcons[ShapeNodeRealizer.HEXAGON] = new ImageIcon(
+		shapeIcons[Shape.HEXAGON] = new ImageIcon(
 				locateImage("hexagon.jpg"), "HEXAGON");
-		shapeIcons[ShapeNodeRealizer.OCTAGON] = new ImageIcon(
+		shapeIcons[Shape.OCTAGON] = new ImageIcon(
 				locateImage("octagon.jpg"), "OCTAGON");
-		shapeIcons[ShapeNodeRealizer.TRAPEZOID] = new ImageIcon(
+		shapeIcons[Shape.TRAPEZOID] = new ImageIcon(
 				locateImage("trapezoid.jpg"), "TRAPEZOID");
-		shapeIcons[ShapeNodeRealizer.TRAPEZOID_2] = new ImageIcon(
+		shapeIcons[Shape.TRAPEZOID_2] = new ImageIcon(
 				locateImage("trapezoid_2.jpg"), "TRAPEZOID_2");
-		shapeIcons[ShapeNodeRealizer.PARALLELOGRAM] = new ImageIcon(
+		shapeIcons[Shape.PARALLELOGRAM] = new ImageIcon(
 				locateImage("parallelogram.jpg"), "PARALLELOGRAM");
-		shapeIcons[ShapeNodeRealizer.TRIANGLE] = new ImageIcon(
+		shapeIcons[Shape.TRIANGLE] = new ImageIcon(
 				locateImage("triangle.jpg"), "TRIANGLE");
 	}
 

@@ -1,7 +1,7 @@
 package org.hypergraphdb.viewer.painter;
 
 import giny.view.NodeView;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 public interface NodePainter
 {

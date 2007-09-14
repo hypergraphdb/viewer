@@ -6,11 +6,11 @@ import java.awt.event.*;
 import javax.swing.event.*;
 
 import java.awt.Dimension;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import phoebe.event.BirdsEyeView;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 import java.beans.*;
 

@@ -7,10 +7,9 @@ import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Stroke;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVNode;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.LineType;
-import org.hypergraphdb.viewer.visual.ShapeNodeRealizer;
 
 public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 {
@@ -18,7 +17,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 	private Color color = Color.WHITE; 
 	private Color borderColor = Color.BLACK;
 	private LineType lineType = LineType.LINE_1; 
-	private byte shape = ShapeNodeRealizer.RECT;
+	private byte shape = Shape.RECT;
 	private String label = "";
 	private Color labelColor = Color.BLACK; 
 	private String tooltip = ""; 
@@ -186,7 +185,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 			nodeView.setWidth(newWidth);
 		}
 		int existingShape = nodeView.getShape();
-		int newShape = ShapeNodeRealizer.getGinyShape(getShape());
+		int newShape = Shape.getGinyShape(getShape());
 		if (existingShape != newShape)
 		{
 			change_made = true;

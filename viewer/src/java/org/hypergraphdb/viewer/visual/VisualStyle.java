@@ -25,7 +25,10 @@ public class VisualStyle implements Cloneable {
     private Color backgroundColor = Color.white;
     protected int dupCount = 0;
     protected Map<HGPersistentHandle, NodePainter> nodePaintersMap = new HashMap<HGPersistentHandle, NodePainter>();
+    protected Map<HGPersistentHandle, NodePainter> npNodePaintersMap = new HashMap<HGPersistentHandle, NodePainter>();
+    
     protected Map<HGPersistentHandle, EdgePainter> edgePaintersMap = new HashMap<HGPersistentHandle, EdgePainter>();
+    protected Map<HGPersistentHandle, EdgePainter> npEdgePaintersMap = new HashMap<HGPersistentHandle, EdgePainter>();
 
    
      /**
@@ -115,19 +118,37 @@ public class VisualStyle implements Cloneable {
 		this.nodePaintersMap = nodePaintersMap;
 	}
 	
+	public NodePainter getNodePainter(HGPersistentHandle h){
+		NodePainter p = nodePaintersMap.get(h);
+		return ( p == null) ? npNodePaintersMap.get(h) : p;
+	}
+	
+	public EdgePainter getEdgePainter(HGPersistentHandle h){
+		EdgePainter p = edgePaintersMap.get(h);
+		return ( p == null) ? npEdgePaintersMap.get(h) : p;
+	}
+	
 	public void addNodePainter(HGPersistentHandle h, NodePainter p){
-		nodePaintersMap.put(h, p);
+		if(p.getClass().getPackage() == null)
+			npNodePaintersMap.put(h, p);
+		else
+		  nodePaintersMap.put(h, p);
 	}
 
 	public void addEdgePainter(HGPersistentHandle h, EdgePainter p){
-		edgePaintersMap.put(h, p);
+		if(p.getClass().getPackage() == null)
+			npEdgePaintersMap.put(h, p);
+		else
+		   edgePaintersMap.put(h, p);
 	}
 	
 	public void removeNodePainter(HGPersistentHandle h){
+		npEdgePaintersMap.remove(h);
 		nodePaintersMap.remove(h);
 	}
     
 	public void removeEdgePainter(HGPersistentHandle h){
+		npEdgePaintersMap.remove(h);
 		edgePaintersMap.remove(h);
 	}
 

@@ -5,22 +5,24 @@ import giny.view.EdgeView;
 import giny.view.NodeView;
 import java.awt.Component;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Iterator;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.hg.HGWNReader;
 import org.hypergraphdb.viewer.painter.NodePainter;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
-public class HGViewer
+public class HGViewer implements Serializable
 {
-	private HyperGraph hg;
-	private int depth;
-	private HGVNetworkView view;
-	private HGHandle foc_handle;
+	private transient HyperGraph hg;
+	private transient int depth;
+	private transient HGVNetworkView view;
+	private transient HGHandle foc_handle;
 
+	private HGViewer(){}
+	
 	public HGViewer(HyperGraph hg)
 	{
 		this.hg = hg;
@@ -46,11 +48,21 @@ public class HGViewer
     	refreshView();
     }
     
-    public void setPainter(HGPersistentHandle typeHandle, NodePainter painter){
-    	VisualStyle vs = view.getVisualStyle();
-        vs.addNodePainter(typeHandle, painter);
+    public void setPainter(HGPersistentHandle typeHandle, NodePainter painter)
+    {
+    	view.self_style.addNodePainter(typeHandle, painter);
         if(view != null)
         	view.redrawGraph();
+    }
+    
+    public void setStyle(VisualStyle vs){
+    	if(view == null) return;
+    	view.setVisualStyle(vs);
+        view.redrawGraph();
+    }
+    
+    public VisualStyle getStyle(){
+    	return (view == null) ? null: view.getVisualStyle();
     }
 
 	public HGVNetworkView getView()
@@ -99,5 +111,25 @@ public class HGViewer
 		//view.getCanvas().getCamera().animateViewToCenterBounds( 
 		//		view.getCanvas().getLayer().getFullBounds(), true, 50l );
 	}
+    
+    private void writeObject(java.io.ObjectOutputStream s)
+    throws java.io.IOException
+	{
+    	s.writeInt(depth);
+    	s.writeObject(hg.getStore().getDatabaseLocation());
+    	s.writeObject(hg.getPersistentHandle(foc_handle));
+    }
+    
+    private void readObject(java.io.ObjectInputStream s)
+    throws java.lang.ClassNotFoundException,
+	     java.io.IOException{
+    	depth = s.readInt();
+    	String loc = (String) s.readObject();
+    	HGPersistentHandle h = (HGPersistentHandle) s.readObject();
+    	hg = new HyperGraph(loc);
+    	this.focus(h);
+    }
+
+ 
     
 }

@@ -10,7 +10,6 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.Arrow;
-import org.hypergraphdb.viewer.visual.LineType;
 import org.hypergraphdb.viewer.visual.ui.EditorConstants;
 import org.hypergraphdb.viewer.visual.ui.PopupIconChooser;
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;

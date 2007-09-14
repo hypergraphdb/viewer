@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.util.*;
 import org.hypergraphdb.viewer.*;
 import org.hypergraphdb.viewer.hg.LoadHyperGraphFileAction;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 
 
 public class RecentFilesProvider implements PropertyChangeListener

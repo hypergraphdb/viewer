@@ -16,7 +16,7 @@ import org.hypergraphdb.viewer.giny.*;
 
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.*;
 
 public class PrintAction extends HGVAction  {

@@ -24,8 +24,7 @@ public class RecordExplorerAction extends HGVAction
     public void actionPerformed( ActionEvent ev )
     {
         RecordExplorerPanel panel = new RecordExplorerPanel();
-        DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(
-        		HGVKit.getCurrentView().getComponent()), panel, "RecordExplorer");
+        DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(), panel, "RecordExplorer");
         d.setModal(true);
         d.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);
         DialogDisplayer.getDefault().notify(d);

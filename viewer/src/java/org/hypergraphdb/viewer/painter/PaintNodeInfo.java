@@ -12,8 +12,6 @@ public interface PaintNodeInfo
 	public void setColor(Color color);
 	public Font getFont();
 	public void setFont(Font font);
-	public double getHeight();
-	public void setHeight(double height);
 	public String getLabel();
 	public void setLabel(String label);
 	public Color getLabelColor();
@@ -26,4 +24,10 @@ public interface PaintNodeInfo
 	public void setTooltip(String tooltip);
 	public double getWidth();
 	public void setWidth(double width);
+	public double getHeight();
+	public void setHeight(double height);
+	
+	
+	
+	
 }

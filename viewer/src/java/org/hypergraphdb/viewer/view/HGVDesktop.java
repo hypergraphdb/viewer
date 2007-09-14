@@ -1,10 +1,10 @@
 package org.hypergraphdb.viewer.view;
 
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.view.HGVMenus;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.*;
 import org.hypergraphdb.viewer.visual.ui.*;
 import org.hypergraphdb.viewer.props.*;

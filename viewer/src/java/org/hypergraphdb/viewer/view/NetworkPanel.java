@@ -2,6 +2,7 @@ package org.hypergraphdb.viewer.view;
 
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 import org.hypergraphdb.viewer.actions.CreateNetworkViewAction;
 import org.hypergraphdb.viewer.data.*;

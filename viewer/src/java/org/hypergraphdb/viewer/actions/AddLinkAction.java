@@ -16,11 +16,11 @@ import org.hypergraphdb.HGValueLink;
 import org.hypergraphdb.handle.UUIDPersistentHandle;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVNode;
 
 
 import org.hypergraphdb.viewer.util.*;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVEdge;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
@@ -49,7 +49,7 @@ public class AddLinkAction extends HGVAction
         
          if(node_indicies.length == 0)
         {
-            GUIUtilities.showWarning(GUIUtilities.getFrame(view.getComponent()),
+            GUIUtilities.showWarning(GUIUtilities.getFrame(),
             		"No nodes selected. The link could not be created");
             return;
         }

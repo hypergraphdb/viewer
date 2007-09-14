@@ -100,8 +100,8 @@ public class BasicGraphViewHandler implements GraphViewHandler {
     
     graph_view.updateView();
               
-    if ( graph_view instanceof org.hypergraphdb.viewer.view.HGVNetworkView ) {
-      ( ( org.hypergraphdb.viewer.view.HGVNetworkView )graph_view ).redrawGraph();
+    if ( graph_view instanceof org.hypergraphdb.viewer.HGVNetworkView ) {
+      ( ( org.hypergraphdb.viewer.HGVNetworkView )graph_view ).redrawGraph();
     }
 
     //TODO: Remove

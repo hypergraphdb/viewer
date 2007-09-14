@@ -8,9 +8,9 @@ package org.hypergraphdb.viewer.actions;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 
 import java.awt.event.ActionEvent;
 import java.util.Set;

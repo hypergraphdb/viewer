@@ -2,10 +2,10 @@ package org.hypergraphdb.viewer.foo;
 
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import cytoscape.util.intr.IntEnumerator;
 import cytoscape.util.intr.IntIterator;
 
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import giny.view.EdgeView;
 import giny.view.NodeView;
 import java.awt.geom.Point2D;

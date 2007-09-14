@@ -6,7 +6,6 @@ import org.hypergraphdb.viewer.painter.editor.FontEditor;
 import org.hypergraphdb.viewer.painter.editor.LineTypeEditor;
 import org.hypergraphdb.viewer.painter.editor.ShapeEditor;
 import org.hypergraphdb.viewer.visual.LineType;
-import org.hypergraphdb.viewer.visual.ShapeNodeRealizer;
 import com.l2fprod.common.beans.BaseBeanInfo;
 import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
 

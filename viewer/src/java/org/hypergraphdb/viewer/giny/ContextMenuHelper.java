@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.actions.DeselectAllAction;
@@ -15,7 +16,6 @@ import org.hypergraphdb.viewer.actions.HideSelectedAction;
 import org.hypergraphdb.viewer.actions.SelectFirstNeighborsAction;
 import org.hypergraphdb.viewer.hg.HGUtils;
 import org.hypergraphdb.viewer.layout.GEM;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 
 import phoebe.PGraphView;
 import phoebe.PNodeView;

@@ -1,0 +1,386 @@
+<notebook title="" engine="beanshell">
+    <output-cell-style borderColor="255,255,255" fgColor="0,128,0"/>
+    <cell index="57" html-preview="true" engine="html">
+        <data><![CDATA[<h2 style="text-align:center;">Working with Painters and Styles in HGViewer
+</h2>
+<p style="text-align:left;">This document describes the different ways to alter the display of nodes and edges HGViewer. There are two key concepts: style and painter.
+</p>
+<p style="text-align:left;">1) Style (org.hypergraphdb.viewer.visual.ViisualStyle) represents a set of painters keyed by the type of the Node/Edge. All availabale styles are kept in a sigleton class org.hypergraphdb.viewer.VisualManager which is responsible for their persisting.
+</p>
+<p style="text-align:left;">2) Painters (org.hypergraphdb.viewer.painter.NodePainter/org.hypergraphdb.viewer.painter.EdgePainter) are simple interfaces with a single method:
+</p>
+<p>
+  <span style="text-align:left;">public void paintNode(NodeView edgeView, HGVNetworkView network_view) </span>and
+</p>
+<p><span style="text-align:left;">public void paintEdge(EdgeView edgeView, HGVNetworkView network_view)</span> respectively.
+</p>
+<p style="text-align:left;">PaintEdgeInfo, PaintNodeInfo hold the information about node/edge visual attributes like foreground and background color, font, label, tooltip, etc. The combination of those two interfaces yields to two more usable classes: DefaultNodePainter and DefaultEdgePainter which are far more suitable to work with.
+</p>
+<p style="text-align:left;">Below are show the methods of those classes:
+</p>
+]]>        </data>
+    </cell>
+    <cell html-preview="true" engine="html">
+        <data><![CDATA[<h2 style="text-align:left;">DefaultNodePainter
+</h2>
+<table align="left" border="0" style="text-align:left; border-style:solid; width:95%; border-width:0;">
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; background-color:#ffff99; border-width:1;">
+      <p style="margin:1;">Method Name      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; background-color:#ffff99; border-width:1;">
+      <p style="margin:1;">Description      
+      </p>    
+    </td>
+    <td align="left" valign="top" style="width:33%; border-color:#000000; background-color:#ffff99; border-style:solid; text-align:left; border-width:1;">
+      <p style="margin:1;">Value      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public Color getColor();      
+      </p>
+      <p style="margin:1;">public void setColor(Color color);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-color:#000000; border-width:1;">
+      <p style="margin:1;">Node's foreground color      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.awt.Color      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public Color getBorderColor();      
+      </p>
+      <p style="margin:1;">public void setBorderColor(Color color);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node's border color      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.awt.Color      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public Font getFont();      
+      </p>
+      <p style="margin:1;">public void setFont(Font font);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node's label font      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.awt.Font      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public Color getLabelColor();      
+      </p>
+      <p style="margin:1;">public void setLabelColor(Color labelColor);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node foreground color      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.awt.Color      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public String getLabel();      
+      </p>
+      <p style="margin:1;">public void setLabel(String label);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node's label text      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.lang.String      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public byte getShape();      
+      </p>
+      <p style="margin:1;">public void setShape(byte shape);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node's shape      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">One of the predefined Shape constants:      
+      </p>
+      <p style="margin:1;">RECT , ROUND_RECT, RECT_3D, TRAPEZOID, TRAPEZOID_2, TRIANGLE ,PARALLELOGRAM, DIAMOND, ELLIPSE, HEXAGON, OCTAGON      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public LineType getLineType();      
+      </p>
+      <p style="margin:1;">public void setLineType(LineType lineType);      
+      </p>
+      <p style="margin:1;">      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node's line type      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">org.hypergraphdb.viewer.visual.LineType      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public String getTooltip();      
+      </p>
+      <p style="margin:1;">public void setTooltip(String tooltip);      
+      </p>
+      <p style="margin:1;">      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node's tooltip      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.lang.String      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public double getWidth();      
+      </p>
+      <p style="margin:1;">public void setWidth(double width);      
+      </p>
+      <p style="margin:1;">public double getHeight();      
+      </p>
+      <p style="margin:1;">public void setHeight(double height);      
+      </p>
+      <p style="margin:1;">      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node's dimensions      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">double      
+      </p>    
+    </td>  
+  </tr>
+</table>
+]]>        </data>
+    </cell>
+    <cell html-preview="true" engine="html">
+        <data><![CDATA[<h2 style="text-align:left;">DefaultNodePainter Methods
+</h2>
+<table align="left" border="0" style="text-align:left; border-style:solid; width:90%; border-width:0;">
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; background-color:#ffff99; border-color:#000000; border-width:1;">
+      <p style="margin:1;">Method Name      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; background-color:#ffff99; border-color:#000000; border-width:1;">
+      <p style="margin:1;">Description      
+      </p>    
+    </td>
+    <td align="left" valign="top" style="width:33%; border-color:#000000; background-color:#ffff99; border-style:solid; text-align:left; border-width:1;">
+      <p style="margin:1;">Value      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public Color getColor();      
+      </p>
+      <p style="margin:1;">public void setColor(Color color);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node's foreground color      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.awt.Color      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public Font getFont();      
+      </p>
+      <p style="margin:1;">public void setFont(Font font);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Edge's label font      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.awt.Font      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public Color getLabelColor();      
+      </p>
+      <p style="margin:1;">public void setLabelColor(Color labelColor);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Edge's foreground color      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.awt.Color      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public String getLabel();      
+      </p>
+      <p style="margin:1;">public void setLabel(String label);      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Edge's label text      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.lang.String      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public LineType getLineType();      
+      </p>
+      <p style="margin:1;">public void setLineType(LineType lineType);      
+      </p>
+      <p style="margin:1;">      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Node's line type      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">org.hypergraphdb.viewer.visual.LineType      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public String getTooltip();      
+      </p>
+      <p style="margin:1;">public void setTooltip(String tooltip);      
+      </p>
+      <p style="margin:1;">      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Edge's tooltip      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">java.lang.String      
+      </p>    
+    </td>  
+  </tr>
+  <tr>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">public Arrow getSrcArrow();      
+      </p>
+      <p style="margin:1;">public void setSrcArrow(Arrow srcArrow);      
+      </p>
+      <p style="margin:1;">public Arrow getTgtArrow();      
+      </p>
+      <p style="margin:1;">public void setTgtArrow(Arrow tgtArrow);      
+      </p>
+      <p style="margin:1;">      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">Edge's source and target arrows      
+      </p>    
+    </td>
+    <td valign="top" style="border-style:solid; width:33%; border-width:1;">
+      <p style="margin:1;">org.hypergraphdb.viewer.visual.Arrow:      
+      </p>    
+    </td>  
+  </tr>
+</table>
+]]>        </data>
+    </cell>
+    <cell-group index="58">
+        <cell index="59" html-preview="true" engine="html">
+            <data><![CDATA[h
+]]>            </data>
+        </cell>
+        <cell engine="beanshell">
+            <data><![CDATA[import org.hypergraphdb.viewer.painter.*;
+import org.hypergraphdb.viewer.visual.*;
+
+public class TestPainter extends DefaultNodePainter{
+   //The node will be displayed in red
+   public Color getColor()
+    {
+        return Color.RED;
+    }
+
+   //The label here is resolved dynamically   using  the inherited protected methods getHG() and getNode()
+   public String getLabel(){
+        Object o = getHG().get(getNode().getHandle());
+        return (o!= null) ? o.getClass().getSimpleName() : "";
+  }
+
+   //the border will be drawn with dashed line 
+   public LineType getLineType()
+    {
+        return LineType.DASHED_1;
+   }
+}
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[class TestPainter
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+    <cell-group index="60">
+        <cell index="61" html-preview="true" engine="html">
+            <data><![CDATA[O
+]]>            </data>
+        </cell>
+
+    </cell-group>
+</notebook>

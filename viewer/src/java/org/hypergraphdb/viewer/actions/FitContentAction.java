@@ -8,8 +8,8 @@ package org.hypergraphdb.viewer.actions;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import phoebe.PGraphView;
-import org.hypergraphdb.viewer.view.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 public class FitContentAction extends HGVAction {

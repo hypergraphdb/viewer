@@ -32,6 +32,7 @@
 
 package org.hypergraphdb.viewer.view;
 import java.util.*;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import giny.model.GraphPerspective;
 import giny.model.GraphPerspectiveChangeEvent;
 import giny.view.GraphView;
