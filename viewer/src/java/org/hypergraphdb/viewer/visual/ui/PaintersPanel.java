@@ -45,7 +45,6 @@ import org.hypergraphdb.viewer.painter.DefaultNodePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.VisualStyle;
-import org.safehaus.uuid.UUID;
 
 public class PaintersPanel extends JPanel
 {

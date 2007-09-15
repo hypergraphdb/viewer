@@ -13,6 +13,7 @@ import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.atom.HGSubsumes;
 import org.hypergraphdb.atom.HGTypeStructuralInfo;
 import org.hypergraphdb.handle.*;
+import org.hypergraphdb.indexing.ByPartIndexer;
 import org.hypergraphdb.query.*;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGVEdge;
@@ -49,9 +50,8 @@ public class HGUtils
 			String keyProperty, Object keyValue)
 	{
 		HGHandle typeHandle = hg.getTypeSystem().getTypeHandle(typeAlias);
-		HGIndex<String, HGPersistentHandle> index = hg.getIndex(typeHandle, new String[] { keyProperty });
-		if (index == null)
-			index = hg.createIndex(typeHandle, new String[] { keyProperty });		
+		ByPartIndexer byProperty = new ByPartIndexer(typeHandle, new String[] { keyProperty });
+		HGIndex<String, HGPersistentHandle> index = hg.getIndexManager().register(byProperty);
 		return index.findFirst((String)keyValue);
 	}
 
