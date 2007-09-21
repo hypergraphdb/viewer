@@ -183,7 +183,7 @@ public class FGraphPerspective
     return m_weeder.hideNode(this, rootGraphNodeInx); }
 
   public int[] hideNodes(int[] rootGraphNodeInx) {
-    return m_weeder.hideNodes(this, rootGraphNodeInx); }
+    return m_weeder.hideNodes(getRootGraph(), rootGraphNodeInx); }
 
   public FNode restoreNode(FNode node) {
     if (node.getRootGraph() == m_root &&
@@ -237,7 +237,7 @@ public class FGraphPerspective
     return m_weeder.hideEdge(this, rootGraphEdgeInx); }
 
   public int[] hideEdges(int[] rootGraphEdgeInx) {
-    return m_weeder.hideEdges(this, rootGraphEdgeInx); }
+    return m_weeder.hideEdges(getRootGraph(), rootGraphEdgeInx); }
 
   public int restoreEdge(int rootGraphEdgeInx) {
     final int returnThis = _restoreEdge(rootGraphEdgeInx);
@@ -566,9 +566,9 @@ public class FGraphPerspective
     public final void rootGraphChanged(RootGraphChangeEvent evt)
     {
       if ((evt.getType() & RootGraphChangeEvent.NODES_REMOVED_TYPE) != 0)
-        m_weeder.hideNodes((FGraphPerspective) evt.getSource(), evt.getRemovedNodeIndices());
+        m_weeder.hideNodes((FRootGraph) evt.getSource(), evt.getRemovedNodeIndices());
       if ((evt.getType() & RootGraphChangeEvent.EDGES_REMOVED_TYPE) != 0)
-        m_weeder.hideEdges((FGraphPerspective) evt.getSource(), 
+        m_weeder.hideEdges(((FRootGraph) evt.getSource()), 
         		evt.getRemovedEdgeIndices());
     }
 
@@ -626,10 +626,9 @@ public class FGraphPerspective
       if (returnThis != 0) {
         final GraphPerspectiveChangeListener listener = m_lis[0];
         if (listener != null) {
-          final FNode removedNode = m_root.getNode(rootGraphNodeInx);
           listener.graphPerspectiveChanged
             (new GraphPerspectiveNodesHiddenEvent
-             (source, new FNode[] { removedNode })); } }
+             (source, new int[] { rootGraphNodeInx })); } }
       return returnThis;
     }
 
@@ -674,7 +673,7 @@ public class FGraphPerspective
 
     // RootGraphChangeSniffer is not to call this method.  We rely on
     // the specified nodes still existing in the RootGraph in this method.
-    private final int[] hideNodes(FGraphPerspective source, int[] rootNodeInx)
+    private final int[] hideNodes(FRootGraph source, int[] rootNodeInx)
     {
       // We can't use m_heap here because it's potentially used by every
       // _hideNode() during hiding of edges.
@@ -687,11 +686,11 @@ public class FGraphPerspective
       if (successes.size() > 0) {
         final GraphPerspectiveChangeListener listener = m_lis[0];
         if (listener != null) {
-          final FNode[] successArr = new FNode[successes.size()];
+          final int[] successArr = new int[successes.size()];
           final IntEnumerator en = successes.elements();
           int index = -1;
           while (en.numRemaining() > 0)
-            successArr[++index] = m_root.getNode(rootNodeInx[en.nextInt()]);
+            successArr[++index] = rootNodeInx[en.nextInt()];
           listener.graphPerspectiveChanged
             (new GraphPerspectiveNodesHiddenEvent(source, successArr)); } }
       return returnThis;
@@ -713,11 +712,11 @@ public class FGraphPerspective
       if (successes.size() > 0) {
         final GraphPerspectiveChangeListener listener = m_lis[0];
         if (listener != null) {
-          final FNode[] successArr = new FNode[successes.size()];
+          final int[] successArr = new int[successes.size()];
           final IntEnumerator en = successes.elements();
           int index = -1;
           while (en.numRemaining() > 0)
-            successArr[++index] = nodes[en.nextInt()];
+            successArr[++index] = nodes[en.nextInt()].getRootGraphIndex();
           listener.graphPerspectiveChanged
             (new GraphPerspectiveNodesHiddenEvent(source, successArr)); } }
     }
@@ -730,10 +729,9 @@ public class FGraphPerspective
       if (returnThis != 0) {
         final GraphPerspectiveChangeListener listener = m_lis[0];
         if (listener != null) {
-          final FEdge removedEdge = m_root.getEdge(rootGraphEdgeInx);
           listener.graphPerspectiveChanged
             (new GraphPerspectiveEdgesHiddenEvent
-             (source, new FEdge[] { removedEdge })); } }
+             (source, new int[] { rootGraphEdgeInx })); } }
       return returnThis;
     }
 
@@ -755,7 +753,7 @@ public class FGraphPerspective
 
     // RootGraphChangeSniffer is not to call this method.  We rely on
     // the specified edges still existing in the RootGraph in this method.
-    private final int[] hideEdges(FGraphPerspective source, int[] rootEdgeInx)
+    private final int[] hideEdges(FRootGraph source, int[] rootEdgeInx)
     {
       m_heap.empty();
       final MinIntHeap successes = m_heap;
@@ -766,11 +764,11 @@ public class FGraphPerspective
       if (successes.size() > 0) {
         final GraphPerspectiveChangeListener listener = m_lis[0];
         if (listener != null) {
-          final FEdge[] successArr = new FEdge[successes.size()];
+          final int[] successArr = new int[successes.size()];
           final IntEnumerator en = successes.elements();
           int index = -1;
           while (en.numRemaining() > 0)
-            successArr[++index] = m_root.getEdge(rootEdgeInx[en.nextInt()]);
+            successArr[++index] = rootEdgeInx[en.nextInt()];
           listener.graphPerspectiveChanged
             (new GraphPerspectiveEdgesHiddenEvent(source, successArr)); } }
       return returnThis;
@@ -788,11 +786,11 @@ public class FGraphPerspective
       if (successes.size() > 0) {
         final GraphPerspectiveChangeListener listener = m_lis[0];
         if (listener != null) {
-          final FEdge[] successArr = new FEdge[successes.size()];
+          final int[] successArr = new int[successes.size()];
           final IntEnumerator en = successes.elements();
           int index = -1;
           while (en.numRemaining() > 0)
-            successArr[++index] = edges[en.nextInt()];
+            successArr[++index] = en.nextInt();
           listener.graphPerspectiveChanged
             (new GraphPerspectiveEdgesHiddenEvent(source, successArr)); } }
     }

@@ -3,7 +3,6 @@ package org.hypergraphdb.viewer.hg;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -33,7 +32,7 @@ public class HGReader //implements GraphReader
 	 */
 	protected File db;
 	ArrayList<Integer> node_indices;
-	HashMap<Integer, Integer> edges; 
+	HashSet<Integer> edges; 
 
 	public HGReader(File db)
 	{
@@ -73,7 +72,7 @@ public class HGReader //implements GraphReader
 		while (it.hasNext())
 			loadHG(hypergraph, it.next(), nodes, links);
 		node_indices = new ArrayList(nodes.size());
-		edges = new HashMap<Integer, Integer>();
+		edges = new HashSet<Integer>();
 		for (Iterator<HGHandle> si = nodes.iterator(); si.hasNext();)
 		{
     		HGPersistentHandle handle = hypergraph.getPersistentHandle(si
@@ -96,7 +95,7 @@ public class HGReader //implements GraphReader
 				HGPersistentHandle handle = hypergraph.getPersistentHandle(link
 						.getTargetAt(l));
 				FEdge edge = HGVKit.getHGVEdge(link_handle, handle);
-				edges.put(edge.getRootGraphIndex(), 0);
+				edges.add(edge.getRootGraphIndex());
 			} // for t
 		} // for i
 	}
@@ -158,8 +157,12 @@ public class HGReader //implements GraphReader
 	public int[] getEdgeIndicesArray()
 	{
 		int[] res = new int[edges.size()];
-		for(int i = 0; i < edges.size(); i++)
-			res[i] = edges.get(i);
+		int i = 0;
+		for(Integer in : edges)
+		{
+			res[i] = in;
+			i++;
+		}
 		return res;
 	}
 /*

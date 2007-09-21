@@ -30,8 +30,6 @@ import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PDimension;
 import edu.umd.cs.piccolo.util.PNodeFilter;
-import edu.umd.cs.piccolox.event.PNotificationCenter;
-import edu.umd.cs.piccolox.handles.PBoundsHandle;
 import edu.umd.cs.piccolox.util.PFixedWidthStroke;
 import phoebe.PNodeView;
 import phoebe.util.*;
