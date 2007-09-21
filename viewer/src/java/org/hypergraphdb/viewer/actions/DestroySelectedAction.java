@@ -4,8 +4,8 @@ package org.hypergraphdb.viewer.actions;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-import giny.model.*;
-import giny.view.*;
+import fing.model.FEdge;
+import fing.model.FNode;
 import java.util.*;
 
 import org.hypergraphdb.viewer.ActionManager;
@@ -32,11 +32,11 @@ public class DestroySelectedAction extends HGVAction  {
 	
 	int j=0;
 	for (Iterator i = flaggedNodes.iterator(); i.hasNext(); ) {
-	    hiddenNodeIndices[j++] = gp.getIndex((Node) i.next());
+	    hiddenNodeIndices[j++] = gp.getIndex((FNode) i.next());
 	}
 	j=0;
 	for (Iterator i = flaggedEdges.iterator(); i.hasNext(); ) {
-	    hiddenEdgeIndices[j++] = gp.getIndex((Edge) i.next());
+	    hiddenEdgeIndices[j++] = gp.getIndex((FEdge) i.next());
 	}
 
 	// unflag then hide nodes from graph perspective

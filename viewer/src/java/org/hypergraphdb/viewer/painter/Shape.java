@@ -31,7 +31,7 @@
 //----------------------------------------------------------------------------
 package org.hypergraphdb.viewer.painter;
 //----------------------------------------------------------------------------
-import giny.view.NodeView;
+import phoebe.PNodeView;
 //----------------------------------------------------------------------------
 /**
  * This class is a replacement for the yFiles Shape class.
@@ -104,21 +104,21 @@ public class Shape {
     
     public static int getGinyShape(byte byteShape) {
         if (byteShape == TRIANGLE) {
-            return NodeView.TRIANGLE;
+            return PNodeView.TRIANGLE;
         } else if (byteShape == PARALLELOGRAM) {
-            return NodeView.PARALELLOGRAM;
+            return PNodeView.PARALELLOGRAM;
         } else if (byteShape == DIAMOND) {
-            return NodeView.DIAMOND;
+            return PNodeView.DIAMOND;
         } else if (byteShape == ELLIPSE) {
-            return NodeView. ELLIPSE;
+            return PNodeView. ELLIPSE;
         } else if (byteShape == HEXAGON) {
-            return NodeView.HEXAGON;
+            return PNodeView.HEXAGON;
         } else if (byteShape == OCTAGON) {
-            return NodeView.OCTAGON;
+            return PNodeView.OCTAGON;
         } else if (byteShape == ROUND_RECT ) {
-          return NodeView.ROUNDED_RECTANGLE;
+          return PNodeView.ROUNDED_RECTANGLE;
         } else {//rectangle, or unknown shape
-            return NodeView.RECTANGLE;
+            return PNodeView.RECTANGLE;
         }
     }
 }

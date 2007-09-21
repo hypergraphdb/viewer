@@ -8,12 +8,18 @@ package org.hypergraphdb.viewer.view;
 import java.util.*;
 import java.io.*;
 
-import giny.model.*;
-import giny.view.*;
+import fing.model.FEdge;
+import fing.model.FNode;
+import fing.model.FRootGraph;
 
 import org.hypergraphdb.viewer.data.FlagFilter;
 import org.hypergraphdb.viewer.data.FlagEventListener;
 import org.hypergraphdb.viewer.data.FlagEvent;
+import phoebe.PEdgeView;
+import phoebe.PGraphView;
+import phoebe.PNodeView;
+import phoebe.event.GraphViewChangeEvent;
+import phoebe.event.GraphViewChangeListener;
 //---------------------------------------------------------------------------
 /**
  * This class synchronizes the flagged status of nodes and edges as held by a
@@ -24,7 +30,7 @@ import org.hypergraphdb.viewer.data.FlagEvent;
 public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChangeListener {
     
     FlagFilter flagFilter;
-    GraphView view;
+    PGraphView view;
     
     /**
      * Standard constructor takes the flag filter and the view that should be
@@ -32,7 +38,7 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
      * and view by turning on flags or selections that are currently on in
      * one of the two objects.
      */
-    public FlagAndSelectionHandler(FlagFilter flagFilter, GraphView view) {
+    public FlagAndSelectionHandler(FlagFilter flagFilter, PGraphView view) {
         this.flagFilter = flagFilter;
         this.view = view;
         syncFilterAndView();
@@ -51,28 +57,28 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
         List selectedEdges = view.getSelectedEdges();
         //select all nodes that are flagged but not currently selected
         for (Iterator iter = flaggedNodes.iterator(); iter.hasNext(); ) {
-            Node node = (Node)iter.next();
-            NodeView nv = view.getNodeView(node);
+            FNode node = (FNode)iter.next();
+            PNodeView nv = view.getNodeView(node);
             if ( nv == null || nv.isSelected() ) {continue;}
             nv.setSelected(true);
         }
         //select all edges that are flagged but not currently selected
         for (Iterator iter = flaggedEdges.iterator(); iter.hasNext(); ) {
-            Edge edge = (Edge)iter.next();
-            EdgeView ev = view.getEdgeView(edge);
+            FEdge edge = (FEdge)iter.next();
+            PEdgeView ev = view.getEdgeView(edge);
             if ( ev == null || ev.isSelected() ) {continue;}
             ev.setSelected(true);
         }
         //flag all nodes that are selected but not currently flagged
         for (Iterator iter = selectedNodes.iterator(); iter.hasNext(); ) {
-            NodeView nv = (NodeView)iter.next();
-            Node node = nv.getNode();
+            PNodeView nv = (PNodeView)iter.next();
+            FNode node = nv.getNode();
             flagFilter.setFlagged(node, true); //does nothing if already flagged
         }
         //flag all edges that are selected but not currently flagged
         for (Iterator iter = selectedEdges.iterator(); iter.hasNext(); ) {
-            EdgeView ev = (EdgeView)iter.next();
-            Edge edge = ev.getEdge();
+            PEdgeView ev = (PEdgeView)iter.next();
+            FEdge edge = ev.getEdge();
             flagFilter.setFlagged(edge, true); //does nothing if already flagged
         }
     }
@@ -86,10 +92,10 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
       
 
         //GINY bug: the event we get frequently has the correct indices
-        //but incorrect Node and Edge objects. For now we get around this
+        //but incorrect FNode and FEdge objects. For now we get around this
         //by converting indices to graph objects ourselves
-        GraphView source = (GraphView)event.getSource();
-        RootGraph rootGraph = source.getGraphPerspective().getRootGraph();
+    	PGraphView source = (PGraphView)event.getSource();
+    	FRootGraph rootGraph = source.getGraphPerspective().getRootGraph();
         if (event.isNodesSelectedType()) {
           //System.out.println( "Nodes slected type:" );
           //System.out.println( "FlagAndSelectionHandler: "+event);
@@ -98,12 +104,12 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
           for ( int i = 0; i < nodes.length; ++i ) {
             //System.out.println( "Selected mnode: "+nodes[i]);
           }
-            //Node[] selNodes = event.getSelectedNodes();
+            //FNode[] selNodes = event.getSelectedNodes();
             //List selList = Arrays.asList(selNodes);
             int[] selIndices = event.getSelectedNodeIndices();
             List selList = new ArrayList();
             for (int index = 0; index < selIndices.length; index++) {
-                Node node = rootGraph.getNode(selIndices[index]);
+                FNode node = rootGraph.getNode(selIndices[index]);
                 //System.out.println( "Adding node: "+node);
                 selList.add(node);
             }
@@ -114,35 +120,35 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
 
             flagFilter.setFlaggedNodes(selList, true);
         } else if (event.isNodesUnselectedType()) {
-            //Node[] unselNodes = event.getUnselectedNodes();
+            //FNode[] unselNodes = event.getUnselectedNodes();
             //List unselList = Arrays.asList(unselNodes);
           //System.out.println( "nodes UNse;ected" );
 
             int[] unselIndices = event.getUnselectedNodeIndices();
             List unselList = new ArrayList();
             for (int index = 0; index < unselIndices.length; index++) {
-                Node node = rootGraph.getNode(unselIndices[index]);
+                FNode node = rootGraph.getNode(unselIndices[index]);
                 unselList.add(node);
                 //System.out.println( "Unselected node:"+node+" "+node.getRootGraphIndex() );
             }
             flagFilter.setFlaggedNodes(unselList, false);
         } else if (event.isEdgesSelectedType()) {
-            //Edge[] selEdges = event.getSelectedEdges();
+            //FEdge[] selEdges = event.getSelectedEdges();
             //List selList = Arrays.asList(selEdges);
             int[] selIndices = event.getSelectedEdgeIndices();
             List selList = new ArrayList();
             for (int index = 0; index < selIndices.length; index++) {
-                Edge edge = rootGraph.getEdge(selIndices[index]);
+                FEdge edge = rootGraph.getEdge(selIndices[index]);
                 selList.add(edge);
             }
             flagFilter.setFlaggedEdges(selList, true);
         } else if (event.isEdgesUnselectedType()) {
-            //Edge[] unselEdges = event.getUnselectedEdges();
+            //FEdge[] unselEdges = event.getUnselectedEdges();
             //List unselList = Arrays.asList(unselEdges);
             int[] unselIndices = event.getUnselectedEdgeIndices();
             List unselList = new ArrayList();
             for (int index = 0; index < unselIndices.length; index++) {
-                Edge edge = rootGraph.getEdge(unselIndices[index]);
+                FEdge edge = rootGraph.getEdge(unselIndices[index]);
                 unselList.add(edge);
             }
             flagFilter.setFlaggedEdges(unselList, false);
@@ -156,19 +162,19 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
      */
     public void onFlagEvent(FlagEvent event) {
         if (event.getTargetType() == FlagEvent.SINGLE_NODE) {//single node
-            setNodeSelected( (Node)event.getTarget(), event.getEventType() );
+            setNodeSelected( (FNode)event.getTarget(), event.getEventType() );
         } else if (event.getTargetType() == FlagEvent.SINGLE_EDGE) {//single edge
-            setEdgeSelected( (Edge)event.getTarget(), event.getEventType() );
+            setEdgeSelected( (FEdge)event.getTarget(), event.getEventType() );
         } else if (event.getTargetType() == FlagEvent.NODE_SET) {//multiple nodes
             Set nodeSet = (Set)event.getTarget();
             for (Iterator iter = nodeSet.iterator(); iter.hasNext(); ) {
-                Node node = (Node)iter.next();
+                FNode node = (FNode)iter.next();
                 setNodeSelected( node, event.getEventType() );
             }
         } else if (event.getTargetType() == FlagEvent.EDGE_SET) {//multiple edges
             Set edgeSet = (Set)event.getTarget();
             for (Iterator iter = edgeSet.iterator(); iter.hasNext(); ) {
-                Edge edge = (Edge)iter.next();
+                FEdge edge = (FEdge)iter.next();
                 setEdgeSelected( edge, event.getEventType() );
             }
         } else {//unexpected target type
@@ -179,8 +185,8 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
     /**
      * Helper method to set selection for a node view.
      */
-    private void setNodeSelected(Node node, boolean selectOn) {
-        NodeView nodeView = view.getNodeView(node);
+    private void setNodeSelected(FNode node, boolean selectOn) {
+        PNodeView nodeView = view.getNodeView(node);
         if (nodeView == null) {return;} //sanity check
         //Giny fires a selection event even if there's no change in state
         //we trap this by only requesting a selection if there's a change
@@ -192,8 +198,8 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
     /**
      * Helper method to set selection for an edge view.
      */
-    private void setEdgeSelected(Edge edge, boolean selectOn) {
-        EdgeView edgeView = view.getEdgeView(edge);
+    private void setEdgeSelected(FEdge edge, boolean selectOn) {
+        PEdgeView edgeView = view.getEdgeView(edge);
         if (edgeView == null) {return;} //sanity check
         //Giny fires a selection event even if there's no change in state
         //we trap this by only requesting a selection if there's a change

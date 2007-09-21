@@ -28,19 +28,20 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.viewer.actions.GinyUtils;
-import org.hypergraphdb.viewer.data.HGVNetworkUtilities;
 import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
 import org.hypergraphdb.viewer.painter.DefaultNodePainter;
 import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
+import org.hypergraphdb.viewer.util.PrimeFinder;
 import org.hypergraphdb.viewer.view.FlagAndSelectionHandler;
 import org.hypergraphdb.viewer.view.HGVMenus;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import org.hypergraphdb.viewer.visual.ui.DropDownButton;
+import phoebe.PEdgeView;
 import phoebe.PGraphView;
-import cern.colt.map.OpenIntObjectHashMap;
-import cern.colt.map.PrimeFinder;
+import phoebe.PNodeView;
+//import cern.colt.map.OpenIntObjectHashMap;
+//import cern.colt.map.PrimeFinder;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PLayer;
 import edu.umd.cs.piccolo.PNode;
@@ -50,9 +51,9 @@ import edu.umd.cs.piccolo.event.PInputEventFilter;
 import edu.umd.cs.piccolo.nodes.PText;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolox.swing.PScrollPane;
-import giny.model.GraphPerspective;
-import giny.view.EdgeView;
-import giny.view.NodeView;
+import fing.model.FEdge;
+import fing.model.FGraphPerspective;
+import fing.model.FNode;
 
 /**
  * HGVNetworkView is responsible for actually getting a graph to show up on the
@@ -60,8 +61,8 @@ import giny.view.NodeView;
  * <BR>
  * HGVKit does not currently define specific classes for NodeViews and
  * EdgeViews, the deafults from the GINY graph library ( namely phoebe.PNodeView
- * and phoebe.PEdgeView ) are most commonly used. Making custom nodes is easy
- * and fun. One must implement the giny.view.NodeView interface and inherit from
+ * and phoebe.PEdgeView0 ) are most commonly used. Making custom nodes is easy
+ * and fun. One must implement the giny.view.PNodeView interface and inherit from
  * edu.umd.cs.piccolo.PNode. The Piccolo project is what all of the paiting is
  * based on, and is very fast, flexable and powerful. Becoming acquainted with
  * Piccolo is essential for build custom nodes.<BR>
@@ -95,7 +96,7 @@ public class HGVNetworkView extends PGraphView
 
 	public HGVNetworkView(HGVNetwork network, String title)
 	{
-		super((GraphPerspective) network);
+		super((FGraphPerspective) network);
 		this.setIdentifier(title);
 		initialize();
 	}
@@ -163,18 +164,18 @@ public class HGVNetworkView extends PGraphView
 		initializeEventHandlers();
 		// initialize all of the Viewable objects based on all of
 		// the Edges and Nodes currently in the GraphPerspective
-		nodeViewMap = new OpenIntObjectHashMap(PrimeFinder
+		nodeViewMap = new HashMap<Integer, PNodeView>(PrimeFinder
 				.nextPrime(perspective.getNodeCount()));
-		edgeViewMap = new OpenIntObjectHashMap(PrimeFinder
+		edgeViewMap = new HashMap<Integer, PEdgeView>(PrimeFinder
 				.nextPrime(perspective.getEdgeCount()));
 		contextMenuStore = new HashMap(5);
 		NODE_DEFAULTS = new Object[] { new Double(DEFAULT_X),
-				new Double(DEFAULT_Y), new Integer(NodeView.OCTAGON),
+				new Double(DEFAULT_Y), new Integer(PNodeView.OCTAGON),
 				DEFAULT_NODE_PAINT, DEFAULT_NODE_SELECTION_PAINT,
 				DEFAULT_BORDER_PAINT, new Float(1), new Double(20),
-				new Double(20), "Node" };
+				new Double(20), "FNode" };
 		EDGE_DEFAULTS = new Object[] { new Integer(0), new Integer(0),
-				new Float(1), new Integer(EdgeView.STRAIGHT_LINES),
+				new Float(1), new Integer(PEdgeView.STRAIGHT_LINES),
 				DEFAULT_EDGE_STROKE_PAINT, DEFAULT_EDGE_STROKE_PAINT_SELECTION,
 				new Integer(2), DEFAULT_EDGE_END_PAINT, DEFAULT_EDGE_END_PAINT,
 				new Integer(3), DEFAULT_EDGE_END_PAINT, DEFAULT_EDGE_END_PAINT };
@@ -283,24 +284,24 @@ public class HGVNetworkView extends PGraphView
 			boolean space_down = false;
 			boolean slash_pressed = false;
 
-			protected void selectAndZoom()
-			{
-				String search_string;
-				if (length == 0)
-				{
-					search_string = "";
-				} else
-				{
-					search_string = typeBuffer.toString() + "*";
-				}
-				GinyUtils.deselectAllNodes(HGVKit.getCurrentView());
-				typeAheadNode.setText(typeBuffer.toString());
-				HGVNetworkUtilities.selectNodesStartingWith(HGVKit
-						.getCurrentNetwork(), search_string, HGVKit
-						.getCurrentView());
-				org.hypergraphdb.viewer.actions.ZoomSelectedAction
-						.zoomSelected();
-			}
+//			protected void selectAndZoom()
+//			{
+//				String search_string;
+//				if (length == 0)
+//				{
+//					search_string = "";
+//				} else
+//				{
+//					search_string = typeBuffer.toString() + "*";
+//				}
+//				GinyUtils.deselectAllNodes(HGVKit.getCurrentView());
+//				typeAheadNode.setText(typeBuffer.toString());
+//				HGVNetworkUtilities.selectNodesStartingWith(HGVKit
+//						.getCurrentNetwork(), search_string, HGVKit
+//						.getCurrentView());
+//				org.hypergraphdb.viewer.actions.ZoomSelectedAction
+//						.zoomSelected();
+//			}
 
 			protected void resetFind()
 			{
@@ -345,32 +346,35 @@ public class HGVNetworkView extends PGraphView
 					typeAheadNode.setTextPaint(java.awt.Color.white);
 					typeAheadNode.setFont(typeAheadNode.getFont().deriveFont(
 							30f));
-				} else if (slash_pressed
-						&& event.getKeyCode() != KeyEvent.VK_ESCAPE
-						&& event.getKeyCode() != KeyEvent.VK_BACK_SPACE)
-				{
-					// System.out.println( "Normal Press" );
-					typeBuffer.append(KeyEvent.getKeyText(event.getKeyCode()));
-					length++;
-					selectAndZoom();
-				} else if (slash_pressed
+				}
+//				else if (slash_pressed
+//						&& event.getKeyCode() != KeyEvent.VK_ESCAPE
+//						&& event.getKeyCode() != KeyEvent.VK_BACK_SPACE)
+//				{
+//					// System.out.println( "Normal Press" );
+//					typeBuffer.append(KeyEvent.getKeyText(event.getKeyCode()));
+//					length++;
+//					selectAndZoom();
+//				} 
+			    else if (slash_pressed
 						&& event.getKeyCode() == KeyEvent.VK_ESCAPE)
 				{
 					// System.out.println( "ESCAPRE PRESSED" );
 					resetFind();
-				} else if (slash_pressed
-						&& event.getKeyCode() == KeyEvent.VK_BACK_SPACE)
-				{
-					// System.out.println( "back space: "+length+"
-					// "+typeBuffer.toString() );
-					if (length != 0)
-					{
-						typeBuffer.deleteCharAt(length - 1);
-						length--;
-					}
-					selectAndZoom();
-					return;
 				}
+//			    else if (slash_pressed
+//						&& event.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+//				{
+//					// System.out.println( "back space: "+length+"
+//					// "+typeBuffer.toString() );
+//					if (length != 0)
+//					{
+//						typeBuffer.deleteCharAt(length - 1);
+//						length--;
+//					}
+//					selectAndZoom();
+//					return;
+//				}
 			}
 
 			public void keyReleased(PInputEvent event)
@@ -434,13 +438,13 @@ public class HGVNetworkView extends PGraphView
 	{
 		for (Iterator i = getNodeViewsIterator(); i.hasNext();)
 		{
-			NodeView nodeView = (NodeView) i.next();
+			PNodeView nodeView = (PNodeView) i.next();
 			if(nodeView == null)
 			{
 				System.out.println("VM - applyNodeAppearances - NULL NODE");
 				continue;
 			}
-			HGVNode node = (HGVNode) nodeView.getNode();
+			FNode node = nodeView.getNode();
 			HyperGraph hg = getNetwork().getHyperGraph();
 			HGPersistentHandle h = hg.getPersistentHandle(
 					hg.getTypeSystem().getTypeHandle(node.getHandle()));
@@ -462,13 +466,13 @@ public class HGVNetworkView extends PGraphView
 	{
 		 for (Iterator i = getEdgeViewsIterator(); i.hasNext(); )
 		 { 
-			 EdgeView edgeView = (EdgeView)i.next();
+			 PEdgeView edgeView = (PEdgeView)i.next();
 			 if(edgeView == null)
 			 {
 				System.out.println("VMM -applyNodeAppearances - NULL NODE");
 				continue;
 			 }
-			 HGVNode node = (HGVNode) ((HGVEdge) edgeView.getEdge()).getSource();
+			 FNode node = edgeView.getEdge().getSource();
 			 HyperGraph hg = getNetwork().getHyperGraph();
 			 HGPersistentHandle h = hg.getPersistentHandle(
 						hg.getTypeSystem().getTypeHandle(node.getHandle()));
@@ -527,7 +531,7 @@ public class HGVNetworkView extends PGraphView
 	/**
 	 * Sets the Given nodes Selected
 	 */
-	public boolean setSelected(HGVNode[] nodes)
+	public boolean setSelected(FNode[] nodes)
 	{
 		return setSelected(convertToViews(nodes));
 	}
@@ -535,7 +539,7 @@ public class HGVNetworkView extends PGraphView
 	/**
 	 * Sets the Given nodes Selected
 	 */
-	public boolean setSelected(NodeView[] node_views)
+	public boolean setSelected(PNodeView[] node_views)
 	{
 		for (int i = 0; i < node_views.length; ++i)
 		{
@@ -547,7 +551,7 @@ public class HGVNetworkView extends PGraphView
 	/**
 	 * Sets the Given edges Selected
 	 */
-	public boolean setSelected(HGVEdge[] edges)
+	public boolean setSelected(FEdge[] edges)
 	{
 		return setSelected(convertToViews(edges));
 	}
@@ -555,7 +559,7 @@ public class HGVNetworkView extends PGraphView
 	/**
 	 * Sets the Given edges Selected
 	 */
-	public boolean setSelected(EdgeView[] edge_views)
+	public boolean setSelected(PEdgeView[] edge_views)
 	{
 		for (int i = 0; i < edge_views.length; ++i)
 		{
@@ -564,9 +568,9 @@ public class HGVNetworkView extends PGraphView
 		return true;
 	}
 
-	protected NodeView[] convertToViews(HGVNode[] nodes)
+	protected PNodeView[] convertToViews(FNode[] nodes)
 	{
-		NodeView[] views = new NodeView[nodes.length];
+		PNodeView[] views = new PNodeView[nodes.length];
 		for (int i = 0; i < nodes.length; ++i)
 		{
 			views[i] = getNodeView(nodes[i]);
@@ -574,9 +578,9 @@ public class HGVNetworkView extends PGraphView
 		return views;
 	}
 
-	protected EdgeView[] convertToViews(HGVEdge[] edges)
+	protected PEdgeView[] convertToViews(FEdge[] edges)
 	{
-		EdgeView[] views = new EdgeView[edges.length];
+		PEdgeView[] views = new PEdgeView[edges.length];
 		for (int i = 0; i < edges.length; ++i)
 		{
 			views[i] = getEdgeView(edges[i]);
@@ -584,9 +588,9 @@ public class HGVNetworkView extends PGraphView
 		return views;
 	}
 
-	protected NodeView[] convertToNodeViews(int[] nodes)
+	protected PNodeView[] convertToNodeViews(int[] nodes)
 	{
-		NodeView[] views = new NodeView[nodes.length];
+		PNodeView[] views = new PNodeView[nodes.length];
 		for (int i = 0; i < nodes.length; ++i)
 		{
 			views[i] = getNodeView(nodes[i]);
@@ -594,54 +598,14 @@ public class HGVNetworkView extends PGraphView
 		return views;
 	}
 
-	protected EdgeView[] convertToEdgeViews(int[] edges)
+	protected PEdgeView[] convertToEdgeViews(int[] edges)
 	{
-		EdgeView[] views = new EdgeView[edges.length];
+		PEdgeView[] views = new PEdgeView[edges.length];
 		for (int i = 0; i < edges.length; ++i)
 		{
 			views[i] = getEdgeView(edges[i]);
 		}
 		return views;
-	}
-
-	protected NodeView[] getInverseViews(NodeView[] given)
-	{
-		NodeView[] inverse = new NodeView[getNodeViewCount() - given.length];
-		List node_views = getNodeViewsList();
-		int count = 0;
-		Iterator i = node_views.iterator();
-		Arrays.sort(given);
-		while (i.hasNext())
-		{
-			NodeView view = (NodeView) i.next();
-			if (Arrays.binarySearch(given, view) < 0)
-			{
-				// not a given, add
-				inverse[count] = view;
-				count++;
-			}
-		}
-		return inverse;
-	}
-
-	protected EdgeView[] getInverseViews(EdgeView[] given)
-	{
-		EdgeView[] inverse = new EdgeView[getEdgeViewCount() - given.length];
-		List edge_views = getEdgeViewsList();
-		int count = 0;
-		Iterator i = edge_views.iterator();
-		Arrays.sort(given);
-		while (i.hasNext())
-		{
-			EdgeView view = (EdgeView) i.next();
-			if (Arrays.binarySearch(given, view) < 0)
-			{
-				// not a given, add
-				inverse[count] = view;
-				count++;
-			}
-		}
-		return inverse;
 	}
 
 	public class Canvas extends PCanvas implements FocusListener

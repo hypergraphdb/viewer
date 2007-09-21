@@ -60,7 +60,7 @@ public class ShapeEditor extends AbstractPropertyEditor
 	
     protected void selectShape()
 	{
-		PopupIconChooser chooser = new PopupIconChooser("Select Node Shape",
+		PopupIconChooser chooser = new PopupIconChooser("Select FNode Shape",
 				    "BlahBlah",
 				    EditorConstants.getShapeIcons(),
 				    (Byte) getValue(),

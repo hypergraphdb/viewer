@@ -9,22 +9,15 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
 import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.actions.DeselectAllAction;
-import org.hypergraphdb.viewer.actions.HideSelectedAction;
-import org.hypergraphdb.viewer.actions.SelectFirstNeighborsAction;
 import org.hypergraphdb.viewer.hg.HGUtils;
-import org.hypergraphdb.viewer.layout.GEM;
 
 import phoebe.PGraphView;
 import phoebe.PNodeView;
+import phoebe.PNodeView;
 
 import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.util.PAffineTransform;
-import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PDimension;
-import giny.view.NodeView;
+import fing.model.FNode;
 
 public class ContextMenuHelper {
 
@@ -35,7 +28,7 @@ public class ContextMenuHelper {
 	    	  {
 	    		  HGVNetworkView v = (HGVNetworkView)((PNodeView) node).getGraphView();
 	    		  HGUtils.expandNode(v.getNetwork().getHyperGraph(), 
-	    				  (HGVNode) ((NodeView)node).getNode());
+	    				  ((PNodeView)node).getNode());
 	    		  int def = 50;
 	    		  removeExtraNodes(node, def);
 	    		  adjust(node);
@@ -49,12 +42,12 @@ public class ContextMenuHelper {
 	    	  public void actionPerformed(ActionEvent e)
 	    	  {
 	    		 // int i = ((PNodeView) node).getRootGraphIndex ();
-	    		 // NodeView view = HGVKit.getCurrentView().getNodeView(i);
+	    		 // PNodeView view = HGVKit.getCurrentView().getNodeView(i);
 	    		 // HGUtils.collapseNode(HGVKit.getCurrentNetwork().getHyperGraph(), 
 	    		//		  (HGVNode)view.getNode());
 	    		  HGVNetworkView v = (HGVNetworkView)((PNodeView) node).getGraphView();
 	    		  HGUtils.collapseNode(v.getNetwork().getHyperGraph(), 
-	    				  (HGVNode) ((NodeView)node).getNode());
+	    				  ((PNodeView)node).getNode());
 	    		 
 	    		  adjust(node);
 	    	  }
@@ -64,7 +57,7 @@ public class ContextMenuHelper {
 	private static void adjust(PNode node)
 	{
 		//int i = ((PNodeView) node).getRootGraphIndex ();
-		//NodeView nview = HGVKit.getCurrentNetworkView().getNodeView(i);
+		//PNodeView nview = HGVKit.getCurrentNetworkView().getNodeView(i);
 		HGVKit.getPreferedLayout().applyLayout();
 		
 		PGraphView view =(PGraphView) HGVKit.getCurrentView();
@@ -75,22 +68,22 @@ public class ContextMenuHelper {
 	//static int def = 15;
 	private static void removeExtraNodes(PNode node, int def)
 	{
-		if(HGVKit.getCurrentView().nodeCount() < def)
+		if(HGVKit.getCurrentView().getNodeViewCount() < def)
 			return;
-		TreeMap<Double, NodeView> nodes = new TreeMap<Double, NodeView>();
+		TreeMap<Double, PNodeView> nodes = new TreeMap<Double, PNodeView>();
 		Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
 		java.awt.geom.Point2D n = node.getFullBounds().getCenter2D();
 		while(it.hasNext())
 		{
-			NodeView view = (NodeView)it.next();
+			PNodeView view = (PNodeView)it.next();
 		    nodes.put(n.distance(view.getOffset()),view);
 		}
-		System.out.println("Node count: " + HGVKit.getCurrentView().nodeCount());
+		//System.out.println("FNode count: " + HGVKit.getCurrentView().nodeCount());
 		int j = 0;
 		for(int i = 0; nodes.size() - def > 0; i++)
 		{
 			Double key = nodes.lastKey();
-			HGVNode nn = (HGVNode)nodes.get(key).getNode();
+			FNode nn = (FNode)nodes.get(key).getNode();
 			j = HGUtils.removeNode(HGVKit.getCurrentNetwork().getHyperGraph(), nn);
 			nodes.remove(key);
 		}

@@ -54,7 +54,7 @@ import java.util.*;
  * Performs transformations and calculations on graphs.
  * This class accepts graphs in an abstract representation. Nodes
  * are indexed with integers, beginning with 0. Edges are represented
- * with instances of the {@link csplugins.hierarchicallayout.Edge}
+ * with instances of the {@link csplugins.hierarchicallayout.FEdge}
  * class, which holds a (from, to) pair of integers.
  */
 public class Graph 
@@ -77,7 +77,7 @@ public class Graph
     /** number of passes to do adjacency exchange */
     static int MAX_ADJACENT_EXCHANGE_PASSES = 5;
     /**
-     * Build a graph from a supplied Edge array.
+     * Build a graph from a supplied FEdge array.
      * Nodes must be consecutively indexed beginning with zero.
      * @param a_nodecount The total number of nodes in the graph
      * @param a_edge An array of all edges in the graph (each edge holds the source and destination node's indicies)
@@ -103,7 +103,7 @@ public class Graph
             || edgeTo < 0 || edgeTo >= nodecount)
             {
                 throw new IllegalArgumentException(
-                "Edge refered to node outside of valid range: "
+                "FEdge refered to node outside of valid range: "
                 + "From=" + edgeFrom + " To=" + edgeTo
                 + " with nodecount=" + nodecount + "\n");
             }
@@ -1382,7 +1382,7 @@ public class Graph
             
             int cI[] = graph.componentIndex();
             int x;
-            System.out.println("Node index:\n");
+            System.out.println("FNode index:\n");
             for (x=0; x<graph.getNodecount(); x++)
             {
                 System.out.println(Integer.toString(cI[x]));

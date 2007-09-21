@@ -6,10 +6,10 @@ import java.util.Map;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.data.FlagFilter;
 import cytoscape.util.intr.IntIterator;
+import fing.model.FEdge;
 import fing.model.FGraphPerspective;
+import fing.model.FNode;
 import fing.model.FRootGraph;
-import giny.model.Edge;
-import giny.model.Node;
 
 /**
  * HGVNetwork is the primary class for algorithm writing.&nbsp; All algorithms
@@ -131,20 +131,6 @@ public class HGVNetwork extends FGraphPerspective
 		return clientData.get(data_name);
 	}
 
-	// ------------------------------//
-	// Depercation
-	// ------------------------------//
-	/**
-	 * Appends all of the nodes and edges in the given Network to this Network
-	 */
-	public void appendNetwork(HGVNetwork network)
-	{
-		int[] nodes = network.getNodeIndicesArray();
-		int[] edges = network.getEdgeIndicesArray();
-		restoreNodes(nodes);
-		restoreEdges(edges);
-	}
-
 	/**
 	 * Returns the default object for flagging graph objects.
 	 */
@@ -158,20 +144,18 @@ public class HGVNetwork extends FGraphPerspective
 	 * 
 	 * @return the node
 	 */
-	public HGVNode addNode(Node cytoscape_node)
+	public FNode addNode(FNode cytoscape_node)
 	{
-		return (HGVNode) restoreNode(cytoscape_node);
+		return restoreNode(cytoscape_node);
 	}
 
 	
 	/**
-	 * Add a edge to this Network
-	 * 
-	 * @return the edge
+	 * Add an edge to this Network
 	 */
-	public HGVEdge addEdge(Edge cytoscape_edge)
+	public void addEdge(FEdge cytoscape_edge)
 	{
-		return (HGVEdge) restoreEdge(cytoscape_edge);
+		restoreEdge(cytoscape_edge.getRootGraphIndex());
 	}
 
 	public HyperGraph getHyperGraph()

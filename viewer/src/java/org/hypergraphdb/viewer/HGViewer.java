@@ -1,8 +1,6 @@
 package org.hypergraphdb.viewer;
 
-import giny.model.RootGraph;
-import giny.view.EdgeView;
-import giny.view.NodeView;
+import fing.model.FRootGraph;
 import java.awt.Component;
 import java.io.IOException;
 import java.io.Serializable;
@@ -13,6 +11,8 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.hg.HGWNReader;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.visual.VisualStyle;
+import phoebe.PEdgeView;
+import phoebe.PNodeView;
 
 public class HGViewer implements Serializable
 {
@@ -93,14 +93,14 @@ public class HGViewer implements Serializable
 	}
     
     private void clearView(){
-    	RootGraph g = view.getNetwork().getRootGraph();
+    	FRootGraph g = view.getNetwork().getRootGraph();
     	for(Iterator it = view.getEdgeViewsIterator(); it.hasNext();){
-    		EdgeView nv = (EdgeView) it.next();
+    		PEdgeView nv = (PEdgeView) it.next();
     		view.removeEdgeView(nv.getEdge().getRootGraphIndex());
     		g.removeEdge(nv.getEdge());
     	}
     	for(Iterator it = view.getNodeViewsIterator(); it.hasNext();){
-    		NodeView nv = (NodeView) it.next();
+    		PNodeView nv = (PNodeView) it.next();
     		view.removeNodeView(nv.getNode().getRootGraphIndex());
     		g.removeNode(nv.getNode());
     	}

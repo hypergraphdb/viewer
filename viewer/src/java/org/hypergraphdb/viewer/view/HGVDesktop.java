@@ -1,16 +1,15 @@
 package org.hypergraphdb.viewer.view;
 
 import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.view.HGVMenus;
 import org.hypergraphdb.viewer.visual.*;
-import org.hypergraphdb.viewer.visual.ui.*;
 import org.hypergraphdb.viewer.props.*;
 import org.hypergraphdb.*;
-import giny.view.GraphView;
-import giny.view.NodeView;
+import fing.model.FNode;
+import phoebe.PGraphView;
+import phoebe.PNodeView;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -353,9 +352,9 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 			pcs.firePropertyChange(e);
 		} else if (e.getPropertyName() == BeanProperty.PROP_VALUE)
 		{
-			GraphView view = HGVKit.getCurrentView();
+			PGraphView view = HGVKit.getCurrentView();
 			List selected_nodeViews = view.getSelectedNodes();
-			HGVNode node = (HGVNode) ((NodeView) selected_nodeViews.get(0))
+			FNode node = ((PNodeView) selected_nodeViews.get(0))
 					.getNode();
 			HyperGraph hg = HGVKit.getCurrentNetwork().getHyperGraph();
 			// System.out.println("HGVDesktop - replace: "
@@ -372,8 +371,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 		List selected_nodeViews = view.getSelectedNodes();
 		if (!selected_nodeViews.isEmpty())
 		{
-			HGVNode node = (HGVNode) ((NodeView) selected_nodeViews.get(0))
-					.getNode();
+			FNode node = ((PNodeView) selected_nodeViews.get(0)).getNode();
 			// System.out.println("updatePropsPanel()" +
 			// ((HGVNode)node).getHandle());
 			Object obj = view.getNetwork().getHyperGraph().get(node.getHandle());

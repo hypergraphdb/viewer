@@ -4,16 +4,17 @@ package org.hypergraphdb.viewer.layout;
 import java.util.*;
 
 import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.hg.HGUtils;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
 import org.hypergraphdb.viewer.layout.util.Graph;
+import phoebe.PEdgeView;
+import phoebe.PNodeView;
 
-import giny.view.NodeView;
-import giny.view.EdgeView;
-import giny.model.*;
+import fing.model.FEdge;
+import fing.model.FGraphPerspective;
+import fing.model.FNode;
 
 /**
  * Java implementation of the gem 2D layout.
@@ -34,8 +35,8 @@ public class GEM implements Layout
     public final static String Name = "GEM Force-directed";
    
     
-    private static Set<Node> nodes;
-    private static Set<Edge> edges;
+    private static Set<FNode> nodes;
+    private static Set<FEdge> edges;
     
     private static int nodeCount;
     //private static int edgeCount;
@@ -151,9 +152,9 @@ public class GEM implements Layout
     }
 
     private GemP gemProp[];
-    private Node invmap[];
+    private FNode invmap[];
     private ArrayList adjacent[];
-    private HashMap<Node, Integer> nodeNumbers;
+    private HashMap<FNode, Integer> nodeNumbers;
 
     public static int rand() {
 	return (int)(Math.random() * Integer.MAX_VALUE);
@@ -586,7 +587,7 @@ public class GEM implements Layout
 	HGVNetwork net = HGVKit.getCurrentNetwork();
 	while (edgeSet.hasNext()) {
 	    e = (Graph.Edge)edgeSet.next();
-	    //??? int or Node key
+	    //??? int or FNode key
 	    u = ((Integer)nodeNumbers.get(net.getNode(e.getFrom()))).intValue();
 	    w = ((Integer)nodeNumbers.get(net.getNode(e.getTo()))).intValue();
 	    if (u != v && w != v) {
@@ -675,18 +676,18 @@ public class GEM implements Layout
 	Integer nodeNr;
 	GemP p;
       
-	nodes = new HashSet<Node>();
-	edges = new HashSet<Edge>();
+	nodes = new HashSet<FNode>();
+	edges = new HashSet<FEdge>();
 	Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
 	while(it.hasNext())
 	{
-	    NodeView view = (NodeView) it.next();
+	    PNodeView view = (PNodeView) it.next();
 	    nodes.add(view.getNode());
 	}
 	it = HGVKit.getCurrentView().getEdgeViewsIterator();
 	while(it.hasNext())
 	{
-	    EdgeView view = (EdgeView) it.next();
+	    PEdgeView view = (PEdgeView) it.next();
 	    edges.add(view.getEdge());
 	}
       
@@ -694,16 +695,16 @@ public class GEM implements Layout
 	//edgeCount = edges.size();
       
 	gemProp = new GemP[nodeCount];
-	invmap  = new Node[nodeCount];
+	invmap  = new FNode[nodeCount];
 	adjacent = new ArrayList[nodeCount];
-	nodeNumbers = new HashMap<Node, Integer>();
+	nodeNumbers = new HashMap<FNode, Integer>();
 	
-	Node n;
-	GraphPerspective graphPerspective = HGVKit.getCurrentView().getGraphPerspective();
+	FNode n;
+	FGraphPerspective graphPerspective = HGVKit.getCurrentView().getGraphPerspective();
 	
 	Iterator nodeSet = nodes.iterator();
 	for (int i = 0; nodeSet.hasNext(); i++) {
-	    n = (HGVNode) nodeSet.next();
+	    n = (FNode) nodeSet.next();
 	    gemProp[i] = new GemP(graphPerspective.getAdjacentEdgeIndicesArray(
 	    		n.getRootGraphIndex(), true, true, true).length);
 	    //System.out.println("GEM: " + n + "  adj: " + graphPerspective.neighborsList(n).size());
@@ -717,7 +718,7 @@ public class GEM implements Layout
 	    		       invmap[i].getRootGraphIndex(), true, true, true);
 	    adjacent[i] = new ArrayList( ); //nset.size() );
 	    for (int j=0; j < neighbors.length; j++) {
-		Edge e = graphPerspective.getEdge(neighbors[j]);
+		FEdge e = graphPerspective.getEdge(neighbors[j]);
 		n = HGUtils.getOppositeNode(invmap[i], e);
 		nodeNr = (Integer)nodeNumbers.get(n);
 		adjacent[i].add( nodeNr );
@@ -763,7 +764,7 @@ public class GEM implements Layout
 
 	double[] xPos = new double[nNodes];
 	double[] yPos = new double[nNodes];
-	Node[] nlist = new Node[nNodes];
+	FNode[] nlist = new FNode[nNodes];
 
 	double xMax = Double.MIN_VALUE;
 	double yMax = Double.MIN_VALUE;
@@ -772,9 +773,9 @@ public class GEM implements Layout
 	
 	Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
 	int i = 0;
-	NodeView[] views = new NodeView[nNodes];
+	PNodeView[] views = new PNodeView[nNodes];
 	while(it.hasNext()) {
-	    views[i] = (NodeView)it.next();
+	    views[i] = (PNodeView)it.next();
 	    nlist[i] = views[i].getNode();
 	    Coordinates c = (Coordinates)locations.get(nlist[i]);
 	    xPos[i] = c.getX();

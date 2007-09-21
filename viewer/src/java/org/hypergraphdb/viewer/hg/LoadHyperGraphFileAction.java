@@ -6,30 +6,27 @@
  */
 package org.hypergraphdb.viewer.hg;
 
-import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
-import cytoscape.task.*;
-import cytoscape.task.ui.*;
-import cytoscape.task.util.*;
-import org.hypergraphdb.viewer.util.GUIUtilities;
-import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.util.FileUtil;
-import org.hypergraphdb.viewer.view.HGVMenus;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.text.DecimalFormat;
-
-import edu.umd.cs.piccolo.PCanvas;
-import edu.umd.cs.piccolo.PLayer;
+import java.text.NumberFormat;
+import javax.swing.SwingUtilities;
+import org.hypergraphdb.viewer.ActionManager;
+import org.hypergraphdb.viewer.AppConfig;
+import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.util.FileUtil;
+import org.hypergraphdb.viewer.util.GUIUtilities;
+import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 import phoebe.PGraphView;
+import cytoscape.task.Task;
+import cytoscape.task.TaskMonitor;
+import cytoscape.task.ui.JTaskConfig;
+import cytoscape.task.util.TaskManager;
+import edu.umd.cs.piccolo.PCanvas;
 
 /**
  */

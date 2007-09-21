@@ -7,8 +7,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import javax.swing.AbstractAction;
-import giny.model.*;
-import giny.view.*;
+import fing.model.FEdge;
+import fing.model.FNode;
 import phoebe.*;
 import java.util.*;
 import org.hypergraphdb.HGHandle;
@@ -17,12 +17,8 @@ import org.hypergraphdb.handle.UUIDPersistentHandle;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.HGVNode;
-
-
 import org.hypergraphdb.viewer.util.*;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVEdge;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.hg.HGUtils;
@@ -57,7 +53,7 @@ public class AddLinkAction extends HGVAction
         HGHandle[] handles = new HGHandle[node_indicies.length];
         for(int i = 0; i<node_indicies.length; i++)
         {
-        	handles[i]  = ((HGVNode) HGVKit.getRootGraph().getNode(node_indicies[i])).getHandle();
+        	handles[i]  = HGVKit.getRootGraph().getNode(node_indicies[i]).getHandle();
         }
         
         NotifyDescriptor d =
@@ -71,11 +67,12 @@ public class AddLinkAction extends HGVAction
                return;
         }
        
-        HGVNode node = HGUtils.addNode(net.getHyperGraph(), 
+        FNode node = HGUtils.addNode(net.getHyperGraph(), 
         		net.getHyperGraph().add(new HGValueLink(name, handles)));
         for(int i = 0; i< handles.length; i++)
         {
-            HGVEdge edge = HGVKit.getHGVEdge(node, (HGVNode) HGVKit.getRootGraph().getNode(node_indicies[i]),
+            FEdge edge = HGVKit.getHGVEdge(node, 
+            		HGVKit.getRootGraph().getNode(node_indicies[i]),
             true);
             net.addEdge(edge);
         }

@@ -54,7 +54,7 @@ public class LineTypeEditor extends AbstractPropertyEditor
 	
     protected void selectShape()
 	{
-		PopupIconChooser chooser = new PopupIconChooser("Select Node Line Type",
+		PopupIconChooser chooser = new PopupIconChooser("Select FNode Line Type",
 				    "BlahBlah",
 				    EditorConstants.getLineTypeIcons(),
 				    EditorConstants.getLineTypeIndex((LineType) getValue()),

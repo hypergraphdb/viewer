@@ -1,9 +1,7 @@
 package org.hypergraphdb.viewer.hg;
 
-import giny.model.Edge;
-import giny.model.Node;
-import giny.view.GraphView;
-import giny.view.NodeView;
+import fing.model.FEdge;
+import fing.model.FNode;
 import java.util.*;
 import org.hypergraphdb.*;
 import org.hypergraphdb.storage.BAtoHandle;
@@ -16,14 +14,13 @@ import org.hypergraphdb.handle.*;
 import org.hypergraphdb.indexing.ByPartIndexer;
 import org.hypergraphdb.query.*;
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.HGVEdge;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.HGVNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.util.GUIUtilities;
+import phoebe.PNodeView;
 import static org.hypergraphdb.HGQuery.hg;
 
 /**
@@ -110,23 +107,23 @@ public class HGUtils
 
 	public static void expandSelectedNode(HyperGraph hg)
 	{
-		GraphView view = HGVKit.getCurrentView();
+		HGVNetworkView view = HGVKit.getCurrentView();
 		List selected_nodeViews = view.getSelectedNodes();
 		for (Object obj : selected_nodeViews)
 		{
-			HGVNode node = (HGVNode) ((NodeView) obj).getNode();
+			FNode node = ((PNodeView) obj).getNode();
 			expandNode(hg, node, false);
 		}
 		HGVKit.getCurrentView().redrawGraph();
 	}
 
-	public static void expandNode(HyperGraph hg, HGVNode node)
+	public static void expandNode(HyperGraph hg, FNode node)
 	{
 		expandNode(hg, node, true);
 		HGVKit.getCurrentView().redrawGraph();
 	}
 
-	private static void expandNode(HyperGraph hg, HGVNode node, boolean select)
+	private static void expandNode(HyperGraph hg, FNode node, boolean select)
 	{
 		Thread.currentThread().setContextClassLoader(
 				AppConfig.getInstance().getClassLoader());
@@ -140,24 +137,24 @@ public class HGUtils
 		addNode(hg, node.getHandle());
 	}
 
-	public static HGVNode addNode(HyperGraph hg, HGHandle handle)
+	public static FNode addNode(HyperGraph hg, HGHandle handle)
 	{
 		return addNode(hg, handle, 1);
 	}
 
 	// The node should be presented in HG, this method adds it to the View
-	public static HGVNode addNode(HyperGraph hg, HGHandle handle, int level)
+	public static FNode addNode(HyperGraph hg, HGHandle handle, int level)
 	{
 		HGVNetworkView view = HGVKit.getCurrentView();
 		Object obj = hg.get(handle);
 		if (obj instanceof HGLink && isDirectedLink(hg, handle))
 			return addDirectedNode(hg, handle, level);
-		HGVNode node = HGVKit
+		FNode node = HGVKit
 				.getHGVNode(hg.getPersistentHandle(handle), true);
 		if(node == null) System.err.println("NULL NODE");
 		view.getNetwork().addNode(node);
-		NodeView nview = view.getNodeView(node.getRootGraphIndex());
-		if(node == null) System.err.println("NULL NodeView");
+		PNodeView nview = view.getNodeView(node.getRootGraphIndex());
+		if(node == null) System.err.println("NULL PNodeView");
 		view.showGraphObject(nview);
 		if (level > 0)
 		{
@@ -172,7 +169,7 @@ public class HGUtils
 					addNode(hg, h_links[i], level - 1);
 					continue;
 				}
-				HGVEdge edge = HGVKit.getHGVEdge(addNode(hg, h_links[i],
+				FEdge edge = HGVKit.getHGVEdge(addNode(hg, h_links[i],
 						level - 1), node, true);
 				view.getNetwork().addEdge(edge);
 				view
@@ -188,7 +185,7 @@ public class HGUtils
 				return node;
 			for (int i = 0; i < link.getArity(); i++)
 			{
-				HGVEdge edge = HGVKit.getHGVEdge(node, addNode(hg, link
+				FEdge edge = HGVKit.getHGVEdge(node, addNode(hg, link
 						.getTargetAt(i), level - 1), true);
 				view.getNetwork().addEdge(edge);
 				view.showGraphObject(view.getEdgeView(edge.getRootGraphIndex()));
@@ -199,16 +196,16 @@ public class HGUtils
 	
 	
 
-	public static HGVNode addDirectedNode(HyperGraph hg, HGHandle handle,
+	public static FNode addDirectedNode(HyperGraph hg, HGHandle handle,
 			int level)
 	{
 		HGVNetworkView view = HGVKit.getCurrentView();
 		Object obj = hg.get(handle);
 		HGHandle src = ((HGLink) obj).getTargetAt(0);
 		HGHandle trg = ((HGLink) obj).getTargetAt(1);
-		HGVNode src_n = addNode(hg, src, level - 1);
-		HGVNode trg_n = addNode(hg, trg, level - 1);
-		HGVEdge edge = HGVKit.getHGVEdge(src_n, trg_n, true);
+		FNode src_n = addNode(hg, src, level - 1);
+		FNode trg_n = addNode(hg, trg, level - 1);
+		FEdge edge = HGVKit.getHGVEdge(src_n, trg_n, true);
 		view.getNetwork().addEdge(edge);
 		view.showGraphObject(view.getNodeView(src_n.getRootGraphIndex()));
 		view.showGraphObject(view.getNodeView(trg_n.getRootGraphIndex()));
@@ -270,14 +267,14 @@ public class HGUtils
 	}
 	
 
-	public static void collapseNode(HyperGraph hg, HGVNode node)
+	public static void collapseNode(HyperGraph hg, FNode node)
 	{
 		removeNode(hg, node);
 		// HGVKit.getCurrentNetworkView().redrawGraph(false, false);
 	}
 	
 //	 The node should be presented in HG, this method removes it from the View
-	public static int removeNode(HyperGraph hg, HGVNode node)
+	public static int removeNode(HyperGraph hg, FNode node)
 	{
 		//Thread.currentThread().setContextClassLoader(
 		//		AppConfig.getInstance().getClassLoader());
@@ -285,15 +282,15 @@ public class HGUtils
 	    HGVNetworkView view = HGVKit.getCurrentView();
 		HGVNetwork net = view.getNetwork();
 		
-		Set<Node> nodesToRemove = new HashSet<Node>();
+		Set<FNode> nodesToRemove = new HashSet<FNode>();
 		nodesToRemove.add(node);
-		Set<Edge> edgesToRemove = new HashSet<Edge>();
+		Set<FEdge> edgesToRemove = new HashSet<FEdge>();
 		int[] edges = net.getAdjacentEdgeIndicesArray(
 				node.getRootGraphIndex(), true, true, true);
 		for(int i = 0; i < edges.length; i++)
 		{
-			Edge e = net.getEdge(edges[i]);
-			Node out = getOppositeNode(node, e);
+			FEdge e = net.getEdge(edges[i]);
+			FNode out = getOppositeNode(node, e);
 			int[] in_edges = net.getAdjacentEdgeIndicesArray(
 					out.getRootGraphIndex(), true, true, true);
 			if( in_edges.length <= 1)
@@ -305,12 +302,12 @@ public class HGUtils
 			edgesToRemove.add(e);
 		}
 		
-		for(Edge edge: edgesToRemove)
+		for(FEdge edge: edgesToRemove)
 		{
 			view.removeEdgeView(edge);
 			net.getRootGraph().removeEdge(edge);
 		}
-		for(Node n: nodesToRemove)
+		for(FNode n: nodesToRemove)
 		{
 		   view.removeNodeView(n);
 		   net.getRootGraph().removeNode(n);
@@ -320,7 +317,7 @@ public class HGUtils
 		return nodesToRemove.size();
 	}
 
-	public static Node getOppositeNode(Node center, giny.model.Edge e)
+	public static FNode getOppositeNode(FNode center, fing.model.FEdge e)
 	{
 		if (e.getSource().equals(center)) return e.getTarget();
 		return e.getSource();

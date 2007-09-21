@@ -10,6 +10,8 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.query.HGQueryCondition;
 import org.hypergraphdb.viewer.*;
+import fing.model.FEdge;
+import fing.model.FNode;
 
 
 /**
@@ -57,13 +59,13 @@ public class HGWNReader
 	}
 	
 //	 The node should be presented in HG, this method adds it to the View
-	public static HGVNode addNode(HyperGraph hg, HGHandle handle, int level,
+	public static FNode addNode(HyperGraph hg, HGHandle handle, int level,
 			HGAtomPredicate cond, Set<Integer> nodes, Set<Integer> edges)
 	{
 		Object obj = hg.get(handle);
 		if (obj instanceof HGLink && HGUtils.isDirectedLink(hg, handle))
 			return addDirectedNode(hg, handle, level, cond, nodes, edges);
-		HGVNode node = HGVKit
+		FNode node = HGVKit
 				.getHGVNode(hg.getPersistentHandle(handle), true);
 		nodes.add(node.getRootGraphIndex());
 		if (level > 0)
@@ -78,7 +80,7 @@ public class HGWNReader
 					addNode(hg, h_links[i], level - 1, cond, nodes, edges);
 					continue;
 				}
-				HGVEdge edge = HGVKit.getHGVEdge(addNode(hg, h_links[i],
+				FEdge edge = HGVKit.getHGVEdge(addNode(hg, h_links[i],
 						level - 1, cond, nodes, edges), node, true);
 				edges.add(edge.getRootGraphIndex());
 			}
@@ -89,7 +91,7 @@ public class HGWNReader
 			HGLink link = ((HGLink) obj);
 			for (int i = 0; i < link.getArity(); i++)
 			{
-				HGVEdge edge = HGVKit.getHGVEdge(node, addNode(hg, link
+				FEdge edge = HGVKit.getHGVEdge(node, addNode(hg, link
 						.getTargetAt(i), level - 1, cond, nodes, edges), true);
 				//HGVKit.getCurrentNetwork().addEdge(edge);
 				edges.add(edge.getRootGraphIndex());
@@ -98,15 +100,15 @@ public class HGWNReader
 		return node;
 	}
 
-	public static HGVNode addDirectedNode(HyperGraph hg, HGHandle handle,
+	public static FNode addDirectedNode(HyperGraph hg, HGHandle handle,
 			int level, HGAtomPredicate cond, Set<Integer> nodes, Set<Integer> edges)
 	{
 		Object obj = hg.get(handle);
 		HGHandle src = ((HGLink) obj).getTargetAt(0);
 		HGHandle trg = ((HGLink) obj).getTargetAt(1);
-		HGVNode src_n = addNode(hg, src, level - 1, cond,  nodes, edges);
-		HGVNode trg_n = addNode(hg, trg, level - 1, cond, nodes, edges);
-		HGVEdge edge = HGVKit.getHGVEdge(src_n, trg_n, true);
+		FNode src_n = addNode(hg, src, level - 1, cond,  nodes, edges);
+		FNode trg_n = addNode(hg, trg, level - 1, cond, nodes, edges);
+		FEdge edge = HGVKit.getHGVEdge(src_n, trg_n, true);
 		edges.add(edge.getRootGraphIndex());
 		return trg_n;
 	}

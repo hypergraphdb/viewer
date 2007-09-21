@@ -9,9 +9,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import java.util.*;
 
-import giny.model.GraphPerspective;
-
 import org.hypergraphdb.viewer.*;
+import fing.model.FGraphPerspective;
 
 
 //-------------------------------------------------------------------------
@@ -34,7 +33,7 @@ public class DeleteSelectedAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) { 
                        
     	HGVNetworkView view = HGVKit.getCurrentView();
-        GraphPerspective perspective = view.getGraphPerspective();
+    	FGraphPerspective perspective = view.getGraphPerspective();
         // get the Selected node and edge indices
         int[] node_indicies = view.getSelectedNodeIndices();
         int[] edge_indicies = view.getSelectedEdgeIndices();

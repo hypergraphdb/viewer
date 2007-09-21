@@ -1,16 +1,9 @@
 package org.hypergraphdb.viewer.view;
 
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.HGVNode;
-import org.hypergraphdb.viewer.HGVEdge;
-import org.hypergraphdb.viewer.view.HGVMenus;
-import org.hypergraphdb.viewer.giny.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.beans.*;

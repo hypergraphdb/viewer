@@ -53,7 +53,7 @@ public class ArrowEditor extends AbstractPropertyEditor
 	
     protected void selectShape()
 	{
-		PopupIconChooser chooser = new PopupIconChooser("Select Node Line Type",
+		PopupIconChooser chooser = new PopupIconChooser("Select FNode Line Type",
 				    "BlahBlah",
 				    EditorConstants.getArrowIcons(),
 				    EditorConstants.getArrowIndex((Arrow) getValue()),

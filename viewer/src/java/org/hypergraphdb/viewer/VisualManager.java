@@ -1,7 +1,5 @@
 package org.hypergraphdb.viewer;
 
-import giny.view.EdgeView;
-import giny.view.NodeView;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +17,7 @@ import org.hypergraphdb.viewer.painter.DefaultNodePainter;
 import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.visual.VisualStyle;
+import phoebe.PEdgeView;
 
 
 public class VisualManager

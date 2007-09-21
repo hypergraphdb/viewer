@@ -3,11 +3,12 @@ package org.hypergraphdb.viewer.foo;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
+import phoebe.PEdgeView;
+import phoebe.PNodeView;
 import cytoscape.util.intr.IntEnumerator;
-import cytoscape.util.intr.IntIterator;
+import fing.model.FEdge;
+import fing.model.FNode;
 
-import giny.view.EdgeView;
-import giny.view.NodeView;
 import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +48,7 @@ public final class GraphConverter2
     Iterator iter = graphView.getNodeViewsIterator();
     while (iter.hasNext())
     {
-      NodeView currentNodeView = (NodeView) iter.next();
+      PNodeView currentNodeView = (PNodeView) iter.next();
       minX = Math.min(minX, currentNodeView.getXPosition());
       maxX = Math.max(maxX, currentNodeView.getXPosition());
       minY = Math.min(minY, currentNodeView.getYPosition());
@@ -58,7 +59,7 @@ public final class GraphConverter2
       (graphView.getSelectedNodeIndices().length == 0);
     while (iter.hasNext())
     {
-      EdgeView currentEdgeView = (EdgeView) iter.next();
+      PEdgeView currentEdgeView = (PEdgeView) iter.next();
       if ((!preserveEdgeAnchors) &&
           (noNodesSelected ||
            graphView.getNodeView
@@ -86,50 +87,24 @@ public final class GraphConverter2
 
     return new MutablePolyEdgeGraphLayout()
       {
-        public int getEdgeNodeIndex(int arg0, boolean arg1) {
-			return fixedGraph.getEdgeIndex(arg0);
-		}
-		public boolean isDirectedEdge(int arg0) {
-			return fixedGraph.isEdgeDirected(arg0);
-		}
-		public int getNumEdges() {
-			return fixedGraph.getNodeCount();
-		}
-		public int getNumNodes() {
-			return fixedGraph.getEdgeCount();
-		}
-		// FixedGraph methods.
-        public IntEnumerator nodes() { return fixedGraph.nodes(); }
-        public IntEnumerator edges() { return fixedGraph.edges(); }
-        public boolean nodeExists(int node) {
-          return fixedGraph.nodeExists(node); }
-        public byte edgeType(int edge) { return fixedGraph.edgeType(edge); }
-        public int edgeSource(int edge) { return fixedGraph.edgeSource(edge); }
+    	public Iterator<FEdge> edgesIterator(){ return fixedGraph.edgesIterator(); }
+        public Iterator<FNode> nodesIterator(){ return fixedGraph.nodesIterator(); }
+	    public int edgeSource(int edge) { return fixedGraph.edgeSource(edge); }
         public int edgeTarget(int edge) { return fixedGraph.edgeTarget(edge); }
-        public IntEnumerator edgesAdjacent(int node, boolean out,
-                                           boolean in, boolean undir) {
-          return fixedGraph.edgesAdjacent(node, out, in, undir); }
-        public IntIterator edgesConnecting(int node0, int node1,
-                                           boolean out, boolean in,
-                                           boolean undir) {
-          return fixedGraph.edgesConnecting(node0, node1, out, in, undir); }
-
+       
         // GraphLayout methods.
         public double getMaxWidth() { return width; }
         public double getMaxHeight() { return height; }
         public double getNodePosition(int node, boolean xPosition) {
-          NodeView nodeView = getNodeView(node);
+          PNodeView nodeView = getNodeView(node);
           if(nodeView == null) return 0;
           if (xPosition) return nodeView.getXPosition() - xOff;
           return nodeView.getYPosition() - yOff; }
 
         // MutableGraphLayout methods.
-        public boolean isMovableNode(int node) {
-        	if (noNodesSelected) return true;
-             NodeView nodeView = getNodeView(node);
-          return nodeView.isSelected(); }
+        public boolean isMovableNode(int node) {return true;}
         public void setNodePosition(int node, double xPos, double yPos) {
-          NodeView nodeView = getNodeView(node);
+          PNodeView nodeView = getNodeView(node);
           if(nodeView == null) return;
           checkPosition(xPos, yPos);
           if (!isMovableNode(node))
@@ -185,16 +160,14 @@ public final class GraphConverter2
             (anchorIndex, new Point2D.Double(xPos + xOff, yPos + yOff)); }
 
         // Helper methods.
-        private NodeView getNodeView(int node) {
-          NodeView nodeView = graphView.getNodeView(~node);
-         // if (nodeView == null) 
-        	  //System.out.println("node " + ~node + " not in this graph " +
-        	//		  graphView.nodeCount());
-        	 // throw new IllegalArgumentException
-             //        ("node " + node + " not in this graph");
+        private PNodeView getNodeView(int node) {
+          PNodeView nodeView = graphView.getNodeView(node);
+          if (nodeView == null) 
+        	  throw new IllegalArgumentException
+                     ("node " + node + " not in this graph");
           return nodeView; }
-        private EdgeView getEdgeView(int edge) {
-          EdgeView edgeView = graphView.getEdgeView(edge);
+        private PEdgeView getEdgeView(int edge) {
+          PEdgeView edgeView = graphView.getEdgeView(edge);
           if (edgeView == null) throw new IllegalArgumentException
                                   ("edge " + edge + " not in this graph");
           return edgeView; }

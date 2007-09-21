@@ -4,9 +4,9 @@
 //---------------------------------------------------------------------------
 package org.hypergraphdb.viewer;
 
-import giny.model.Edge;
-import giny.model.Node;
-import giny.view.GraphView;
+import fing.model.FEdge;
+import fing.model.FNode;
+import fing.model.FRootGraph;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
@@ -18,7 +18,6 @@ import javax.swing.event.SwingPropertyChangeSupport;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.viewer.actions.FitContentAction;
 import org.hypergraphdb.viewer.actions.ZoomAction;
-import org.hypergraphdb.viewer.giny.HGVRootGraph;
 import org.hypergraphdb.viewer.hg.HGWNReader;
 import org.hypergraphdb.viewer.layout.*;
 import org.hypergraphdb.viewer.layout.SpringLayout;
@@ -26,6 +25,7 @@ import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 import org.hypergraphdb.viewer.view.GraphViewController;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 import org.hypergraphdb.*;
+import phoebe.PGraphView;
 
 /**
  * This class, HGVKit is <i>the</i> primary class in the API.
@@ -52,7 +52,7 @@ public abstract class HGVKit
 	/**
 	 * The shared RootGraph between all Networks
 	 */
-	protected static HGVRootGraph/* RootGraph */rootGraph;
+	protected static FRootGraph rootGraph;
 	protected static Object pcsO = new Object();
 	protected static SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(
 			pcsO);
@@ -68,6 +68,8 @@ public abstract class HGVKit
 		layouts.add(new GEM());
 		layouts.add(new HierarchicalLayout());
 		layouts.add(new SpringLayout());
+		//layouts.add(new SpringEmbeddedLayout());
+		//layouts.add(new Sugiyama());
 		layouts.add(l);
 		setPreferedLayout(l);
 	}
@@ -123,9 +125,9 @@ public abstract class HGVKit
 	/**
 	 * Return the HGViewerRootGraph
 	 */
-	public static HGVRootGraph getRootGraph()
+	public static FRootGraph getRootGraph()
 	{
-		if (rootGraph == null) rootGraph = new HGVRootGraph();
+		if (rootGraph == null) rootGraph = new FRootGraph();
 		return rootGraph;
 	}
 
@@ -133,7 +135,7 @@ public abstract class HGVKit
 	 * @param alias an alias of a node
 	 * @return will return a node, if one exists for the given alias
 	 */
-	public static HGVNode getHGVNode(HGPersistentHandle handle)
+	public static FNode getHGVNode(HGPersistentHandle handle)
 	{
 		return getHGVNode(handle, false);
 	}
@@ -143,19 +145,19 @@ public abstract class HGVKit
 	 * @param create will create a node if one does not exist
 	 * @return will always return a node, if <code>create</code> is true
 	 */
-	public static HGVNode getHGVNode(HGPersistentHandle handle, boolean create)
+	public static FNode getHGVNode(HGPersistentHandle handle, boolean create)
 	{
-		HGVNode node = HGVKit.getRootGraph().getNode(handle);
+		FNode node = getRootGraph().getNode(handle);
 		if (node != null) return node;
 		if (!create) return null;
-		int n = HGVKit.getRootGraph().createNode();
-		node = (HGVNode) HGVKit.getRootGraph().getNode(n);
+		int n = getRootGraph().createNode();
+		node = getRootGraph().getNode(n);
 		node.setHandle(handle);
 		return node;
 	}
 
 	/**
-	 * Gets the first HGVEdge found.
+	 * Gets the first Edge found.
 	 * 
 	 * @param node_1 one end of the edge
 	 * @param node_2 the other end of the edge
@@ -164,7 +166,7 @@ public abstract class HGVKit
 	 * @return returns an existing HGVEdge if present, or creates one if
 	 * <code>create</code> is true, otherwise returns null.
 	 */
-	public static HGVEdge getHGVEdge(Node node_1, Node node_2, boolean create)
+	public static FEdge getHGVEdge(FNode node_1, FNode node_2, boolean create)
 	{
 		// System.out.println("node_1: " + node_1 + " node_2: " + node_2
 		// + "attribute_value" + create + "create");
@@ -174,11 +176,11 @@ public abstract class HGVKit
 					node_1.getRootGraphIndex(), true, true, true);
 			for (int i = 0; i < n1Edges.length; i++)
 			{
-				HGVEdge edge = (HGVEdge) getRootGraph().getEdge(n1Edges[i]);
-				HGVNode otherNode = (HGVNode) edge.getTarget();
+				FEdge edge = getRootGraph().getEdge(n1Edges[i]);
+				FNode otherNode = edge.getTarget();
 				if (otherNode.getRootGraphIndex() == node_1.getRootGraphIndex())
 				{
-					otherNode = (HGVNode) edge.getSource();
+					otherNode = edge.getSource();
 				}
 				if (otherNode.getRootGraphIndex() == node_2.getRootGraphIndex())
 				{
@@ -195,7 +197,7 @@ public abstract class HGVKit
 		}
 		if (!create) return null;
 		// create the edge
-		HGVEdge edge = (HGVEdge) getRootGraph().getEdge(
+		FEdge edge = getRootGraph().getEdge(
 				getRootGraph().createEdge(node_1, node_2));
 		return edge;
 	}
@@ -205,13 +207,13 @@ public abstract class HGVKit
 	 * @param target_alias an target node handle
 	 * @return will always return an edge or null
 	 */
-	public static HGVEdge getHGVEdge(HGPersistentHandle sourceH,
+	public static FEdge getHGVEdge(HGPersistentHandle sourceH,
 			HGPersistentHandle targetH)
 	{
 		// System.out.println("getHGVEdge - source: " + sourceH + " edge: "
 		//+ " target:" + targetH);
-		HGVNode source = getHGVNode(sourceH, true);
-		HGVNode target = getHGVNode(targetH, true);
+		FNode source = getHGVNode(sourceH, true);
+		FNode target = getHGVNode(targetH, true);
 		if (source == null || target == null) return null; // TODO: ???
 		// throw new NullPointerException("Can't create HGVEdge - source: " +
 		// source + " target: " + target);
@@ -252,14 +254,6 @@ public abstract class HGVKit
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Return a List of all available HGVNetworks
-	 */
-	public static Set<HGVNetwork> getNetworkSet()
-	{
-		return new java.util.LinkedHashSet<HGVNetwork>(getNetworkMap().keySet());
 	}
 
 	public static HGVNetwork getNetworkByFile(File file)
@@ -352,14 +346,14 @@ public abstract class HGVKit
 		firePropertyChange(NETWORK_DESTROYED, null, network);
 		if (destroy_unique)
 		{
-			ArrayList<Node> nodes = new ArrayList<Node>();
-			ArrayList<Edge> edges = new ArrayList<Edge>();
+			ArrayList<FNode> nodes = new ArrayList<FNode>();
+			ArrayList<FEdge> edges = new ArrayList<FEdge>();
 			Collection networks = networkMap.values();
 			Iterator nodes_i = network.nodesIterator();
-			Iterator edges_i = network.edgesIterator();
+			Iterator<FEdge> edges_i = network.edgesIterator();
 			while (nodes_i.hasNext())
 			{
-				Node node = (Node) nodes_i.next();
+				FNode node = (FNode) nodes_i.next();
 				boolean add = true;
 				for (Iterator n_i = networks.iterator(); n_i.hasNext();)
 				{
@@ -378,7 +372,7 @@ public abstract class HGVKit
 			}
 			while (edges_i.hasNext())
 			{
-				Edge edge = (Edge) edges_i.next();
+				FEdge edge = edges_i.next();
 				boolean add = true;
 				for (Iterator n_i = networks.iterator(); n_i.hasNext();)
 				{
@@ -395,8 +389,10 @@ public abstract class HGVKit
 					getRootGraph().removeEdge(edge);
 				}
 			}
-			getRootGraph().removeNodes(nodes);
-			getRootGraph().removeEdges(edges);
+			for (int i = 0; i < nodes.size(); i++)
+				getRootGraph().removeNode(nodes.get(i));
+			for (int i = 0; i < edges.size(); i++)
+				getRootGraph().removeEdge(edges.get(i));
 		}
 		// theoretically this should not be set to null till after the events
 		// firing is done
@@ -481,7 +477,7 @@ public abstract class HGVKit
 	 * @param edges a collection of edges
 	 * @param db the HyperGraph of the new network.
 	 */
-	public static HGVNetwork createNetwork(Collection<HGVNode> nodes, Collection<HGVEdge> edges,
+	public static HGVNetwork createNetwork(Collection<FNode> nodes, Collection<FEdge> edges,
 			HyperGraph db)
 	{
 		HGVNetwork network = getRootGraph().createNetwork(nodes, edges);
@@ -506,7 +502,7 @@ public abstract class HGVKit
 	/**
 	 * Creates a new Network, that inherits from the given ParentNetwork
 	 */
-	public static HGVNetwork createNetwork(Collection<HGVNode> nodes, Collection<HGVEdge> edges,
+	public static HGVNetwork createNetwork(Collection<FNode> nodes, Collection<FEdge> edges,
 			HyperGraph db, HGVNetwork parent)
 	{
 		HGVNetwork network = getRootGraph().createNetwork(nodes, edges);
@@ -649,7 +645,7 @@ public abstract class HGVKit
 	 * SELECT_NODES_AND_EDGES.
 	 * @param view the GraphView to set the selection mode on.
 	 */
-	public static void setSelectionMode(int selectionMode, GraphView view)
+	public static void setSelectionMode(int selectionMode, PGraphView view)
 	{
 		// first, disable node and edge selection on the view
 		view.disableNodeSelection();

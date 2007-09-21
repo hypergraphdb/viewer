@@ -1,30 +1,26 @@
 package org.hypergraphdb.viewer.hg;
 
-import giny.model.Edge;
-import giny.model.RootGraph;
-import giny.view.GraphView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import org.hypergraphdb.HGException;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGLink;
+import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HGQuery;
 import org.hypergraphdb.HGSearchResult;
 import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.handle.HGLiveHandle;
 import org.hypergraphdb.query.AtomTypeCondition;
 import org.hypergraphdb.type.HGAtomType;
-import org.hypergraphdb.viewer.*;
-import cern.colt.list.IntArrayList;
-import cern.colt.map.OpenIntIntHashMap;
-import cytoscape.task.TaskMonitor;
-import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.type.RecordType;
+import org.hypergraphdb.viewer.HGVKit;
+import cytoscape.task.TaskMonitor;
+import fing.model.FEdge;
+import fing.model.FNode;
 
 /**
  */
@@ -36,8 +32,8 @@ public class HGReader //implements GraphReader
 	 * The DB to be loaded
 	 */
 	protected File db;
-	IntArrayList node_indices;
-	OpenIntIntHashMap edges; 
+	ArrayList<Integer> node_indices;
+	HashMap<Integer, Integer> edges; 
 
 	public HGReader(File db)
 	{
@@ -76,15 +72,14 @@ public class HGReader //implements GraphReader
 				.iterator();
 		while (it.hasNext())
 			loadHG(hypergraph, it.next(), nodes, links);
-		node_indices = new IntArrayList(nodes.size());
-		edges = new OpenIntIntHashMap();
+		node_indices = new ArrayList(nodes.size());
+		edges = new HashMap<Integer, Integer>();
 		for (Iterator<HGHandle> si = nodes.iterator(); si.hasNext();)
 		{
     		HGPersistentHandle handle = hypergraph.getPersistentHandle(si
 					.next());
-			//System.out.println("Node: " + handle);
-			HGVNode node = (HGVNode) HGVKit.getHGVNode(handle, true);
-			node.setHandle(handle);
+			//System.out.println("FNode: " + handle);
+    		FNode node = HGVKit.getHGVNode(handle, true);
 			node_indices.add(node.getRootGraphIndex());
 		}
 		// ---------------------------------------------------------------------------
@@ -100,7 +95,7 @@ public class HGReader //implements GraphReader
 			{
 				HGPersistentHandle handle = hypergraph.getPersistentHandle(link
 						.getTargetAt(l));
-				HGVEdge edge = HGVKit.getHGVEdge(link_handle, handle);
+				FEdge edge = HGVKit.getHGVEdge(link_handle, handle);
 				edges.put(edge.getRootGraphIndex(), 0);
 			} // for t
 		} // for i
@@ -154,16 +149,18 @@ public class HGReader //implements GraphReader
 
 	public int[] getNodeIndicesArray()
 	{
-		node_indices.trimToSize();
-		return node_indices.elements();
+		int[] res = new int[node_indices.size()];
+		for(int i = 0; i < node_indices.size(); i++)
+			res[i] = node_indices.get(i);
+		return res;
 	}
 
 	public int[] getEdgeIndicesArray()
 	{
-		IntArrayList edge_indices = new IntArrayList(edges.size());
-		edges.keys(edge_indices);
-		edge_indices.trimToSize();
-		return edge_indices.elements();
+		int[] res = new int[edges.size()];
+		for(int i = 0; i < edges.size(); i++)
+			res[i] = edges.get(i);
+		return res;
 	}
 /*
 

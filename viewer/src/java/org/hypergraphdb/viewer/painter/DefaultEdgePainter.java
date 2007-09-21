@@ -1,7 +1,5 @@
 package org.hypergraphdb.viewer.painter;
 
-import giny.view.EdgeView;
-import giny.view.Label;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Paint;
@@ -10,6 +8,8 @@ import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.Arrow;
 import org.hypergraphdb.viewer.visual.LineType;
+import phoebe.PEdgeView;
+import phoebe.util.PLabel;
 
 public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 {
@@ -169,7 +169,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 		this.tooltip = tooltip;
 	}
 
-	public void paintEdge(EdgeView edgeView, HGVNetworkView network_view)
+	public void paintEdge(PEdgeView edgeView, HGVNetworkView network_view)
 	{
 		Paint existingUnselectedPaint = edgeView.getUnselectedPaint();
 		Paint newUnselectedPaint = this.getColor();
@@ -178,7 +178,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 			edgeView.setUnselectedPaint(newUnselectedPaint);
 		}
 		Stroke existingStroke = edgeView.getStroke();
-		//System.out.println("Edge: " + edgeView + ":" + existingStroke);
+		//System.out.println("FEdge: " + edgeView + ":" + existingStroke);
 		Stroke newStroke = getLineType().getStroke();
 		if (!newStroke.equals(existingStroke))
 		{
@@ -196,7 +196,8 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 		{
 			edgeView.setTargetEdgeEnd(newTargetEdge);
 		}
-		Label label = edgeView.getLabel();
+		PLabel label = edgeView.getLabel();
+		
 		String existingText = label.getText();
 		String newText = getLabel();
 		if (!newText.equals(existingText))

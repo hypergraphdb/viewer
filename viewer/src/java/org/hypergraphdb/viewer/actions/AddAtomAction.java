@@ -12,8 +12,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import javax.swing.AbstractAction;
-import giny.model.*;
-import giny.view.*;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
@@ -24,8 +22,6 @@ import org.hypergraphdb.type.HGAtomType;
 import org.hypergraphdb.type.RecordType;
 import org.hypergraphdb.type.Slot;
 import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.HGVNode;
-
 import org.hypergraphdb.viewer.util.*;
 import org.hypergraphdb.viewer.dialogs.*;
 import org.hypergraphdb.viewer.HGVKit;

@@ -32,7 +32,7 @@
 package org.hypergraphdb.viewer.visual;
 //----------------------------------------------------------------------------
 import java.io.Serializable;
-import giny.view.EdgeView;
+import phoebe.PEdgeView;
 //----------------------------------------------------------------------------
 /**
  * This class is a replacement for the yFiles Arrow class.
@@ -69,48 +69,48 @@ public class Arrow implements Serializable {
   public int getGinyArrow() {
 
     if (  name.equals("WHITE_DIAMOND")) {
-      return EdgeView.WHITE_DIAMOND;
+      return PEdgeView.WHITE_DIAMOND;
     } else if (  name.equals("BLACK_DIAMOND")) {
-      return EdgeView.BLACK_DIAMOND;
+      return PEdgeView.BLACK_DIAMOND;
     } else if (  name.equals("COLOR_DIAMOND")) {
-      return EdgeView.EDGE_COLOR_DIAMOND;
+      return PEdgeView.EDGE_COLOR_DIAMOND;
     } 
 
     else if (  name.equals("WHITE_DELTA")) {
-      return EdgeView.WHITE_DELTA;
+      return PEdgeView.WHITE_DELTA;
     } else if (  name.equals("BLACK_DELTA")) {
-      return EdgeView.BLACK_DELTA;
+      return PEdgeView.BLACK_DELTA;
     } else if (  name.equals("COLOR_DELTA")) {
-      return EdgeView.EDGE_COLOR_DELTA;
+      return PEdgeView.EDGE_COLOR_DELTA;
     } 
 
     else if (  name.equals("WHITE_ARROW")) {
-      return EdgeView.WHITE_ARROW;
+      return PEdgeView.WHITE_ARROW;
     } else if (  name.equals("BLACK_ARROW")) {
-      return EdgeView.BLACK_ARROW;
+      return PEdgeView.BLACK_ARROW;
     } else if (  name.equals("COLOR_ARROW")) {
-      return EdgeView.EDGE_COLOR_ARROW;
+      return PEdgeView.EDGE_COLOR_ARROW;
     } 
 
     else if (  name.equals("WHITE_T")) {
-      return EdgeView.WHITE_T;
+      return PEdgeView.WHITE_T;
     } else if (  name.equals("BLACK_T")) {
-      return EdgeView.BLACK_T;
+      return PEdgeView.BLACK_T;
     } else if (  name.equals("COLOR_T")) {
-      return EdgeView.EDGE_COLOR_T;
+      return PEdgeView.EDGE_COLOR_T;
     } 
 
 
     else if (  name.equals("WHITE_CIRCLE")) {
-      return EdgeView.WHITE_CIRCLE;
+      return PEdgeView.WHITE_CIRCLE;
     } else if (  name.equals("BLACK_CIRCLE")) {
-      return EdgeView.BLACK_CIRCLE;
+      return PEdgeView.BLACK_CIRCLE;
     } else if (  name.equals("COLOR_CIRCLE")) {
-      return EdgeView.EDGE_COLOR_CIRCLE;
+      return PEdgeView.EDGE_COLOR_CIRCLE;
     } 
 
     else {
-      return EdgeView.NO_END;
+      return PEdgeView.NO_END;
     }
       
   }

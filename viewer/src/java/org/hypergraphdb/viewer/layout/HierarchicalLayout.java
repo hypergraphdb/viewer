@@ -42,14 +42,14 @@ package org.hypergraphdb.viewer.layout;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
-import giny.view.NodeView;
-import giny.view.EdgeView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 import org.hypergraphdb.viewer.layout.*;
 import org.hypergraphdb.viewer.layout.util.Graph;
 import org.hypergraphdb.viewer.layout.util.Graph.Edge;
+import phoebe.PEdgeView;
+import phoebe.PNodeView;
 
 
 /**
@@ -126,7 +126,7 @@ public class HierarchicalLayout implements Layout
         final int numSelectedNodes = selectedNodes.size();
         final int numNodes = networkView.getNodeViewCount();
         final int numLayoutNodes = (numSelectedNodes <= 1) ? numNodes : numSelectedNodes;
-        NodeView nodeView[] = new NodeView[numNodes];
+        PNodeView nodeView[] = new PNodeView[numNodes];
         int nextNode = 0;
         HashMap ginyIndex2Index = new HashMap(numNodes*2);
         if (numSelectedNodes > 1)
@@ -134,7 +134,7 @@ public class HierarchicalLayout implements Layout
             Iterator iter = selectedNodes.iterator();
             while (iter.hasNext())
             {
-                nodeView[nextNode] = (NodeView)(iter.next());
+                nodeView[nextNode] = (PNodeView)(iter.next());
                 ginyIndex2Index.put(new Integer(nodeView[nextNode].getNode().getRootGraphIndex()), new Integer(nextNode));
                 nextNode++;
             }
@@ -142,7 +142,7 @@ public class HierarchicalLayout implements Layout
         Iterator iter = networkView.getNodeViewsIterator() ; /* all nodes */
         while (iter.hasNext())
         {
-            NodeView nv = (NodeView)(iter.next());
+            PNodeView nv = (PNodeView)(iter.next());
             Integer nodeIndexKey = new Integer(nv.getNode().getRootGraphIndex());
             if (!ginyIndex2Index.containsKey(nodeIndexKey))
             {
@@ -156,7 +156,7 @@ public class HierarchicalLayout implements Layout
         iter = networkView.getEdgeViewsIterator();
         while (iter.hasNext())
         {
-            EdgeView ev = (EdgeView)(iter.next());
+            PEdgeView ev = (PEdgeView)(iter.next());
             Integer edgeFrom = (Integer)ginyIndex2Index.get(new Integer(ev.getEdge().getSource().getRootGraphIndex()));
             Integer edgeTo = (Integer)ginyIndex2Index.get(new Integer(ev.getEdge().getTarget().getRootGraphIndex()));
             if (edgeFrom == null || edgeTo == null)
@@ -180,7 +180,7 @@ public class HierarchicalLayout implements Layout
         int cI[] = graph.componentIndex();
         int x;
                 /*
-                System.out.println("Node index:\n");
+                System.out.println("FNode index:\n");
                 for (x=0; x<graph.getNodecount(); x++) {
                         System.out.println(cI[x]);
                 }
@@ -257,7 +257,7 @@ public class HierarchicalLayout implements Layout
             HierarchyFlowLayoutOrderNode node = flowLayoutOrder[nodeIndex];
             int currentComponent = node.componentNumber;
             int currentLayer = node.layer;
-            NodeView currentView = node.nodeView;
+            PNodeView currentView = node.nodeView;
             if (lastComponent == -1)
             {
                 /* this is the first component */
@@ -343,7 +343,7 @@ public class HierarchicalLayout implements Layout
         for (nodeIndex=0; nodeIndex<numLayoutNodes; nodeIndex++)
         {
             HierarchyFlowLayoutOrderNode node = flowLayoutOrder[nodeIndex];
-            NodeView currentView = node.nodeView;
+            PNodeView currentView = node.nodeView;
             currentView.setOffset(node.getXPos(),node.getYPos());
         }
         /* layout any other nodes */
@@ -365,7 +365,7 @@ public class HierarchicalLayout implements Layout
     
     class HierarchyFlowLayoutOrderNode implements Comparable
     {
-        public NodeView nodeView;
+        public PNodeView nodeView;
         public int componentNumber;
         public int componentSize;
         public int layer;
@@ -382,7 +382,7 @@ public class HierarchicalLayout implements Layout
         public void setYPos(int a_yPos)
         { yPos = a_yPos; }
         
-        public HierarchyFlowLayoutOrderNode(NodeView a_nodeView, int a_componentNumber,
+        public HierarchyFlowLayoutOrderNode(PNodeView a_nodeView, int a_componentNumber,
         int a_componentSize, int a_layer, int a_horizontalPosition)
         {
             nodeView = a_nodeView;

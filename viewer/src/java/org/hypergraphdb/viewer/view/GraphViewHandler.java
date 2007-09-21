@@ -32,8 +32,8 @@
 
 package org.hypergraphdb.viewer.view;
 
-import giny.model.GraphPerspectiveChangeEvent;
-import giny.view.GraphView;
+import org.hypergraphdb.viewer.HGVNetworkView;
+import phoebe.event.GraphPerspectiveChangeEvent;
 
 /**
  * This interface represents an object that handles a change in a 
@@ -51,7 +51,7 @@ public interface GraphViewHandler {
    * <code>giny.model.GraphPerspective</code> that generated the event and that should
    * be updated as necessary
    */
-  public void handleGraphPerspectiveEvent (GraphPerspectiveChangeEvent event, GraphView graph_view);
+  public void handleGraphPerspectiveEvent (GraphPerspectiveChangeEvent event, HGVNetworkView graph_view);
 
   /**
    * Updates graph_view so that it is synchronized with its <code>giny.model.GraphPerspective</code>
@@ -61,6 +61,6 @@ public interface GraphViewHandler {
    * @param graph_view the <code>giny.view.GraphView</code> that views the should
    * be updated as necessary
    */
-  public void updateGraphView (GraphView graph_view);
+  public void updateGraphView (HGVNetworkView graph_view);
   
 }//GraphViewHandler

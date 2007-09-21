@@ -20,7 +20,7 @@ public class SquiggleAction extends JMenu {
 	    // Do this in the GUI Event Dispatch thread...
 	    SwingUtilities.invokeLater( new Runnable() {
 	      public void run() {
-		    PGraphView view = (PGraphView)HGVKit.getCurrentView();
+	    	//HGVNetworkView view = HGVKit.getCurrentView();
 		    if (enabled) {
               HGVKit.enableSquiggle();
               squiggleMode.setText("Disable");

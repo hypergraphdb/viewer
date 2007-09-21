@@ -1,7 +1,8 @@
 package org.hypergraphdb.viewer.foo;
 
-import cytoscape.graph.fixed.FixedGraph;
-import cytoscape.graph.legacy.GraphTopology;
+import java.util.Iterator;
+import fing.model.FEdge;
+import fing.model.FNode;
 
 
 /**
@@ -9,11 +10,15 @@ import cytoscape.graph.legacy.GraphTopology;
  * of defining poly-line edges (as opposed to just straight-line edges).
  **/
 public interface MutablePolyEdgeGraphLayout 
-  extends FixedGraph, GraphTopology
 {
 
-	public int getNumNodes();
-	public int getNumEdges();
+	public Iterator<FEdge> edgesIterator();
+    public Iterator<FNode> nodesIterator();
+     
+     public int edgeSource(int edge);
+     public int edgeTarget(int edge);
+     
+    
   /**
    * Deletes an edge anchor point.<p>
    * The deletion of an anchor point is accomplished such that the ordering of

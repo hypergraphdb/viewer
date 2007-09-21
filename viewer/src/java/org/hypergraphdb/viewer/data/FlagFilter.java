@@ -6,15 +6,14 @@
 package org.hypergraphdb.viewer.data;
 //---------------------------------------------------------------------------
 import java.util.*;
-import java.io.*;
+import phoebe.event.GraphPerspectiveChangeEvent;
+import phoebe.event.GraphPerspectiveChangeListener;
 
-import giny.model.GraphPerspective;
-import giny.model.GraphPerspectiveChangeListener;
-import giny.model.GraphPerspectiveChangeEvent;
-import giny.model.Node;
-import giny.model.Edge;
-import giny.model.RootGraph;
-import giny.filter.Filter;
+import fing.model.FEdge;
+import fing.model.FGraphPerspective;
+import fing.model.FNode;
+import fing.model.FRootGraph;
+
 //---------------------------------------------------------------------------
 /**
  * This class implements the ability to attach a flag to every node or
@@ -46,12 +45,12 @@ import giny.filter.Filter;
  * N is either the number of flagged objects or the number of objects in
  * the graph, as applicable.<P>
  */
-public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
+public class FlagFilter implements GraphPerspectiveChangeListener {
     
-    GraphPerspective graph;
-    Set flaggedNodes = new HashSet();
-    Set flaggedEdges = new HashSet();
-    List listeners = new ArrayList();
+    FGraphPerspective graph;
+    Set<FNode> flaggedNodes = new HashSet<FNode>();
+    Set<FEdge> flaggedEdges = new HashSet<FEdge>();
+    List<FlagEventListener> listeners = new ArrayList<FlagEventListener>();
     
     /**
      * Standard ConstructorLink. The argument is the graph that this filter will
@@ -59,7 +58,7 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
      *
      * @throws NullPointerException  if the argument is null.
      */
-    public FlagFilter(GraphPerspective graph) {
+    public FlagFilter(FGraphPerspective graph) {
         this.graph = graph;
         //this throws a NullPointerException if the graph is null
         graph.addGraphPerspectiveChangeListener(this);
@@ -71,30 +70,30 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
      * WARNING: the returned set is the actual data object, not a copy. Don't
      * directly modify this set.
      */
-    public Set getFlaggedNodes() {return flaggedNodes;}
+    public Set<FNode> getFlaggedNodes() {return flaggedNodes;}
     /**
      * Returns the set of all flagged edges in the referenced GraphPespective.<P>
      *
      * WARNING: the returned set is the actual data object, not a copy. Don't
      * directly modify this set.
      */
-    public Set getFlaggedEdges() {return flaggedEdges;}
+    public Set<FEdge> getFlaggedEdges() {return flaggedEdges;}
     
     
     /**
-     * Returns true if the argument is a flagged Node in the referenced
+     * Returns true if the argument is a flagged FNode in the referenced
      * GraphPerspective, false otherwise.
      */
-    public boolean isFlagged(Node node) {return flaggedNodes.contains(node);}
+    public boolean isFlagged(FNode node) {return flaggedNodes.contains(node);}
     /**
-     * Returns true if the argument is a flagged Edge in the referenced
+     * Returns true if the argument is a flagged FEdge in the referenced
      * GraphPerspective, false otherwise.
      */
-    public boolean isFlagged(Edge edge) {return flaggedEdges.contains(edge);}
+    public boolean isFlagged(FEdge edge) {return flaggedEdges.contains(edge);}
     
     /**
      * Implementation of the Filter interface. Returns true if the argument
-     * is a flagged Node or Edge in the referenced GraphPerspective, false otherwise.
+     * is a flagged FNode or FEdge in the referenced GraphPerspective, false otherwise.
      */
     public boolean passesFilter(Object o) {
         if (flaggedNodes.contains(o) || flaggedEdges.contains(o)) {
@@ -106,13 +105,13 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
     
     
     /**
-     * If the first argument is a Node in the referenced GraphPerspective,
+     * If the first argument is a FNode in the referenced GraphPerspective,
      * sets its flagged state to the value of the second argument. An event
      * will be fired iff the new state is different from the old state.
      *
      * @return  true if an actual change was made, false otherwise
      */
-    public boolean setFlagged(Node node, boolean newState) {
+    public boolean setFlagged(FNode node, boolean newState) {
         if (newState == true) {//set flag to on
             //don't flag the node if it's not in the graph
         	if (graph.getNode(node.getRootGraphIndex()) == null)
@@ -129,13 +128,13 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
     }
     
     /**
-     * If the first argument is an Edge in the referenced GraphPerspective,
+     * If the first argument is an FEdge in the referenced GraphPerspective,
      * sets its flagged state to the value of the second argument. An event
      * will be fired iff the new state is different from the old state.
      *
      * @return  true if an actual change was made, false otherwise
      */
-    public boolean setFlagged(Edge edge, boolean newState) {
+    public boolean setFlagged(FEdge edge, boolean newState) {
         if (newState == true) {//set flag to on
             //don'tflagthe edge if it's not in the graph
             if (graph.getEdge(edge.getRootGraphIndex()) == null) 
@@ -153,27 +152,23 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
     
     /**
      * Sets the flagged state defined by the second argument for all Nodes
-     * contained in the first argument, which should be a Collection of Node objects
+     * contained in the first argument, which should be a Collection of FNode objects
      * contained in the referenced GraphPerspective. One event will be fired
      * for the full set of changes. This method does nothing if the first
      * argument is null.
      *
      * @return a Set containing the objects for which the flagged state changed
      * @throws ClassCastException  if the first argument contains objects other
-     *                             than giny.model.Node objects
+     *                             than giny.model.FNode objects
      */
-    public Set setFlaggedNodes(Collection nodesToSet, boolean newState) {
+    public Set<FNode> setFlaggedNodes(Collection<FNode> nodesToSet, boolean newState) {
         
       //System.out.println( "SettingFlaggedNodes" );
-      
-      Set returnSet = new HashSet();
+      Set<FNode> returnSet = new HashSet<FNode>();
         if (nodesToSet == null) {return returnSet;}
         if (newState == true) {
-            for (Iterator i = nodesToSet.iterator(); i.hasNext(); ) {
-                Node node = (Node)i.next();
-
+            for (FNode node : nodesToSet) {
                 //System.out.println( "Flagging node"+node );
-
                 if (node == null || graph.getNode(node.getRootGraphIndex()) == null)
                     continue;
                 boolean setChanged = flaggedNodes.add(node);
@@ -181,8 +176,7 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
             }
             if (returnSet.size() > 0) {fireEvent(returnSet, true);}
         } else {
-            for (Iterator i = nodesToSet.iterator(); i.hasNext(); ) {
-                Node node = (Node)i.next();
+            for (FNode node : nodesToSet) {
                 //System.out.println( "UNFlagging node"+node );
                 boolean setChanged = flaggedNodes.remove(node);
                 if (setChanged) {
@@ -197,21 +191,21 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
     
     /**
      * Sets the flagged state defined by the second argument for all Edges
-     * contained in the first argument, which should be a Collection of Edge objects
+     * contained in the first argument, which should be a Collection of FEdge objects
      * contained in the referenced GraphPerspective. One event will be fired
      * for the full set of changes. This method does nothing if the first
      * argument is null.
      *
      * @return a Set containing the objects for which the flagged state changed
      * @throws ClassCastException  if the first argument contains objects other
-     *                             than giny.model.Edge objects
+     *                             than giny.model.FEdge objects
      */
-    public Set setFlaggedEdges(Collection edgesToSet, boolean newState) {
-        Set returnSet = new HashSet();
+    public Set<FEdge> setFlaggedEdges(Collection<FEdge> edgesToSet, boolean newState) {
+        Set<FEdge> returnSet = new HashSet<FEdge>();
         if (edgesToSet == null) {return returnSet;}
         if (newState == true) {
-            for (Iterator i = edgesToSet.iterator(); i.hasNext(); ) {
-                Edge edge = (Edge)i.next();
+            for (Iterator<FEdge> i = edgesToSet.iterator(); i.hasNext(); ) {
+                FEdge edge = i.next();
                 if (graph.getEdge(edge.getRootGraphIndex()) == null) 
                     continue;
                 boolean setChanged = flaggedEdges.add(edge);
@@ -219,8 +213,8 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
             }
             if (returnSet.size() > 0) {fireEvent(returnSet, true);}
         } else {
-            for (Iterator i = edgesToSet.iterator(); i.hasNext(); ) {
-                Edge edge = (Edge)i.next();
+            for (Iterator<FEdge> i = edgesToSet.iterator(); i.hasNext(); ) {
+                FEdge edge = i.next();
                 boolean setChanged = flaggedEdges.remove(edge);
                 if (setChanged) {returnSet.add(edge);}
             }
@@ -233,9 +227,9 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
      * Sets the flagged state to true for all Nodes in the GraphPerspective.
      */
     public void flagAllNodes() {
-        Set changes = new HashSet();
+        Set<FNode> changes = new HashSet<FNode>();
         for (Iterator i = graph.nodesIterator(); i.hasNext(); ) {
-            Node node = (Node)i.next();
+            FNode node = (FNode)i.next();
             boolean setChanged = flaggedNodes.add(node);
             if (setChanged) {changes.add(node);}
         }
@@ -246,9 +240,9 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
      * Sets the flagged state to true for all Edges in the GraphPerspective.
      */
     public void flagAllEdges() {
-        Set changes = new HashSet();
+        Set<FEdge> changes = new HashSet<FEdge>();
         for (Iterator i = graph.edgesIterator(); i.hasNext(); ) {
-            Edge edge = (Edge)i.next();
+            FEdge edge = (FEdge)i.next();
             boolean setChanged = flaggedEdges.add(edge);
             if (setChanged) {changes.add(edge);}
         }
@@ -260,7 +254,7 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
      */
     public void unflagAllNodes() {
         if (flaggedNodes.size() == 0) {return;}
-        Set changes = new HashSet(flaggedNodes);
+        Set<FNode> changes = new HashSet<FNode>(flaggedNodes);
         flaggedNodes.clear();
         fireEvent(changes, false);
     }
@@ -270,7 +264,7 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
      */
     public void unflagAllEdges() {
         if (flaggedEdges.size() == 0) {return;}
-        Set changes = new HashSet(flaggedEdges);
+        Set<FEdge> changes = new HashSet<FEdge>(flaggedEdges);
         flaggedEdges.clear();
         fireEvent(changes, false);
     }
@@ -283,16 +277,20 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
      * actual change in the current flagged set.
      */
     public void graphPerspectiveChanged(GraphPerspectiveChangeEvent event) {
+    	Object eventSource = event.getSource();
+    	FRootGraph root = (eventSource instanceof FRootGraph)?
+          (FRootGraph) eventSource : ((FGraphPerspective) eventSource).getRootGraph();
+        
         //careful: this event can represent both hidden nodes and hidden edges
         //if a hide node operation implicitly hid its incident edges
-        Set nodeChanges = null; //only create the set if we need it
+        Set<FNode> nodeChanges = null; //only create the set if we need it
         if ( event.isNodesHiddenType() ) {//at least one node was hidden
-            Node[] hiddenNodes = event.getHiddenNodes();
-            for (int index=0; index<hiddenNodes.length; index++) {
-                Node node = hiddenNodes[index];
+            int[] hiddenNodes = event.getHiddenNodeIndices();;
+            for (int index=0; index < hiddenNodes.length; index++) {
+                FNode node = root.getNode(hiddenNodes[index]);
                 boolean setChanged = flaggedNodes.remove(node);
                 if (setChanged) {//the hidden node was actually flagged
-                    if (nodeChanges == null) {nodeChanges = new HashSet();}
+                    if (nodeChanges == null) {nodeChanges = new HashSet<FNode>();}
                     nodeChanges.add(node); //save change for the event we'll fire
                 }
             }
@@ -300,30 +298,24 @@ public class FlagFilter implements Filter, GraphPerspectiveChangeListener {
         if (nodeChanges != null && nodeChanges.size() > 0) {
             fireEvent(nodeChanges, false);
         }
-        Set edgeChanges = null; //only create the set if we need it
+        Set<FEdge> edgeChanges = null; //only create the set if we need it
         if ( event.isEdgesHiddenType() ) {//at least one edge was hidden
             //GINY bug: sometimes we get an event that has valid edge indices
-            //but the Edge array contains null objects
+            //but the FEdge array contains null objects
             //for now, get around this by converting indices to edges ourselves
-            Object eventSource = event.getSource();
-            RootGraph root;
-            if (eventSource instanceof RootGraph)
-              root = (RootGraph) eventSource;
-            else
-              root = ((GraphPerspective) eventSource).getRootGraph();
             int[] indices = event.getHiddenEdgeIndices();
             for (int index = 0; index < indices.length; index++) {
-                Edge edge = root.getEdge(indices[index]);
+                FEdge edge = root.getEdge(indices[index]);
                 boolean setChanged = flaggedEdges.remove(edge);
                 if (setChanged) {//the hidden edge was actually flagged
-                    if (edgeChanges == null) {edgeChanges = new HashSet();}
+                    if (edgeChanges == null) {edgeChanges = new HashSet<FEdge>();}
                     edgeChanges.add(edge); //save change for the event we'll fire
                 }
             }
             /*this is the code that sometimes doesn't work
-            Edge[] hiddenEdges = event.getHiddenEdges();
+            FEdge[] hiddenEdges = event.getHiddenEdges();
             for (int index=0; index<hiddenEdges.length; index++) {
-                Edge edge = hiddenEdges[index];
+                FEdge edge = hiddenEdges[index];
                 boolean setChanged = flaggedEdges.remove(edge);
                 if (setChanged) {
                     if (edgeChanges == null) {edgeChanges = new HashSet();}

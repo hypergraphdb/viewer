@@ -25,12 +25,9 @@ public class HGVNetworkNaming
 
   private static boolean isNetworkTitleTaken(String titleCandidate)
   {
-    Set existingNetworks = HGVKit.getNetworkSet();
-    Iterator iter = existingNetworks.iterator();
-    while (iter.hasNext()) {
-      HGVNetwork existingNetwork = (HGVNetwork) iter.next();
-      if (existingNetwork.getTitle().equals(titleCandidate))
-        return true; }
+    for (HGVNetwork net: HGVKit.getNetworkMap().keySet()) 
+      if (net.getTitle().equals(titleCandidate))
+          return true; 
     return false;
   }
 

@@ -11,28 +11,28 @@ public class DefaultEdgePainterBeanInfo extends BaseBeanInfo
 	public DefaultEdgePainterBeanInfo()
 	{
 		super(DefaultEdgePainter.class);
-		addProperty("color").setShortDescription("Edge's line color.");
+		addProperty("color").setShortDescription("FEdge's line color.");
 		ExtendedPropertyDescriptor e = addProperty("lineType");
-		e.setShortDescription("Edge's line type.");
+		e.setShortDescription("FEdge's line type.");
 		e.setPropertyEditorClass(LineTypeEditor.class);
 		e.setPropertyTableRendererClass(LineTypeEditor.CellRenderer.class);
 		
 		e = addProperty("srcArrow");
-		   e.setShortDescription("Edge's Source Arrow.");
+		   e.setShortDescription("FEdge's Source Arrow.");
 		e.setPropertyEditorClass(ArrowEditor.class);
 		e.setPropertyTableRendererClass(ArrowEditor.CellRenderer.class);
 		
 		e = addProperty("tgtArrow");
-		e.setShortDescription("Edge's Target Arrow.");
+		e.setShortDescription("FEdge's Target Arrow.");
 		e.setPropertyEditorClass(ArrowEditor.class);
 		e.setPropertyTableRendererClass(ArrowEditor.CellRenderer.class);
 		
 		
-		addProperty("label").setShortDescription("Edge's label text.");
-		addProperty("labelColor").setShortDescription("Edge's label color.");
-		addProperty("tooltip").setShortDescription("Edge's tooltip.");
+		addProperty("label").setShortDescription("FEdge's label text.");
+		addProperty("labelColor").setShortDescription("FEdge's label color.");
+		addProperty("tooltip").setShortDescription("FEdge's tooltip.");
 		e = addProperty("font");
-		e.setShortDescription("Edge's font.");
+		e.setShortDescription("FEdge's font.");
 		e.setPropertyEditorClass(FontEditor.class);
 		e.setPropertyTableRendererClass(FontEditor.CellRenderer.class);
    }

@@ -1,9 +1,9 @@
 package org.hypergraphdb.viewer.painter;
 
-import giny.view.NodeView;
 import org.hypergraphdb.viewer.HGVNetworkView;
+import phoebe.PNodeView;
 
 public interface NodePainter
 {
-	public void paintNode(NodeView nodeView, HGVNetworkView network_view);
+	public void paintNode(PNodeView nodeView, HGVNetworkView network_view);
 }

@@ -6,33 +6,32 @@
  */
 package org.hypergraphdb.viewer.hg;
 
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import javax.swing.SwingUtilities;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
-import cytoscape.task.*;
-import cytoscape.task.util.*;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.view.HGVMenus;
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.DecimalFormat;
-
-import edu.umd.cs.piccolo.PCanvas;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 import org.hypergraphdb.viewer.visual.VisualStyle;
+import cytoscape.task.Task;
+import cytoscape.task.TaskMonitor;
+import cytoscape.task.util.TaskManager;
+import edu.umd.cs.piccolo.PCanvas;
 
 /**
   */

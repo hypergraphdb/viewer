@@ -7,21 +7,21 @@ package org.hypergraphdb.viewer.data;
 //---------------------------------------------------------------------------
 import java.util.Set;
 
-import giny.model.Node;
-import giny.model.Edge;
+import fing.model.FEdge;
+import fing.model.FNode;
 //---------------------------------------------------------------------------
 /**
- * Events that are fired when the flagged state of a Node or Edge, or a group
+ * Events that are fired when the flagged state of a FNode or FEdge, or a group
  * of Nodes or Edges, is changed.
  */
 public class FlagEvent {
 
     /**
-     * Static constant indicating a change to a single Node.
+     * Static constant indicating a change to a single FNode.
      */
     public static final int SINGLE_NODE = 0;
     /**
-     * Static constant indicating a change to a single Edge.
+     * Static constant indicating a change to a single FEdge.
      */
     public static final int SINGLE_EDGE = 1;
     /**
@@ -44,7 +44,7 @@ public class FlagEvent {
      * The first argument is the object that fired this event.<P>
      *
      * The second argument decribes what objects were affected; it should be of
-     * type Node, Edge, a Set of Nodes, or a Set of Edges. If the argument is a
+     * type FNode, FEdge, a Set of Nodes, or a Set of Edges. If the argument is a
      * Set, it should contain at least one element.
      *
      * The third argument is a boolean indicating the type of event. It should be true
@@ -59,9 +59,9 @@ public class FlagEvent {
         this.selectOn = selectOn;
         if (target == null) {
             throw new IllegalArgumentException("Unexpected null target");
-        } else if (target instanceof Node) {
+        } else if (target instanceof FNode) {
             this.targetType = this.SINGLE_NODE;
-        } else if (target instanceof Edge) {
+        } else if (target instanceof FEdge) {
             this.targetType = this.SINGLE_EDGE;
         } else if (target instanceof Set) {
             Set targetSet = (Set)target;
@@ -69,9 +69,9 @@ public class FlagEvent {
                 throw new IllegalArgumentException("Unexpected empty target set");
             }
             Object first = targetSet.iterator().next();
-            if (first instanceof Node) {
+            if (first instanceof FNode) {
                 this.targetType = this.NODE_SET;
-            } else if (first instanceof Edge) {
+            } else if (first instanceof FEdge) {
                 this.targetType = this.EDGE_SET;
             } else {//unknown object type
                 throw new IllegalArgumentException("Unknown object type in target set");
@@ -88,14 +88,14 @@ public class FlagEvent {
     
     /**
      * Returns an object references the target that was changed. This should
-     * be a Node, an Edge, a Set of Nodes, or a Set of Edges. The return value
+     * be a FNode, an FEdge, a Set of Nodes, or a Set of Edges. The return value
      * of getTargetType determines which of the four cases applies.
      */
     public Object getTarget() {return target;}
 
     /**
      * Returns a static constant identifying the type of object; either SINGLE_NODE
-     * for a Node, SINGLE_EDGE for an Edge, NODE_SET for a Set of Nodes, or
+     * for a FNode, SINGLE_EDGE for an FEdge, NODE_SET for a Set of Nodes, or
      * EDGE_SET for a Set of Edges.
      */
     public int getTargetType() {return targetType;}

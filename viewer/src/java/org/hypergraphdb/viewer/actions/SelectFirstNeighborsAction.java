@@ -17,8 +17,8 @@ import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
-import giny.model.Edge;
-import giny.model.Node;
+import fing.model.FEdge;
+import fing.model.FNode;
 //-------------------------------------------------------------------------
 /**
  *  select every first neighbor (directly connected nodes) of the currently
@@ -33,15 +33,16 @@ public class SelectFirstNeighborsAction extends HGVAction {
     public void actionPerformed (ActionEvent e) {
       HGVNetwork net = HGVKit.getCurrentNetwork();
       if(net == null) return;
-      Set set = net.getFlagger().getFlaggedNodes();
-      Set new_set = new HashSet();
-      for (Object o: set){
-    	 // System.out.println("N:" + o);
-    	 List l = net.getAdjacentEdgesList(((Node)o),true, true, true);
-    	 for(Object edge: l){
-    		 //System.out.println("E:" + edge + ":" + ((Edge)edge).getTarget());
-        	 new_set.add(((Edge)edge).getTarget());
-        	 new_set.add(((Edge)edge).getSource());
+      Set<FNode> set = net.getFlagger().getFlaggedNodes();
+      Set<FNode> new_set = new HashSet<FNode>();
+      for (FNode o: set){
+    	 int[] ids  = net.getAdjacentEdgeIndicesArray(
+    			 o.getRootGraphIndex(), true, true, true);
+    	 for(int i = 0; i < ids.length; i++){
+    		 FEdge edge = net.getEdge(ids[i]);
+    		 //System.out.println("E:" + edge + ":" + ((FEdge)edge).getTarget());
+        	 new_set.add(edge.getTarget());
+        	 new_set.add(edge.getSource());
     	 }
 	  }
       net.getFlagger().setFlaggedNodes(new_set, true);

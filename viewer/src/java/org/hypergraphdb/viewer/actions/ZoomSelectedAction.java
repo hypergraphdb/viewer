@@ -15,11 +15,10 @@ import edu.umd.cs.piccolo.activities.PTransformActivity;
 import java.util.List;
 import java.util.Iterator;
 
-import giny.view.*;
-import org.hypergraphdb.viewer.giny.*;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVAction;
+import phoebe.PNodeView;
 
 //-------------------------------------------------------------------------
 public class ZoomSelectedAction extends HGVAction {
@@ -47,14 +46,14 @@ public class ZoomSelectedAction extends HGVAction {
         double W;
         double H;
         
-        NodeView first = ( NodeView )selected_nodes_iterator.next();
+        PNodeView first = ( PNodeView )selected_nodes_iterator.next();
         bigX = first.getXPosition();
         smallX = bigX;
         bigY = first.getYPosition();
         smallY = bigY;
     
         while ( selected_nodes_iterator.hasNext() ) {
-          NodeView nv = ( NodeView )selected_nodes_iterator.next();
+          PNodeView nv = ( PNodeView )selected_nodes_iterator.next();
           double x = nv.getXPosition();
           double y = nv.getYPosition();
 

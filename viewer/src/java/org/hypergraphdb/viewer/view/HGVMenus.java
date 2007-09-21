@@ -47,13 +47,13 @@ import org.hypergraphdb.viewer.actions.*;
 //import org.hypergraphdb.viewer.data.annotation.AnnotationGui;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.util.CreditScreen;
-import giny.view.GraphViewChangeListener;
-import giny.view.GraphViewChangeEvent;
 import org.hypergraphdb.viewer.hg.LoadHyperGraphFileAction;
 import org.hypergraphdb.viewer.hg.LoadWordNetAction;
 import java.net.URL;
 import org.hypergraphdb.viewer.beanshell.BeanShellAction;
 import org.hypergraphdb.viewer.util.RecentFilesProvider;
+import phoebe.event.GraphViewChangeEvent;
+import phoebe.event.GraphViewChangeListener;
 
 //------------------------------------------------------------------------------
 /**
@@ -296,7 +296,7 @@ public class HGVMenus implements GraphViewChangeListener
 				HGVNetworkView graphView = HGVKit.getCurrentView();
 				HGVNetwork graph = HGVKit.getCurrentNetwork();
 				boolean inactive = false;
-				if (graphView == null || graphView.nodeCount() == 0)
+				if (graphView == null || graphView.getRootGraph().getNodeCount() == 0)
 					inactive = true;
 				boolean networkExists = (graph != null);
 				MenuElement[] popup = fileMenu.getSubElements();
@@ -338,7 +338,7 @@ public class HGVMenus implements GraphViewChangeListener
 			{
 				HGVNetworkView graphView = HGVKit.getCurrentView();
 				boolean inactive = false;
-				if (graphView == null || graphView.nodeCount() == 0)
+				if (graphView == null || graphView.getRootGraph().getNodeCount() == 0)
 					inactive = true;
 				MenuElement[] popup = editMenu.getSubElements();
 				if (popup[0] instanceof JPopupMenu)
@@ -445,7 +445,7 @@ public class HGVMenus implements GraphViewChangeListener
 			{
 				HGVNetworkView graphView = HGVKit.getCurrentView();
 				boolean inactive = false;
-				if (graphView == null || graphView.nodeCount() == 0)
+				if (graphView == null || graphView.getRootGraph().getNodeCount() == 0)
 					inactive = true;
 				MenuElement[] popup = layoutMenu.getSubElements();
 				if (popup[0] instanceof JPopupMenu)
@@ -748,6 +748,7 @@ public class HGVMenus implements GraphViewChangeListener
 				.setIcon(new ImageIcon(getImgResource("new/color_wheel36.gif")));
 		vizButton.setToolTipText("Set Visual Properties");
 		vizButton.setBorderPainted(false);
+		vizButton.setText("");
 	}// createToolBar
 
 	/**

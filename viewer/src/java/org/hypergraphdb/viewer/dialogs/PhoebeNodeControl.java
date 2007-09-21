@@ -1,9 +1,7 @@
 package org.hypergraphdb.viewer.dialogs;
 
 import phoebe.*;
-import giny.model.*;
-import giny.view.*;
-
+import fing.model.FNode;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -11,10 +9,10 @@ import java.util.*;
 
 import java.util.List;
 
-import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.colorchooser.*;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 /**
  * An Adobe style node organizer.
@@ -23,7 +21,7 @@ import javax.swing.colorchooser.*;
 public class PhoebeNodeControl  {
 
   
-  GraphView view;
+  HGVNetworkView view;
   double Xmin, Ymin;
   double Xmax, Ymax;
   boolean setToCircle;
@@ -31,12 +29,12 @@ public class PhoebeNodeControl  {
 
   JSlider radius, rotation, twist;
 
-  public PhoebeNodeControl ( GraphView view ) {
+  public PhoebeNodeControl ( HGVNetworkView view ) {
 
-    JFrame frame = new JFrame( "Node Control" );
+    JFrame frame = new JFrame( "FNode Control" );
     JTabbedPane tabbed = new JTabbedPane();
 
-    this.view = ( PGraphView )view;
+    this.view = view;
 
     //Add Control tabs
     tabbed.addTab( "Align", createAlignTab() );
@@ -100,13 +98,13 @@ public class PhoebeNodeControl  {
                             // do it.
                             
                             double h;
-                            NodeView node_view;
-                            Node node;
+                            PNodeView node_view;
+                            FNode node;
                             Iterator sel_nodes;
                             sel_nodes = view.getSelectedNodes().iterator();
-                            h = ( ( NodeView )sel_nodes.next() ).getXPosition();
+                            h = ( ( PNodeView )sel_nodes.next() ).getXPosition();
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               if ( node_view.getXPosition() < h ) {
                                 h = node_view.getXPosition();
                               }
@@ -114,7 +112,7 @@ public class PhoebeNodeControl  {
                             
                             sel_nodes = view.getSelectedNodes().iterator();
                             while ( sel_nodes.hasNext() ) {
-                              ( ( NodeView )sel_nodes.next() ).setXPosition( h );
+                              ( ( PNodeView )sel_nodes.next() ).setXPosition( h );
                             }
                             // done doing it
                           }
@@ -135,13 +133,13 @@ public class PhoebeNodeControl  {
                           public void run() {
                             // do it.
                             double h;
-                            NodeView node_view;
-                            Node node;
+                            PNodeView node_view;
+                            FNode node;
                             Iterator sel_nodes;
                             sel_nodes = view.getSelectedNodes().iterator();
-                            h = ( ( NodeView )sel_nodes.next() ).getXPosition();
+                            h = ( ( PNodeView )sel_nodes.next() ).getXPosition();
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               if ( node_view.getXPosition() > h ) {
                                 h = node_view.getXPosition();
                               }
@@ -149,7 +147,7 @@ public class PhoebeNodeControl  {
                             
                             sel_nodes = view.getSelectedNodes().iterator();
                             while ( sel_nodes.hasNext() ) {
-                              ( ( NodeView )sel_nodes.next() ).setXPosition( h );
+                              ( ( PNodeView )sel_nodes.next() ).setXPosition( h );
                             }
                            
                             // done doing it
@@ -174,13 +172,13 @@ public class PhoebeNodeControl  {
                             
                             double min;
                             double max;
-                            NodeView node_view;
+                            PNodeView node_view;
                             Iterator sel_nodes;
                             sel_nodes = view.getSelectedNodes().iterator();
-                            min = ( ( NodeView )sel_nodes.next() ).getXPosition();
+                            min = ( ( PNodeView )sel_nodes.next() ).getXPosition();
                             max = min;
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               if ( node_view.getXPosition() > max ) {
                                 max = node_view.getXPosition();
                               }
@@ -192,7 +190,7 @@ public class PhoebeNodeControl  {
                             min = ( min + (max - min) / 2 );
                             sel_nodes = view.getSelectedNodes().iterator();
                             while ( sel_nodes.hasNext() ) {
-                              ( ( NodeView )sel_nodes.next() ).setXPosition( min );
+                              ( ( PNodeView )sel_nodes.next() ).setXPosition( min );
                             }                        }
                              
                             // done doing it
@@ -215,13 +213,13 @@ return
                           public void run() {
                             // do it.
                             double h;
-                            NodeView node_view;
-                            Node node;
+                            PNodeView node_view;
+                            FNode node;
                             Iterator sel_nodes;
                             sel_nodes = view.getSelectedNodes().iterator();
-                            h = ( ( NodeView )sel_nodes.next() ).getYPosition();
+                            h = ( ( PNodeView )sel_nodes.next() ).getYPosition();
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               if ( node_view.getYPosition() > h ) {
                                 h = node_view.getYPosition();
                               }
@@ -229,7 +227,7 @@ return
                             
                             sel_nodes = view.getSelectedNodes().iterator();
                             while ( sel_nodes.hasNext() ) {
-                              ( ( NodeView )sel_nodes.next() ).setYPosition( h );
+                              ( ( PNodeView )sel_nodes.next() ).setYPosition( h );
                             }
                           
                             // done doing it
@@ -254,13 +252,13 @@ return
                                  
                             double min;
                             double max;
-                            NodeView node_view;
+                            PNodeView node_view;
                             Iterator sel_nodes;
                             sel_nodes = view.getSelectedNodes().iterator();
-                            min = ( ( NodeView )sel_nodes.next() ).getYPosition();
+                            min = ( ( PNodeView )sel_nodes.next() ).getYPosition();
                             max = min;
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               if ( node_view.getYPosition() > max ) {
                                 max = node_view.getYPosition();
                               }
@@ -272,7 +270,7 @@ return
                             min = ( min + (max - min) / 2 );
                             sel_nodes = view.getSelectedNodes().iterator();
                             while ( sel_nodes.hasNext() ) {
-                              ( ( NodeView )sel_nodes.next() ).setYPosition( min );
+                              ( ( PNodeView )sel_nodes.next() ).setYPosition( min );
                             }                        
                             
                              
@@ -297,13 +295,13 @@ return
                           public void run() {
                             // do it.
                             double h;
-                            NodeView node_view;
-                            Node node;
+                            PNodeView node_view;
+                            FNode node;
                             Iterator sel_nodes;
                             sel_nodes = view.getSelectedNodes().iterator();
-                            h = ( ( NodeView )sel_nodes.next() ).getYPosition();
+                            h = ( ( PNodeView )sel_nodes.next() ).getYPosition();
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               if ( node_view.getYPosition() < h ) {
                                 h = node_view.getYPosition();
                               }
@@ -311,7 +309,7 @@ return
                             
                             sel_nodes = view.getSelectedNodes().iterator();
                             while ( sel_nodes.hasNext() ) {
-                              ( ( NodeView )sel_nodes.next() ).setYPosition( h );
+                              ( ( PNodeView )sel_nodes.next() ).setYPosition( h );
                             }
                           
                             // done doing it
@@ -338,7 +336,7 @@ return
                             
                             double min = 0;
                             double max = 0;
-                            NodeView node_view = null;
+                            PNodeView node_view = null;
                             List sel_nodes_list = view.getSelectedNodes();
 
                             if ( sel_nodes_list.size() == 0 )
@@ -346,10 +344,10 @@ return
 
                             Iterator sel_nodes;
                             sel_nodes = sel_nodes_list.iterator();
-                            min = ( ( NodeView )sel_nodes.next() ).getYPosition();
+                            min = ( ( PNodeView )sel_nodes.next() ).getYPosition();
                             max = min;
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               
                               if ( node_view.getYPosition() > max ) {
                                 max = node_view.getYPosition();
@@ -364,7 +362,7 @@ return
 
                             sel_nodes = sel_nodes_list.iterator();
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               node_view.setYPosition( loc );
                               loc += diff;
                             }
@@ -390,7 +388,7 @@ return
                             // do it.
                             double min = 0;
                             double max = 0;
-                            NodeView node_view = null;
+                            PNodeView node_view = null;
                             List sel_nodes_list = view.getSelectedNodes();
 
                             if ( sel_nodes_list.size() == 0 )
@@ -398,10 +396,10 @@ return
 
                             Iterator sel_nodes;
                             sel_nodes = sel_nodes_list.iterator();
-                            min = ( ( NodeView )sel_nodes.next() ).getXPosition();
+                            min = ( ( PNodeView )sel_nodes.next() ).getXPosition();
                             max = min;
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               
                               if ( node_view.getXPosition() > max ) {
                                 max = node_view.getXPosition();
@@ -416,7 +414,7 @@ return
 
                             sel_nodes = sel_nodes_list.iterator();
                             while ( sel_nodes.hasNext() ) {
-                              node_view = ( NodeView )sel_nodes.next();
+                              node_view = ( PNodeView )sel_nodes.next();
                               node_view.setXPosition( loc );
                               loc += diff;
                             }
@@ -481,7 +479,7 @@ return
     double radius = ( new Integer(ra) ).doubleValue();
     double rotation = ( new Integer(ro )).doubleValue();
     double radians = Math.toRadians( tw );
-    NodeView node_view;
+    PNodeView node_view;
    
     List sel_nodes_list = view.getSelectedNodes();
     if ( sel_nodes_list.size() == 0 ) {
@@ -491,13 +489,13 @@ return
     Iterator sel_nodes;
     sel_nodes = sel_nodes_list.iterator();
     double maxX, maxY, minX, minY;
-    node_view = ( NodeView )sel_nodes.next();
+    node_view = ( PNodeView )sel_nodes.next();
     maxY = node_view.getYPosition();
     minY = maxY;
     maxX = node_view.getXPosition();
     minX = maxX;
     while ( sel_nodes.hasNext() ) {
-      node_view = ( NodeView )sel_nodes.next();
+      node_view = ( PNodeView )sel_nodes.next();
       
       if ( node_view.getXPosition() > maxX ) {
         maxX = node_view.getXPosition();
@@ -521,7 +519,7 @@ return
     
     sel_nodes = sel_nodes_list.iterator();
     while ( sel_nodes.hasNext() ) {
-      node_view = ( NodeView )sel_nodes.next();
+      node_view = ( PNodeView )sel_nodes.next();
       node_view.setXPosition( Math.cos(theta + Math.toRadians( radians )) * radius + midX );
       node_view.setYPosition( Math.sin(theta + Math.toRadians( radians )) * radius + midY );
       theta += thetaIncr;
