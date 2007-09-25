@@ -23,10 +23,10 @@ import org.hypergraphdb.atom.*;
 import org.hypergraphdb.viewer.visual.*;
 import org.hypergraphdb.viewer.actions.*;
 
-hg = new org.hypergraphdb.HyperGraph("E:/temp/xxx2");
+hg = new org.hypergraphdb.HyperGraph("E:/temp/xxx3");
 ]]>            </data>
             <output-cell>
-                <data><![CDATA[org.hypergraphdb.HyperGraph@268948
+                <data><![CDATA[org.hypergraphdb.HyperGraph@3002b9
 ]]>                </data>
             </output-cell>
         </cell>
@@ -49,22 +49,6 @@ comp.focus(h);
 ]]>            </data>
             <output-cell>
                 <data><![CDATA[
-]]>                </data>
-            </output-cell>
-        </cell>
-
-    </cell-group>
-    <cell-group index="9">
-        <cell index="51" html-preview="true" engine="html">
-            <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
-]]>            </data>
-        </cell>
-        <cell index="52">
-            <data><![CDATA[comp.setDepth(1);
-comp.refresh();
-]]>            </data>
-            <output-cell>
-                <data><![CDATA[null
 ]]>                </data>
             </output-cell>
         </cell>
@@ -94,7 +78,7 @@ hh = node.getNode().getHandle();
 hg.get(hh)
 ]]>        </data>
         <output-cell>
-            <data><![CDATA[org.hypergraphdb.type.javaprimitive.EnumType@688aeb
+            <data><![CDATA[org.hypergraphdb.type.Top@1bca5f1
 ]]>            </data>
         </output-cell>
     </cell>
@@ -103,29 +87,27 @@ hg.get(hh)
 ]]>        </data>
     </cell>
     <cell index="12">
-        <data><![CDATA[//helper function for adding generic painters  
-public NodePainter makePainter(HyperGraph hg, Class cls, HGViewer view)
-{
-    painter = new DefaultNodePainter();
-    typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(cls));
-    comp.setPainter(typeH, painter);
-    return painter;
-}
-
-//adding generic and persistent painters 
-painter = makePainter(hg, HGSubsumes.class, comp);
-painter.setColor(Color.LIGHT_GRAY);
-painter.setShape(ShapeNodeRealizer.ROUND_RECT);
-//this is a very simple predefined painter, which returns the simple class name as a label and full class name as tooltip
-painter1 = new SimpleLabelTooltipNodePainter(); 
-typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(Top.class));
-painter1.setColor(Color.RED);
-painter1.setShape(ShapeNodeRealizer.DIAMOND);
-comp.setPainter(typeH, painter1);
+        <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
 ]]>        </data>
         <output-cell>
             <data><![CDATA[null
 ]]>            </data>
         </output-cell>
     </cell>
+    <cell-group index="57">
+        <cell index="51" html-preview="true" engine="html">
+            <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
+]]>            </data>
+        </cell>
+        <cell index="52">
+            <data><![CDATA[comp.setDepth(1);
+comp.refresh();
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
 </notebook>
