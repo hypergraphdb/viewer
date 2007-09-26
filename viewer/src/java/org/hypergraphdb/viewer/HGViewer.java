@@ -9,6 +9,7 @@ import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.hg.HGWNReader;
+import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import phoebe.PEdgeView;
@@ -69,6 +70,24 @@ public class HGViewer implements Serializable
 	{
 		return view;
 	} 
+	
+	public void setDefaultNodePainter(NodePainter p){
+		if(p != null)
+			HGVNetworkView.def_node_painter = p;
+	}
+	
+	public void setDefaultEdgePainter(EdgePainter p){
+		if(p != null)
+			HGVNetworkView.def_edge_painter = p;
+	}
+	
+	public NodePainter getDefaultNodePainter(){
+		return HGVNetworkView.def_node_painter;
+	}
+	
+	public EdgePainter getDefaultEdgePainter(){
+		return	HGVNetworkView.def_edge_painter;
+	}
 	    
     private void refreshView()
 	{

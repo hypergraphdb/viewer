@@ -250,14 +250,6 @@ public class PNodeView extends PPath
 		return rootGraphIndex;
 	}
 
-	/**
-	 * @return The list of EdgeViews connecting these two nodes. Possibly null.
-	 */
-	public java.util.List getEdgeViewsList(PNodeView otherNode)
-	{
-		return view.getEdgeViewsList(getNode(), otherNode.getNode());
-	}
-
 	// ------------------------------------------------------//
 	// Get and Set Methods for all Common Viewable Elements
 	// ------------------------------------------------------//

@@ -678,16 +678,17 @@ public class GEM implements Layout
       
 	nodes = new HashSet<FNode>();
 	edges = new HashSet<FEdge>();
-	Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
-	while(it.hasNext())
+	
+	for(Iterator<PNodeView> it = 
+		HGVKit.getCurrentView().getNodeViewsIterator();it.hasNext();)
 	{
-	    PNodeView view = (PNodeView) it.next();
-	    nodes.add(view.getNode());
+	    PNodeView view = it.next();
+	    nodes.add(view.getNode()); 
 	}
-	it = HGVKit.getCurrentView().getEdgeViewsIterator();
-	while(it.hasNext())
+	
+	for(Iterator <PEdgeView>it = HGVKit.getCurrentView().getEdgeViewsIterator();it.hasNext();)
 	{
-	    PEdgeView view = (PEdgeView) it.next();
+	    PEdgeView view = it.next();
 	    edges.add(view.getEdge());
 	}
       
@@ -757,7 +758,7 @@ public class GEM implements Layout
 					int pad,
 					Map locations) {
 
-    int nNodes = HGVKit.getCurrentNetwork().getNodeCount();
+    int nNodes = HGVKit.getCurrentView().getNodeViewCount();
 	if (nNodes <= 1) {
 	    return;
 	}

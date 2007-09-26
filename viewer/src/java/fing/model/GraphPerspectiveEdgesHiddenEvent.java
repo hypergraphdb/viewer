@@ -10,7 +10,7 @@ final class GraphPerspectiveEdgesHiddenEvent
   // Note that no copy of the array hiddenEdges is made - the exact
   // array reference is kept.  However, copies are made in the return values
   // of methods of this class.  
-  GraphPerspectiveEdgesHiddenEvent(Object source,
+  GraphPerspectiveEdgesHiddenEvent(FGraphPerspective source,
                                    int[] hiddenEdges)
   {
     super(source);

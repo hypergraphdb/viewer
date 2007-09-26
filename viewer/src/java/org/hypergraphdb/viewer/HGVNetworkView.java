@@ -11,10 +11,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -29,9 +27,9 @@ import javax.swing.SwingConstants;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
-import org.hypergraphdb.viewer.painter.DefaultNodePainter;
 import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
+import org.hypergraphdb.viewer.painter.SimpleLabelTooltipNodePainter;
 import org.hypergraphdb.viewer.util.PrimeFinder;
 import org.hypergraphdb.viewer.view.FlagAndSelectionHandler;
 import org.hypergraphdb.viewer.view.HGVMenus;
@@ -40,8 +38,6 @@ import org.hypergraphdb.viewer.visual.ui.DropDownButton;
 import phoebe.PEdgeView;
 import phoebe.PGraphView;
 import phoebe.PNodeView;
-//import cern.colt.map.OpenIntObjectHashMap;
-//import cern.colt.map.PrimeFinder;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PLayer;
 import edu.umd.cs.piccolo.PNode;
@@ -61,7 +57,7 @@ import fing.model.FNode;
  * <BR>
  * HGVKit does not currently define specific classes for NodeViews and
  * EdgeViews, the deafults from the GINY graph library ( namely phoebe.PNodeView
- * and phoebe.PEdgeView0 ) are most commonly used. Making custom nodes is easy
+ * and phoebe.PEdgeView ) are most commonly used. Making custom nodes is easy
  * and fun. One must implement the giny.view.PNodeView interface and inherit from
  * edu.umd.cs.piccolo.PNode. The Piccolo project is what all of the paiting is
  * based on, and is very fast, flexable and powerful. Becoming acquainted with
@@ -75,8 +71,8 @@ import fing.model.FNode;
 
 public class HGVNetworkView extends PGraphView
 {
-	 private static EdgePainter def_edge_painter = new DefaultEdgePainter();
-	 private static NodePainter def_node_painter = new DefaultNodePainter();
+	 static EdgePainter def_edge_painter = new DefaultEdgePainter();
+	 static NodePainter def_node_painter = new SimpleLabelTooltipNodePainter();
 	  
 	/**
 	 * This is the label that tells how many node/edges are in a HGVNetworkView

@@ -168,8 +168,10 @@ public abstract class HGVKit
 	 */
 	public static FEdge getHGVEdge(FNode node_1, FNode node_2, boolean create)
 	{
-		// System.out.println("node_1: " + node_1 + " node_2: " + node_2
-		// + "attribute_value" + create + "create");
+		if(node_1.equals(node_2) ){
+		 System.out.println("node_1: " + node_1 + " node_2: " + node_2 + ":" + create);
+				return null;
+		}
 		if (getRootGraph().getEdgeCount() != 0)
 		{
 			int[] n1Edges = getRootGraph().getAdjacentEdgeIndicesArray(

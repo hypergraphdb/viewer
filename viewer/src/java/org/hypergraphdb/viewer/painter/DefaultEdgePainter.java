@@ -16,7 +16,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 	private Color color = Color.BLACK;
 	private LineType lineType = LineType.LINE_1;
 	private Arrow srcArrow = Arrow.NONE;
-	private Arrow tgtArrow = Arrow.NONE;
+	private Arrow tgtArrow = Arrow.BLACK_ARROW;
 	private String label = "";
 	private Color labelColor = Color.WHITE;
 	private String tooltip = "";

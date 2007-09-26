@@ -7,7 +7,7 @@ abstract class GraphPerspectiveChangeEventAdapter
   extends GraphPerspectiveChangeEvent
 {
 
-  GraphPerspectiveChangeEventAdapter(Object source)
+  GraphPerspectiveChangeEventAdapter(FGraphPerspective source)
   {
     super(source);
   }

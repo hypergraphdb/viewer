@@ -82,7 +82,8 @@ public class HGWNReader
 				}
 				FEdge edge = HGVKit.getHGVEdge(addNode(hg, h_links[i],
 						level - 1, cond, nodes, edges), node, true);
-				edges.add(edge.getRootGraphIndex());
+				if(edge != null)  
+				  edges.add(edge.getRootGraphIndex());
 			}
 		}
 		if (obj instanceof HGLink)

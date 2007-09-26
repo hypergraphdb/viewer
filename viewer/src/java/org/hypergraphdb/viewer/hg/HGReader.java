@@ -71,7 +71,7 @@ public class HGReader //implements GraphReader
 				.iterator();
 		while (it.hasNext())
 			loadHG(hypergraph, it.next(), nodes, links);
-		node_indices = new ArrayList(nodes.size());
+		node_indices = new ArrayList<Integer>(nodes.size());
 		edges = new HashSet<Integer>();
 		for (Iterator<HGHandle> si = nodes.iterator(); si.hasNext();)
 		{
@@ -120,15 +120,16 @@ public class HGReader //implements GraphReader
 	{
 		if (nodes.contains(handle)) return;
 		// TODO:Nasty hacks - everything here should be redesigned
-		Object obj = h.get(handle);
-		if (obj instanceof RecordType)
-		{
-			HGHandle[] recHandles = HGUtils.getAllForType(h,
-					(HGPersistentHandle) handle);
-			for (int i = 0; i < recHandles.length; i++)
-				processHandles(h, h.getPersistentHandle(recHandles[i]), nodes, links);
-			return;
-		}
+		//Object obj = h.get(handle);
+		//if (obj instanceof RecordType)
+		//{
+		//	HGHandle[] recHandles = HGUtils.getAllForType(h,
+		//			(HGPersistentHandle) handle);
+		//	for (int i = 0; i < recHandles.length; i++)
+		//		processHandles(h, h.getPersistentHandle(recHandles[i]), nodes, links);
+		//	return;
+		//}else
+		//	System.out.println("Not A RecordType: " + obj);
 		nodes.add(handle);
 		HGHandle[] all = h.getIncidenceSet(handle);
 		for (int i = 0; i < all.length; i++)

@@ -89,8 +89,14 @@ public final class GraphConverter2
       {
     	public Iterator<FEdge> edgesIterator(){ return fixedGraph.edgesIterator(); }
         public Iterator<FNode> nodesIterator(){ return fixedGraph.nodesIterator(); }
-	    public int edgeSource(int edge) { return fixedGraph.edgeSource(edge); }
-        public int edgeTarget(int edge) { return fixedGraph.edgeTarget(edge); }
+	    public int edgeSource(int edge) { 
+	    	return fixedGraph.getEdge(edge).getSource().getRootGraphIndex();
+	    	 //fixedGraph.edgeSource(edge); 
+	    	}
+        public int edgeTarget(int edge) { 
+        	return fixedGraph.getEdge(edge).getTarget().getRootGraphIndex();
+        	//return fixedGraph.edgeTarget(edge); 
+        }
        
         // GraphLayout methods.
         public double getMaxWidth() { return width; }

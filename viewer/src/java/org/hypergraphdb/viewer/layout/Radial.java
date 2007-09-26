@@ -189,12 +189,12 @@ public class Radial implements Layout
 			front = nextLayer;
 		}
 		seen.clear();
-		// Iterator it = tree.getNodes().iterator();
 		Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
 		while (it.hasNext())
 		{
 			PNodeView n = (PNodeView) it.next();
-			layerDistance = Math.max(Math.max(layerDistance, n.getWidth() * 4),
+			if(n != null)
+			  layerDistance = Math.max(Math.max(layerDistance, n.getWidth() * 4),
 					n.getHeight() * 4);
 		}
 		double baseX = 0.0;
@@ -224,11 +224,11 @@ public class Radial implements Layout
 					rho, alpha1, alpha2, baseX);
 			alpha1 = alpha2;
 		}
-		// it = tree.getNodes().iterator();
 		it = HGVKit.getCurrentView().getNodeViewsIterator();
 		while (it.hasNext())
 		{
 			PNodeView n = (PNodeView) it.next();
+			if(n == null) continue;
 			Point2D loc = (Point2D) coords.get(n.getNode());
 			if (loc != null)
 			{

@@ -13,7 +13,7 @@ final class GraphPerspectiveNodesHiddenEvent
   // must contain valid RootGraph indices at the time this constructor is
   // called; further behavior of the FNode objects is not too important
   // because the getHiddenNodes() method has been deprecated.
-  GraphPerspectiveNodesHiddenEvent(Object source,
+  GraphPerspectiveNodesHiddenEvent(FGraphPerspective source,
                                    int[] hiddenNodes)
   {
     super(source);
