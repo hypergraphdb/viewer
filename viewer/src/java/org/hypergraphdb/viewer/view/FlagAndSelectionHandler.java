@@ -25,7 +25,7 @@ import phoebe.event.GraphViewChangeListener;
  * This class synchronizes the flagged status of nodes and edges as held by a
  * FlagFilter object of a network with the selection status of the corresponding
  * node and edge views in a GraphView. An object will be selected in the view
- * iff the matching object is flagged in the FlagFilter.
+ * if the matching object is flagged in the FlagFilter.
  */
 public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChangeListener {
     
@@ -88,9 +88,6 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
      * state in the FlagFilter object.
      */
     public void graphViewChanged(GraphViewChangeEvent event) {
-
-      
-
         //GINY bug: the event we get frequently has the correct indices
         //but incorrect FNode and FEdge objects. For now we get around this
         //by converting indices to graph objects ourselves
@@ -100,10 +97,10 @@ public class FlagAndSelectionHandler implements FlagEventListener, GraphViewChan
           //System.out.println( "Nodes slected type:" );
           //System.out.println( "FlagAndSelectionHandler: "+event);
           //System.out.println( event.getSelectedNodeIndices()+" <- nodes selected" );
-          int[] nodes = event.getSelectedNodeIndices();
-          for ( int i = 0; i < nodes.length; ++i ) {
+          //int[] nodes = event.getSelectedNodeIndices();
+         // for ( int i = 0; i < nodes.length; ++i ) {
             //System.out.println( "Selected mnode: "+nodes[i]);
-          }
+         // }
             //FNode[] selNodes = event.getSelectedNodes();
             //List selList = Arrays.asList(selNodes);
             int[] selIndices = event.getSelectedNodeIndices();

@@ -145,7 +145,7 @@ public abstract class HGVKit
 	 * @param create will create a node if one does not exist
 	 * @return will always return a node, if <code>create</code> is true
 	 */
-	public static FNode getHGVNode(HGPersistentHandle handle, boolean create)
+	public static FNode getHGVNode(HGHandle handle, boolean create)
 	{
 		FNode node = getRootGraph().getNode(handle);
 		if (node != null) return node;
@@ -209,8 +209,7 @@ public abstract class HGVKit
 	 * @param target_alias an target node handle
 	 * @return will always return an edge or null
 	 */
-	public static FEdge getHGVEdge(HGPersistentHandle sourceH,
-			HGPersistentHandle targetH)
+	public static FEdge getHGVEdge(HGHandle sourceH, HGHandle targetH)
 	{
 		// System.out.println("getHGVEdge - source: " + sourceH + " edge: "
 		//+ " target:" + targetH);
@@ -725,25 +724,7 @@ public abstract class HGVKit
 		HGVKit.setSelectionMode(HGVKit.getSelectionMode(), view);
 		HGVKit.getGraphViewController().addGraphView(view);
 		view.redrawGraph();
-		
-		// TODO: remove after implementing ActionManager
-		view.getCanvas().getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK),
-				"FitContent");
-		view.getCanvas().getActionMap().put("FitContent",
-				new FitContentAction());
-		view.getCanvas().getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_UP, ActionEvent.CTRL_MASK),
-				"Zoom In");
-		view.getCanvas().getActionMap().put("Zoom In", new ZoomAction(1.1));
-		view.getCanvas().getInputMap()
-				.put(
-						KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,
-								ActionEvent.CTRL_MASK), "Zoom Out");
-		view.getCanvas().getActionMap().put("Zoom Out", new ZoomAction(0.9));
-		// ///////////
-		return view;
+    	return view;
 	}
-
 	
 }

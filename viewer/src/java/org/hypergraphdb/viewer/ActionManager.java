@@ -21,7 +21,6 @@ public class ActionManager
 	public static final String DESTROY_NETWORK_ACTION = "Destroy Network";
 	public static final String DESTROY_SELECTED_NODES_EDGES_ACTION = "Destroy Selected Nodes/Edges";
 	public final static String PREFERENCES_ACTION = "Preferences...";
-	public static final String ADD_LINK_ACTION = "Add link for selected nodes";
 	public static final String INVERT_NODE_SELECTION_ACTION = "Invert selection";
 	public static final String HIDE_NODE_SELECTION_ACTION = "Hide selection";
 	public static final String SHOW_ALL_NODES_ACTION = "Show All";
@@ -68,7 +67,6 @@ public class ActionManager
 		actions.put(DESTROY_NETWORK_ACTION, new DestroyNetworkAction());
 		actions.put(DESTROY_SELECTED_NODES_EDGES_ACTION, new DestroySelectedAction());
 		actions.put(PREFERENCES_ACTION, new PreferenceAction());
-		actions.put(ADD_LINK_ACTION, new AddLinkAction());
 		actions.put(INVERT_NODE_SELECTION_ACTION, new InvertSelectedNodesAction());
 		actions.put(HIDE_NODE_SELECTION_ACTION, new HideSelectedNodesAction());
 		actions.put(SHOW_ALL_NODES_ACTION, new UnHideSelectedNodesAction());

@@ -6,7 +6,6 @@
 package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.HGVKit;

@@ -15,7 +15,7 @@ public class UnHideSelectedNodesAction extends HGVAction  {
 
     public UnHideSelectedNodesAction () {
         super (ActionManager.SHOW_ALL_NODES_ACTION);
-        setAcceleratorCombo( java.awt.event.KeyEvent.VK_H, ActionEvent.CTRL_MASK|ActionEvent.SHIFT_MASK );
+        setAcceleratorCombo( java.awt.event.KeyEvent.VK_U, ActionEvent.CTRL_MASK|ActionEvent.SHIFT_MASK );
     }
 
     public void actionPerformed (ActionEvent e) {		

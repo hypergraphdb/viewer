@@ -62,11 +62,7 @@ public class HGWNReader
 	public static FNode addNode(HyperGraph hg, HGHandle handle, int level,
 			HGAtomPredicate cond, Set<Integer> nodes, Set<Integer> edges)
 	{
-		Object obj = hg.get(handle);
-		if (obj instanceof HGLink && HGUtils.isDirectedLink(hg, handle))
-			return addDirectedNode(hg, handle, level, cond, nodes, edges);
-		FNode node = HGVKit
-				.getHGVNode(hg.getPersistentHandle(handle), true);
+		FNode node = HGVKit.getHGVNode(handle, true);
 		nodes.add(node.getRootGraphIndex());
 		if (level > 0)
 		{
@@ -75,17 +71,13 @@ public class HGWNReader
 			{
 				if(cond != null && !cond.satisfies(hg, h_links[i]))
 						continue;
-				if (HGUtils.isDirectedLink(hg, h_links[i]))
-				{
-					addNode(hg, h_links[i], level - 1, cond, nodes, edges);
-					continue;
-				}
 				FEdge edge = HGVKit.getHGVEdge(addNode(hg, h_links[i],
 						level - 1, cond, nodes, edges), node, true);
 				if(edge != null)  
 				  edges.add(edge.getRootGraphIndex());
 			}
 		}
+		Object obj = hg.get(handle);
 		if (obj instanceof HGLink)
 		{
 			if (level < 1) return node;
@@ -94,24 +86,10 @@ public class HGWNReader
 			{
 				FEdge edge = HGVKit.getHGVEdge(node, addNode(hg, link
 						.getTargetAt(i), level - 1, cond, nodes, edges), true);
-				//HGVKit.getCurrentNetwork().addEdge(edge);
 				edges.add(edge.getRootGraphIndex());
 			}
 		}
 		return node;
-	}
-
-	public static FNode addDirectedNode(HyperGraph hg, HGHandle handle,
-			int level, HGAtomPredicate cond, Set<Integer> nodes, Set<Integer> edges)
-	{
-		Object obj = hg.get(handle);
-		HGHandle src = ((HGLink) obj).getTargetAt(0);
-		HGHandle trg = ((HGLink) obj).getTargetAt(1);
-		FNode src_n = addNode(hg, src, level - 1, cond,  nodes, edges);
-		FNode trg_n = addNode(hg, trg, level - 1, cond, nodes, edges);
-		FEdge edge = HGVKit.getHGVEdge(src_n, trg_n, true);
-		edges.add(edge.getRootGraphIndex());
-		return trg_n;
 	}
 
 	public int[] getNodeIndicesArray()

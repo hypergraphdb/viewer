@@ -72,8 +72,8 @@ public class GinyUtils {
             PNodeView nview =(PNodeView) i.next();
             view.showGraphObject( nview );
         }
-        for (Iterator ei = view.getEdgeViewsList().iterator(); ei.hasNext(); ) {
-            PEdgeView eview =(PEdgeView) ei.next();
+        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext(); ) {
+            PEdgeView eview = i.next();
             view.showGraphObject( eview );
         }	
     }
@@ -132,8 +132,8 @@ public class GinyUtils {
     public static void invertSelectedEdges(HGVNetworkView view) {
         if (view == null) {return;}
         
-        for (Iterator i = view.getEdgeViewsList().iterator(); i.hasNext(); ) {
-            PEdgeView eview =(PEdgeView) i.next();
+        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext(); ) {
+            PEdgeView eview = i.next();
             eview.setSelected( !eview.isSelected() );
         }
     }
@@ -161,17 +161,17 @@ public class GinyUtils {
     public static void selectAllNodes(HGVNetworkView view) {
         if (view == null) {return;}
         
-        for (Iterator i = view.getNodeViewsIterator(); i.hasNext(); ) {
-            PNodeView nview =(PNodeView) i.next();
-            nview.setSelected( true );
+        for (Iterator<PNodeView> i = view.getNodeViewsIterator(); i.hasNext(); ) {
+            PNodeView nview = i.next();
+            nview.setSelected(true);
         }
     }
     
     public static void deselectAllNodes(HGVNetworkView view) {
         if (view == null) {return;}
         
-        for (Iterator i = view.getNodeViewsIterator(); i.hasNext(); ) {
-            PNodeView nview =(PNodeView) i.next();
+        for (Iterator<PNodeView> i = view.getNodeViewsIterator(); i.hasNext(); ) {
+            PNodeView nview = i.next();
             nview.setSelected( false );
         }
     }
@@ -180,8 +180,8 @@ public class GinyUtils {
     public static void selectAllEdges(PGraphView view) {
         if (view == null) {return;}
         
-        for (Iterator i = view.getEdgeViewsList().iterator(); i.hasNext(); ) {
-            PEdgeView eview =(PEdgeView) i.next();
+        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext(); ) {
+            PEdgeView eview = i.next();
             eview.setSelected( true );
         }
     }
@@ -189,17 +189,17 @@ public class GinyUtils {
     public static void deselectAllEdges(PGraphView view) {
         if (view == null) {return;}
         
-        for (Iterator i = view.getEdgeViewsList().iterator(); i.hasNext(); ) {
-            PEdgeView eview =(PEdgeView) i.next();
-            eview.setSelected( false );
+        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext(); ) {
+            PEdgeView eview = i.next();
+            eview.setSelected(false);
         }
     }
     
     public static void hideAllEdges(PGraphView view) {
         if (view == null) {return;}
         
-        for (Iterator i = view.getEdgeViewsList().iterator(); i.hasNext(); ) {
-            PEdgeView eview =(PEdgeView) i.next();
+        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext(); ) {
+            PEdgeView eview = i.next();
             view.hideGraphObject( eview );
         }
     }
@@ -207,8 +207,8 @@ public class GinyUtils {
     public static void unHideAllEdges(PGraphView view) {
         if (view == null) {return;}
         
-        for (Iterator i = view.getEdgeViewsList().iterator(); i.hasNext(); ) {
-            PEdgeView eview =(PEdgeView) i.next();
+        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext(); ) {
+            PEdgeView eview = i.next();
             view.showGraphObject( eview );
         }
     }

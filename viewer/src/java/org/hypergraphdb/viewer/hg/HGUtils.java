@@ -20,6 +20,7 @@ import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.util.GUIUtilities;
+import phoebe.PEdgeView;
 import phoebe.PNodeView;
 import static org.hypergraphdb.HGQuery.hg;
 
@@ -105,120 +106,31 @@ public class HGUtils
 		}
 	}
 
-	public static void expandSelectedNode(HyperGraph hg)
-	{
-		HGVNetworkView view = HGVKit.getCurrentView();
-		List selected_nodeViews = view.getSelectedNodes();
-		for (Object obj : selected_nodeViews)
-		{
-			FNode node = ((PNodeView) obj).getNode();
-			expandNode(hg, node, false);
-		}
-		HGVKit.getCurrentView().redrawGraph();
-	}
-
 	public static void expandNode(HyperGraph hg, FNode node)
 	{
-		expandNode(hg, node, true);
-		HGVKit.getCurrentView().redrawGraph();
-	}
-
-	private static void expandNode(HyperGraph hg, FNode node, boolean select)
-	{
-		Thread.currentThread().setContextClassLoader(
-				AppConfig.getInstance().getClassLoader());
-		if (select)
-		{
-			HGVNetworkView view = HGVKit.getCurrentView();
-			// select the view, because the popup doesnt do this automaticaly
-			view.getNetwork().getFlagger().unflagAllNodes();
-			view.getNodeView(node).setSelected(true);
-		}
-		addNode(hg, node.getHandle());
-	}
-
-	public static FNode addNode(HyperGraph hg, HGHandle handle)
-	{
-		return addNode(hg, handle, 1);
-	}
-
-	public static FNode addNode(HyperGraph hg, HGHandle handle, int level)
-	{
 		HGVNetworkView view = HGVKit.getCurrentView();
-		Object obj = hg.get(handle);
-		if (obj instanceof HGLink && isDirectedLink(hg, handle))
-			return addDirectedNode(hg, handle, level);
-		FNode node = HGVKit
-				.getHGVNode(hg.getPersistentHandle(handle), true);
-		if(node == null) System.err.println("NULL NODE");
-		//view.getNetwork().addNode(node);
-		PNodeView nview = view.getNodeView(node.getRootGraphIndex());
-		if(node == null) System.err.println("NULL PNodeView");
-		view.showGraphObject(nview);
-		if (level > 0)
-		{
-			HGHandle[] h_links = hg.getIncidenceSet(handle);
-			if(!confirmExpanding(h_links.length))
-				return node;
-		
-			for (int i = 0; i < h_links.length; i++)
-			{
-				if (isDirectedLink(hg, h_links[i]))
-				{
-					addNode(hg, h_links[i], level - 1);
-					continue;
-				}
-				FEdge edge = HGVKit.getHGVEdge(addNode(hg, h_links[i],
-						level - 1), node, true);
-				//view.getNetwork().addEdge(edge);
-				view.showGraphObject(view.getEdgeView(edge
-								.getRootGraphIndex()));
+		// select the view, because the popup doesn't do this automaticaly
+		view.getNetwork().getFlagger().unflagAllNodes();
+		view.getNodeView(node).setSelected(true);
+		HGHandle[] links = hg.getIncidenceSet(node.getHandle());
+		if(links.length == 0){
+			Object obj = hg.get(node.getHandle());
+			if (obj instanceof HGLink){
+				links = new HGHandle[((HGLink) obj).getArity()];
+				for(int i = 0; i < links.length; i++)
+					links[i] = ((HGLink) obj).getTargetAt(i);
 			}
 		}
-		if (obj instanceof HGLink)
-		{
-			if (level < 1) return node;
-			HGLink link = ((HGLink) obj);
-			if(!confirmExpanding(link.getArity()))
-				return node;
-			for (int i = 0; i < link.getArity(); i++)
-			{
-				FEdge edge = HGVKit.getHGVEdge(node, addNode(hg, link
-						.getTargetAt(i), level - 1), true);
-				//view.getNetwork().addEdge(edge);
-				view.showGraphObject(view.getEdgeView(edge.getRootGraphIndex()));
-			}
+		if(!confirmExpanding(links.length)) return;
+		for(int i = 0; i < links.length; i++){
+			FNode n = HGVKit.getHGVNode(links[i], true);
+			PNodeView v = view.getNodeView(n.getRootGraphIndex(), true);
+			view.showGraphObject(v);
+			FEdge e = HGVKit.getHGVEdge(links[i], node.getHandle());
+			PEdgeView ev = view.getEdgeView(e.getRootGraphIndex(), true);
+			view.showGraphObject(ev);
 		}
-		return node;
-	}
-	
-	
-
-	public static FNode addDirectedNode(HyperGraph hg, HGHandle handle,
-			int level)
-	{
-		HGVNetworkView view = HGVKit.getCurrentView();
-		Object obj = hg.get(handle);
-		HGHandle src = ((HGLink) obj).getTargetAt(0);
-		HGHandle trg = ((HGLink) obj).getTargetAt(1);
-		FNode src_n = addNode(hg, src, level - 1);
-		FNode trg_n = addNode(hg, trg, level - 1);
-		FEdge edge = HGVKit.getHGVEdge(src_n, trg_n, true);
-		view.getNetwork().addEdge(edge);
-		view.showGraphObject(view.getNodeView(src_n.getRootGraphIndex()));
-		view.showGraphObject(view.getNodeView(trg_n.getRootGraphIndex()));
-		view.showGraphObject(view.getEdgeView(edge.getRootGraphIndex()));
-		return trg_n;
-	}
-
-	public static boolean isDirectedLink(HyperGraph hg, HGHandle handle)
-	{
-//		HGAtomType type = hg.getTypeSystem().getAtomType(hg.get(handle));
-//		for(HGAtomType t : getDirLinks(hg))
-//			if(t.equals(type))
-//				return true;
-//		return false;
-		return true;
+		view.redrawGraph();
 	}
 	
 	private static boolean confirmExpanding(int edges_count)
@@ -228,10 +140,7 @@ public class HGUtils
 			NotifyDescriptor d = new NotifyDescriptor.Confirmation(
 					GUIUtilities.getFrame(), "The node contains " + edges_count + " edges. Are you sure that you want to expand them?", 
 					NotifyDescriptor.OK_CANCEL_OPTION);
-			if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.CANCEL_OPTION)
-			{
-				return false;
-			}
+			return DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION;
 		}
 		return true;
 	}
@@ -287,7 +196,6 @@ public class HGUtils
 		{
 			FEdge e = net.getEdge(edges[i]);
 			FNode out = getOppositeNode(node, e);
-			
 			int[] in_edges = net.getAdjacentEdgeIndicesArray(
 					out.getRootGraphIndex(), true, true, true);
 			if( in_edges.length <= 1)

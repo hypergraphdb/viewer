@@ -294,11 +294,9 @@ public class HGVMenus implements GraphViewChangeListener
 			public void menuSelected(MenuEvent e)
 			{
 				HGVNetworkView graphView = HGVKit.getCurrentView();
-				HGVNetwork graph = HGVKit.getCurrentNetwork();
 				boolean inactive = false;
 				if (graphView == null || graphView.getRootGraph().getNodeCount() == 0)
 					inactive = true;
-				boolean networkExists = (graph != null);
 				MenuElement[] popup = fileMenu.getSubElements();
 				if (popup[0] instanceof JPopupMenu)
 				{
@@ -363,40 +361,40 @@ public class HGVMenus implements GraphViewChangeListener
 				}
 			}
 		});
-		menuBar.add(dataMenu = new JMenu("Data"));
-		dataMenu.addMenuListener(new MenuListener() {
-			public void menuCanceled(MenuEvent e)
-			{
-			}
-
-			public void menuDeselected(MenuEvent e)
-			{
-			}
-
-			public void menuSelected(MenuEvent e)
-			{
-				HGVNetwork graph = HGVKit.getCurrentNetwork();
-				boolean inactive = false;
-				if (graph == null || graph.getNodeCount() == 0)
-					inactive = true;
-				MenuElement[] popup = dataMenu.getSubElements();
-				if (popup[0] instanceof JPopupMenu)
-				{
-					MenuElement[] submenus = ((JPopupMenu) popup[0])
-							.getSubElements();
-					for (int i = 0; i < submenus.length; i++)
-					{
-						if (submenus[i] instanceof JMenuItem)
-						{
-							if (inactive)
-								((JMenuItem) submenus[i]).setEnabled(false);
-							else
-								((JMenuItem) submenus[i]).setEnabled(true);
-						}
-					}
-				}
-			}
-		});
+//		menuBar.add(dataMenu = new JMenu("Data"));
+//		dataMenu.addMenuListener(new MenuListener() {
+//			public void menuCanceled(MenuEvent e)
+//			{
+//			}
+//
+//			public void menuDeselected(MenuEvent e)
+//			{
+//			}
+//
+//			public void menuSelected(MenuEvent e)
+//			{
+//				HGVNetwork graph = HGVKit.getCurrentNetwork();
+//				boolean inactive = false;
+//				if (graph == null || graph.getNodeCount() == 0)
+//					inactive = true;
+//				MenuElement[] popup = dataMenu.getSubElements();
+//				if (popup[0] instanceof JPopupMenu)
+//				{
+//					MenuElement[] submenus = ((JPopupMenu) popup[0])
+//							.getSubElements();
+//					for (int i = 0; i < submenus.length; i++)
+//					{
+//						if (submenus[i] instanceof JMenuItem)
+//						{
+//							if (inactive)
+//								((JMenuItem) submenus[i]).setEnabled(false);
+//							else
+//								((JMenuItem) submenus[i]).setEnabled(true);
+//						}
+//					}
+//				}
+//			}
+//		});
 		menuBar.add(selectMenu = new JMenu("Select"));
 		selectMenu.addMenuListener(new MenuListener() {
 			public void menuCanceled(MenuEvent e)
@@ -532,7 +530,7 @@ public class HGVMenus implements GraphViewChangeListener
 		editMenu.add(new JSeparator());
 		editMenu.add(mi(ActionManager.PREFERENCES_ACTION));
 		// fill the Data menu
-		dataMenu.add(mi(ActionManager.ADD_LINK_ACTION));
+		//dataMenu.add(mi(ActionManager.ADD_LINK_ACTION));
 		// addAction(new BeanShellAction());
 		// addAction(new RecordExplorerAction());
 		// fill the Select menu

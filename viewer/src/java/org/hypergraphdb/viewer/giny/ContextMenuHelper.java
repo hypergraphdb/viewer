@@ -42,9 +42,8 @@ public class ContextMenuHelper {
 	    	  public void actionPerformed(ActionEvent e)
 	    	  {
 	    		  HGVNetworkView v = (HGVNetworkView)((PNodeView) node).getGraphView();
-	    		  //HGUtils.collapseNode(v.getNetwork().getHyperGraph(), 
-	    		//		  ((PNodeView)node).getNode());
-	    		 
+	    		  HGUtils.collapseNode(v.getNetwork().getHyperGraph(), 
+	    				  ((PNodeView)node).getNode());
 	    		  adjust(node);
 	    	  }
 	    	  });

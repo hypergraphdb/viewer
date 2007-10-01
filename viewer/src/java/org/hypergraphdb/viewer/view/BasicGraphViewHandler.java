@@ -274,33 +274,7 @@ public class BasicGraphViewHandler implements GraphViewHandler {
     return (FEdge[])unselectedEdges.toArray(new FEdge[unselectedEdges.size()]);
   }//unselectGraphViewEdges
 
-  /**
-   * It removes the nodes in the array from the given <code>giny.view.GraphView</code> object,
-   * it also removes the connected edges to these nodes (an edge without a connecting node makes
-   * no mathematical sense).
-   *
-   * @param graph_view the <code>giny.view.GraphView</code> object from which nodes will be removed
-   * @param nodes the nodes whose views will be removed from <code>graph_view</code>
-   * @return an array of nodes that were removed
-   */
-  // NOTE: GINY automatically hides the edges connected to the nodes in the GraphPerspective
-  // and this hiding fires a hideEdgesEvent, so removeGraphViewEdges will get called on those
-  // edges and we don't need to hide them in this method
-  // TESTED
-  static public FNode[] removeGraphViewNodes (HGVNetworkView graph_view,
-                                           FNode [] nodes){
-    //System.out.println("In BasicGraphViewHandler.removeGraphViewNodes()");
-    Set removedNodes = new HashSet();
-    for(int i = 0; i < nodes.length; i++){
-      PNodeView nodeView = graph_view.removeNodeView(nodes[i]);
-      if(nodeView != null){ 
-        removedNodes.add(nodes[i]);
-      }
-    }//for i
-    //System.out.println("Leaving BasicGraphViewHandler.removeGraphViewNodes(), " +"num removed nodes = " + removedNodes.size());
-    return (FNode[])removedNodes.toArray(new FNode[removedNodes.size()]);
-  }//removeGraphViewNodes
-
+  
    /**
    * It removes the views of the nodes with the given indices that are contained in the given 
    * <code>giny.view.GraphView</code> object, it also removes the connected edges to 

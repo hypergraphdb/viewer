@@ -266,20 +266,22 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		public Object getValueAt(Object node, int column) {
 			if (column == 0)
 				return ((DefaultMutableTreeNode) node).getUserObject();
-			else if (column == 1) {
-				// return new Integer( HGVKit.getNetwork( ( ( NetworkTreeNode
-				// )node).getNetworkID() ).getNodeCount() );
-				HGVNetwork net = (((NetworkTreeNode) node).getNetworkID());
-				if(net == null) return "";
-				return "" + net.getNodeCount() + "("
-						+ net.getFlagger().getFlaggedNodes().size() + ")";
+			HGVNetwork net = (((NetworkTreeNode) node).getNetworkID());
+			if(net == null) return "";
+			HGVNetworkView view = HGVKit.getNetworkView(net);
+			String s = "";
+			if (column == 1) {
+				s = "" + net.getNodeCount(); 
+				if(view != null)
+					s += "(" + view.getNodeViewCount() + ")";
+				s += "(" + net.getFlagger().getFlaggedNodes().size() + ")";
 			} else if (column == 2) {
-				HGVNetwork net = (((NetworkTreeNode) node).getNetworkID());
-				if(net == null) return "";
-				return "" + net.getEdgeCount() + "("
-						+ net.getFlagger().getFlaggedEdges().size() + ")";
+				s = "" + net.getEdgeCount(); 
+				if(view != null)
+					s += "(" + view.getEdgeViewCount() + ")";
+				s += "(" + net.getFlagger().getFlaggedEdges().size() + ")";
 			}
-			return "";
+			return s;
 
 		}
 
