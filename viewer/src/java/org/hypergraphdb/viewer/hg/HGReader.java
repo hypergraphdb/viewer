@@ -15,7 +15,6 @@ import org.hypergraphdb.HGSearchResult;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.query.AtomTypeCondition;
 import org.hypergraphdb.type.HGAtomType;
-import org.hypergraphdb.type.RecordType;
 import org.hypergraphdb.viewer.HGVKit;
 import cytoscape.task.TaskMonitor;
 import fing.model.FEdge;

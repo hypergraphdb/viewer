@@ -56,12 +56,11 @@ import fing.model.FNode;
  * screen.<BR>
  * <BR>
  * HGVKit does not currently define specific classes for NodeViews and
- * EdgeViews, the deafults from the GINY graph library ( namely phoebe.PNodeView
+ * EdgeViews, the defaults from the GINY graph library ( namely phoebe.PNodeView
  * and phoebe.PEdgeView ) are most commonly used. Making custom nodes is easy
- * and fun. One must implement the giny.view.PNodeView interface and inherit from
- * edu.umd.cs.piccolo.PNode. The Piccolo project is what all of the paiting is
- * based on, and is very fast, flexable and powerful. Becoming acquainted with
- * Piccolo is essential for build custom nodes.<BR>
+ * and fun. One must inherit from edu.umd.cs.piccolo.PNode. The Piccolo project is 
+ * what all of the paiting is based on, and is very fast, flexable and powerful. 
+ * Becoming acquainted with Piccolo is essential for build custom nodes.<BR>
  * <BR>
  * Fortunately, if you just want basic shapes and colors, it's all built into
  * the UI already, and you really need never even use this class. Just learn how

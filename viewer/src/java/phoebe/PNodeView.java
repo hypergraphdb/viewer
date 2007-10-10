@@ -861,14 +861,6 @@ public class PNodeView extends PPath
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public void moveBy(double dx, double dy)
-	{
-		offset(dx, dy);
-	}
-
-	/**
 	 * 
 	 */
 	public void setCenter(double x, double y)
