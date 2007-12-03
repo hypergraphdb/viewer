@@ -424,11 +424,11 @@ public class FGraphPerspective
 	public int[] getAdjacentEdgeIndicesArray(int nodeInx, boolean undirected,
 			boolean incomingDirected, boolean outgoingDirected)
 	{
-		if (!(nodeInx < 0)) return null;
+		if (!(nodeInx < 0)) return new int[0];
 		final int nativeNodeInx = m_rootToNativeNodeInxMap.get(~nodeInx);
 		final IntEnumerator adj = m_graph.edgesAdjacent(nativeNodeInx,
 				outgoingDirected, incomingDirected, undirected);
-		if (adj == null) return null;
+		if (adj == null) return new int[0];
 		final int[] returnThis = new int[adj.numRemaining()];
 		for (int i = 0; i < returnThis.length; i++)
 			returnThis[i] = m_nativeToRootEdgeInxMap.getIntAtIndex(adj

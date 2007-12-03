@@ -124,9 +124,11 @@ public class HGUtils
 		if(!confirmExpanding(links.length)) return;
 		for(int i = 0; i < links.length; i++){
 			FNode n = HGVKit.getHGVNode(links[i], true);
+			view.getNetwork().addNode(n);
 			PNodeView v = view.getNodeView(n.getRootGraphIndex(), true);
 			view.showGraphObject(v);
 			FEdge e = HGVKit.getHGVEdge(links[i], node.getHandle());
+			view.getNetwork().addEdge(e);
 			PEdgeView ev = view.getEdgeView(e.getRootGraphIndex(), true);
 			view.showGraphObject(ev);
 		}

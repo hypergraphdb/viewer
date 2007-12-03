@@ -141,7 +141,6 @@ public class HGVNetwork extends FGraphPerspective
 
 	/**
 	 * Add a node to this Network
-	 * 
 	 * @return the node
 	 */
 	public FNode addNode(FNode cytoscape_node)

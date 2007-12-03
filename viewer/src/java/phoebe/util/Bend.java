@@ -134,7 +134,7 @@ public class Bend
 		//		 "is empty : "+handlePointList.isEmpty() );
 		if (i == 0 && handlePointList.isEmpty())
 		{
-			 System.out.println( "Adding handle by hand" );
+			//System.out.println( "Adding handle by hand" );
 			handlePointList.add(pt);
 		}
 		// if ( i != 0 || i >= handlePointList.size() || i < 0 ) {

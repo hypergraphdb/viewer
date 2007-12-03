@@ -609,6 +609,8 @@ public class GEM implements Layout
 			FNode n = nodeSet.next().getNode();
 			gemProp[i] = new GemP(graphPerspective.getAdjacentEdgeIndicesArray(
 					n.getRootGraphIndex(), true, true, true).length);
+			if(n == null)
+				System.out.println("GEM:" +	i +	":" + n);
 			invmap[i] = n;
 			nodeNumbers.put(n, i);
 		}

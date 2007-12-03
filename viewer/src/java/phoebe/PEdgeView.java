@@ -735,7 +735,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 				getConnectingEdgeIndicesArray(new int[] {
 						source.getRootGraphIndex(), target.getRootGraphIndex()});
 		if (same_edges == null) same_edges = new int[0];
-		if (same_edges.length != 1)
+		if (same_edges.length > 1)
 		{
 			System.out.println("Same Edges: " + same_edges.length);
 			// we have multiple edges between the same nodes

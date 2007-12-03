@@ -21,8 +21,12 @@ public class HGViewer implements Serializable
 	private transient int depth;
 	private transient HGVNetworkView view;
 	private transient HGHandle foc_handle;
+	private transient VisualStyle tmp_style = 
+		new VisualStyle("tmp");
 
-	private HGViewer(){}
+	private HGViewer(){
+		
+	}
 	
 	public HGViewer(HyperGraph hg)
 	{
@@ -34,8 +38,16 @@ public class HGViewer implements Serializable
 	}
 	
 	public Component focus(HGHandle handle){
+		//we've been already focused
+		if(view != null)
+			tmp_style = view.self_style;
 		this.foc_handle = handle;
 		view = HGVKit.getStandaloneView(hg, foc_handle, depth, null);
+		for(HGPersistentHandle h: tmp_style.getNodePaintersMap().keySet())
+			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
+		for(HGPersistentHandle h: tmp_style.getEdgePaintersMap().keySet())
+			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
+		
 		Component c = view.getComponent();
 		c.setPreferredSize(new java.awt.Dimension(600,400));
 		layout();
@@ -49,21 +61,26 @@ public class HGViewer implements Serializable
     	refreshView();
     }
     
-    public void setPainter(HGPersistentHandle typeHandle, NodePainter painter)
+    public void setPainter(HGHandle typeHandle, NodePainter painter)
     {
-    	view.self_style.addNodePainter(typeHandle, painter);
-        if(view != null)
-        	view.redrawGraph();
+    	if(view != null){
+    	  view.self_style.addNodePainter(hg.getPersistentHandle(typeHandle), painter);
+          view.redrawGraph();
+        }else 
+        	tmp_style.addNodePainter(hg.getPersistentHandle(typeHandle), painter);
     }
     
     public void setStyle(VisualStyle vs){
-    	if(view == null) return;
+    	if(view == null) {
+    		tmp_style = vs;
+    		return;
+    	}
     	view.setVisualStyle(vs);
         view.redrawGraph();
     }
     
     public VisualStyle getStyle(){
-    	return (view == null) ? null: view.getVisualStyle();
+    	return (view == null) ? tmp_style: view.getVisualStyle();
     }
 
 	public HGVNetworkView getView()
@@ -113,12 +130,12 @@ public class HGViewer implements Serializable
     
     private void clearView(){
     	FRootGraph g = view.getNetwork().getRootGraph();
-    	for(Iterator it = view.getEdgeViewsIterator(); it.hasNext();){
+    	for(Iterator<PEdgeView> it = view.getEdgeViewsIterator(); it.hasNext();){
     		PEdgeView nv = (PEdgeView) it.next();
     		view.removeEdgeView(nv.getEdge().getRootGraphIndex());
     		g.removeEdge(nv.getEdge());
     	}
-    	for(Iterator it = view.getNodeViewsIterator(); it.hasNext();){
+    	for(Iterator<PNodeView> it = view.getNodeViewsIterator(); it.hasNext();){
     		PNodeView nv = (PNodeView) it.next();
     		view.removeNodeView(nv.getNode().getRootGraphIndex());
     		g.removeNode(nv.getNode());
@@ -149,6 +166,4 @@ public class HGViewer implements Serializable
     	this.focus(h);
     }
 
- 
-    
 }
