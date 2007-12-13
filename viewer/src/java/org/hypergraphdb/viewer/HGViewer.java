@@ -1,5 +1,7 @@
 package org.hypergraphdb.viewer;
 
+import edu.umd.cs.piccolo.util.PBounds;
+import fing.model.FNode;
 import fing.model.FRootGraph;
 import java.awt.Component;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import phoebe.PEdgeView;
+import phoebe.PGraphView;
 import phoebe.PNodeView;
 
 public class HGViewer implements Serializable
@@ -47,10 +50,19 @@ public class HGViewer implements Serializable
 			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
 		for(HGPersistentHandle h: tmp_style.getEdgePaintersMap().keySet())
 			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
+		for(HGPersistentHandle h: tmp_style.getNonPersistentNodePaintersMap().keySet())
+			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
+		for(HGPersistentHandle h: tmp_style.getNonPersistentEdgePaintersMap().keySet())
+			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
 		
 		Component c = view.getComponent();
 		c.setPreferredSize(new java.awt.Dimension(600,400));
 		layout();
+		view.redrawGraph();
+		FNode node = HGVKit.getHGVNode(handle, false); 
+		view.getNodeView(node).setSelected(true);
+		view.getCanvas().getCamera().animateViewToCenterBounds( 
+				view.getNodeView(node).getFullBounds(), false, 1550l );
 		return c;
 	}
 	
@@ -144,8 +156,6 @@ public class HGViewer implements Serializable
     
     private void layout(){
     	HGVKit.getPreferedLayout().applyLayout();
-		//view.getCanvas().getCamera().animateViewToCenterBounds( 
-		//		view.getCanvas().getLayer().getFullBounds(), true, 50l );
 	}
     
     private void writeObject(java.io.ObjectOutputStream s)

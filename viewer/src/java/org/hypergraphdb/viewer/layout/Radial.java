@@ -101,10 +101,10 @@ public class Radial implements Layout
 		if(node_indicies.length > 0)
 			center_view = view.getNodeView(node_indicies[0]);
 		done = false;
-		Iterator it = view.getNodeViewsIterator();
+		Iterator<PNodeView> it = view.getNodeViewsIterator();
 		while (it.hasNext())
 		{
-			PNodeView n = (PNodeView) it.next();
+			PNodeView n = it.next();
 			//if no center is specified, take the first view from the list
 			if(center_view == null)
 				center_view = n;
@@ -114,8 +114,7 @@ public class Radial implements Layout
 		}
 		center = center_view.getNode();
 		advancePositions();
-		double scale = 1;
-		GEM.rescalePositions(scale, 0, locations);
+		//GEM.rescalePositions(1, 0, locations);
 	}
 
 	private FNode getOpposite(FNode center, fing.model.FEdge e)
@@ -189,6 +188,7 @@ public class Radial implements Layout
 			front = nextLayer;
 		}
 		seen.clear();
+		layerDistance = 10;
 		Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
 		while (it.hasNext())
 		{

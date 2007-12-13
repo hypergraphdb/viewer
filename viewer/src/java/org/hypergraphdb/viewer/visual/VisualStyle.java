@@ -111,6 +111,16 @@ public class VisualStyle implements Cloneable {
 	{
 		return nodePaintersMap;
 	}
+	
+	public Map<HGPersistentHandle, NodePainter> getNonPersistentNodePaintersMap()
+	{
+		return this.npNodePaintersMap;
+	}
+	
+	public Map<HGPersistentHandle, EdgePainter> getNonPersistentEdgePaintersMap()
+	{
+		return npEdgePaintersMap;
+	}
 
 	public void setNodePaintersMap(
 			Map<HGPersistentHandle, NodePainter> nodePaintersMap)

@@ -4,7 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
 
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
+
+import phoebe.PGraphView;
 
 public class LayoutAction extends HGVAction
 {
@@ -20,6 +23,9 @@ public class LayoutAction extends HGVAction
 	public void actionPerformed(ActionEvent event)
     {
 		layout.applyLayout();
+		//PGraphView view = HGVKit.getCurrentView();
+	    //view.getCanvas().getCamera().animateViewToCenterBounds( 
+	    //		view.getCanvas().getLayer().getFullBounds(), false, 1550l );
     }
     
 }

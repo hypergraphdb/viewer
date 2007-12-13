@@ -64,8 +64,8 @@ public abstract class HGVKit
 	protected static Set<Layout> layouts = new HashSet<Layout>();
 	static
 	{
-		Layout l = new Radial();
-		layouts.add(new GEM());
+		Layout l = new GEM(); 
+		layouts.add(new Radial());
 		layouts.add(new HierarchicalLayout());
 		layouts.add(new SpringLayout());
 		//layouts.add(new SpringEmbeddedLayout());
