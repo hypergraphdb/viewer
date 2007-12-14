@@ -42,12 +42,8 @@ package org.hypergraphdb.viewer.layout;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
-import org.hypergraphdb.viewer.layout.*;
 import org.hypergraphdb.viewer.layout.util.Graph;
-import org.hypergraphdb.viewer.layout.util.Graph.Edge;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
 
@@ -109,37 +105,29 @@ public class HierarchicalLayout implements Layout
         HGVNetwork network = networkView.getNetwork();
         if (network == null)   return;
         
-        //and the view should be a view on this structure
-        if (networkView.getNetwork() != network)
-        {
-            System.err.println("In HierarchicalLayoutListener.actionPerformed: ");
-            System.err.println("Current CyNetworkView is not a view on the current CyNetwork.");
-            return;
-        }
-        //Select all nodes as the default action if none are selected
+         //Select all nodes as the default action if none are selected
         if(network.getNodeCount() <= 0)
-        {
-            return;
-        }
+          return;
+        
         /* construct node list with selected nodes first */
-        List selectedNodes = networkView.getSelectedNodes();
+        List<PNodeView> selectedNodes = networkView.getSelectedNodes();
         final int numSelectedNodes = selectedNodes.size();
         final int numNodes = networkView.getNodeViewCount();
         final int numLayoutNodes = (numSelectedNodes <= 1) ? numNodes : numSelectedNodes;
         PNodeView nodeView[] = new PNodeView[numNodes];
         int nextNode = 0;
-        HashMap ginyIndex2Index = new HashMap(numNodes*2);
+        HashMap<Integer, Integer> ginyIndex2Index = new HashMap<Integer, Integer> (numNodes*2);
         if (numSelectedNodes > 1)
         {
-            Iterator iter = selectedNodes.iterator();
+            Iterator<PNodeView> iter = selectedNodes.iterator();
             while (iter.hasNext())
             {
-                nodeView[nextNode] = (PNodeView)(iter.next());
-                ginyIndex2Index.put(new Integer(nodeView[nextNode].getNode().getRootGraphIndex()), new Integer(nextNode));
+                nodeView[nextNode] = iter.next();
+                ginyIndex2Index.put(nodeView[nextNode].getNode().getRootGraphIndex(), nextNode);
                 nextNode++;
             }
         }
-        Iterator iter = networkView.getNodeViewsIterator() ; /* all nodes */
+        Iterator<PNodeView> iter = networkView.getNodeViewsIterator() ; /* all nodes */
         while (iter.hasNext())
         {
             PNodeView nv = (PNodeView)(iter.next());
@@ -152,11 +140,11 @@ public class HierarchicalLayout implements Layout
             }
         }
         /* create edge list from edges between selected nodes */
-        LinkedList edges = new LinkedList();
-        iter = networkView.getEdgeViewsIterator();
-        while (iter.hasNext())
+        LinkedList<Graph.Edge> edges = new LinkedList<Graph.Edge>();
+        Iterator<PEdgeView> iter2 = networkView.getEdgeViewsIterator();
+        while (iter2.hasNext())
         {
-            PEdgeView ev = (PEdgeView)(iter.next());
+            PEdgeView ev = iter2.next();
             Integer edgeFrom = (Integer)ginyIndex2Index.get(new Integer(ev.getEdge().getSource().getRootGraphIndex()));
             Integer edgeTo = (Integer)ginyIndex2Index.get(new Integer(ev.getEdge().getTarget().getRootGraphIndex()));
             if (edgeFrom == null || edgeTo == null)

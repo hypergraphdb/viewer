@@ -23,8 +23,8 @@ public class JUNGSpringLayout extends AbstractLayout
 	private LengthFunction lengthFunction;
 	public static int RANGE = 100;
 	private double FORCE_CONSTANT = 1.0 / 3.0;
-	private Map nodeIndexToDataMap;
-	private Map edgeIndexToDataMap;
+	private Map<Integer, SpringVertexData> nodeIndexToDataMap;
+	private Map<Integer, SpringEdgeData> edgeIndexToDataMap;
 	double increment;
 	double NUM_INCRMENTS = 100;
 	long relaxTime = 0;
@@ -50,10 +50,8 @@ public class JUNGSpringLayout extends AbstractLayout
 	{
 		super(g);
 		this.lengthFunction = f;
-		nodeIndexToDataMap = new HashMap(); // PrimeFinder.nextPrime(
-											// graphView.getNodeViewCount() ) );
-		edgeIndexToDataMap = new HashMap(); // PrimeFinder.nextPrime(
-											// graphView.getEdgeViewCount() ) );
+		nodeIndexToDataMap = new HashMap<Integer, SpringVertexData>(graphView.getNodeViewCount());
+		edgeIndexToDataMap = new HashMap<Integer, SpringEdgeData>(graphView.getEdgeViewCount());
 	}
 
 	public void doLayout()
@@ -64,19 +62,19 @@ public class JUNGSpringLayout extends AbstractLayout
 			advancePositions();
 			// System.out.println( increment +" "+getStatus() );
 		}
-		Iterator nodes = graphView.getNodeViewsIterator();
+		Iterator<PNodeView> nodes = graphView.getNodeViewsIterator();
 		while (nodes.hasNext())
 		{
-			((PNodeView) nodes.next()).setNodePosition(true);
+			nodes.next().setNodePosition(true);
 		}
 	}
 
 	protected void initialize_local()
 	{
 		increment = 0;
-		for (Iterator iter = graphView.getEdgeViewsIterator(); iter.hasNext();)
+		for (Iterator<PEdgeView> iter = graphView.getEdgeViewsIterator(); iter.hasNext();)
 		{
-			PEdgeView e = (PEdgeView) iter.next();
+			PEdgeView e = iter.next();
 			SpringEdgeData sed = getSpringData(e);
 			if (sed == null)
 			{
@@ -108,9 +106,9 @@ public class JUNGSpringLayout extends AbstractLayout
 	public void advancePositions()
 	{
 		increment++;
-		for (Iterator iter = graphView.getNodeViewsIterator(); iter.hasNext();)
+		for (Iterator<PNodeView> iter = graphView.getNodeViewsIterator(); iter.hasNext();)
 		{
-			PNodeView v = (PNodeView) iter.next();
+			PNodeView v = iter.next();
 			SpringVertexData svd = getSpringData(v);
 			if (svd == null)
 			{
@@ -129,9 +127,9 @@ public class JUNGSpringLayout extends AbstractLayout
 
 	private void relaxEdges()
 	{
-		for (Iterator i = graphView.getEdgeViewsIterator(); i.hasNext();)
+		for (Iterator<PEdgeView> i = graphView.getEdgeViewsIterator(); i.hasNext();)
 		{
-			PEdgeView e = (PEdgeView) i.next();
+			PEdgeView e = i.next();
 			int source_index = graphView.getGraphPerspective()
 					.getEdgeSourceIndex(e.getGraphPerspectiveIndex());
 			int target_index = graphView.getGraphPerspective()
@@ -179,16 +177,16 @@ public class JUNGSpringLayout extends AbstractLayout
 
 	private void calculateRepulsion()
 	{
-		for (Iterator iter = graphView.getNodeViewsIterator(); iter.hasNext();)
+		for (Iterator<PNodeView> iter = graphView.getNodeViewsIterator(); iter.hasNext();)
 		{
-			PNodeView v = (PNodeView) iter.next();
+			PNodeView v = iter.next();
 			if (dontMove(v)) continue;
 			SpringVertexData svd = getSpringData(v);
 			double dx = 0, dy = 0;
-			for (Iterator iter2 = graphView.getNodeViewsIterator(); iter2
+			for (Iterator<PNodeView> iter2 = graphView.getNodeViewsIterator(); iter2
 					.hasNext();)
 			{
-				PNodeView v2 = (PNodeView) iter2.next();
+				PNodeView v2 = iter2.next();
 				if (v == v2) continue;
 				double v_x = graphView.getNodeDoubleProperty(v
 						.getGraphPerspectiveIndex(), PGraphView.NODE_X_POSITION);
@@ -226,9 +224,9 @@ public class JUNGSpringLayout extends AbstractLayout
 	{
 		synchronized (getCurrentSize())
 		{
-			for (Iterator i = graphView.getNodeViewsIterator(); i.hasNext();)
+			for (Iterator<PNodeView> i = graphView.getNodeViewsIterator(); i.hasNext();)
 			{
-				PNodeView v = (PNodeView) i.next();
+				PNodeView v = i.next();
 				if (dontMove(v)) continue;
 				SpringVertexData vd = getSpringData(v);
 				double v_x = graphView.getNodeDoubleProperty(v
@@ -280,19 +278,17 @@ public class JUNGSpringLayout extends AbstractLayout
 
 	public SpringVertexData getSpringData(int v)
 	{
-		return (SpringVertexData) nodeIndexToDataMap.get(v);
+		return nodeIndexToDataMap.get(v);
 	}
 
 	public SpringEdgeData getSpringData(PEdgeView e)
 	{
-		return (SpringEdgeData) edgeIndexToDataMap.get(e
-				.getGraphPerspectiveIndex());
+		return edgeIndexToDataMap.get(e.getGraphPerspectiveIndex());
 	}
 
 	public double getLength(PEdgeView e)
 	{
-		return ((SpringEdgeData) edgeIndexToDataMap.get(e
-				.getGraphPerspectiveIndex())).length;
+		return edgeIndexToDataMap.get(e.getGraphPerspectiveIndex()).length;
 	}
 
 	/* ---------------Length Function------------------ */

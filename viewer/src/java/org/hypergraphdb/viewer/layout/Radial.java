@@ -114,7 +114,7 @@ public class Radial implements Layout
 		}
 		center = center_view.getNode();
 		advancePositions();
-		//GEM.rescalePositions(1, 0, locations);
+		GEM.rescalePositions(0.25, 0, locations);
 	}
 
 	private FNode getOpposite(FNode center, fing.model.FEdge e)
@@ -189,13 +189,13 @@ public class Radial implements Layout
 		}
 		seen.clear();
 		layerDistance = 10;
-		Iterator it = HGVKit.getCurrentView().getNodeViewsIterator();
+		Iterator<PNodeView> it = HGVKit.getCurrentView().getNodeViewsIterator();
 		while (it.hasNext())
 		{
-			PNodeView n = (PNodeView) it.next();
+			PNodeView n = it.next();
 			if(n != null)
-			  layerDistance = Math.max(Math.max(layerDistance, n.getWidth() * 4),
-					n.getHeight() * 4);
+			  layerDistance = Math.max(layerDistance, 
+					           (n.getWidth()+ n.getHeight()) * 2);
 		}
 		double baseX = 0.0;
 		// System.out.println("\tsetting width prop...");
