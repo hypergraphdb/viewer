@@ -244,7 +244,7 @@ public class HGVUtils
 		if (total.length() > 1)
 			total = total.substring(0, total.length() - 1);
 		if (total.length() == 0)
-			total = hg.get(h).getClass().getName();
+			total = hg.<Object>get(h).getClass().getName();
 		return total;
 	}
 
