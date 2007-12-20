@@ -27,7 +27,7 @@ import static org.hypergraphdb.HGQuery.hg;
 /**
  * 
  */
-public class HGUtils
+public class HGVUtils
 {
 	// temporary here, will go away
 	public static Set<HGAtomType> getAllAtomTypes(HyperGraph graph)
@@ -289,7 +289,7 @@ public class HGUtils
 	// HashMap<HyperGraph, Set<String>>();
 	//private static HashMap<HyperGraph, Set<String>> edgeTypesCache = new
 	// HashMap<HyperGraph, Set<String>>();
-	private HGUtils()
+	private HGVUtils()
 	{ 
 	}
 }
