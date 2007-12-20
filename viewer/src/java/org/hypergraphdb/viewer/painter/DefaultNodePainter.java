@@ -199,7 +199,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 			change_made = true;
 			label.setText(newLabel);
 		}
-				
+
 		Font existingFont = label.getFont();
 		Font newFont = this.getFont();
 		if (!newFont.equals(existingFont))

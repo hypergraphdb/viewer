@@ -15,7 +15,7 @@ import org.hypergraphdb.handle.HGLiveHandle;
 import org.hypergraphdb.type.*;
 import org.hypergraphdb.viewer.HGVLogger;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.hg.HGUtils;
+import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.props.*;
 
 /**
@@ -40,7 +40,7 @@ public class RecordExplorerPanel extends javax.swing.JPanel
 	private void initComponents2()
 	{
 		hg = HGVKit.getCurrentNetwork().getHyperGraph();
-		recordTypeHandles = HGUtils.getAllRecordTypes(hg);
+		recordTypeHandles = HGVUtils.getAllRecordTypes(hg);
 		recordTypes = new HGCompositeType[recordTypeHandles.length];
 		recordTypeNames = new String[recordTypeHandles.length];
 		System.out.println("RecTypes: " + recordTypeHandles.length);
@@ -48,7 +48,7 @@ public class RecordExplorerPanel extends javax.swing.JPanel
 		{
 			// recordTypes[i] = HGUtils.getRecordType(hg, recordTypeHandles[i]);
 			recordTypes[i] = (HGCompositeType) hg.get(recordTypeHandles[i]);
-			recordTypeNames[i] = HGUtils.deduceAliasName(hg,
+			recordTypeNames[i] = HGVUtils.deduceAliasName(hg,
 					recordTypeHandles[i]);
 		}
 		this.recordTypeCombo
@@ -158,13 +158,13 @@ public class RecordExplorerPanel extends javax.swing.JPanel
 		public AbstractProperty[][] getData()
 		{
 			HGPersistentHandle recTypeHandle = (HGPersistentHandle) bean;
-			rtype = HGUtils.getRecordType(hg, recTypeHandle);
+			rtype = HGVUtils.getRecordType(hg, recTypeHandle);
 			List labels = new LinkedList();
 			for (Iterator lab = rtype.getDimensionNames(); lab.hasNext();)
 				labels.add(lab.next());
 			col_labels = (String[]) labels.toArray(new String[labels.size()]);// new
 																				// String[rtype.slotCount()];
-			recHandles = HGUtils.getAllForType(hg, recTypeHandle);
+			recHandles = HGVUtils.getAllForType(hg, recTypeHandle);
 			AbstractProperty[][] data0 = new AbstractProperty[col_labels.length][recHandles.length];
 			for (int j = 0; j < col_labels.length; j++)
 			  for (int i = 0; i < recHandles.length; i++)

@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGVKit;
@@ -286,14 +287,14 @@ public class LoadWordNetAction extends HGVAction
     			String lemma = ((NotifyDescriptor.InputLine) d).getInputText();
     			if (lemma == null || lemma.equals("")) return;
     			HyperGraph hg = reader.getHyperGraph();
-        		reader.read(getWordHandle(hg, lemma), 2, null);
+        		reader.read(getWordHandle(hg, lemma), 2, (HGAtomPredicate)null);
     		}
     	}
         
         private HGHandle getWordHandle(HyperGraph hg, String lemma) throws IOException
     	{
         	HGHandle word_handle = 
-    			HGUtils.lookup(hg, "word", "lemma",	lemma);
+    			HGVUtils.lookup(hg, "word", "lemma",	lemma);
     		if (word_handle == null){
     			hg.close();
     			throw new IOException("No such word: " + lemma + " in the DB.");

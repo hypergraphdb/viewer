@@ -5,7 +5,7 @@ import java.util.*;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.hg.HGUtils;
+import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
 import org.hypergraphdb.viewer.layout.util.Graph;
@@ -623,7 +623,7 @@ public class GEM implements Layout
 			for (int j = 0; j < neighbors.length; j++)
 			{
 				FEdge e = graphPerspective.getEdge(neighbors[j]);
-				FNode n = HGUtils.getOppositeNode(invmap[i], e);
+				FNode n = HGVUtils.getOppositeNode(invmap[i], e);
 				Integer nodeNr = nodeNumbers.get(n);
 				if(nodeNr != null)
 				   adjacent[i].add(nodeNr);

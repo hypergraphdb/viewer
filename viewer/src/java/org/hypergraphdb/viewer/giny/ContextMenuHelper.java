@@ -10,7 +10,7 @@ import javax.swing.JMenuItem;
 
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.hg.HGUtils;
+import org.hypergraphdb.viewer.hg.HGVUtils;
 
 import phoebe.PGraphView;
 import phoebe.PNodeView;
@@ -27,7 +27,7 @@ public class ContextMenuHelper {
 	    	  public void actionPerformed(ActionEvent e)
 	    	  {
 	    		  HGVNetworkView v = (HGVNetworkView)((PNodeView) node).getGraphView();
-	    		  HGUtils.expandNode(v.getNetwork().getHyperGraph(), 
+	    		  HGVUtils.expandNode(v.getNetwork().getHyperGraph(), 
 	    				  ((PNodeView)node).getNode());
 	    		  int def = 150;
 	    		  removeExtraNodes(node, def);
@@ -42,7 +42,7 @@ public class ContextMenuHelper {
 	    	  public void actionPerformed(ActionEvent e)
 	    	  {
 	    		  HGVNetworkView v = (HGVNetworkView)((PNodeView) node).getGraphView();
-	    		  HGUtils.collapseNode(v.getNetwork().getHyperGraph(), 
+	    		  HGVUtils.collapseNode(v.getNetwork().getHyperGraph(), 
 	    				  ((PNodeView)node).getNode());
 	    		  adjust(node);
 	    	  }
@@ -75,7 +75,7 @@ public class ContextMenuHelper {
 		{
 			Double key = nodes.lastKey();
 			FNode nn = (FNode)nodes.get(key).getNode();
-			HGUtils.removeNode(HGVKit.getCurrentNetwork().getHyperGraph(), nn, true);
+			HGVUtils.removeNode(HGVKit.getCurrentNetwork().getHyperGraph(), nn, true);
 			nodes.remove(key);
 		}
 	}

@@ -24,10 +24,10 @@ import org.hypergraphdb.atom.*;
 import org.hypergraphdb.viewer.visual.*;
 import org.hypergraphdb.viewer.actions.*;
 
-hg = new org.hypergraphdb.HyperGraph("E:/temp/xxx3");
+hg = new org.hypergraphdb.HyperGraph("c:/tmp/graphs/wordnet");
 ]]>            </data>
             <output-cell>
-                <data><![CDATA[org.hypergraphdb.HyperGraph@49f9fa
+                <data><![CDATA[org.hypergraphdb.HyperGraph@afccbe
 ]]>                </data>
             </output-cell>
         </cell>
@@ -48,27 +48,24 @@ h = hg.getTypeSystem().getTypeHandle(Top.class);
 comp.setDepth(5);
 comp.focus(h);
 ]]>            </data>
-            <output-cell>
-                <data><![CDATA[
-]]>                </data>
-            </output-cell>
         </cell>
 
     </cell-group>
     <cell index="9" html-preview="true" engine="html">
-        <data><![CDATA[<p>Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:
+        <data><![CDATA[<p>
+  <span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
 </p>
 <ul>
-  <li>Right Mouse Button Down + Drag Up = Zoom In  
+  <li><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Right Mouse Button Down + Drag Up = Zoom In</span>  
   </li>
-  <li>Right Mouse Button Down + Drag Down = Zoom Out  
+  <li><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Right Mouse Button Down + Drag Down = Zoom Out</span>  
   </li>
-  <li>Ctrl + F = View is scaled to display all presented nodes  
+  <li><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Ctrl + F = View is scaled to display all presented nodes</span>  
   </li>
-  <li>Ctrl + 1...4 Different layouts&#160;  
+  <li><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Ctrl + 1...4 Different layouts&#160;</span>  
   </li>
 </ul>
-<p>To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.
+<p><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.</span>
 </p>
 ]]>        </data>
     </cell>
@@ -78,6 +75,10 @@ node = list.get(0);
 hh = node.getNode().getHandle();
 hg.get(hh)
 ]]>        </data>
+        <output-cell>
+            <data><![CDATA[org.hypergraphdb.type.javaprimitive.ByteType@1f3eab7
+]]>            </data>
+        </output-cell>
     </cell>
     <cell index="28" html-preview="true" engine="html">
         <data><![CDATA[At this point the nodes in the viewer should look pretty ugly. So let's make them look better (For more information on painters and styles you could look at &quot;Painters And Styles.nb&quot;). We define few generic painters which are responsible for drawing the nodes of a given type.
@@ -117,10 +118,6 @@ comp.setPainter(typeH, painter1);
             <data><![CDATA[comp.setDepth(1);
 comp.refresh();
 ]]>            </data>
-            <output-cell>
-                <data><![CDATA[null
-]]>                </data>
-            </output-cell>
         </cell>
 
     </cell-group>
@@ -128,14 +125,14 @@ comp.refresh();
         <cell index="54">
             <data><![CDATA[mypainter =new org.hypergraphdb.viewer.painter.NodePainter()
 {
-public void paintNode(phoebe.PNodeView nodeView, org.hypergraphdb.viewer.HGVNetworkView network_view)
-{
-       nodeView.setLabelText("Bizi is here");
-}     
+    public void paintNode(phoebe.PNodeView nodeView, org.hypergraphdb.viewer.HGVNetworkView network_view)
+    {
+        nodeView.setLabelText("Bizi is here");
+    } 
 }
 ]]>            </data>
             <output-cell>
-                <data><![CDATA['this' reference (XThis) to Bsh object: NameSpace: AnonymousBlock (bsh.NameSpace@6755b6)
+                <data><![CDATA['this' reference (XThis) to Bsh object: NameSpace: AnonymousBlock (bsh.NameSpace@b27de5)
 implements: org.hypergraphdb.viewer.painter.NodePainter
 ]]>                </data>
             </output-cell>
@@ -146,6 +143,52 @@ implements: org.hypergraphdb.viewer.painter.NodePainter
         <cell index="56">
             <data><![CDATA[typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(Top.class));
 comp.setPainter(typeH, mypainter);
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+        <cell>
+            <data><![CDATA[comp.setDefaultNodePainter(mypainter)
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+        <cell>
+            <data><![CDATA[import org.hypergraphdb.app.wordnet.data.Word;
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+        <cell>
+            <data><![CDATA[comp.focus(HGQuery.hg.findOne(hg, new And(HGQuery.hg.type(Word.class), HGQuery.hg.eq("lemma", "table"))))
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+    <cell-group index="57">
+        <cell index="58">
+            <data><![CDATA[hg.close()
+]]>            </data>
+            <output-cell>
+                <data><![CDATA[null
+]]>                </data>
+            </output-cell>
+        </cell>
+
+    </cell-group>
+    <cell-group index="61">
+        <cell index="62">
+            <data><![CDATA[comp.getView().setZoom(2)
 ]]>            </data>
             <output-cell>
                 <data><![CDATA[null

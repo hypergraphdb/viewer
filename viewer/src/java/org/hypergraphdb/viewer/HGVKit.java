@@ -687,28 +687,35 @@ public abstract class HGVKit
 		prefered_layout = pref_layout;
 	}
 
-	public static HGVNetworkView getStandaloneView(HyperGraph hg, HGHandle h,
-			int depth, HGAtomPredicate cond)
+	public static HGVNetworkView getStandaloneView(HyperGraph graph, HGWNReader reader)
 	{
 		embeded = true;
 		try
 		{
-			final HGWNReader reader = new HGWNReader(hg);
-			reader.read(h, depth, cond);
 			final int[] nodes = reader.getNodeIndicesArray();
 			final int[] edges = reader.getEdgeIndicesArray();
 			int realThreshold = AppConfig.getInstance().getViewThreshold();
 			AppConfig.getInstance().setViewThreshold(0);
-			HGVNetwork network = HGVKit.createNetwork(nodes, edges, hg);
-			network.setTitle(hg.getStore().getDatabaseLocation());
+			HGVNetwork network = HGVKit.createNetwork(nodes, edges, graph);
+			network.setTitle(graph.getStore().getDatabaseLocation());
 			AppConfig.getInstance().setViewThreshold(realThreshold);
 			return createView(network);
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
 		return null;
+	}
+
+	public static HGVNetworkView getStandaloneView(HyperGraph hg, 
+												   HGHandle h,
+												   int depth, 
+												   HGAtomPredicate cond)
+	{
+		final HGWNReader reader = new HGWNReader(hg);
+		reader.read(h, depth, cond); 
+		return getStandaloneView(hg, reader);
 	}
 
 	private static HGVNetworkView createView(HGVNetwork network)

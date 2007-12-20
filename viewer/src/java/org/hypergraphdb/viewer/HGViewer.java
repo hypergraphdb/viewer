@@ -10,6 +10,9 @@ import java.util.Iterator;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.algorithms.DefaultALGenerator;
+import org.hypergraphdb.algorithms.HGALGenerator;
+import org.hypergraphdb.util.CloseMe;
 import org.hypergraphdb.viewer.hg.HGWNReader;
 import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
@@ -24,10 +27,11 @@ public class HGViewer implements Serializable
 	private transient int depth;
 	private transient HGVNetworkView view;
 	private transient HGHandle foc_handle;
-	private transient VisualStyle tmp_style = 
-		new VisualStyle("tmp");
-
-	private HGViewer(){
+	private transient VisualStyle tmp_style = new VisualStyle("tmp");
+	private HGALGenerator generator = null;
+		
+	private HGViewer()
+	{
 		
 	}
 	
@@ -36,13 +40,60 @@ public class HGViewer implements Serializable
 		this.hg = hg;
 	}
 	
-	public void setDepth(int depth){
+	public void setDepth(int depth)
+	{
 		this.depth = depth;
 	}
 	
-	public Component focus(HGHandle handle){
+	public HGALGenerator getGenerator()
+	{
+		if (generator == null)
+			generator = new DefaultALGenerator(hg, null, null);
+		return generator;
+	}
+	
+	public void setGenerator(HGALGenerator generator)
+	{
+		if (this.generator != null && this.generator instanceof CloseMe)
+			((CloseMe)this.generator).close();
+		this.generator = generator;		
+	}
+	
+	public Component focus(HGHandle handle, HGALGenerator generator)
+	{
+		
 		//we've been already focused
 		if(view != null)
+			tmp_style = view.self_style;
+		this.foc_handle = handle;
+		HGWNReader reader = new HGWNReader(hg);
+		reader.read(handle, depth, generator); 
+		view = HGVKit.getStandaloneView(hg, reader);
+		for(HGPersistentHandle h: tmp_style.getNodePaintersMap().keySet())
+			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
+		for(HGPersistentHandle h: tmp_style.getEdgePaintersMap().keySet())
+			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
+		for(HGPersistentHandle h: tmp_style.getNonPersistentNodePaintersMap().keySet())
+			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
+		for(HGPersistentHandle h: tmp_style.getNonPersistentEdgePaintersMap().keySet())
+			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
+		
+		Component c = view.getComponent();
+		c.setPreferredSize(new java.awt.Dimension(600,400));
+		layout();
+		view.redrawGraph();
+		FNode node = HGVKit.getHGVNode(handle, false); 
+		view.getNodeView(node).setSelected(true);
+		view.getCanvas().getCamera().animateViewToCenterBounds( 
+				view.getNodeView(node).getFullBounds(), false, 1550l );
+		return c;		
+	}
+	
+	public Component focus(HGHandle handle)
+	{
+		return focus(handle, getGenerator());
+		//we've been already focused
+/*		if(view != null)
 			tmp_style = view.self_style;
 		this.foc_handle = handle;
 		view = HGVKit.getStandaloneView(hg, foc_handle, depth, null);
@@ -63,7 +114,7 @@ public class HGViewer implements Serializable
 		view.getNodeView(node).setSelected(true);
 		view.getCanvas().getCamera().animateViewToCenterBounds( 
 				view.getNodeView(node).getFullBounds(), false, 1550l );
-		return c;
+		return c; */
 	}
 	
     public void refresh()
@@ -120,24 +171,16 @@ public class HGViewer implements Serializable
 	    
     private void refreshView()
 	{
-		try
-		{
-			final HGWNReader reader = new HGWNReader(hg);
-			reader.read(foc_handle, depth, null);
-			final int[] nodes = reader.getNodeIndicesArray();
-			final int[] edges = reader.getEdgeIndicesArray();
-			HGVNetwork net = view.getNetwork();
-			for(int i = 0; i < nodes.length; i++)
-				net.restoreNode(nodes[i]);
-			for(int i = 0; i < edges.length; i++)
-				net.restoreEdge(edges[i]);
-			layout();
-		}
-		catch (IOException ex)
-		{
-			ex.printStackTrace();
-		}
-		
+		final HGWNReader reader = new HGWNReader(hg);
+		reader.read(foc_handle, depth, getGenerator());
+		final int[] nodes = reader.getNodeIndicesArray();
+		final int[] edges = reader.getEdgeIndicesArray();
+		HGVNetwork net = view.getNetwork();
+		for(int i = 0; i < nodes.length; i++)
+			net.restoreNode(nodes[i]);
+		for(int i = 0; i < edges.length; i++)
+			net.restoreEdge(edges[i]);
+		layout();
 	}
     
     private void clearView(){

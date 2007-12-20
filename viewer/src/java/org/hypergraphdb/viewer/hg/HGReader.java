@@ -66,7 +66,7 @@ public class HGReader //implements GraphReader
 		}
 		Set<HGHandle> nodes = new HashSet<HGHandle>();
 		Set<HGHandle> links = new HashSet<HGHandle>();
-		Iterator<HGAtomType> it = HGUtils.getAllAtomTypes(hypergraph)
+		Iterator<HGAtomType> it = HGVUtils.getAllAtomTypes(hypergraph)
 				.iterator();
 		while (it.hasNext())
 			loadHG(hypergraph, it.next(), nodes, links);
