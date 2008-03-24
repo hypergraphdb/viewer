@@ -39,7 +39,7 @@ import edu.umd.cs.piccolo.PCanvas;
 public class LoadWordNetAction extends HGVAction
 {
 	private static final String WORDNET_PATH_PROP = "WORDNET_PATH_PROP";
-	private static String PATH = "D:\\kosta\\hg\\wordnet";
+	private static String PATH = "F:\\kosta\\hg\\wordnet";
     
     /**
      * ConstructorLink.

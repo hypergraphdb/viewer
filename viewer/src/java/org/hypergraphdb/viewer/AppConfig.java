@@ -42,32 +42,33 @@ public class AppConfig
 	{
 		if (instance == null)
 		{
-			graph = new HyperGraph(new File(getConfigDirectory(),
-					APP_CONFIG_HG_NAME).getAbsolutePath());
+			String path = new File(getConfigDirectory(),
+			APP_CONFIG_HG_NAME).getAbsolutePath();
+			System.out.println("Trying to get or create new AppConfig in: " + path);
+			graph = new HyperGraph(path);
 			instance = (AppConfig) hg.getOne(graph, hg.type(AppConfig.class));
 			if (instance == null)
 			{
-				System.out.println("Creating new AppConfig");
 				instance = new AppConfig();
 				graph.add(instance, HGSystemFlags.MUTABLE);
 			}
 			instance.classLoader = new URLClassLoader(new URL[] {},
 					HGVKit.class.getClassLoader());
 			
-			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-				public void run()
-				{
-					try
-					{
-						System.out.println("Saving AppConfig");
-						graph.close();
-					}
-					catch (Throwable t)
-					{
-						t.printStackTrace(System.err);
-					}
-				}
-			}));
+//			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+//				public void run()
+//				{
+//					try
+//					{
+//						//System.out.println("Saving AppConfig");
+//						//graph.close();
+//					}
+//					catch (Throwable t)
+//					{
+//						t.printStackTrace(System.err);
+//					}
+//				}
+//			}));
 		}
 		return instance;
 	}

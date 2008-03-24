@@ -23,10 +23,10 @@ import phoebe.PNodeView;
 
 public class HGViewer implements Serializable
 {
-	private transient HyperGraph hg;
-	private transient int depth;
+	transient HyperGraph hg;
+	transient int depth;
 	private transient HGVNetworkView view;
-	private transient HGHandle foc_handle;
+	transient HGHandle foc_handle;
 	private transient VisualStyle tmp_style = new VisualStyle("tmp");
 	private HGALGenerator generator = null;
 		
@@ -61,8 +61,7 @@ public class HGViewer implements Serializable
 	
 	public Component focus(HGHandle handle, HGALGenerator generator)
 	{
-		
-		//we've been already focused
+	    //we've been already focused
 		if(view != null)
 			tmp_style = view.self_style;
 		this.foc_handle = handle;

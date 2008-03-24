@@ -104,7 +104,7 @@ public class HGVNetworkView extends PGraphView
 	protected void initializePGraphView(boolean setup)
 	{
 		isInitialized = true;
-		viewComponent = new JPanel();
+		viewComponent = new HGVComponent();
 		viewComponent.setLayout(new BorderLayout());
 		canvas = new Canvas();
 		canvas
