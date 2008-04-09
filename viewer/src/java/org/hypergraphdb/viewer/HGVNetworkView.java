@@ -266,6 +266,10 @@ public class HGVNetworkView extends PGraphView
 				"org.hypergraphdb.viewer.giny.ContextMenuHelper",
 				"collapseNodeAction", new Class[] {}, getClass()
 						.getClassLoader());
+		this.addContextMethod("phoebe.PNodeView",
+				"org.hypergraphdb.viewer.giny.ContextMenuHelper",
+				"focusNodeAction", new Class[] {}, getClass()
+						.getClassLoader());
 	}
 
 	protected void initializeEventHandlers()

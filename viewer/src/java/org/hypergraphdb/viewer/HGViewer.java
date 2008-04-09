@@ -77,8 +77,9 @@ public class HGViewer implements Serializable
 		for(HGPersistentHandle h: tmp_style.getNonPersistentEdgePaintersMap().keySet())
 			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
 		
-		Component c = view.getComponent();
+		HGVComponent c = view.getComponent();
 		c.setPreferredSize(new java.awt.Dimension(600,400));
+		c.putClientProperty("HG_VIEWER", this);
 		layout();
 		view.redrawGraph();
 		FNode node = HGVKit.getHGVNode(handle, false); 
@@ -86,6 +87,28 @@ public class HGViewer implements Serializable
 		view.getCanvas().getCamera().animateViewToCenterBounds( 
 				view.getNodeView(node).getFullBounds(), false, 1550l );
 		return c;		
+	}
+	
+	public void normal_focus(HGHandle handle)
+	{
+	    if(view != null)
+			tmp_style = view.self_style;
+		this.foc_handle = handle;
+		HGWNReader reader = new HGWNReader(hg);
+		reader.read(handle, depth, getGenerator()); 
+		clearView();
+		final int[] nodes = reader.getNodeIndicesArray();
+		final int[] edges = reader.getEdgeIndicesArray();
+		for(int i = 0; i<nodes.length; i++)
+			view.addNodeView(nodes[i]);
+		for(int i = 0; i<edges.length; i++)
+			view.addEdgeView(edges[i]);
+		layout();
+		view.redrawGraph();
+		FNode node = HGVKit.getHGVNode(handle, false); 
+		view.getNodeView(node).setSelected(true);
+		view.getCanvas().getCamera().animateViewToCenterBounds( 
+				view.getNodeView(node).getFullBounds(), false, 1550l );
 	}
 	
 	public Component focus(HGHandle handle)
@@ -187,12 +210,12 @@ public class HGViewer implements Serializable
     	for(Iterator<PEdgeView> it = view.getEdgeViewsIterator(); it.hasNext();){
     		PEdgeView nv = (PEdgeView) it.next();
     		view.removeEdgeView(nv.getEdge().getRootGraphIndex());
-    		g.removeEdge(nv.getEdge());
+    		//g.removeEdge(nv.getEdge());
     	}
     	for(Iterator<PNodeView> it = view.getNodeViewsIterator(); it.hasNext();){
     		PNodeView nv = (PNodeView) it.next();
     		view.removeNodeView(nv.getNode().getRootGraphIndex());
-    		g.removeNode(nv.getNode());
+    		//g.removeNode(nv.getNode());
     	}
     }
     
