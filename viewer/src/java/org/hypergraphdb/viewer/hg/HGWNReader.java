@@ -68,8 +68,8 @@ public class HGWNReader
 	
 	public void read(HGHandle handle, int depth, HGALGenerator generator)
 	{
-		ArrayList<Integer> nodes = new ArrayList<Integer>();
-		ArrayList<Integer> edges = new ArrayList<Integer>();
+		Set<Integer> nodes = new HashSet<Integer>();
+		Set<Integer> edges = new HashSet<Integer>();
 		LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
 		depth--;
 		FNode node = HGVKit.getHGVNode(handle, true);
@@ -121,7 +121,8 @@ public class HGWNReader
 		this.edges = new int[edges.size()];
 		i = 0;
 		for(Integer in: edges)
-			this.edges[i++] = in.intValue();		
+			this.edges[i++] = in.intValue();	
+		System.out.println("focus0: " + this.nodes.length + ":" + this.edges.length);
 	}
 	
 	
