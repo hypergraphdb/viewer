@@ -1,6 +1,6 @@
 package org.hypergraphdb.viewer.giny;
 
-import java.awt.event.ActionEvent;
+import java.awt.event.ActionEvent; 
 import java.awt.geom.AffineTransform;
 import java.util.Iterator;
 import java.util.TreeMap;
@@ -10,6 +10,7 @@ import javax.swing.JMenuItem;
 
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.hg.HGVUtils;
 
 import phoebe.PGraphView;
@@ -48,6 +49,18 @@ public class ContextMenuHelper {
 	    	  }
 	    	  });
 	   }
+	public static JMenuItem focusNodeAction(Object[] args, final PNode node) {
+
+        return new JMenuItem( new  AbstractAction("Focus"){
+            public void actionPerformed(ActionEvent e)
+            {
+                HGVNetworkView v = (HGVNetworkView)((PNodeView) node).getGraphView();               
+                HGViewer vvv = (HGViewer) v.getComponent().getClientProperty("HG_VIEWER");
+                vvv.normal_focus(((PNodeView) node).getNode().getHandle());
+            }
+            });
+       }
+
 	
 	private static void adjust(PNode node)
 	{
