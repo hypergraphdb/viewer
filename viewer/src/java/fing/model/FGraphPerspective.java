@@ -577,7 +577,7 @@ public class FGraphPerspective
 				throw new IllegalArgumentException("edge with index "
 						+ rootEdgeInx + " not in RootGraph");
 		}
-		m_root.addRootGraphChangeListener(m_changeSniffer);
+		//m_root.addRootGraphChangeListener(m_changeSniffer);
 	}
 
 	// Cannot have any recursize reference to a FGraphPerspective in this

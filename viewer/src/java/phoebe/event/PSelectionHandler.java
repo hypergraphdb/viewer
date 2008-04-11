@@ -6,7 +6,7 @@
  * www.cs.umd.edu/hcil by Jesse Grosjean under the supervision of Ben Bederson. 
  * The Piccolo website is www.cs.umd.edu/hcil/piccolo 
  */
-package phoebe.event;
+package phoebe.event; 
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -168,7 +168,7 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 	}
 
 	public void unselectAll() {
-		for (PNode node : selection.keySet()) {
+		for (PNode node : getSelection()) {
 			if (node instanceof PNodeView)
 				((PNodeView) node).unselect();
 			undecorateSelectedNode(node);
@@ -197,9 +197,7 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 	 */
 	protected boolean isSelectable(PNode node) {
 		boolean selectable = false;
-		Iterator parentsIt = selectableParents.iterator();
-		while (parentsIt.hasNext()) {
-			PNode parent = (PNode) parentsIt.next();
+		for(PNode parent: selectableParents) {
 			if (parent.getChildrenReference().contains(node)) {
 				selectable = true;
 				break;

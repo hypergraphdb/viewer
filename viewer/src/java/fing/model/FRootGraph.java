@@ -12,6 +12,10 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
+
+import phoebe.PEdgeView;
+import phoebe.PNodeView;
 
 /**
  * <h2>Architecture</h2>
@@ -212,6 +216,13 @@ public class FRootGraph
 				return rootGraph.getEdge(~(edges.nextInt()));
 			}
 		};
+	}
+	
+	public void removeAll(HGVNetworkView view){
+		for(Iterator<PEdgeView> it = view.getEdgeViewsIterator(); it.hasNext();)
+			removeEdge(it.next().getEdge());
+		for(Iterator<PNodeView> it = view.getNodeViewsIterator(); it.hasNext();)
+			removeNode(it.next().getNode());
 	}
 
 	public FNode removeNode(FNode node)

@@ -281,6 +281,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		setStroke(new BasicStroke(view.getEdgeFloatProperty(rootGraphIndex,
 				PGraphView.EDGE_WIDTH), BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND));
+		System.out.println("initializeEdgeView: " + target + ":" + source);
 		// Initialize the FNode Locators
 		if (source == target)
 		{
