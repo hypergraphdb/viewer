@@ -13,6 +13,7 @@ import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HGQuery;
 import org.hypergraphdb.HGSearchResult;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.IncidenceSet;
 import org.hypergraphdb.query.AtomTypeCondition;
 import org.hypergraphdb.type.HGAtomType;
 import org.hypergraphdb.viewer.HGVKit;
@@ -130,13 +131,13 @@ public class HGReader //implements GraphReader
 		//}else
 		//	System.out.println("Not A RecordType: " + obj);
 		nodes.add(handle);
-		HGHandle[] all = h.getIncidenceSet(handle);
-		for (int i = 0; i < all.length; i++)
+		IncidenceSet all = h.getIncidenceSet(handle);
+		for (HGHandle linkHandle : all)
 		{
-			HGLink link = (HGLink) h.get(all[i]);
-			if (links.contains(all[i])) continue;
-			links.add(all[i]); 
-			nodes.add(all[i]);
+			HGLink link = (HGLink) h.get(linkHandle);
+			if (links.contains(linkHandle)) continue;
+			links.add(linkHandle); 
+			nodes.add(linkHandle);
 			int arity = link.getArity();
 			for (int j = 0; j < arity; j++)
 			{

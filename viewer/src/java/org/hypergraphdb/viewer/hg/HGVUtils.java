@@ -112,7 +112,7 @@ public class HGVUtils
 		// select the view, because the popup doesn't do this automaticaly
 		view.getNetwork().getFlagger().unflagAllNodes();
 		view.getNodeView(node).setSelected(true);
-		HGHandle[] in_links = hg.getIncidenceSet(node.getHandle());
+		IncidenceSet in_links = hg.getIncidenceSet(node.getHandle());
 		HGHandle[] out_links = new HGHandle[0];
 		Object obj = hg.get(node.getHandle());
 		if (obj instanceof HGLink){
@@ -120,9 +120,9 @@ public class HGVUtils
 				for(int i = 0; i < out_links.length; i++)
 					out_links[i] = ((HGLink) obj).getTargetAt(i);
 			}
-		if(!confirmExpanding(in_links.length + out_links.length)) return;
+		if(!confirmExpanding(in_links.size() + out_links.length)) return;
 		expandLinks(view, node, out_links, false);
-		expandLinks(view, node, in_links, true);
+		expandLinks(view, node, in_links.toArray(new HGHandle[0]), true);
 		view.redrawGraph();
 	}
 	
@@ -238,9 +238,9 @@ public class HGVUtils
 	{
 		HGTypeSystem ts = hg.getTypeSystem();
 		String total = "";
-		Iterator it = ts.findAliases(h);
-		while (it.hasNext())
-    		total += (String)it.next() + "/";// \s
+		Set<String> aliases = ts.findAliases(h);
+		for (String al : aliases)
+    		total += al + "/";// \s
 		if (total.length() > 1)
 			total = total.substring(0, total.length() - 1);
 		if (total.length() == 0)

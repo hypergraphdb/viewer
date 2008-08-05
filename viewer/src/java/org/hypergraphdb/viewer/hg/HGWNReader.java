@@ -12,6 +12,7 @@ import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HGSearchResult;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.IncidenceSet;
 import org.hypergraphdb.algorithms.HGALGenerator;
 import org.hypergraphdb.algorithms.HGBreadthFirstTraversal;
 import org.hypergraphdb.query.HGAtomPredicate;
@@ -134,12 +135,12 @@ public class HGWNReader
 		nodes.add(node.getRootGraphIndex());
 		if (level > 0)
 		{
-			HGHandle[] h_links = hypergraph.getIncidenceSet(handle);
-			for (int i = 0; i < h_links.length; i++)
+			IncidenceSet h_links = hypergraph.getIncidenceSet(handle);
+			for (HGHandle linkHandle : h_links)
 			{
-				if(cond != null && !cond.satisfies(hypergraph, h_links[i]))
+				if(cond != null && !cond.satisfies(hypergraph, linkHandle))
 						continue;
-				FEdge edge = HGVKit.getHGVEdge(addNode(h_links[i],
+				FEdge edge = HGVKit.getHGVEdge(addNode(linkHandle,
 						level - 1, cond, nodes, edges), node, true);
 				if(edge != null)  
 				  edges.add(edge.getRootGraphIndex());
