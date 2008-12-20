@@ -22,6 +22,6 @@ public class SimpleLabelTooltipNodePainter extends DefaultNodePainter
 			return NOT_EDITABLE;
 		
 		Object o = getHG().get(getNode().getHandle());
-		return o!= null ? o.getClass().getName() : "";
+		return o!= null ? o.toString() : "[null]";
 	}
 }
