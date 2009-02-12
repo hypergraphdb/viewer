@@ -25,25 +25,16 @@ public class DestroySelectedAction extends HGVAction  {
     
     public void actionPerformed (ActionEvent e) {
 	HGVNetwork gp =HGVKit.getCurrentNetwork();
-	Set flaggedNodes = gp.getFlagger().getFlaggedNodes();
-	Set flaggedEdges = gp.getFlagger().getFlaggedEdges();
-	int [] hiddenNodeIndices = new int [flaggedNodes.size()];
-	int [] hiddenEdgeIndices = new int [flaggedEdges.size()];
+	Set<FNode> flaggedNodes = gp.getFlagger().getFlaggedNodes();
+	Set<FEdge> flaggedEdges = gp.getFlagger().getFlaggedEdges();
+	FNode [] hiddenNodeIndices = flaggedNodes.toArray(new FNode [flaggedNodes.size()]);
+	FEdge [] hiddenEdgeIndices = flaggedEdges.toArray(new FEdge [flaggedEdges.size()]);
 	
-	int j=0;
-	for (Iterator i = flaggedNodes.iterator(); i.hasNext(); ) {
-	    hiddenNodeIndices[j++] = gp.getIndex((FNode) i.next());
-	}
-	j=0;
-	for (Iterator i = flaggedEdges.iterator(); i.hasNext(); ) {
-	    hiddenEdgeIndices[j++] = gp.getIndex((FEdge) i.next());
-	}
-
 	// unflag then hide nodes from graph perspective
 	gp.getFlagger().unflagAllNodes();
 	gp.getFlagger().unflagAllEdges();
-	gp.hideEdges(hiddenEdgeIndices);
-	gp.hideNodes(hiddenNodeIndices);
+	gp.removeEdges(hiddenEdgeIndices);
+	gp.removeNodes(hiddenNodeIndices);
 	    
     }//action performed
 

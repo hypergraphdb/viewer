@@ -31,8 +31,8 @@ public class HGWNReader
 	 * The DB to be loaded
 	 */
 	protected File db;
-	int[] nodes;
-	int[] edges;
+	FNode[] nodes;
+	FEdge[] edges;
 	private boolean showLinksAsNodes = true;
 	
 	public HGWNReader(File db)
@@ -54,27 +54,27 @@ public class HGWNReader
 	// ----------------------------------------------------------------------------------------
 	public void read(HGHandle handle, int depth, HGAtomPredicate cond)
 	{
-		Set<Integer> nodes1 = new HashSet<Integer>();
-		Set<Integer> edges1 = new HashSet<Integer>();
+		Set<FNode> nodes1 = new HashSet<FNode>();
+		Set<FEdge> edges1 = new HashSet<FEdge>();
 		addNode(handle, depth, cond, nodes1, edges1);
-		nodes = new int[nodes1.size()];
+		nodes = new FNode[nodes1.size()];
 		int i = 0;
-		for(Integer in: nodes1)
-			nodes[i++] = in.intValue();
-		edges = new int[edges1.size()];
+		for(FNode in: nodes1)
+			nodes[i++] = in;
+		edges = new FEdge[edges1.size()];
 		i = 0;
-		for(Integer in: edges1)
-			edges[i++] = in.intValue();
+		for(FEdge in: edges1)
+			edges[i++] = in;
 	}
 	
 	public void read(HGHandle handle, int depth, HGALGenerator generator)
 	{
-		Set<Integer> nodes = new HashSet<Integer>();
-		Set<Integer> edges = new HashSet<Integer>();
+		Set<FNode> nodes = new HashSet<FNode>();
+		Set<FEdge> edges = new HashSet<FEdge>();
 		LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
 		depth--;
 		FNode node = HGVKit.getHGVNode(handle, true);
-		nodes.add(node.getRootGraphIndex());		
+		nodes.add(node);		
 		remaining.add(handle);		
 		while (remaining.size() > 0)
 		{
@@ -98,14 +98,14 @@ public class HGWNReader
 				{
 					currLink = generator.getCurrentLink();
 					linkNode = HGVKit.getHGVNode(currLink, true);
-					nodes.add(linkNode.getRootGraphIndex());
+					nodes.add(linkNode);
 					FEdge edge = HGVKit.getHGVEdge(node, linkNode, true);
-					edges.add(edge.getRootGraphIndex());
+					edges.add(edge);
 				}
 				FNode an = HGVKit.getHGVNode(a, true);				
-				nodes.add(an.getRootGraphIndex());
+				nodes.add(an);
 				FEdge edge = HGVKit.getHGVEdge(linkNode, an, true);
-				edges.add(edge.getRootGraphIndex());
+				edges.add(edge);
 				if (depth > 0)
 					remaining.add(a);
 			}
@@ -115,24 +115,24 @@ public class HGWNReader
 				depth--;
 			}
 		}
-		this.nodes = new int[nodes.size()];
+		this.nodes = new FNode[nodes.size()];
 		int i = 0;
-		for(Integer in: nodes)
-			this.nodes[i++] = in.intValue();
-		this.edges = new int[edges.size()];
+		for(FNode in: nodes)
+			this.nodes[i++] = in;
+		this.edges = new FEdge[edges.size()];
 		i = 0;
-		for(Integer in: edges)
-			this.edges[i++] = in.intValue();	
+		for(FEdge in: edges)
+			this.edges[i++] = in;	
 		System.out.println("focus0: " + this.nodes.length + ":" + this.edges.length);
 	}
 	
 	
 //	 The node should be presented in HG, this method adds it to the View
 	private FNode addNode(HGHandle handle, int level,
-			HGAtomPredicate cond, Set<Integer> nodes, Set<Integer> edges)
+			HGAtomPredicate cond, Set<FNode> nodes, Set<FEdge> edges)
 	{
 		FNode node = HGVKit.getHGVNode(handle, true);
-		nodes.add(node.getRootGraphIndex());
+		nodes.add(node);
 		if (level > 0)
 		{
 			IncidenceSet h_links = hypergraph.getIncidenceSet(handle);
@@ -143,7 +143,7 @@ public class HGWNReader
 				FEdge edge = HGVKit.getHGVEdge(addNode(linkHandle,
 						level - 1, cond, nodes, edges), node, true);
 				if(edge != null)  
-				  edges.add(edge.getRootGraphIndex());
+				  edges.add(edge);
 			}
 		}
 		Object obj = hypergraph.get(handle);
@@ -155,18 +155,18 @@ public class HGWNReader
 			{
 				FEdge edge = HGVKit.getHGVEdge(node, addNode(link
 						.getTargetAt(i), level - 1, cond, nodes, edges), true);
-				edges.add(edge.getRootGraphIndex());
+				edges.add(edge);
 			}
 		}
 		return node;
 	}
 
-	public int[] getNodeIndicesArray()
+	public FNode[] getNodeIndicesArray()
 	{
 		return nodes;
 	}
 
-	public int[] getEdgeIndicesArray()
+	public FEdge[] getEdgeIndicesArray()
 	{
 		return edges;
 	}

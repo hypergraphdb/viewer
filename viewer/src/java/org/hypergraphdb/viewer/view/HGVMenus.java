@@ -47,20 +47,20 @@ import org.hypergraphdb.viewer.actions.*;
 //import org.hypergraphdb.viewer.data.annotation.AnnotationGui;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.util.CreditScreen;
+import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
+import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
 import org.hypergraphdb.viewer.hg.LoadHyperGraphFileAction;
 import org.hypergraphdb.viewer.hg.LoadWordNetAction;
 import java.net.URL;
 import org.hypergraphdb.viewer.beanshell.BeanShellAction;
 import org.hypergraphdb.viewer.util.RecentFilesProvider;
-import phoebe.event.GraphViewChangeEvent;
-import phoebe.event.GraphViewChangeListener;
 
 //------------------------------------------------------------------------------
 /**
  * This class creates the menu and tool bars for a HGVKit window object. It
  * also provides access to individual menus and items.
  */
-public class HGVMenus implements GraphViewChangeListener
+public class HGVMenus implements HGVNetworkChangeListener
 {
 	private static final String IMG_BASE = "org/hypergraphdb/viewer/images/";
 	boolean menusInitialized = false;
@@ -262,7 +262,7 @@ public class HGVMenus implements GraphViewChangeListener
 	 * non-empty.
 	 * @param e
 	 */
-	public void graphViewChanged(GraphViewChangeEvent e)
+	public void networkChanged(HGVNetworkChangeEvent e)
 	{
 		// Do this in the GUI Event Dispatch thread...
 		SwingUtilities.invokeLater(new Runnable() {
@@ -295,7 +295,7 @@ public class HGVMenus implements GraphViewChangeListener
 			{
 				HGVNetworkView graphView = HGVKit.getCurrentView();
 				boolean inactive = false;
-				if (graphView == null || graphView.getRootGraph().getNodeCount() == 0)
+				if (graphView == null || graphView.getNodeViewCount() == 0)
 					inactive = true;
 				MenuElement[] popup = fileMenu.getSubElements();
 				if (popup[0] instanceof JPopupMenu)
@@ -336,7 +336,7 @@ public class HGVMenus implements GraphViewChangeListener
 			{
 				HGVNetworkView graphView = HGVKit.getCurrentView();
 				boolean inactive = false;
-				if (graphView == null || graphView.getRootGraph().getNodeCount() == 0)
+				if (graphView == null || graphView.getNodeViewCount() == 0)
 					inactive = true;
 				MenuElement[] popup = editMenu.getSubElements();
 				if (popup[0] instanceof JPopupMenu)
@@ -443,7 +443,7 @@ public class HGVMenus implements GraphViewChangeListener
 			{
 				HGVNetworkView graphView = HGVKit.getCurrentView();
 				boolean inactive = false;
-				if (graphView == null || graphView.getRootGraph().getNodeCount() == 0)
+				if (graphView == null || graphView.getNodeViewCount() == 0)
 					inactive = true;
 				MenuElement[] popup = layoutMenu.getSubElements();
 				if (popup[0] instanceof JPopupMenu)

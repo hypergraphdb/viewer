@@ -20,16 +20,16 @@ public class CloneGraphInNewWindowAction extends HGVAction {
   }
 
   public void actionPerformed(ActionEvent e) {
-
-    HGVNetwork current_network = HGVKit.getCurrentNetwork();
-    if(current_network == null || HGVKit.isEmbeded()) return;
-	
-    HGVNetwork new_network = HGVKit.createNetwork( current_network.getNodeIndicesArray(),
-                                                     current_network.getEdgeIndicesArray(),
-                                                     current_network.getHyperGraph());
-    new_network.setTitle(current_network.getTitle() + " copy");
-    String title = " selection";
-    HGVKit.createNetworkView( new_network, title );
+//TODO:???
+//    HGVNetwork current_network = HGVKit.getCurrentNetwork();
+//    if(current_network == null || HGVKit.isEmbeded()) return;
+//	
+//    HGVNetwork new_network = HGVKit.createNetwork( current_network.getNodeIndicesArray(),
+//                                                     current_network.getEdgeIndicesArray(),
+//                                                     current_network.getHyperGraph());
+//    new_network.setTitle(current_network.getTitle() + " copy");
+//    String title = " selection";
+//    HGVKit.createNetworkView( new_network, title );
   }
 
 }

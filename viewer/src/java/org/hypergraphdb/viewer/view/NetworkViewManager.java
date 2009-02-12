@@ -35,7 +35,7 @@ public class NetworkViewManager implements PropertyChangeListener,
 
 		// add Help hooks
 		// TODO: temporarily switched off
-		// cytoscapeDesktop.getHelpBroker().enableHelp(container,
+		// cyDesktop.getHelpBroker().enableHelp(container,
 		// "network-view-manager", null);
 		networkViewMap = new HashMap<HGVNetworkView, Component>();
 		componentMap = new HashMap<Component, HGVNetworkView>();

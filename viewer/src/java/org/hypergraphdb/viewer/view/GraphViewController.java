@@ -32,16 +32,17 @@
 
 package org.hypergraphdb.viewer.view;
 import java.util.*;
+
+import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
-import phoebe.event.GraphPerspectiveChangeEvent;
-import fing.model.FGraphPerspective;
+import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
 
 
 public class GraphViewController 
-  implements phoebe.event.GraphPerspectiveChangeListener{
+  implements org.hypergraphdb.viewer.event.HGVNetworkChangeListener{
   
   protected Map<HGVNetworkView, GraphViewHandler> graphViewToHandler;  // a map of GraphViews to GraphViewHandlers
-  protected Map<FGraphPerspective, HGVNetworkView> gpToGv;              // a map of GraphPerspectives to GraphViews
   public static final GraphViewHandler DEFAULT_GRAPH_VIEW_HANDLER =
     new BasicGraphViewHandler();
   
@@ -50,95 +51,10 @@ public class GraphViewController
    */
   public GraphViewController (){
     this.graphViewToHandler = new HashMap<HGVNetworkView, GraphViewHandler>();
-    this.gpToGv = new HashMap<FGraphPerspective, HGVNetworkView>();
   }//GraphViewController
     
-  /**
-   * ConstructorLink, assigns <code>GraphViewController.DEFAULT_GRAPH_VIEW_HANDLER</code>
-   * to all the given <code>giny.view.GraphView</code> objects in the array.
-   *
-   * @param graph_views an array of <code>giny.view.GraphView</code> objects
-   * that this <code>GraphViewController</code> will keep synchronized to
-   * their corresponding <code>giny.model.GraphPerspective</code> objects
-   * available through their <code>getGraphPerspective()</code> method.
-   */
-  public GraphViewController (HGVNetworkView [] graph_views){
-    this.graphViewToHandler = new HashMap<HGVNetworkView, GraphViewHandler>();
-    this.gpToGv = new HashMap<FGraphPerspective, HGVNetworkView>();
-    setGraphViews(graph_views);
-  }//GraphViewController
-  
-  /**
-   * ConstructorLink, specifies the <code>org.hypergraphdb.viewer.view.GraphViewHandler</code> objects
-   * for the given <code>giny.view.GraphView</code> objects in the arrays.
-   *
-   * @param graph_views an array of <code>giny.view.GraphView</code> objects
-   * that this <code>GraphViewController</code> will keep synchronized to
-   * their corresponding <code>giny.model.GraphPerspective</code> objects
-   * available through their <code>getGraphPerspective()</code> method
-   * @param gv_to_handler a <code>Map</code> with <code>giny.view.GraphView</code>
-   * objects as keys, and <code>org.hypergraphdb.viewer.view.GraphViewHandler</code> objects
-   * as values, two or more different keys can share the same value, the
-   * DEFAULT_GRAPH_VIEW_HANDLER will be set for <code>giny.view.GraphView</code>
-   * objects that are not keys in the given <code>Map</code>
-   */
-  public GraphViewController (HGVNetworkView [] graph_views, Map gv_to_handler){
-    this.graphViewToHandler = new HashMap<HGVNetworkView, GraphViewHandler>();
-    this.gpToGv = new HashMap<FGraphPerspective, HGVNetworkView>();
-    setGraphViews(graph_views, gv_to_handler);
-  }//GraphViewController
-
-  /**
-   * Sets the array of <code>giny.view.GraphView</code> objects
-   * that this <code>GraphViewController</code> will keep synchronized with
-   * their corresponding <code>giny.model.GraphPerspective</code> objects
-   * available through their <code>getGraphPerspective()</code> method, the
-   * DEFAULT_GRAPH_VIEW_HANDLER is set for all the views. Any previous <code>GraphView</code>
-   * objects are removed from this listener
-   *
-   * @param graph_views an array of <code>giny.view.GraphView</code> objects
-   */
-  public void setGraphViews (HGVNetworkView [] graph_views){
-    removeAllGraphViews();
-    for(int i = 0; i < graph_views.length; i++){
-    	FGraphPerspective graphPerspective = graph_views[i].getGraphPerspective();
-      graphPerspective.addGraphPerspectiveChangeListener(this);
-      this.gpToGv.put(graphPerspective, graph_views[i]);
-      this.graphViewToHandler.put(graph_views[i], DEFAULT_GRAPH_VIEW_HANDLER);
-    }//for i
-  }//setGraphViews
-
+    
    /**
-   * Sets the array of <code>giny.view.GraphView</code> objects
-   * that this <code>GraphViewController</code> will keep synchronized with
-   * their corresponding <code>giny.model.GraphPerspective</code> objects
-   * available through their <code>getGraphPerspective()</code> method, the
-   * <code>org.hypergraphdb.viewer.view.GraphViewHandler</code> objects for the 
-   * <code>GraphView</code>s are obtained from the given <code>Map</code>,
-   * if a <code>GraphView</code> in the array is not a key in the <code>Map</code>
-   * then DEFAULT_GRAPH_VIEW_HANDLER is used. Any previous <code>GraphView</code>
-   * objects are removed from this listener
-   *
-   * @param graph_views an array of <code>giny.view.GraphView</code> objects
-   * @param gv_to_handler a <code>Map</code> with <code>giny.view.GraphView</code> 
-   * for keys and <code>org.hypergraphdb.viewer.view.GraphViewHandler</code> objects for values
-   */
-  public void setGraphViews (HGVNetworkView [] graph_views, Map gv_to_handler){
-    removeAllGraphViews();
-    for(int i = 0; i < graph_views.length; i++){
-    	FGraphPerspective graphPerspective = graph_views[i].getGraphPerspective();
-      graphPerspective.addGraphPerspectiveChangeListener(this);
-      this.gpToGv.put(graphPerspective, graph_views[i]);
-      GraphViewHandler handler = (GraphViewHandler)gv_to_handler.get(graph_views[i]);
-      if(handler == null){
-        this.graphViewToHandler.put(graph_views[i], DEFAULT_GRAPH_VIEW_HANDLER);
-      }else{
-        this.graphViewToHandler.put(graph_views[i], handler);
-      }
-    }//for i
-  }//setGraphViews
-
-  /**
    * Gets an array of <code>giny.view.GraphView</code> objects
    * that this <code>GraphViewController</code> will keep synchronized with
    * their corresponding <code>giny.model.GraphPerspective</code> objects
@@ -151,18 +67,7 @@ public class GraphViewController
     return (HGVNetworkView[])keySet.toArray(new HGVNetworkView[keySet.size()]);
   }//getGraphViews
 
-  /**
-   * Gets a <code>Map</code> with <code>giny.view.GraphView</code>
-   * objects as keys, and <code>org.hypergraphdb.viewer.view.GraphViewHandler</code> objects
-   * as values, two or more different keys can share the same value.
-   *
-   * @return the <code>Map</code> that specifies what <code>org.hypergraphdb.viewer.view.GraphViewHandler</code>
-   * objects handle the <code>giny.view.GraphView</code> objects in this controller.
-   */
-  public Map getGraphViewHandlersMap (){
-    return this.graphViewToHandler;
-  }//getGraphViewHandlersMap
-
+ 
   /**
    * Gets the <code>org.hypergraphdb.viewer.view.GraphViewHandler</code> for the given
    * <code>giny.view.GraphView</code>
@@ -188,9 +93,8 @@ public class GraphViewController
    */
   public GraphViewHandler removeGraphView (HGVNetworkView graph_view){
     if(this.graphViewToHandler.containsKey(graph_view)){
-    	FGraphPerspective graphPerspective = graph_view.getGraphPerspective();
-      graphPerspective.removeGraphPerspectiveChangeListener(this);
-      this.gpToGv.remove(graphPerspective);
+    	HGVNetwork graphPerspective = graph_view.getNetwork();
+      graphPerspective.removeHGVNetworkChangeListener(this);
       GraphViewHandler gvHandler = 
         (GraphViewHandler)this.graphViewToHandler.remove(graph_view);
       return gvHandler;
@@ -230,10 +134,9 @@ public class GraphViewController
       // already contained
       return false;
     }
-    FGraphPerspective graphPerspective = graph_view.getGraphPerspective();
-    graphPerspective.addGraphPerspectiveChangeListener(this);
-    this.gpToGv.put(graphPerspective, graph_view);
-    this.graphViewToHandler.put(graph_view, gv_handler);
+    HGVNetwork graphPerspective = graph_view.getNetwork();
+    graphPerspective.addHGVNetworkChangeListener(this);
+     this.graphViewToHandler.put(graph_view, gv_handler);
     return true;
   }//addGraphView
 
@@ -268,11 +171,10 @@ public class GraphViewController
   public HGVNetworkView [] removeAllGraphViews (){
 	  HGVNetworkView [] gViews = getGraphViews();
     for(int i = 0; i < gViews.length; i++){
-    	FGraphPerspective graphPerspective = gViews[i].getGraphPerspective();
-      graphPerspective.removeGraphPerspectiveChangeListener(this);
+    	HGVNetwork graphPerspective = gViews[i].getNetwork();
+      graphPerspective.removeHGVNetworkChangeListener(this);
     }//for i
-    this.gpToGv.clear();
-    this.graphViewToHandler.clear();
+   this.graphViewToHandler.clear();
     return gViews;
   }//removeAllGraphViews
   
@@ -297,8 +199,8 @@ public class GraphViewController
   public void stopListening (){
 	  HGVNetworkView [] graphViews = getGraphViews();
     for(int i = 0; i < graphViews.length; i++){
-    	FGraphPerspective graphPerspective = graphViews[i].getGraphPerspective();
-      graphPerspective.removeGraphPerspectiveChangeListener(this);
+    	HGVNetwork graphPerspective = graphViews[i].getNetwork();
+      graphPerspective.removeHGVNetworkChangeListener(this);
     }//for i
   }//stopListening
   
@@ -312,8 +214,8 @@ public class GraphViewController
   // TODO: Catch all change events even of stopListening has been called, and when
   // listening is resumed, update the graph view
   public void stopListening (HGVNetworkView graph_view){
-	  FGraphPerspective graphPerspective = graph_view.getGraphPerspective();
-    graphPerspective.removeGraphPerspectiveChangeListener(this);
+	  HGVNetwork graphPerspective = graph_view.getNetwork();
+    graphPerspective.removeHGVNetworkChangeListener(this);
   }//stopListening
   
   /**
@@ -328,10 +230,10 @@ public class GraphViewController
   public void resumeListening (){
 	HGVNetworkView [] graphViews = getGraphViews();
     for(int i = 0; i < graphViews.length; i++){
-    	FGraphPerspective graphPerspective = graphViews[i].getGraphPerspective();
+    	HGVNetwork graphPerspective = graphViews[i].getNetwork();
       GraphViewHandler handler = (GraphViewHandler)this.graphViewToHandler.get(graphViews[i]);
-      handler.updateGraphView(graphViews[i]);
-      graphPerspective.addGraphPerspectiveChangeListener(this);
+      //handler.updateGraphView(graphViews[i]);
+      graphPerspective.addHGVNetworkChangeListener(this);
     }//for i
   }//resumeListening
 
@@ -346,9 +248,9 @@ public class GraphViewController
    */
   public void resumeListening (HGVNetworkView graph_view){
     GraphViewHandler handler = (GraphViewHandler)this.graphViewToHandler.get(graph_view);
-    handler.updateGraphView(graph_view);
-    FGraphPerspective graphPerspective = graph_view.getGraphPerspective();
-    graphPerspective.addGraphPerspectiveChangeListener(this);
+    //handler.updateGraphView(graph_view);
+    HGVNetwork graphPerspective = graph_view.getNetwork();
+    graphPerspective.addHGVNetworkChangeListener(this);
   }//resumeListening
   
   /**
@@ -359,17 +261,15 @@ public class GraphViewController
    * @param event the event that was generated, contains the source 
    * <code>giny.model.GraphPerspective</code>
    */
-  public void graphPerspectiveChanged (GraphPerspectiveChangeEvent event){
-    Object changedGraphPers = event.getSource();
-    HGVNetworkView graphView = gpToGv.get(changedGraphPers);
-    if(graphView == null)
-      return;
-    GraphViewHandler gvHandler = (GraphViewHandler)this.graphViewToHandler.get(graphView);
+  public void networkChanged (HGVNetworkChangeEvent event){
+    HGVNetwork net = (HGVNetwork) event.getSource();
+    HGVNetworkView graphView = HGVKit.getNetworkView(net);
+    if(graphView == null)   return;
+    GraphViewHandler gvHandler = graphViewToHandler.get(graphView);
     if(gvHandler == null) return;
     gvHandler.handleGraphPerspectiveEvent(event, graphView);
     if ( graphView instanceof HGVNetworkView )
       ( ( HGVNetworkView )graphView).updateStatusLabel();
-      
   }//graphPerspectiveChanged
 
 }//class GraphViewController

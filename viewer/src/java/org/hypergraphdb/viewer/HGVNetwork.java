@@ -2,14 +2,24 @@ package org.hypergraphdb.viewer;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+
+import org.hypergraphdb.HGHandle;
+import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.data.FlagFilter;
-import cytoscape.util.intr.IntIterator;
+import org.hypergraphdb.viewer.event.HGVNetworkChangeListenerChain;
+import org.hypergraphdb.viewer.event.HGVNetworkEdgesRemovedEvent;
+import org.hypergraphdb.viewer.event.HGVNetworkEdgesAddedEvent;
+import org.hypergraphdb.viewer.event.HGVNetworkNodesRemovedEvent;
+import org.hypergraphdb.viewer.event.HGVNetworkNodesAddedEvent;
+import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
+
 import fing.model.FEdge;
-import fing.model.FGraphPerspective;
 import fing.model.FNode;
-import fing.model.FRootGraph;
 
 /**
  * HGVNetwork is the primary class for algorithm writing.&nbsp; All algorithms
@@ -29,48 +39,154 @@ import fing.model.FRootGraph;
  * In general, all methods are supported for working with Nodes/Edges as
  * objects.<br>
  */
-public class HGVNetwork extends FGraphPerspective
+public class HGVNetwork 
 {
-	private static int uid_counter = 0;
 	private String identifier;
 	protected String title;
-	/**
-	 * The ClientData map
-	 */
 	protected Map clientData;
-	/**
-	 * The default object for flagging graph objects
-	 */
 	protected FlagFilter flagger;
-	private HyperGraph hg;
-
-	// ----------------------------------------//
-	// Constructors
-	// ----------------------------------------//
-	/**
-	 * rootGraphNodeInx need not contain all endpoint nodes corresponding to
-	 * edges in rootGraphEdgeInx - this is calculated automatically by this
-	 * constructor. If any index does not correspond to an existing node or
-	 * edge, an IllegalArgumentException is thrown. The indices lists need not
-	 * be non-repeating - the logic in this constructor handles duplicate
-	 * filtering.
-	 */
-	public HGVNetwork(FRootGraph root, IntIterator rootGraphNodeInx,
-			IntIterator rootGraphEdgeInx)
+	// This is an array of length 1 - we need an array as an extra reference
+	// to a reference because some other inner classes need to know what the
+	// current listener is.
+	private final HGVNetworkChangeListener[] m_lis;
+	private Set<FNode> nodes = new HashSet<FNode>();
+	private Set<FEdge> edges = new HashSet<FEdge>();
+	protected HyperGraph hg;
+	
+	public HGVNetwork(HyperGraph db, FNode[] nodes0, FEdge[] edges0)
 	{
-		super(root, rootGraphNodeInx, rootGraphEdgeInx);
+		hg = db;
+		for (FNode n : nodes0)
+			nodes.add(n);
+		for (FEdge e : edges0)
+			edges.add(e);
+		m_lis = new HGVNetworkChangeListener[1];
 		initialize();
 	}
 
 	protected void initialize()
 	{
-		// TODO: get a better naming system in place
-		Integer i = new Integer(uid_counter);
-		identifier = i.toString();
-		uid_counter++;
 		clientData = new HashMap();
 		flagger = new FlagFilter(this);
 	}
+	
+	public HyperGraph getHyperGraph() {
+		return hg;
+	}
+
+	public void addHGVNetworkChangeListener(
+			HGVNetworkChangeListener listener) {
+		// This method is not thread safe; synchronize on an object to make it
+		// so.
+		m_lis[0] = HGVNetworkChangeListenerChain.add(m_lis[0], listener);
+	}
+
+	public void removeHGVNetworkChangeListener(
+			HGVNetworkChangeListener listener) {
+		// This method is not thread safe; synchronize on an object to make it
+		// so.
+		m_lis[0] = HGVNetworkChangeListenerChain.remove(m_lis[0],
+				listener);
+	}
+
+	public int getNodeCount() {
+		return nodes.size();
+	}
+
+	public int getEdgeCount() {
+		return edges.size();
+	}
+
+	public Iterator<FNode> nodesIterator() {
+		return nodes.iterator();
+	}
+
+	public Iterator<FEdge> edgesIterator() {
+		return edges.iterator();
+	}
+
+	public void removeNode(FNode node) {
+		if(!nodes.contains(node)) return;
+		nodes.remove(node);
+		m_lis[0].networkChanged(new HGVNetworkNodesRemovedEvent(
+				this, new FNode[] { node }));
+	}
+
+	public void removeNodes(FNode[] nodes0) {
+		for(FNode n: nodes0)
+			nodes.remove(n);
+		if (m_lis[0] != null)
+		   m_lis[0].networkChanged(
+				new HGVNetworkNodesRemovedEvent(
+				this, nodes0));
+	}
+
+	public void addNode(FNode node) {
+		if (nodes.contains(node))return;
+		if (m_lis[0] != null) {
+			m_lis[0].networkChanged(new HGVNetworkNodesAddedEvent(
+							this, new FNode[] { node }));
+		}
+	}
+
+	public void removeEdge(FEdge e) {
+		if (!edges.contains(e))return;
+		m_lis[0].networkChanged(new HGVNetworkEdgesRemovedEvent(
+				this, new FEdge[]{e}));
+	}
+	
+	public void removeEdges(FEdge[] res) {
+		for (FEdge e : res)
+			edges.remove(e);
+		m_lis[0].networkChanged(new HGVNetworkEdgesRemovedEvent(
+				this, res));
+	}
+
+	public boolean addEdge(FEdge edge) {
+		if (edges.contains(edge))
+			return false;
+		edges.add(edge);
+
+		final HGVNetworkChangeListener listener = m_lis[0];
+		if (listener != null) {
+			listener
+					.networkChanged(new HGVNetworkEdgesAddedEvent(
+							this, new FEdge[] { edge }));
+		}
+		return true;
+	}
+
+	public FEdge[] getAdjacentEdges(FNode node, boolean undirected,
+			boolean incomingDirected, boolean outgoingDirected) {
+		if (node == null)
+			return new FEdge[0];
+		HGHandle nH = node.getHandle();
+		HGHandle[] handles = hg.getIncidenceSet(node.getHandle());
+		Set<FEdge> res = new HashSet<FEdge>();
+		for (HGHandle h : handles) {
+			FEdge e = new FEdge(node, new FNode(h));
+			if (edges.contains(e))
+				res.add(e);
+		}
+		Object o = hg.get(nH);
+		if (o instanceof HGLink) {
+			HGLink link = ((HGLink) o);
+			for (int i = 0; i > link.getArity(); i++) {
+				FEdge e = new FEdge(new FNode(link.getTargetAt(i)), node);
+				if (edges.contains(e))
+					res.add(e);
+			}
+		}
+		return res.toArray(new FEdge[res.size()]);
+	}
+
+//	public FEdge[] getConnectingEdges(FNode[] nodeInx) {
+//		Set<FEdge> res = new HashSet<FEdge>();
+//		for (FNode n : nodeInx) {
+//
+//		}
+//		return res.toArray(new FEdge[res.size()]);
+//	}
 
 	/**
 	 * Can Change
@@ -139,31 +255,4 @@ public class HGVNetwork extends FGraphPerspective
 		return flagger;
 	}
 
-	/**
-	 * Add a node to this Network
-	 * @return the node
-	 */
-	public FNode addNode(FNode cytoscape_node)
-	{
-		return restoreNode(cytoscape_node);
-	}
-
-	
-	/**
-	 * Add an edge to this Network
-	 */
-	public void addEdge(FEdge cytoscape_edge)
-	{
-		restoreEdge(cytoscape_edge.getRootGraphIndex());
-	}
-
-	public HyperGraph getHyperGraph()
-	{
-		return hg;
-	}
-
-	public void setHyperGraph(HyperGraph h)
-	{
-		hg = h;
-	}
 }

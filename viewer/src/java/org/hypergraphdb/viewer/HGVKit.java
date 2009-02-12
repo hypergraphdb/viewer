@@ -4,28 +4,34 @@
 //---------------------------------------------------------------------------
 package org.hypergraphdb.viewer;
 
-import fing.model.FEdge;
-import fing.model.FNode;
-import fing.model.FRootGraph;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import javax.swing.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.swing.SwingUtilities;
 import javax.swing.event.SwingPropertyChangeSupport;
+
+import org.hypergraphdb.HGHandle;
+import org.hypergraphdb.HGPersistentHandle;
+import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.query.HGAtomPredicate;
-import org.hypergraphdb.viewer.actions.FitContentAction;
-import org.hypergraphdb.viewer.actions.ZoomAction;
 import org.hypergraphdb.viewer.hg.HGWNReader;
-import org.hypergraphdb.viewer.layout.*;
+import org.hypergraphdb.viewer.layout.GEM;
+import org.hypergraphdb.viewer.layout.HierarchicalLayout;
+import org.hypergraphdb.viewer.layout.Layout;
+import org.hypergraphdb.viewer.layout.Radial;
 import org.hypergraphdb.viewer.layout.SpringLayout;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 import org.hypergraphdb.viewer.view.GraphViewController;
 import org.hypergraphdb.viewer.view.HGVDesktop;
-import org.hypergraphdb.*;
+
 import phoebe.PGraphView;
+import fing.model.FEdge;
+import fing.model.FNode;
 
 /**
  * This class, HGVKit is <i>the</i> primary class in the API.
@@ -49,10 +55,6 @@ public abstract class HGVKit
 	private static int currentSelectionMode = SELECT_NODES_ONLY;
 	// global flag to indicate if Squiggle is turned on
 	private static boolean squiggleEnabled = false;
-	/**
-	 * The shared RootGraph between all Networks
-	 */
-	protected static FRootGraph rootGraph;
 	protected static Object pcsO = new Object();
 	protected static SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(
 			pcsO);
@@ -123,15 +125,6 @@ public abstract class HGVKit
 	}
 
 	/**
-	 * Return the HGViewerRootGraph
-	 */
-	public static FRootGraph getRootGraph()
-	{
-		if (rootGraph == null) rootGraph = new FRootGraph();
-		return rootGraph;
-	}
-
-	/**
 	 * @param alias an alias of a node
 	 * @return will return a node, if one exists for the given alias
 	 */
@@ -147,12 +140,7 @@ public abstract class HGVKit
 	 */
 	public static FNode getHGVNode(HGHandle handle, boolean create)
 	{
-		FNode node = getRootGraph().getNode(handle);
-		if (node != null) return node;
-		if (!create) return null;
-		int n = getRootGraph().createNode();
-		node = getRootGraph().getNode(n);
-		node.setHandle(handle);
+		FNode node = new FNode(handle);
 		return node;
 	}
 
@@ -168,39 +156,7 @@ public abstract class HGVKit
 	 */
 	public static FEdge getHGVEdge(FNode node_1, FNode node_2, boolean create)
 	{
-		if(node_1.equals(node_2) ){
-		 System.out.println("node_1: " + node_1 + " node_2: " + node_2 + ":" + create);
-				return null;
-		}
-		if (getRootGraph().getEdgeCount() != 0)
-		{
-			int[] n1Edges = getRootGraph().getAdjacentEdgeIndicesArray(
-					node_1.getRootGraphIndex(), true, true, true);
-			for (int i = 0; i < n1Edges.length; i++)
-			{
-				FEdge edge = getRootGraph().getEdge(n1Edges[i]);
-				FNode otherNode = edge.getTarget();
-				if (otherNode.getRootGraphIndex() == node_1.getRootGraphIndex())
-				{
-					otherNode = edge.getSource();
-				}
-				if (otherNode.getRootGraphIndex() == node_2.getRootGraphIndex())
-				{
-					// TODO: maybe we could add an option to hide those
-					// reflexive pointers
-					// i.e. to not perform the following check
-					// if (type.equals(edge.getHandle()))
-					// return edge;
-					// if (HGVKit.getBooleanProperty("hideReflexiveEdges",
-					// true))
-					return edge;
-				}
-			}// for i
-		}
-		if (!create) return null;
-		// create the edge
-		FEdge edge = getRootGraph().getEdge(
-				getRootGraph().createEdge(node_1, node_2));
+		FEdge edge = new FEdge(node_1, node_2);
 		return edge;
 	}
 
@@ -321,18 +277,6 @@ public abstract class HGVKit
 	 */
 	public static void destroyNetwork(HGVNetwork network)
 	{
-		destroyNetwork(network, false);
-	}
-
-	/**
-	 * destroys the given network
-	 * 
-	 * @param network the network to be destroyed
-	 * @param destroy_unique if this is true, then all Nodes and Edges that are
-	 * in this network, but no other are also destroyed.
-	 */
-	public static void destroyNetwork(HGVNetwork network, boolean destroy_unique)
-	{
 		HyperGraph hg = network.getHyperGraph();
 		boolean last_net = true;
 		for (HGVNetwork n : getNetworkMap().keySet())
@@ -345,56 +289,6 @@ public abstract class HGVKit
 		if (viewExists(network)) destroyNetworkView(network);
 		getNetworkMap().remove(network);
 		firePropertyChange(NETWORK_DESTROYED, null, network);
-		if (destroy_unique)
-		{
-			ArrayList<FNode> nodes = new ArrayList<FNode>();
-			ArrayList<FEdge> edges = new ArrayList<FEdge>();
-			Collection networks = networkMap.values();
-			Iterator nodes_i = network.nodesIterator();
-			Iterator<FEdge> edges_i = network.edgesIterator();
-			while (nodes_i.hasNext())
-			{
-				FNode node = (FNode) nodes_i.next();
-				boolean add = true;
-				for (Iterator n_i = networks.iterator(); n_i.hasNext();)
-				{
-					HGVNetwork net = (HGVNetwork) n_i.next();
-					if (net.getNode(node.getRootGraphIndex()) != null) 
-		            {
-						add = false;
-						continue;
-					}
-				}
-				if (add)
-				{
-					nodes.add(node);
-					getRootGraph().removeNode(node);
-				}
-			}
-			while (edges_i.hasNext())
-			{
-				FEdge edge = edges_i.next();
-				boolean add = true;
-				for (Iterator n_i = networks.iterator(); n_i.hasNext();)
-				{
-					HGVNetwork net = (HGVNetwork) n_i.next();
-					if (net.getEdge(edge.getRootGraphIndex()) != null) 
-		            {
-						add = false;
-						continue;
-					}
-				}
-				if (add)
-				{
-					edges.add(edge);
-					getRootGraph().removeEdge(edge);
-				}
-			}
-			for (int i = 0; i < nodes.size(); i++)
-				getRootGraph().removeNode(nodes.get(i));
-			for (int i = 0; i < edges.size(); i++)
-				getRootGraph().removeEdge(edges.get(i));
-		}
 		// theoretically this should not be set to null till after the events
 		// firing is done
 		network = null;
@@ -444,10 +338,6 @@ public abstract class HGVKit
 			network.setTitle(HGVNetworkNaming.getSuggestedNetworkTitle(db
 					.getStore().getDatabaseLocation()));
 		}
-		if (parent != null)
-		{
-			network.setHyperGraph(parent.getHyperGraph());
-		}
 		firePropertyChange(NETWORK_CREATED, parent, network);
 		if (network.getNodeCount() < AppConfig.getInstance().getViewThreshold())
 		{
@@ -455,50 +345,27 @@ public abstract class HGVKit
 		}
 	}
 
-	/**
-	 * Creates a new Network
-	 * 
-	 * @param nodes the indeces of nodes
-	 * @param edges the indeces of edges
-	 * @param title the title of the new network.
-	 */
-	public static HGVNetwork createNetwork(int[] nodes, int[] edges,
-			HyperGraph hg)
-	{
-		HGVNetwork network = getRootGraph().createNetwork(nodes, edges);
-		network.setHyperGraph(hg);
-		addNetwork(network);
-		return network;
-	}
-
-	/**
-	 * Creates a new Network
-	 * 
-	 * @param nodes a collection of nodes
-	 * @param edges a collection of edges
-	 * @param db the HyperGraph of the new network.
-	 */
-	public static HGVNetwork createNetwork(Collection<FNode> nodes, Collection<FEdge> edges,
+	
+	public static HGVNetwork createNetwork(FNode[] nodes, FEdge[] edges,
 			HyperGraph db)
 	{
-		HGVNetwork network = getRootGraph().createNetwork(nodes, edges);
-		network.setHyperGraph(db);
-		addNetwork(network);
-		return network;
+		return createNetwork(nodes, edges, db, null);
 	}
-
 	/**
 	 * Creates a new Network, that inherits from the given ParentNetwork
 	 * 
 	 */
-	public static HGVNetwork createNetwork(int[] nodes, int[] edges,
+	public static HGVNetwork createNetwork(FNode[] nodes, FEdge[] edges,
 			HyperGraph db, HGVNetwork parent)
 	{
-		HGVNetwork network = getRootGraph().createNetwork(nodes, edges);
-		network.setHyperGraph(db);
+		HGVNetwork network = createNetwork(db, nodes, edges);
 		addNetwork(network, parent);
 		return network;
 	}
+	
+	private static HGVNetwork createNetwork(HyperGraph db, FNode[] nodes, FEdge[] edges){
+		return new HGVNetwork(db, nodes, edges);
+	}
 
 	/**
 	 * Creates a new Network, that inherits from the given ParentNetwork
@@ -506,8 +373,8 @@ public abstract class HGVKit
 	public static HGVNetwork createNetwork(Collection<FNode> nodes, Collection<FEdge> edges,
 			HyperGraph db, HGVNetwork parent)
 	{
-		HGVNetwork network = getRootGraph().createNetwork(nodes, edges);
-		network.setHyperGraph(db);
+		HGVNetwork network = createNetwork(db, nodes.toArray(new FNode[nodes.size()]), 
+				edges.toArray(new FEdge[edges.size()]));
 		addNetwork(network, parent);
 		return network;
 	}
@@ -692,8 +559,8 @@ public abstract class HGVKit
 		embeded = true;
 		try
 		{
-			final int[] nodes = reader.getNodeIndicesArray();
-			final int[] edges = reader.getEdgeIndicesArray();
+			final FNode[] nodes = reader.getNodeIndicesArray();
+			final FEdge[] edges = reader.getEdgeIndicesArray();
 			int realThreshold = AppConfig.getInstance().getViewThreshold();
 			AppConfig.getInstance().setViewThreshold(0);
 			HGVNetwork network = HGVKit.createNetwork(nodes, edges, graph);

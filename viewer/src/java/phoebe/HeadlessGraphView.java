@@ -1,9 +1,11 @@
 package phoebe;
 
-import fing.model.FGraphPerspective;
-import fing.model.FRootGraph;
+import fing.model.FEdge;
+import fing.model.FNode;
 import java.util.*;
 import java.awt.Paint;
+
+import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.util.PrimeFinder;
 
 /**
@@ -14,7 +16,7 @@ import org.hypergraphdb.viewer.util.PrimeFinder;
  * This class would be used when you would want to compute a layout but not ever
  * put anything on the screen
  */
-public abstract class HeadlessGraphView //implements GraphView
+public abstract class HeadlessGraphView 
 {
 	// Keep Track of the Default FNode Position
 	public double DEFAULT_X = 100;
@@ -22,7 +24,7 @@ public abstract class HeadlessGraphView //implements GraphView
 	public double DEFAULT_Y = 100;
 	// Default FNode Paint
 	public static Paint DEFAULT_NODE_PAINT = java.awt.Color.lightGray;
-	// Default FNode Selction Pain
+	// Default FNode Selection Paint
 	public static Paint DEFAULT_NODE_SELECTION_PAINT = java.awt.Color.yellow;
 	// Deafult Border Paint
 	public static Paint DEFAULT_BORDER_PAINT = java.awt.Color.black;
@@ -32,7 +34,7 @@ public abstract class HeadlessGraphView //implements GraphView
 	/**
 	 * Data store for Nodes
 	 */
-	protected Map<Integer, Object[]> nodeDataStore;
+	protected Map<FNode, Object[]> nodeDataStore;
 	/**
 	 * The Description and Class type associated with a FNode Data Type
 	 */
@@ -40,7 +42,7 @@ public abstract class HeadlessGraphView //implements GraphView
 	/**
 	 * Data store for Edges
 	 */
-	protected Map<Integer, Object> edgeDataStore;
+	protected Map<FEdge, Object> edgeDataStore;
 	/**
 	 * The Description and Class type associated with a FEdge Data Type
 	 */
@@ -52,10 +54,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * itself.
 	 */
 	protected ArrayList viewDataStore;
-	/**
-	 * The GraphPerspective that we hold view information for
-	 */
-	protected FGraphPerspective perspective;
+	
+	protected HGVNetwork network;
 	/**
 	 * A unique Identifier for the Model
 	 */
@@ -66,9 +66,9 @@ public abstract class HeadlessGraphView //implements GraphView
 	 */
 	private static int viewCount = 0;
 
-	public HeadlessGraphView(FGraphPerspective perspective)
+	public HeadlessGraphView(HGVNetwork net)
 	{
-		this("View" + viewCount, perspective);
+		this("View" + viewCount, net);
 		viewCount++;
 	}
 
@@ -77,51 +77,38 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param perspective The one GraphPerspective that we are a view on
 	 * @param id the unique identifier for this view
 	 */
-	public HeadlessGraphView(String identifier, FGraphPerspective perspective)
+	public HeadlessGraphView(String identifier, HGVNetwork net)
 	{
-		this.perspective = perspective;
+		this.network = net;
 		this.identifier = identifier;
 		// System.out.println( "NAME OF VIEW: "+identifier );
 		// Create Data Stores and Data Descriptors
-		nodeDataStore = new HashMap<Integer, Object[]>(PrimeFinder
-				.nextPrime(perspective.getNodeCount()));
-		edgeDataStore = new HashMap<Integer, Object>(PrimeFinder
-				.nextPrime(perspective.getEdgeCount()));
+		nodeDataStore = new HashMap<FNode, Object[]>(PrimeFinder
+				.nextPrime(net.getNodeCount()));
+		edgeDataStore = new HashMap<FEdge, Object>(PrimeFinder
+				.nextPrime(net.getEdgeCount()));
 		viewDataStore = new ArrayList();
 	}
 
-	public FRootGraph getRootGraph()
+	public HGVNetwork getNetwork()
 	{
-		return perspective.getRootGraph();
-	}
-
-	public FGraphPerspective getGraphPerspective()
-	{
-		return perspective;
+		return network;
 	}
 
 	/**
 	 * Set All Data For a NOde <B>Big Bold Faced Warning</B> <BR>
 	 * Talk to rowan before using.
 	 */
-	public void setAllNodePropertyData(int node_index, Object[] data)
+	public void setAllNodePropertyData(FNode node_index, Object[] data)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		nodeDataStore.put(node_index, data);
 	}
 
 	/*
 	 * <B>Big Bold Faced Warning</B> <BR> Talk to rowan before using.
 	 */
-	public Object[] getAllNodePropertyData(int node_index)
+	public Object[] getAllNodePropertyData(FNode node_index)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		return nodeDataStore.get(node_index);
 	}
 
@@ -130,24 +117,16 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * <B>Big Bold Faced Warning</B> <BR>
 	 * Talk to rowan before using.
 	 */
-	public void setAllEdgePropertyData(int edge_index, Object[] data)
+	public void setAllEdgePropertyData(FEdge edge_index, Object[] data)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		edgeDataStore.put(edge_index, data);
 	}
 
 	/*
 	 * <B>Big Bold Faced Warning</B> <BR> Talk to rowan before using.
 	 */
-	public Object[] getAllEdgePropertyData(int edge_index)
+	public Object[] getAllEdgePropertyData(FEdge edge_index)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		return (Object[]) edgeDataStore.get(edge_index);
 	}
 
@@ -156,12 +135,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param node_index The FNode Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public Object getNodeObjectProperty(int node_index, int property)
+	public Object getNodeObjectProperty(FNode node_index, int property)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if (nodeDataStore.get(node_index) != null)
 		{
 			return nodeDataStore.get(node_index)[property];
@@ -175,13 +150,9 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setNodeObjectProperty(int node_index, int property,
+	public boolean setNodeObjectProperty(FNode node_index, int property,
 			Object value)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if (nodeDataStore.get(node_index) instanceof Object[])
 		{
 			Object[] data = nodeDataStore.get(node_index);
@@ -210,12 +181,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param edge_index The FEdge Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public Object getEdgeObjectProperty(int edge_index, int property)
+	public Object getEdgeObjectProperty(FEdge edge_index, int property)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) != null)
 		{
 			return ((Object[]) edgeDataStore.get(edge_index))[property];
@@ -229,13 +196,9 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setEdgeObjectProperty(int edge_index, int property,
+	public boolean setEdgeObjectProperty(FEdge edge_index, int property,
 			Object value)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) instanceof Object[])
 		{
 			Object[] data = (Object[]) edgeDataStore.get(edge_index);
@@ -270,12 +233,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param node_index The FNode Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public double getNodeDoubleProperty(int node_index, int property)
+	public double getNodeDoubleProperty(FNode node_index, int property)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if (nodeDataStore.get(node_index) != null)
 			if (nodeDataStore.get(node_index)[property] instanceof Double)
 				return ((Double) nodeDataStore.get(node_index)[property]);
@@ -287,13 +246,9 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setNodeDoubleProperty(int node_index, int property,
+	public boolean setNodeDoubleProperty(FNode node_index, int property,
 			double value)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if (nodeDataStore.get(node_index) instanceof Object[])
 		{
 			Object[] data = nodeDataStore.get(node_index);
@@ -333,12 +288,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param edge_index The FEdge Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public double getEdgeDoubleProperty(int edge_index, int property)
+	public double getEdgeDoubleProperty(FEdge edge_index, int property)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) != null)
 		{
 			if (((Object[]) edgeDataStore.get(edge_index))[property] instanceof Double)
@@ -355,13 +306,9 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setEdgeDoubleProperty(int edge_index, int property,
+	public boolean setEdgeDoubleProperty(FEdge edge_index, int property,
 			double value)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) instanceof Object[])
 		{
 			Object[] data = (Object[]) edgeDataStore.get(edge_index);
@@ -404,12 +351,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param node_index The FNode Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public float getNodeFloatProperty(int node_index, int property)
+	public float getNodeFloatProperty(FNode node_index, int property)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if (nodeDataStore.get(node_index) != null)
 			if (nodeDataStore.get(node_index)[property] instanceof Float)
 				return ((Float)nodeDataStore.get(node_index)[property]);
@@ -421,13 +364,9 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setNodeFloatProperty(int node_index, int property,
+	public boolean setNodeFloatProperty(FNode node_index, int property,
 			float value)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if (nodeDataStore.get(node_index) instanceof Object[])
 		{
 			Object[] data = (Object[]) nodeDataStore.get(node_index);
@@ -466,12 +405,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param edge_index The FEdge Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public float getEdgeFloatProperty(int edge_index, int property)
+	public float getEdgeFloatProperty(FEdge edge_index, int property)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) != null)
 		{
 			if (((Object[]) edgeDataStore.get(edge_index))[property] instanceof Float)
@@ -488,13 +423,9 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setEdgeFloatProperty(int edge_index, int property,
+	public boolean setEdgeFloatProperty(FEdge edge_index, int property,
 			float value)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) instanceof Object[])
 		{
 			Object[] data = (Object[]) edgeDataStore.get(edge_index);
@@ -538,12 +469,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param node_index The FNode Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public boolean getNodeBooleanProperty(int node_index, int property)
+	public boolean getNodeBooleanProperty(FNode node_index, int property)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if (nodeDataStore.get(node_index) != null)
 			if (nodeDataStore.get(node_index)[property] instanceof Boolean)
 				return ((Boolean) nodeDataStore.get(node_index)[property]);
@@ -555,13 +482,9 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setNodeBooleanProperty(int node_index, int property,
+	public boolean setNodeBooleanProperty(FNode node_index, int property,
 			boolean value)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if (nodeDataStore.get(node_index) instanceof Object[])
 		{
 			Object[] data = nodeDataStore.get(node_index);
@@ -601,12 +524,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param edge_index The FEdge Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public boolean getEdgeBooleanProperty(int edge_index, int property)
+	public boolean getEdgeBooleanProperty(FEdge edge_index, int property)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) != null)
 		{
 			if (((Object[]) edgeDataStore.get(edge_index))[property] instanceof Boolean)
@@ -623,13 +542,9 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setEdgeBooleanProperty(int edge_index, int property,
+	public boolean setEdgeBooleanProperty(FEdge edge_index, int property,
 			boolean value)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) instanceof Object[])
 		{
 			Object[] data = (Object[]) edgeDataStore.get(edge_index);
@@ -673,12 +588,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param node_index The FNode Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public int getNodeIntProperty(int node_index, int property)
+	public int getNodeIntProperty(FNode node_index, int property)
 	{
-		if(node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if(nodeDataStore.get(node_index) != null)
 			if(nodeDataStore.get(node_index)[property] instanceof Integer)
 				return ((Integer)nodeDataStore.get(node_index)[property]);
@@ -691,12 +602,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setNodeIntProperty(int node_index, int property, int value)
+	public boolean setNodeIntProperty(FNode node_index, int property, int value)
 	{
-		if (node_index >= 0)
-		{
-			node_index = perspective.getRootGraphNodeIndex(node_index);
-		}
 		if (nodeDataStore.get(node_index) instanceof Object[])
 		{
 			Object[] data = nodeDataStore.get(node_index);
@@ -736,12 +643,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param edge_index The FEdge Index to be queried
 	 * @param property the property to be accessed
 	 */
-	public int getEdgeIntProperty(int edge_index, int property)
+	public int getEdgeIntProperty(FEdge edge_index, int property)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) != null)
 		{
 			if (((Object[]) edgeDataStore.get(edge_index))[property] instanceof Integer)
@@ -758,12 +661,8 @@ public abstract class HeadlessGraphView //implements GraphView
 	 * @param property the property to be accessed
 	 * @param value the new value for this property
 	 */
-	public boolean setEdgeIntProperty(int edge_index, int property, int value)
+	public boolean setEdgeIntProperty(FEdge edge_index, int property, int value)
 	{
-		if (edge_index >= 0)
-		{
-			edge_index = perspective.getRootGraphEdgeIndex(edge_index);
-		}
 		if (edgeDataStore.get(edge_index) instanceof Object[])
 		{
 			Object[] data = (Object[]) edgeDataStore.get(edge_index);
@@ -795,218 +694,4 @@ public abstract class HeadlessGraphView //implements GraphView
 		// TODO: initilialize the data here.
 		return false;
 	}
-	// ----------------------------------------//
-	// Stubs
-	// ----------------------------------------//
-	// /**
-	// * @return an int array of the graph perspective indices of the selected
-	// nodes
-	// */
-	// public int[] getSelectedNodeIndices(){ return null; }
-	// /**
-	// * @return a list of the selected PNodeView
-	// */
-	// public List getSelectedNodes(){ return null; }
-	// /**
-	// * @return an int array of the graph perspective indices of the selected
-	// edges
-	// */
-	// public int[] getSelectedEdgeIndices(){ return null; }
-	// /**
-	// * @return a list of the selected PEdgeView
-	// */
-	// public List getSelectedEdges(){ return null; }
-	// /**
-	// * Adds a new GraphViewChangeListener to this GraphViews list of
-	// listeners.
-	// */
-	// public void addGraphViewChangeListener(GraphViewChangeListener listener){
-	// }
-	// /**
-	// * Removes a GraphViewChangeListener from this GraphViews list of
-	// listeners.
-	// */
-	// public void removeGraphViewChangeListener(GraphViewChangeListener
-	// listener){ }
-	// /**
-	// * @param the new Paint for the background
-	// */
-	// public void setBackgroundPaint(Paint paint){ }
-	// /**
-	// * @return the backgroundPaint
-	// */
-	// public Paint getBackgroundPaint(){ return null; }
-	// /**
-	// * @return the java.awt.Component that can be added to most screen thingys
-	// */
-	// public Component getComponent(){ return null; }
-	// /**
-	// * @param node_index the index of a node to have a view created for it
-	// * @return a new PNodeView based on the node with the given index
-	// */
-	// public PNodeView addNodeView(int node_index){ return null; }
-	// /**
-	// * @param edge_index the index of an edge
-	// * @return the newly created edgeview
-	// */
-	// public PEdgeView addEdgeView(int edge_index){ return null; }
-	// /**
-	// * To facilitate adding Custome EdgeViews
-	// * It is recomended that All Custom FEdge Views follow the patterns
-	// outlined
-	// * in PEdgeView0 and BasicPEdgeView.
-	// * @param class_name the name of the class that implements PEdgeView and
-	// esnted PEdge
-	// * @param edge_index the index of the edge
-	// */
-	// public PEdgeView addEdgeView(String class_name, int edge_index){ return
-	// null; }
-	// /**
-	// * To facilitate adding Custome NodeViews
-	// * It is recomended that All Custom FNode Views follow the patterns
-	// outlined
-	// * in PNodeView and BasicPNodeView.
-	// * @param class_name the name of the class that implements PNodeView and
-	// esnted PNode
-	// * @param node_index the index of the node
-	// */
-	// public PNodeView addNodeView(String class_name, int node_index){ return
-	// null; }
-	// /**
-	// * Add in a PNodeView for a FNode in the GraphPerspective.
-	// * Note that this means that if there already was a PNodeView for this
-	// node,
-	// * the new PNodeView will take its place.
-	// * @return If it is replacing, it returns the <B>old</B> PNodeView.
-	// * @return If it is new, it returns the <B>new</b> PNodeView.
-	// */
-	// public PNodeView addNodeView(
-	// int node_index,
-	// PNodeView node_view_replacement){ return null; }
-	// /**
-	// * @return The Unique Identifier of this GraphView
-	// */
-	// public String getIdentifier(){ return null; }
-	// /**
-	// * @param new_identifier The New Identifier for this GraphView
-	// */
-	// public void setIdentifier(String new_identifier){ }
-	// /**
-	// * @return The Current Zoom Level
-	// */
-	// public double getZoom(){ return 0; }
-	// /**
-	// * @param zoom The New ZoomLevel
-	// */
-	// public void setZoom(double zoom){ }
-	// /**
-	// * Fits all Viewable elements onto the Graph
-	// */
-	// public void fitContent(){ }
-	// /**
-	// * Do a global redraw of the entire canvas
-	// */
-	// public void updateView(){ }
-	// /**
-	// * nodeViewsIterator only returns the NodeViews that are explicitly
-	// * associated with this GraphView
-	// */
-	// public Iterator getNodeViewsIterator(){ return null; }
-	// /**
-	// * @return the number of node views present
-	// */
-	// public int getNodeViewCount(){ return 0; }
-	// /**
-	// * @return the number of EdgeViews present
-	// */
-	// public int getEdgeViewCount(){ return 0; }
-	// /**
-	// * @param node The FNode whose view is requested
-	// *
-	// * @return The PNodeView of the given FNode
-	// */
-	// public PNodeView getNodeView(FNode node){ return null; }
-	// /**
-	// * @param index the index of the node whose view is requested
-	// * @return The PNodeView of the given FNode
-	// */
-	// public PNodeView getNodeView(int index){ return null; }
-	// /**
-	// * Return all of the EdgeViews in this GraphView
-	// */
-	// public java.util.List getEdgeViewsList(){ return null; }
-	// /**
-	// * Note that this will return a list of FEdge objects, the other one will
-	// return indices
-	// * @return The list of EdgeViews connecting these two nodes. Possibly
-	// null.
-	// */
-	// public java.util.List getEdgeViewsList(
-	// FNode oneNode,
-	// FNode otherNode){ return null; }
-	// /**
-	// * @return a List of indicies
-	// */
-	// public java.util.List getEdgeViewsList(
-	// int from_node_index,
-	// int to_node_index,
-	// boolean include_undirected_edges){ return null; }
-	// /**
-	// * @return the PEdgeView that corresponds to the given index
-	// */
-	// public PEdgeView getEdgeView(int edge_index){ return null; }
-	// /**
-	// * Return all of the EdgeViews in this GraphView
-	// */
-	// public Iterator getEdgeViewsIterator(){ return null; }
-	// /**
-	// * @return the PEdgeView that corresponds to the given FEdge
-	// */
-	// public PEdgeView getEdgeView(FEdge edge){ return null; }
-	// /**
-	// * @return the number of edges
-	// */
-	// public int edgeCount(){ return 0; }
-	// /**
-	// * @return The number of Nodes, same number as the perspective
-	// */
-	// public int nodeCount(){ return 0; }
-	// /**
-	// * use this to hide a node or edge
-	// */
-	// public boolean hideGraphObject(Object object){ return false; }
-	// /**
-	// * use this to show a node or edge
-	// */
-	// public boolean showGraphObject(Object object){ return false; }
-	// /**
-	// * <B> Warning!!!!!!!</B><BR>
-	// * Only to be used for homogenous groups!!!!
-	// */
-	// public boolean hideGraphObjects(List objects){ return false; }
-	// /**
-	// * <B> Warning!!!!!!!</B><BR>
-	// * Only to be used for homogenous groups!!!!
-	// */
-	// public boolean showGraphObjects(List objects){ return false; }
-	// /**
-	// * Context Menu Support
-	// */
-	// public Object[] getContextMethods(
-	// String class_name,
-	// boolean plus_superclass){ return null; }
-	// /**
-	// * Context Menu Support
-	// */
-	// public Object[] getContextMethods(
-	// String class_name,
-	// Object[] methods){ return null; }
-	// /**
-	// * Context Menu Support
-	// */
-	// public boolean addContextMethod(
-	// String class_name,
-	// String method_class_name,
-	// String method_name,
-	// String action_name){ return false; }
 }

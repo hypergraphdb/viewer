@@ -46,16 +46,14 @@ public class NewWindowSelectedNodesEdgesAction extends HGVAction
 		if (new_view == null) return;
 		if (current_network_view != null)
 		{
-			Iterator i = new_network.nodesIterator();
+			Iterator<FNode> i = new_network.nodesIterator();
 			while (i.hasNext())
 			{
-				FNode node = (FNode) i.next();
+				FNode node = i.next();
 				new_view.getNodeView(node).setOffset(
-						current_network_view.getNodeDoubleProperty(node
-								.getRootGraphIndex(),
+						current_network_view.getNodeDoubleProperty(node,
 								HGVNetworkView.NODE_X_POSITION),
-						current_network_view.getNodeDoubleProperty(node
-								.getRootGraphIndex(),
+						current_network_view.getNodeDoubleProperty(node,
 								HGVNetworkView.NODE_Y_POSITION));
 			}
 		}

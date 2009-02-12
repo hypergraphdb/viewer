@@ -10,7 +10,12 @@ import javax.swing.AbstractAction;
 import java.util.*;
 
 import org.hypergraphdb.viewer.*;
-import fing.model.FGraphPerspective;
+
+import phoebe.PEdgeView;
+import phoebe.PNodeView;
+
+import fing.model.FEdge;
+import fing.model.FNode;
 
 
 //-------------------------------------------------------------------------
@@ -33,19 +38,19 @@ public class DeleteSelectedAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) { 
                        
     	HGVNetworkView view = HGVKit.getCurrentView();
-    	FGraphPerspective perspective = view.getGraphPerspective();
+    	//FGraphPerspective perspective = view.getGraphPerspective();
         // get the Selected node and edge indices
-        int[] node_indicies = view.getSelectedNodeIndices();
-        int[] edge_indicies = view.getSelectedEdgeIndices();
+    	//List<PNodeView> node_indicies = view.getSelectedNodes();
+    	//List<PEdgeView> edge_indicies = view.getSelectedEdges();
         //and the node/edge vew objects
-        List selected_nodeViews = view.getSelectedNodes();
-        List selected_edgeViews = view.getSelectedEdges();
+        List<PNodeView> selected_nodeViews = view.getSelectedNodes();
+        List<PEdgeView> selected_edgeViews = view.getSelectedEdges();
 
         // Hide the viewable things and the perspective refs
         view.hideGraphObjects( selected_nodeViews );
         view.hideGraphObjects( selected_edgeViews );
-        perspective.hideEdges( edge_indicies );
-        perspective.hideNodes( node_indicies );
+        //perspective.hideEdges( edge_indicies );
+        //perspective.hideNodes( node_indicies );
         
         view.redrawGraph();
      } // actionPerformed

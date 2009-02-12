@@ -116,26 +116,25 @@ public class HierarchicalLayout implements Layout
         final int numLayoutNodes = (numSelectedNodes <= 1) ? numNodes : numSelectedNodes;
         PNodeView nodeView[] = new PNodeView[numNodes];
         int nextNode = 0;
-        HashMap<Integer, Integer> ginyIndex2Index = new HashMap<Integer, Integer> (numNodes*2);
+        HashMap<PNodeView, Integer> ginyIndex2Index = new HashMap<PNodeView, Integer> (numNodes*2);
         if (numSelectedNodes > 1)
         {
             Iterator<PNodeView> iter = selectedNodes.iterator();
             while (iter.hasNext())
             {
                 nodeView[nextNode] = iter.next();
-                ginyIndex2Index.put(nodeView[nextNode].getNode().getRootGraphIndex(), nextNode);
+                ginyIndex2Index.put(nodeView[nextNode], nextNode);
                 nextNode++;
             }
         }
         Iterator<PNodeView> iter = networkView.getNodeViewsIterator() ; /* all nodes */
         while (iter.hasNext())
         {
-            PNodeView nv = (PNodeView)(iter.next());
-            Integer nodeIndexKey = new Integer(nv.getNode().getRootGraphIndex());
-            if (!ginyIndex2Index.containsKey(nodeIndexKey))
+            PNodeView nv = iter.next();
+            if (!ginyIndex2Index.containsKey(nv))
             {
                 nodeView[nextNode] = nv;
-                ginyIndex2Index.put(nodeIndexKey, new Integer(nextNode));
+                ginyIndex2Index.put(nv, nextNode);
                 nextNode++;
             }
         }
@@ -145,8 +144,8 @@ public class HierarchicalLayout implements Layout
         while (iter2.hasNext())
         {
             PEdgeView ev = iter2.next();
-            Integer edgeFrom = (Integer)ginyIndex2Index.get(new Integer(ev.getEdge().getSource().getRootGraphIndex()));
-            Integer edgeTo = (Integer)ginyIndex2Index.get(new Integer(ev.getEdge().getTarget().getRootGraphIndex()));
+            Integer edgeFrom = ginyIndex2Index.get(ev.source);
+            Integer edgeTo = ginyIndex2Index.get(ev.target);
             if (edgeFrom == null || edgeTo == null)
             {
                 System.err.println("In HierarchicalLayoutListener.actionPerformed: ");
@@ -167,13 +166,6 @@ public class HierarchicalLayout implements Layout
         Graph graph = new Graph(numLayoutNodes,edge);
         int cI[] = graph.componentIndex();
         int x;
-                /*
-                System.out.println("FNode index:\n");
-                for (x=0; x<graph.getNodecount(); x++) {
-                        System.out.println(cI[x]);
-                }
-                System.out.println("Partitioning into components:\n");
-                 */
         int renumber[] = new int[cI.length];
         Graph component[] = graph.partition(cI,renumber);
         final int numComponents = component.length;

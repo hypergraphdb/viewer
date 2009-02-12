@@ -31,8 +31,8 @@ public class HGReader //implements GraphReader
 	 * The DB to be loaded
 	 */
 	protected File db;
-	ArrayList<Integer> node_indices;
-	HashSet<Integer> edges; 
+	ArrayList<FNode> nodes;
+	HashSet<FEdge> edges; 
 
 	public HGReader(File db)
 	{
@@ -65,21 +65,21 @@ public class HGReader //implements GraphReader
 				hypergraph.close();
 			throw new IOException(ex.toString());
 		}
-		Set<HGHandle> nodes = new HashSet<HGHandle>();
+		Set<HGHandle> nodesH = new HashSet<HGHandle>();
 		Set<HGHandle> links = new HashSet<HGHandle>();
 		Iterator<HGAtomType> it = HGVUtils.getAllAtomTypes(hypergraph)
 				.iterator();
 		while (it.hasNext())
-			loadHG(hypergraph, it.next(), nodes, links);
-		node_indices = new ArrayList<Integer>(nodes.size());
-		edges = new HashSet<Integer>();
-		for (Iterator<HGHandle> si = nodes.iterator(); si.hasNext();)
+			loadHG(hypergraph, it.next(), nodesH, links);
+		nodes = new ArrayList<FNode>(nodesH.size());
+		edges = new HashSet<FEdge>();
+		for (Iterator<HGHandle> si = nodesH.iterator(); si.hasNext();)
 		{
     		HGPersistentHandle handle = hypergraph.getPersistentHandle(si
 					.next());
 			//System.out.println("FNode: " + handle);
     		FNode node = HGVKit.getHGVNode(handle, true);
-			node_indices.add(node.getRootGraphIndex());
+			nodes.add(node);
 		}
 		// ---------------------------------------------------------------------------
 		// now loop over the interactions again, this time creating edges
@@ -95,7 +95,7 @@ public class HGReader //implements GraphReader
 				HGPersistentHandle handle = hypergraph.getPersistentHandle(link
 						.getTargetAt(l));
 				FEdge edge = HGVKit.getHGVEdge(link_handle, handle);
-				edges.add(edge.getRootGraphIndex());
+				edges.add(edge);
 			} // for t
 		} // for i
 	}
@@ -147,65 +147,24 @@ public class HGReader //implements GraphReader
 		}
 	}
 
-	public int[] getNodeIndicesArray()
+	public FNode[] getNodeIndicesArray()
 	{
-		int[] res = new int[node_indices.size()];
-		for(int i = 0; i < node_indices.size(); i++)
-			res[i] = node_indices.get(i);
+		FNode[] res = new FNode[nodes.size()];
+		for(int i = 0; i < nodes.size(); i++)
+			res[i] = nodes.get(i);
 		return res;
 	}
 
-	public int[] getEdgeIndicesArray()
+	public FEdge[] getEdgeIndicesArray()
 	{
-		int[] res = new int[edges.size()];
+		FEdge[] res = new FEdge[edges.size()];
 		int i = 0;
-		for(Integer in : edges)
+		for(FEdge in : edges)
 		{
 			res[i] = in;
 			i++;
 		}
 		return res;
 	}
-/*
-
-	public static HyperGraph populateTestDB(HyperGraph hg)
-	{
-		ArrayList<HGHandle> list = new ArrayList<HGHandle>();
-		for (int i = 0; i < 2; i++)
-			list.add(hg.add("String" + i));
-		TestBean bean = new TestBean();
-		bean.setStr("");
-		bean.setIntT(70023);
-		bean.addMruf("SomePath");
-		CompoundTestBean comp = new CompoundTestBean();
-		comp.setInner(bean);
-		HGHandle recH = hg.add(bean);
-		recH = hg.add(comp);
-		list.add(recH);
-		HGValueLink link1 = new HGValueLink("SomeLink1", (HGHandle[]) list
-				.toArray(new HGHandle[list.size()]));
-		HGHandle link_handle = hg.add(link1);
-		list.add(link_handle);
-		HGValueLink link2 = new HGValueLink("SomeLink2", (HGHandle[]) list
-				.toArray(new HGHandle[list.size()]));
-		hg.add(link2);
-		return hg;
-	}
-	
-	public static void main(String[] args)
-	{
-		HyperGraph hg = new HyperGraph("X:\\kosta\\ticl\\hypergraphdb\\XXX1");
-		populateTestDB(hg);
-		System.out.println("Adding succesfull.");
-		HGSearchResult res = hg.find(new AtomTypeCondition(TestBean.class));
-		if (res.hasNext())
-		{
-			TestBean bean = (TestBean) hg.get((HGHandle) res.next());
-			System.out.println("Bean found: " + bean);
-			
-		}
-		hg.close();
-		System.exit(0);
-	} */
 }
 

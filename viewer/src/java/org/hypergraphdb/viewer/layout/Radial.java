@@ -96,10 +96,10 @@ public class Radial implements Layout
 	{
 		HGVNetworkView view = HGVKit.getCurrentView();
 		clear();
-		int[] node_indicies = view.getSelectedNodeIndices();
+		List<PNodeView> node_indicies = view.getSelectedNodes();
 		PNodeView center_view = null;
-		if(node_indicies.length > 0)
-			center_view = view.getNodeView(node_indicies[0]);
+		if(node_indicies.size() > 0)
+			center_view = (node_indicies.get(0));
 		done = false;
 		Iterator<PNodeView> it = view.getNodeViewsIterator();
 		while (it.hasNext())
@@ -127,10 +127,10 @@ public class Radial implements Layout
 	{
 		HGVNetwork net = HGVKit.getCurrentNetwork();
 		Set<FEdge> totalEdges = new HashSet<FEdge>();
-		int[] e = net.getAdjacentEdgeIndicesArray(
-				node.getRootGraphIndex(), true, true, true);
+		FEdge[] e = net.getAdjacentEdges(
+				node, true, true, true);
 		for (int i = 0; i < e.length; i++)
-			totalEdges.add(net.getEdge(e[i]));
+			totalEdges.add(e[i]);
 		return totalEdges;
 	}
 

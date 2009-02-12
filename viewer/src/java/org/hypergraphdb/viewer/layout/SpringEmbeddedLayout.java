@@ -6,6 +6,9 @@ import java.util.*;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.layout.util.NodeDistances;
+
+import edu.umd.cs.piccolo.PNode;
+import fing.model.FNode;
 import phoebe.PGraphView;
 import phoebe.PNodeView;
 
@@ -64,8 +67,8 @@ public class SpringEmbeddedLayout implements Layout
     protected int edgeCount;
     protected int layoutPass;
 
-    protected HashMap nodeIndexToMatrixIndexMap; //maps a root graph index to a distance matrix index
-    protected TreeMap matrixIndexToNodeIndexMap; //maps a distance matrix index to a root graph instance
+    protected HashMap<PNodeView, Integer> nodeIndexToMatrixIndexMap; //maps a root graph index to a distance matrix index
+    protected TreeMap<Integer, PNodeView> matrixIndexToNodeIndexMap; //maps a distance matrix index to a root graph instance
 
     public SpringEmbeddedLayout()
     {
@@ -109,14 +112,14 @@ public class SpringEmbeddedLayout implements Layout
         edgeCount = graphView.getEdgeViewCount();
 
         //initialize the index map
-        nodeIndexToMatrixIndexMap = new HashMap();
-        matrixIndexToNodeIndexMap = new TreeMap();
-        Iterator nodes = graphView.getNodeViewsIterator();
+        nodeIndexToMatrixIndexMap = new HashMap<PNodeView, Integer>();
+        matrixIndexToNodeIndexMap = new TreeMap<Integer, PNodeView>();
+        Iterator<PNodeView> nodes = graphView.getNodeViewsIterator();
         int count=0;
         while (nodes.hasNext()) {
-            PNodeView nodeView = (PNodeView) nodes.next();
-            nodeIndexToMatrixIndexMap.put(new Integer(nodeView.getRootGraphIndex()), new Integer(count));
-            matrixIndexToNodeIndexMap.put(new Integer(count), new Integer(nodeView.getRootGraphIndex()));
+            PNodeView nodeView = nodes.next();
+            nodeIndexToMatrixIndexMap.put(nodeView, new Integer(count));
+            matrixIndexToNodeIndexMap.put(new Integer(count), nodeView);
             count++;
         }
 
@@ -131,9 +134,8 @@ public class SpringEmbeddedLayout implements Layout
         int num_iterations = (int)
                 ((nodeCount * averageIterationsPerNode) / numLayoutPasses);
 
-        List partials_list = createPartialsList();
+        List<PartialDerivatives> partials_list = new ArrayList<PartialDerivatives>();
         PotentialEnergy potential_energy = new PotentialEnergy();
-        Iterator node_views_iterator;
         PNodeView node_view;
         PartialDerivatives partials;
         PartialDerivatives furthest_node_partials = null;
@@ -150,9 +152,9 @@ public class SpringEmbeddedLayout implements Layout
             partials_list.clear();
 
             // Calculate all node distances.  Keep track of the furthest.
-            node_views_iterator = graphView.getNodeViewsIterator();
+            Iterator<PNodeView> node_views_iterator = graphView.getNodeViewsIterator();
             while (node_views_iterator.hasNext()) {
-                node_view = (PNodeView) node_views_iterator.next();
+                node_view = node_views_iterator.next();
 
                 partials = new PartialDerivatives(node_view);
                 calculatePartials(partials,
@@ -207,15 +209,15 @@ public class SpringEmbeddedLayout implements Layout
         }
 
         //create a list of nodes that has the same indices as the nodeIndexToMatrixIndexMap
-        ArrayList nodeList = new ArrayList();
-        Collection matrixIndices = matrixIndexToNodeIndexMap.values();
+        ArrayList<FNode> nodeList = new ArrayList<FNode>();
+        Collection<PNodeView> matrixIndices = matrixIndexToNodeIndexMap.values();
         int i=0;
-        for (Iterator iterator = matrixIndices.iterator(); iterator.hasNext();) {
-            Integer nodeIndex = (Integer) iterator.next();
-            nodeList.add(i, graphView.getGraphPerspective().getNode(nodeIndex.intValue()));
+        for (Iterator<PNodeView> iterator = matrixIndices.iterator(); iterator.hasNext();) {
+        	PNodeView nodeIndex = iterator.next();
+            nodeList.add(i, nodeIndex.getNode());
             i++;
         }
-        NodeDistances ind = new NodeDistances(nodeList, graphView.getGraphPerspective(), nodeIndexToMatrixIndexMap);
+        NodeDistances ind = new NodeDistances(nodeList, graphView.getNetwork(), nodeIndexToMatrixIndexMap);
         int[][] node_distances = (int[][]) ind.calculate();
 
         if (node_distances == null) {
@@ -243,8 +245,8 @@ public class SpringEmbeddedLayout implements Layout
             for (int node_j = (node_i + 1); node_j < nodeCount; node_j++) {
 
                // System.out.println( "APSP: node_i: "+node_i+ " node_j: "+ node_j+" == " +node_distances[ node_i ][node_j ] );
-            	System.out.println( "node_distances1: " + nodeDistanceSpringRestLengths  +
-                		":" + node_distances.length + ":" + node_i + ":" + node_j);
+            	//System.out.println( "node_distances1: " + nodeDistanceSpringRestLengths  +
+                //		":" + node_distances.length + ":" + node_i + ":" + node_j);
                 if (node_distances[node_i][node_j] == Integer.MAX_VALUE) {
                     nodeDistanceSpringRestLengths[node_i][node_j] =
                             disconnectedNodeDistanceSpringRestLength;
@@ -299,8 +301,7 @@ public class SpringEmbeddedLayout implements Layout
         partials.reset();
 
         PNodeView node_view = partials.getNodeView();
-        int node_view_index = ((Integer) nodeIndexToMatrixIndexMap.get(
-                new Integer(node_view.getRootGraphIndex()))).intValue();
+        int node_view_index = nodeIndexToMatrixIndexMap.get(node_view);
         double node_view_radius = node_view.getWidth();
         double node_view_x = node_view.getXPosition();
         double node_view_y = node_view.getYPosition();
@@ -336,13 +337,13 @@ public class SpringEmbeddedLayout implements Layout
                 other_node_view = other_node_partials.getNodeView();
             }
 
-            if (node_view.getRootGraphIndex() == other_node_view.getRootGraphIndex()) {
+            if (node_view.getNode().getHandle().equals(
+            		other_node_view.getNode().getHandle())) {
                 //System.out.println( "Nodes are the same. " );
                 continue;
             }
 
-            other_node_view_index = ((Integer) nodeIndexToMatrixIndexMap.get(
-                    new Integer(other_node_view.getRootGraphIndex()))).intValue();
+            other_node_view_index = nodeIndexToMatrixIndexMap.get(other_node_view);
             other_node_view_radius = other_node_view.getWidth();
 
             delta_x = (node_view_x - other_node_view.getXPosition());
@@ -744,9 +745,9 @@ public class SpringEmbeddedLayout implements Layout
      * @return the PartialDerivatives of the furthest node after the move.
      */
     protected PartialDerivatives moveNode(PartialDerivatives partials,
-                                          List partials_list,
+    		List<PartialDerivatives> partials_list,
                                           PotentialEnergy potential_energy) {
-        PNodeView node_view = partials.getNodeView();
+        //PNodeView node_view = partials.getNodeView();
 
         PartialDerivatives starting_partials = new PartialDerivatives(partials);
         calculatePartials(partials,
@@ -794,10 +795,6 @@ public class SpringEmbeddedLayout implements Layout
         node_view.setOffset(p.getX() + delta_x, p.getY() + delta_y);
 
     } // simpleMoveNode( PartialDerivatives )
-
-    protected List createPartialsList() {
-        return new ArrayList();
-    } // createPartialsList()
 
     class PartialDerivatives {
         protected PNodeView nodeView;

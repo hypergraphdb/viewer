@@ -5,7 +5,7 @@ import edu.umd.cs.piccolo.nodes.*;
 import edu.umd.cs.piccolo.util.*;
 import edu.umd.cs.piccolox.util.*;
 import fing.model.FEdge;
-import fing.model.FRootGraph;
+import fing.model.FNode;
 import phoebe.event.*;
 import phoebe.util.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	/**
 	 * The FEdge Index that corresponds to the FEdge that we are a view on
 	 */
-	protected int rootGraphIndex;
+	protected FEdge edge;
 	/**
 	 * The GraphView on which we are displayed
 	 */
@@ -110,16 +110,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	protected boolean inLargeGraph;
 	protected boolean selfEdge = false;
 
-	/**
-	 * @param edge_index The RootGraph Index of this edge
-	 * @param view the PGraphView that we belong to
-	 */
-	public PEdgeView(int edge_index, PGraphView view)
-	{
-		this(edge_index, view, Float.MAX_VALUE, Integer.MAX_VALUE, null, null,
-				Integer.MAX_VALUE, null, null, Integer.MAX_VALUE, null, null);
-	}
-
+	
 	/**
 	 * Create a new PEdgeView0 with default Attributes
 	 * @param edge The FEdge we are a view on
@@ -127,7 +118,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public PEdgeView(FEdge edge, PGraphView view)
 	{
-		this(edge.getRootGraphIndex(), view, Float.MAX_VALUE,
+		this(edge, view, Float.MAX_VALUE,
 				Integer.MAX_VALUE, null, null, Integer.MAX_VALUE, null, null,
 				Integer.MAX_VALUE, null, null);
 	}
@@ -149,7 +140,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 * @param target_end_selected_paint the paint when selected for the target
 	 * end
 	 */
-	public PEdgeView(int edge_index, PGraphView view, float width,
+	public PEdgeView(FEdge edge_index, PGraphView view, float width,
 			int line_type, Paint paint, Paint selection_paint, int source_end,
 			Paint source_end_paint, Paint source_end_selected_paint,
 			int target_end, Paint target_end_paint,
@@ -165,78 +156,67 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		}
 		this.view = view;
 		// Set the Index
-		if (edge_index == Integer.MAX_VALUE)
-		{
-			throw new IllegalArgumentException(
-					"A edge_index must be passed to create a PEdgeView0");
-		}
-		if (edge_index >= 0)
-		{
-			this.rootGraphIndex = view.getGraphPerspective()
-					.getRootGraphEdgeIndex(edge_index);
-		} else
-		{
-			this.rootGraphIndex = edge_index;
-		}
+		this.edge = edge_index;
+	
 		// Set FEdge Width
 		if (width != Float.MAX_VALUE)
 		{
-			view.setEdgeFloatProperty(rootGraphIndex, PGraphView.EDGE_WIDTH,
+			view.setEdgeFloatProperty(edge, PGraphView.EDGE_WIDTH,
 					width);
 		}
 		// Set FEdge Line Type
 		if (line_type != Integer.MAX_VALUE)
 		{
-			view.setEdgeIntProperty(rootGraphIndex, PGraphView.EDGE_LINE_TYPE,
+			view.setEdgeIntProperty(edge, PGraphView.EDGE_LINE_TYPE,
 					line_type);
 		}
 		// Set FEdge Paint
 		if (paint != null)
 		{
-			view.setEdgeObjectProperty(rootGraphIndex, PGraphView.EDGE_PAINT,
+			view.setEdgeObjectProperty(edge, PGraphView.EDGE_PAINT,
 					paint);
 		}
 		// Set the FEdge Selection_Paint
 		if (selection_paint != null)
 		{
-			view.setEdgeObjectProperty(rootGraphIndex,
+			view.setEdgeObjectProperty(edge,
 					PGraphView.EDGE_SELECTION_PAINT, selection_paint);
 		}
 		// Set the FEdge Source End Type
 		if (source_end != Integer.MAX_VALUE)
 		{
-			view.setEdgeIntProperty(rootGraphIndex,
+			view.setEdgeIntProperty(edge,
 					PGraphView.EDGE_SOURCE_END_TYPE, source_end);
 		}
 		// Set the FEdge Source End Paint
 		if (source_end_paint != null)
 		{
-			view.setEdgeObjectProperty(rootGraphIndex,
+			view.setEdgeObjectProperty(edge,
 					PGraphView.EDGE_SOURCE_END_PAINT, source_end_paint);
 		}
 		// Set the FEdge Source End Selection_Paint
 		if (source_end_selected_paint != null)
 		{
-			view.setEdgeObjectProperty(rootGraphIndex,
+			view.setEdgeObjectProperty(edge,
 					PGraphView.EDGE_SOURCE_END_SELECTED_PAINT,
 					source_end_selected_paint);
 		}
 		// Set the FEdge Target End Type
 		if (target_end != Integer.MAX_VALUE)
 		{
-			view.setEdgeIntProperty(rootGraphIndex,
+			view.setEdgeIntProperty(edge,
 					PGraphView.EDGE_TARGET_END_TYPE, target_end);
 		}
 		// Set the FEdge Target End Paint
 		if (target_end_paint != null)
 		{
-			view.setEdgeObjectProperty(rootGraphIndex,
+			view.setEdgeObjectProperty(edge,
 					PGraphView.EDGE_TARGET_END_PAINT, target_end_paint);
 		}
 		// Set the FEdge Target End Selection_Paint
 		if (target_end_selected_paint != null)
 		{
-			view.setEdgeObjectProperty(rootGraphIndex,
+			view.setEdgeObjectProperty(edge,
 					PGraphView.EDGE_TARGET_END_SELECTED_PAINT,
 					target_end_selected_paint);
 		}
@@ -270,18 +250,16 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		// Because Every PNodeView Implementation that will be
 		// used with Phoebe will inherit from PNode we can
 		// use PNode's PCS stuff.
-		source = view.getNodeView(view.getEdgeIntProperty(
-				rootGraphIndex, PGraphView.SOURCE_INDEX));
-		target = view.getNodeView(view.getEdgeIntProperty(
-				rootGraphIndex, PGraphView.TARGET_INDEX));
+		source = view.getNodeView(edge.getSource());
+		target = view.getNodeView(edge.getTarget());
 		// Set up the Paint
 		// TODO: Change to include stroke ?
-		setStrokePaint((Paint) view.getEdgeObjectProperty(rootGraphIndex,
+		setStrokePaint((Paint) view.getEdgeObjectProperty(edge,
 				PGraphView.EDGE_PAINT));
-		setStroke(new BasicStroke(view.getEdgeFloatProperty(rootGraphIndex,
+		setStroke(new BasicStroke(view.getEdgeFloatProperty(edge,
 				PGraphView.EDGE_WIDTH), BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND));
-		System.out.println("initializeEdgeView: " + target + ":" + source);
+		//System.out.println("initializeEdgeView: " + target + ":" + source);
 		// Initialize the FNode Locators
 		if (source == target)
 		{
@@ -307,14 +285,14 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		((PNode) target).addPropertyChangeListener(this);
 		view.getEdgeLayer().addPropertyChangeListener(this);
 		bend = new Bend(sourcePoint, targetPoint, this);
-		setSourceEdgeEndType(view.getEdgeIntProperty(rootGraphIndex,
+		setSourceEdgeEndType(view.getEdgeIntProperty(edge,
 				PGraphView.EDGE_SOURCE_END_TYPE));
 		sourceEdgeEnd.setPaint((Paint) view.getEdgeObjectProperty(
-				rootGraphIndex, PGraphView.EDGE_SOURCE_END_PAINT));
-		setTargetEdgeEndType(view.getEdgeIntProperty(rootGraphIndex,
+				edge, PGraphView.EDGE_SOURCE_END_PAINT));
+		setTargetEdgeEndType(view.getEdgeIntProperty(edge,
 				PGraphView.EDGE_TARGET_END_TYPE));
 		targetEdgeEnd.setPaint((Paint) view.getEdgeObjectProperty(
-				rootGraphIndex, PGraphView.EDGE_TARGET_END_PAINT));
+				edge, PGraphView.EDGE_TARGET_END_PAINT));
 		sourceEdgeEnd.setStroke(null);
 		targetEdgeEnd.setStroke(null);
 		setPickable(true);
@@ -340,12 +318,10 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		if (source == null || target == null || source.getNode() == null
 				|| target.getNode() == null)
 		{
-			return ("edge root index = " + rootGraphIndex);
+			return ("edge root index = " + edge);
 		}
-		return (source.getNode().getRootGraphIndex() + "->"
-				+ target.getNode().getRootGraphIndex() + " (" + rootGraphIndex + ")");
-		// return ( source.getGraphPerspectiveIndex() +" ->
-		// "+target.getGraphPerspectiveIndex() );
+		return (source.getNode() + "->"
+				+ target.getNode() + " (" + edge + ")");
 	}
 
 	public PEdgeHandler getEdgeHandler()
@@ -381,45 +357,13 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		updateEdgeView();
 	}
 
-	public void updateConnection(int node_index)
-	{
-		if (node_index < 0)
-		{
-			node_index = view.getGraphPerspective().getRootGraphNodeIndex(
-					node_index);
-		}
-		if (node_index == source.getGraphPerspectiveIndex())
-		{
-			// System.out.println( "Updateing source node." );
-			setSourceNode(view.getNodeView(node_index));
-		}
-		if (node_index == target.getGraphPerspectiveIndex())
-		{
-			// System.out.println( "Updateing target node." );
-			setTargetNode(view.getNodeView(node_index));
-		}
-	}
-
-	/**
-	 * @return the index of this edge in the GraphPerspective
-	 */
-	public int getGraphPerspectiveIndex()
-	{
-		return (rootGraphIndex);
-	}
-
-	public int getRootGraphIndex()
-	{
-		return rootGraphIndex;
-	}
-
+	
 	/**
 	 * @return the FEdge to which we are a view on
 	 */
 	public FEdge getEdge()
 	{
-		FRootGraph rootGraph = view.getGraphPerspective().getRootGraph();
-		return rootGraph.getEdge(rootGraphIndex);
+		return edge;
 	}
 
 	/**
@@ -451,7 +395,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public void setStrokeWidth(float width)
 	{
-		view.setEdgeFloatProperty(rootGraphIndex, PGraphView.EDGE_WIDTH, width);
+		view.setEdgeFloatProperty(edge, PGraphView.EDGE_WIDTH, width);
 		setStroke(new BasicStroke(width));
 	}
 
@@ -460,7 +404,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public float getStrokeWidth()
 	{
-		return view.getEdgeFloatProperty(rootGraphIndex, PGraphView.EDGE_WIDTH);
+		return view.getEdgeFloatProperty(edge, PGraphView.EDGE_WIDTH);
 	}
 
 	/**
@@ -468,7 +412,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public void setLineType(int line_type)
 	{
-		view.setEdgeIntProperty(rootGraphIndex, PGraphView.EDGE_LINE_TYPE,
+		view.setEdgeIntProperty(edge, PGraphView.EDGE_LINE_TYPE,
 				line_type);
 		updateEdgeView();
 	}
@@ -478,7 +422,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public int getLineType()
 	{
-		return view.getEdgeIntProperty(rootGraphIndex,
+		return view.getEdgeIntProperty(edge,
 				PGraphView.EDGE_LINE_TYPE);
 	}
 
@@ -490,7 +434,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	public void setUnselectedPaint(Paint paint)
 	{
 		view
-				.setEdgeObjectProperty(rootGraphIndex, PGraphView.EDGE_PAINT,
+				.setEdgeObjectProperty(edge, PGraphView.EDGE_PAINT,
 						paint);
 		// TODO: remove?
 		// what happens when I set the paint of a selected node....oops.
@@ -507,7 +451,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public Paint getUnselectedPaint()
 	{
-		return (Paint) view.getEdgeObjectProperty(rootGraphIndex,
+		return (Paint) view.getEdgeObjectProperty(edge,
 				PGraphView.EDGE_PAINT);
 	}
 
@@ -518,7 +462,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public void setSelectedPaint(Paint paint)
 	{
-		view.setEdgeObjectProperty(rootGraphIndex,
+		view.setEdgeObjectProperty(edge,
 				PGraphView.EDGE_SELECTION_PAINT, paint);
 		if (selected)
 		{
@@ -533,7 +477,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public Paint getSelectedPaint()
 	{
-		return (Paint) view.getEdgeObjectProperty(rootGraphIndex,
+		return (Paint) view.getEdgeObjectProperty(edge,
 				PGraphView.EDGE_SELECTION_PAINT);
 	}
 
@@ -542,7 +486,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public Paint getSourceEdgeEndPaint()
 	{
-		return (Paint) view.getEdgeObjectProperty(rootGraphIndex,
+		return (Paint) view.getEdgeObjectProperty(edge,
 				PGraphView.EDGE_SOURCE_END_PAINT);
 	}
 
@@ -551,7 +495,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public Paint getSourceEdgeEndSelectedPaint()
 	{
-		return (Paint) view.getEdgeObjectProperty(rootGraphIndex,
+		return (Paint) view.getEdgeObjectProperty(edge,
 				PGraphView.EDGE_SOURCE_END_SELECTED_PAINT);
 	}
 
@@ -560,7 +504,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public Paint getTargetEdgeEndPaint()
 	{
-		return (Paint) view.getEdgeObjectProperty(rootGraphIndex,
+		return (Paint) view.getEdgeObjectProperty(edge,
 				PGraphView.EDGE_TARGET_END_PAINT);
 	}
 
@@ -569,7 +513,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public Paint getTargetEdgeEndSelectedPaint()
 	{
-		return (Paint) view.getEdgeObjectProperty(rootGraphIndex,
+		return (Paint) view.getEdgeObjectProperty(edge,
 				PGraphView.EDGE_TARGET_END_SELECTED_PAINT);
 	}
 
@@ -578,7 +522,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public void setSourceEdgeEndSelectedPaint(Paint paint)
 	{
-		view.setEdgeObjectProperty(rootGraphIndex,
+		view.setEdgeObjectProperty(edge,
 				PGraphView.EDGE_SOURCE_END_SELECTED_PAINT, paint);
 		if (selected)
 		{
@@ -599,7 +543,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public void setTargetEdgeEndSelectedPaint(Paint paint)
 	{
-		view.setEdgeObjectProperty(rootGraphIndex,
+		view.setEdgeObjectProperty(edge,
 				PGraphView.EDGE_TARGET_END_SELECTED_PAINT, paint);
 		if (selected)
 		{
@@ -620,7 +564,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public void setSourceEdgeEndPaint(Paint paint)
 	{
-		view.setEdgeObjectProperty(rootGraphIndex,
+		view.setEdgeObjectProperty(edge,
 				PGraphView.EDGE_SOURCE_END_PAINT, paint);
 		if (!selected)
 		{
@@ -633,7 +577,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public void setTargetEdgeEndPaint(Paint paint)
 	{
-		view.setEdgeObjectProperty(rootGraphIndex,
+		view.setEdgeObjectProperty(edge,
 				PGraphView.EDGE_TARGET_END_PAINT, paint);
 		if (!selected)
 		{
@@ -732,10 +676,10 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		}
 		updateTargetPointView();
 		updateSourcePointView();
-		int[] same_edges = view.getGraphPerspective().
-				getConnectingEdgeIndicesArray(new int[] {
-						source.getRootGraphIndex(), target.getRootGraphIndex()});
-		if (same_edges == null) same_edges = new int[0];
+		FEdge[] same_edges = new FEdge[0];//view.getGraphPerspective().
+//				getConnectingEdges(new FNode[] {
+//						source.getNode(), target.getNode()});
+		if (same_edges == null) same_edges = new FEdge[0];
 		if (same_edges.length > 1)
 		{
 			System.out.println("Same Edges: " + same_edges.length);
@@ -745,10 +689,10 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 			// I changed this to eliminate this assumption, instead use the
 			// order of the associated indices to rank the edges
 			int count = 0;
-			int index = getGraphPerspectiveIndex();
-			for (int i = 0; i < same_edges.length; ++i)
-				if (same_edges[i] < index)
-					count++;
+			//TODO:???
+			//for (int i = 0; i < same_edges.length; ++i)
+			//	if (same_edges[i] < index)
+			//		count++;
 			
 			// now count lets us know our order in the edges
 			// if there is an even number of edges, fake an additional
@@ -769,7 +713,8 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 				// source for the purposes of generating the handle, figure this
 				// out
 				// here
-				if (source.getRootGraphIndex() > target.getRootGraphIndex())
+				//TODO:???
+				if (true) //source.getRootGraphIndex() > target.getRootGraphIndex())
 				{
 					x = sourcePoint.getX();
 					y = sourcePoint.getY();
@@ -889,7 +834,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public int getSourceEdgeEnd()
 	{
-		return view.getEdgeIntProperty(rootGraphIndex,
+		return view.getEdgeIntProperty(edge,
 				PGraphView.EDGE_SOURCE_END_TYPE);
 	}
 
@@ -898,7 +843,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	 */
 	public int getTargetEdgeEnd()
 	{
-		return view.getEdgeIntProperty(rootGraphIndex,
+		return view.getEdgeIntProperty(edge,
 				PGraphView.EDGE_TARGET_END_TYPE);
 	}
 
@@ -912,7 +857,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 			removeChild(sourceEdgeEnd);
 		}
 		sourceEdgeEnd = null;
-		view.setEdgeIntProperty(rootGraphIndex,
+		view.setEdgeIntProperty(edge,
 				PGraphView.EDGE_SOURCE_END_TYPE, type);
 		switch (type)
 		{
@@ -1031,7 +976,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 			removeChild(targetEdgeEnd);
 		}
 		targetEdgeEnd = null;
-		view.setEdgeIntProperty(rootGraphIndex,
+		view.setEdgeIntProperty(edge,
 				PGraphView.EDGE_TARGET_END_TYPE, type);
 		switch (type)
 		{
@@ -1373,8 +1318,8 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		if (!inLargeGraph)
 		{
 			Point2D bendTargetPoint = bend.getTargetHandlePoint();
-			int node_shape = view.getNodeIntProperty(view.getGraphPerspective()
-					.getEdgeTargetIndex(rootGraphIndex), PGraphView.NODE_SHAPE);
+			int node_shape = view.getNodeIntProperty(
+					edge.getTarget(), PGraphView.NODE_SHAPE);
 			updateEndPointView(bendTargetPoint, node_shape, targetPoint, target);
 		} else
 		{
@@ -1393,8 +1338,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		if (!inLargeGraph)
 		{
 			Point2D bendSourcePoint = bend.getSourceHandlePoint();
-			int node_shape = view.getNodeIntProperty(view.getGraphPerspective()
-					.getEdgeSourceIndex(rootGraphIndex), PGraphView.NODE_SHAPE);
+			int node_shape = view.getNodeIntProperty(edge.getSource(), PGraphView.NODE_SHAPE);
 			updateEndPointView(bendSourcePoint, node_shape, sourcePoint, source);
 		} else
 		{
@@ -1431,26 +1375,22 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 		}
 		if (evt.getPropertyName().equals("Offset"))
 		{
-			if (((PNodeView) evt.getNewValue()).getGraphPerspectiveIndex() == target
-					.getGraphPerspectiveIndex())
+			if (((PNodeView) evt.getNewValue()).node.getHandle().equals(target.getNode().getHandle()))
 			{
 				updateEdgeView();
 			} else if (((PNodeView) evt.getNewValue())
-					.getGraphPerspectiveIndex() == source
-					.getGraphPerspectiveIndex())
+					.node.getHandle().equals(source.getNode().getHandle()))
 			{
 				updateEdgeView();
 			}
 		} else if (evt.getPropertyName().equals("BoundsChanged"))
 		{
-			if (((PNodeView) evt.getNewValue()).getGraphPerspectiveIndex() == target
-					.getGraphPerspectiveIndex())
+			if (((PNodeView) evt.getNewValue()).node.getHandle().equals(target.getNode().getHandle()))
 			{
 				updateEdgeView();
 			} else if (((PNodeView) evt.getNewValue())
-					.getGraphPerspectiveIndex() == source
-					.getGraphPerspectiveIndex())
-			{
+					.node.getHandle().equals(source.getNode().getHandle()))
+					{
 				updateEdgeView();
 			}
 		} else if (evt.getPropertyName() == PNode.PROPERTY_TRANSFORM)
@@ -1506,7 +1446,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	{
 		bend.drawSelected();
 		setPaint(null);
-		super.setStrokePaint((Paint) view.getEdgeObjectProperty(rootGraphIndex,
+		super.setStrokePaint((Paint) view.getEdgeObjectProperty(edge,
 				PGraphView.EDGE_SELECTION_PAINT));
 	}
 
@@ -1517,7 +1457,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	{
 		bend.drawUnselected();
 		setPaint(null);
-		super.setStrokePaint((Paint) view.getEdgeObjectProperty(rootGraphIndex,
+		super.setStrokePaint((Paint) view.getEdgeObjectProperty(edge,
 				PGraphView.EDGE_PAINT));
 	}
 

@@ -36,10 +36,9 @@ public class SelectFirstNeighborsAction extends HGVAction {
       Set<FNode> set = net.getFlagger().getFlaggedNodes();
       Set<FNode> new_set = new HashSet<FNode>();
       for (FNode o: set){
-    	 int[] ids  = net.getAdjacentEdgeIndicesArray(
-    			 o.getRootGraphIndex(), true, true, true);
+    	 FEdge[] ids  = net.getAdjacentEdges(o, true, true, true);
     	 for(int i = 0; i < ids.length; i++){
-    		 FEdge edge = net.getEdge(ids[i]);
+    		 FEdge edge = ids[i];
     		 //System.out.println("E:" + edge + ":" + ((FEdge)edge).getTarget());
         	 new_set.add(edge.getTarget());
         	 new_set.add(edge.getSource());

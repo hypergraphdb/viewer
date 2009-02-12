@@ -33,12 +33,14 @@
 package org.hypergraphdb.viewer.view;
 
 import java.util.*;
+
+import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
+
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
-import phoebe.event.GraphPerspectiveChangeEvent;
 import fing.model.FEdge;
-import fing.model.FGraphPerspective;
 import fing.model.FNode;
 
 /**
@@ -46,7 +48,8 @@ import fing.model.FNode;
  * changes on a given <code>GraphView</code>
  */
 
-public class BasicGraphViewHandler implements GraphViewHandler {
+public class BasicGraphViewHandler implements GraphViewHandler
+{
 
   /**
    * ConstructorLink
@@ -61,33 +64,33 @@ public class BasicGraphViewHandler implements GraphViewHandler {
    * <code>giny.model.GraphPerspective</code> that generated the event and that should
    * be updated as necessary
    */
-  public void handleGraphPerspectiveEvent (GraphPerspectiveChangeEvent event, HGVNetworkView graph_view){
+  public void handleGraphPerspectiveEvent (HGVNetworkChangeEvent event, HGVNetworkView graph_view){
     
     int numTypes = 0; // An event may have more than one type
     
     // FNode Events:
-    if(event.isNodesHiddenType()){
+    if(event.isNodesRemovedType()){
       //System.out.println("isNodesHiddenType == " + event.isNodesHiddenType());
-      removeGraphViewNodes(graph_view, event.getHiddenNodeIndices());
+      removeGraphViewNodes(graph_view, event.getRemovedNodes());
       numTypes++;
     }
 
-    if(event.isNodesRestoredType()){
+    if(event.isNodesAddedType()){
       //System.out.println("isNodesRestoredType == " + event.isNodesRestoredType());
-      restoreGraphViewNodes(graph_view, event.getRestoredNodeIndices(), true);
+      restoreGraphViewNodes(graph_view, event.getAddedNodes(), true);
       numTypes++;
     }
     
     // FEdge events:
-    if(event.isEdgesHiddenType()){
+    if(event.isEdgesRemovedType()){
       //System.out.println("isEdgesHiddenType == " + event.isEdgesHiddenType());
-      removeGraphViewEdges(graph_view, event.getHiddenEdgeIndices());
+      removeGraphViewEdges(graph_view, event.getRemovedEdges());
       numTypes++;
     }
     
-    if(event.isEdgesRestoredType()){
+    if(event.isEdgesAddedType()){
       //System.out.println("isEdgesRestoredType == " + event.isEdgesRestoredType());
-      restoreGraphViewEdges(graph_view, event.getRestoredEdgeIndices());
+      restoreGraphViewEdges(graph_view, event.getAddedEdges());
       numTypes++;
     }
     
@@ -117,10 +120,10 @@ public class BasicGraphViewHandler implements GraphViewHandler {
    * @param edge_indices the indices of the edges that will be removed
    * @return an array of edge indices that were removed
    */
-  static public int []  removeGraphViewEdges (HGVNetworkView graph_view,
-                                              int [] edge_indices){
+  static public FEdge []  removeGraphViewEdges (HGVNetworkView graph_view,
+		  FEdge [] edge_indices){
     //System.out.println("In BasicGraphViewHandler.removeGraphViewEdges()");
-    ArrayList<Integer> removedEdges = new ArrayList<Integer>(edge_indices.length);
+    ArrayList<FEdge> removedEdges = new ArrayList<FEdge>(edge_indices.length);
     for(int i = 0; i < edge_indices.length; i++){
       PEdgeView edgeView = graph_view.removeEdgeView(edge_indices[i]);
       if(edgeView != null){
@@ -130,7 +133,7 @@ public class BasicGraphViewHandler implements GraphViewHandler {
     removedEdges.trimToSize();
     //TODO: Remove
     //System.out.println("Leaving BasicGraphViewHandler.removeGraphViewEdges()," + "num removed edges = " + removedEdges.size());
-    int[] res = new int[removedEdges.size()];
+    FEdge[] res = new FEdge[removedEdges.size()];
     for(int i = 0; i < removedEdges.size(); i++)
     	res[i] = removedEdges.get(i);
     return res;
@@ -155,7 +158,7 @@ public class BasicGraphViewHandler implements GraphViewHandler {
       if(edgeView == null){
         // This means that the restored edge had not been viewed before
         // by graph_view
-        edgeView = graph_view.addEdgeView(edges[i].getRootGraphIndex());
+        edgeView = graph_view.addEdgeView(edges[i]);
         if(edgeView != null){
           restored = true;
         }
@@ -172,64 +175,7 @@ public class BasicGraphViewHandler implements GraphViewHandler {
     return (FEdge[])restoredEdges.toArray(new FEdge[restoredEdges.size()]);
   }//restoreGraphViewEdges
 
-  /**
-   * It restores the views of the edges with the given indices in the given 
-   * <code>giny.view.GraphView</code> object
-   *
-   * @param graph_view the <code>giny.view.GraphView</code> object in which edges' views 
-   * will be restored
-   * @param edge_indices the indices of the edges that will be restored
-   * @return an array of indices of edges that were restored
-   */
-  // TODO: What if a connected node is not in the graph view or graph perspective?
-  static public int [] restoreGraphViewEdges (HGVNetworkView graph_view,
-                                              int [] edge_indices){
-    //TODO: Remove
-    //System.out.println("In BasicGraphViewHandler.restoreGraphViewEdges()");
-    ArrayList<Integer> restoredEdgeIndices = new ArrayList<Integer>(edge_indices.length);
-    for(int i = 0; i < edge_indices.length; i++){
-      // TEST: See if the NodeViews of the connected Nodes are in graph_view
-      // TODO: What to do in this case? I would say throw exception.
-      //GraphPerspective graphPerspective = graph_view.getGraphPerspective();
-      //int sourceRootIndex = 
-      // graphPerspective.getRootGraphNodeIndex(graphPerspective.getEdgeSourceIndex(edge_indices[i]));
-      //int targetRootIndex =
-      //graphPerspective.getRootGraphNodeIndex(graphPerspective.getEdgeTargetIndex(edge_indices[i]));
-      //PNodeView sourceNodeView = graph_view.getNodeView(sourceRootIndex);
-      //PNodeView targetNodeView = graph_view.getNodeView(targetRootIndex);
-      //if(sourceNodeView == null){
-      //System.err.println("ERROR: Source PNodeView for edge "+edge_indices[i]+" is null");
-      //}
-      //if(targetNodeView == null){
-      //System.err.println("ERROR: Target PNodeView for edge "+edge_indices[i]+" is null");
-      //}
-
-      // The given index can be either RootGraph index or GraphPerspective index
-      PEdgeView edgeView = graph_view.getEdgeView(edge_indices[i]);
-      boolean restored = false;
-      if(edgeView == null){
-        // This means that the restored edge had not been viewed before
-        // by graph_view
-        edgeView = graph_view.addEdgeView(edge_indices[i]);
-        if(edgeView != null){
-          restored = true;
-        }
-      }else{
-        // This means that the restored edge had been viewed by the graph_view
-        // before, so all we need to do is tell the graph_view to re-show it
-        restored = graph_view.showGraphObject(edgeView);
-      }
-      if(restored){
-        restoredEdgeIndices.add(edge_indices[i]);
-      }
-    }//for i
-    
-    int[] res = new int[restoredEdgeIndices.size()];
-    for(int i = 0; i < restoredEdgeIndices.size(); i++)
-    	res[i] = restoredEdgeIndices.get(i);
-    return res;
-  }//restoreGraphViewEdges
-  
+ 
   /**
    * It selects the edges in the array in the given <code>giny.view.GraphView</code> object.
    *
@@ -287,10 +233,10 @@ public class BasicGraphViewHandler implements GraphViewHandler {
   // NOTE: GINY automatically hides the edges connected to the nodes in the GraphPerspective
   // and this hiding fires a hideEdgesEvent, so removeGraphViewEdges will get called on those
   // edges and we don't need to remove them in this method
-  static public int[] removeGraphViewNodes (HGVNetworkView graph_view,
-                                          int [] node_indices){
+  static public FNode[] removeGraphViewNodes (HGVNetworkView graph_view,
+                                          FNode [] node_indices){
     //System.out.println("In BasicGraphViewHandler.removeGraphViewNodes()");
-    ArrayList<Integer> removedNodesIndices = new ArrayList<Integer>(node_indices.length);
+    ArrayList<FNode> removedNodesIndices = new ArrayList<FNode>(node_indices.length);
     for(int i = 0; i < node_indices.length; i++){
       PNodeView nodeView = graph_view.removeNodeView(node_indices[i]);
       if(nodeView != null){
@@ -298,7 +244,7 @@ public class BasicGraphViewHandler implements GraphViewHandler {
       }
     }//for i
     removedNodesIndices.trimToSize();
-    int[] res = new int[removedNodesIndices.size()];
+    FNode[] res = new FNode[removedNodesIndices.size()];
     for(int i = 0; i < removedNodesIndices.size(); i++)
     	res[i] = removedNodesIndices.get(i);
     return res;
@@ -316,12 +262,12 @@ public class BasicGraphViewHandler implements GraphViewHandler {
    * @return an array of indices of the nodes whose views were restored
    */
   //TODO: Depending on restore_connected_edges, restore connected edges or not.
-  static public int[] restoreGraphViewNodes (HGVNetworkView graph_view,
-                                              int [] node_indices,
+  static public FNode[] restoreGraphViewNodes (HGVNetworkView graph_view,
+		  FNode [] node_indices,
                                               boolean restore_connected_edges){
     //TODO: Remove
     //System.out.println("In BasicGraphViewHandler.restoreGraphViewNodes()");
-    ArrayList<Integer> restoredNodeIndices = new ArrayList<Integer>(node_indices.length);
+    ArrayList<FNode> restoredNodeIndices = new ArrayList<FNode>(node_indices.length);
     for(int i = 0; i < node_indices.length; i++){
       
       PNodeView nodeView = graph_view.getNodeView(node_indices[i]);
@@ -349,7 +295,7 @@ public class BasicGraphViewHandler implements GraphViewHandler {
       }
     }//for i
     restoredNodeIndices.trimToSize();
-    int[] res = new int[restoredNodeIndices.size()];
+    FNode[] res = new FNode[restoredNodeIndices.size()];
     for(int i = 0; i < restoredNodeIndices.size(); i++)
     	res[i] = restoredNodeIndices.get(i);
     return res; 
@@ -413,9 +359,8 @@ public class BasicGraphViewHandler implements GraphViewHandler {
    */
   static public void positionToBarycenter (PNodeView node_view){
     FNode node = node_view.getNode();
-    int rootIndex = node.getRootGraphIndex();
     HGVNetworkView graphView = (HGVNetworkView) node_view.getGraphView();
-    FGraphPerspective gp = graphView.getGraphPerspective();
+    HGVNetwork gp = graphView.getNetwork();
     
    // int [] childrenNodeIndices = gp.getNodeMetaChildIndicesArray(rootIndex);
    // if(childrenNodeIndices == null || childrenNodeIndices.length == 0){return;}
@@ -427,14 +372,14 @@ public class BasicGraphViewHandler implements GraphViewHandler {
   //  }
     //Iterator it = childGP.nodesIterator(); 
     
-    int[] children = gp.getAdjacentEdgeIndicesArray(rootIndex, true, true, true);
+    FEdge[] children = gp.getAdjacentEdges(node, true, true, true);
     double x = 0.0;
     double y = 0.0;
     double viewableChildren = 0;
     for(int i = 0; i < children.length; i++){
-      FNode childNode = gp.getEdge(children[i]).getTarget();
-      if(gp.getNode(childNode.getRootGraphIndex()) != null) {
-        PNodeView childNV = graphView.getNodeView(childNode.getRootGraphIndex());
+      FNode childNode = children[i].getTarget();
+      if(childNode!= null) {
+        PNodeView childNV = graphView.getNodeView(childNode);
         if(childNV != null){
           x += childNV.getXPosition();
           y += childNV.getYPosition();
@@ -449,92 +394,5 @@ public class BasicGraphViewHandler implements GraphViewHandler {
       node_view.setYPosition(y);
     }
   }//positionToBarycenter
-
-  /**
-   * Updates the given graph_view to contain node and edge visual representations
-   * of only nodes and edges that are in its <code>GraphPerspective</code>
-   * 
-   * @see GraphViewController#resumeListening()
-   * @see GraphViewController#resumeListening(GraphView)
-   */
-  public void updateGraphView (HGVNetworkView graph_view){
-    
-	  FGraphPerspective graphPerspective = graph_view.getGraphPerspective();
-    
-    ArrayList<Integer> gpNodeIndices = new ArrayList<Integer>();
-    for(Iterator it = graphPerspective.nodesIterator(); it.hasNext();)
-    	gpNodeIndices.add(((FNode)it.next()).getRootGraphIndex());
-    ArrayList<Integer> gpEdgeIndices = new ArrayList<Integer>();
-    for(Iterator it = graphPerspective.edgesIterator(); it.hasNext();)
-    	gpEdgeIndices.add(((FEdge)it.next()).getRootGraphIndex());
-        
-    ArrayList<Integer> gvNodeIndices = new ArrayList<Integer>(graph_view.getNodeViewCount());
-    ArrayList<Integer> gvEdgeIndices = new ArrayList<Integer>(graph_view.getEdgeViewCount());
-    
-    // Obtain a list of nodes' root indices that are represented in graph_view
-    Iterator it = graph_view.getNodeViewsIterator();
-    while(it.hasNext()){
-      PNodeView nodeView = (PNodeView)it.next();
-      FNode gvNode = nodeView.getNode();
-      if(gvNode == null){
-        System.err.println("FNode for nodeView is null (nodeView  = " + nodeView + ")");
-        continue;
-      }
-      int nodeIndex = gvNode.getRootGraphIndex();
-      gvNodeIndices.add(nodeIndex);
-    }// while there are more graph view nodes
-    
-    // Obtain a list of edges that are represented in graph_view,
-    // and remove EdgeViews that are no longer in graph_perspective
-    it = graph_view.getEdgeViewsIterator();
-    while(it.hasNext()){
-      PEdgeView edgeView = (PEdgeView)it.next();
-      FEdge gvEdge = edgeView.getEdge();
-      if(gvEdge == null){
-        System.err.println("FEdge for edgeView is null (edgeView  = " + edgeView + ")");
-        continue;
-      }
-      int edgeIndex = gvEdge.getRootGraphIndex();
-      gvEdgeIndices.add(edgeIndex);
-    }// while there are more graph view edges
-    
-    // Make sure that graph_view represents all nodes that are
-    // currently in graphPerspective
-    for(int i = 0; i < gpNodeIndices.size(); i++){
-      int nodeIndex = gpNodeIndices.get(i);
-      PNodeView nodeView = graph_view.getNodeView(nodeIndex);
-      if(nodeView == null){
-        graph_view.addNodeView(nodeIndex);
-      }else{
-        graph_view.showGraphObject(nodeView);
-      }
-    }// for each graphPerspective node
-    
-    // Make sure that graph_view represents all edges that are
-    // currently in graphPerspective
-    for(int i = 0; i < gpEdgeIndices.size(); i++){
-      int edgeIndex = gpEdgeIndices.get(i);
-      PEdgeView edgeView = graph_view.getEdgeView(edgeIndex);
-      if(edgeView == null){
-        graph_view.addEdgeView(edgeIndex);
-      }else{
-        graph_view.showGraphObject(edgeView);
-      }
-    }// for each GraphPerspective edge
-
-    // Remove from graph_view all edge representations that are not in graphPerspective
-    gvEdgeIndices.removeAll(gpEdgeIndices);
-    gvEdgeIndices.trimToSize();
-    for( int i = 0;  i < gvEdgeIndices.size(); i++){
-      graph_view.removeEdgeView(gvEdgeIndices.get(i));
-    }// for each edge that is in graph_view but that is not in graphPerspective
-    
-    // Remove from graph_view all node representations that are not in graphPerspective
-    gvNodeIndices.removeAll(gpNodeIndices);
-    gvNodeIndices.trimToSize();
-    for( int i = 0;  i < gvNodeIndices.size(); i++){
-      graph_view.removeNodeView(gvNodeIndices.get(i));
-    }// for each node that is in graph_view but that is not in graphPerspective
-  }//updateGraphview
 
 }//classs BasicGraphViewHandler

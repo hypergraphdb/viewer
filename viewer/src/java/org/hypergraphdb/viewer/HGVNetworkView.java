@@ -48,7 +48,6 @@ import edu.umd.cs.piccolo.nodes.PText;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolox.swing.PScrollPane;
 import fing.model.FEdge;
-import fing.model.FGraphPerspective;
 import fing.model.FNode;
 
 /**
@@ -91,7 +90,7 @@ public class HGVNetworkView extends PGraphView
 
 	public HGVNetworkView(HGVNetwork network, String title)
 	{
-		super((FGraphPerspective) network);
+		super(network);
 		this.setIdentifier(title);
 		initialize();
 	}
@@ -159,10 +158,10 @@ public class HGVNetworkView extends PGraphView
 		initializeEventHandlers();
 		// initialize all of the Viewable objects based on all of
 		// the Edges and Nodes currently in the GraphPerspective
-		nodeViewMap = new HashMap<Integer, PNodeView>(PrimeFinder
-				.nextPrime(perspective.getNodeCount()));
-		edgeViewMap = new HashMap<Integer, PEdgeView>(PrimeFinder
-				.nextPrime(perspective.getEdgeCount()));
+		nodeViewMap = new HashMap<FNode, PNodeView>(PrimeFinder
+				.nextPrime(network.getNodeCount()));
+		edgeViewMap = new HashMap<FEdge, PEdgeView>(PrimeFinder
+				.nextPrime(network.getEdgeCount()));
 		contextMenuStore = new HashMap(5);
 		NODE_DEFAULTS = new Object[] { new Double(DEFAULT_X),
 				new Double(DEFAULT_Y), new Integer(PNodeView.OCTAGON),
@@ -403,11 +402,6 @@ public class HGVNetworkView extends PGraphView
 				keyEventHandler);
 	}
 
-	public HGVNetwork getNetwork()
-	{
-		return (HGVNetwork) getGraphPerspective();
-	}
-
 	public void redrawGraph()
 	{
 		getCanvas().setInteracting(true);
@@ -435,9 +429,9 @@ public class HGVNetworkView extends PGraphView
 	 */
 	public void applyNodeAppearances()
 	{
-		for (Iterator i = getNodeViewsIterator(); i.hasNext();)
+		for (Iterator<PNodeView> i = getNodeViewsIterator(); i.hasNext();)
 		{
-			PNodeView nodeView = (PNodeView) i.next();
+			PNodeView nodeView = i.next();
 			if(nodeView == null)
 			{
 				System.out.println("VM - applyNodeAppearances - NULL NODE");
@@ -494,19 +488,6 @@ public class HGVNetworkView extends PGraphView
 		//redrawGraph();
 	}
 
-
-	// ------------------------------//
-	// Event Handling and Response
-	/**
-	 * Overwritten version of fireGraphViewChanged so that the label can be
-	 * updated
-	 */
-	protected void fireGraphViewChanged(ChangeEvent event)
-	{
-		updateStatusLabel();
-		// fire the event to everyone else.
-		super.fireGraphViewChanged(event);
-	}
 
 	/**
 	 * Resets the info label status bar text with the current number of nodes,
@@ -578,26 +559,6 @@ public class HGVNetworkView extends PGraphView
 	}
 
 	protected PEdgeView[] convertToViews(FEdge[] edges)
-	{
-		PEdgeView[] views = new PEdgeView[edges.length];
-		for (int i = 0; i < edges.length; ++i)
-		{
-			views[i] = getEdgeView(edges[i]);
-		}
-		return views;
-	}
-
-	protected PNodeView[] convertToNodeViews(int[] nodes)
-	{
-		PNodeView[] views = new PNodeView[nodes.length];
-		for (int i = 0; i < nodes.length; ++i)
-		{
-			views[i] = getNodeView(nodes[i]);
-		}
-		return views;
-	}
-
-	protected PEdgeView[] convertToEdgeViews(int[] edges)
 	{
 		PEdgeView[] views = new PEdgeView[edges.length];
 		for (int i = 0; i < edges.length; ++i)

@@ -131,12 +131,21 @@ public class HGVUtils
 		for(int i = 0; i < links.length; i++){
 			FNode n = HGVKit.getHGVNode(links[i], true);
 			view.getNetwork().addNode(n);
-			PNodeView v = view.getNodeView(n.getRootGraphIndex(), true);
+			//TODO:??? add getNodeView(n, boolean create)
+			PNodeView v = view.getNodeView(n);
+			if(v == null) {
+				view.addNodeView(n);
+				v = view.getNodeView(n);
+			}
 			view.showGraphObject(v);
 			FEdge e = (incoming) ? HGVKit.getHGVEdge(links[i], node.getHandle()) :
 				HGVKit.getHGVEdge(node.getHandle(), links[i]);
 			view.getNetwork().addEdge(e);
-			PEdgeView ev = view.getEdgeView(e.getRootGraphIndex(), true);
+			PEdgeView ev = view.getEdgeView(e);
+			if(v == null) {
+				view.addEdgeView(e);
+				ev = view.getEdgeView(e);
+			}
 			view.showGraphObject(ev);
 		}
 	}
@@ -198,33 +207,33 @@ public class HGVUtils
 		Set<FNode> nodesToRemove = new HashSet<FNode>();
 		if( remove_center_too)	nodesToRemove.add(node);
 		Set<FEdge> edgesToRemove = new HashSet<FEdge>();
-		int[] edges = net.getAdjacentEdgeIndicesArray(
-				node.getRootGraphIndex(), true, true, true);
+		FEdge[] edges = net.getAdjacentEdges(
+				node, true, true, true);
 		for(int i = 0; i < edges.length; i++)
 		{
-			FEdge e = net.getEdge(edges[i]);
+			FEdge e = edges[i];
 			FNode out = getOppositeNode(node, e);
-			int[] in_edges = net.getAdjacentEdgeIndicesArray(
-					out.getRootGraphIndex(), true, true, true);
+			FEdge[] in_edges = net.getAdjacentEdges(
+					out, true, true, true);
 			if( in_edges.length <= 1)
 			{
 				nodesToRemove.add(out);
 				for(int j = 0; j < in_edges.length; j++)
-				   edgesToRemove.add(net.getEdge(in_edges[j]));
+				   edgesToRemove.add(in_edges[j]);
 				edgesToRemove.add(e);
 			}
 		}
 		
 		for(FEdge edge: edgesToRemove)
 		{
-			view.removeEdgeView(edge);
-			//net.getRootGraph().removeEdge(edge);
+			//view.removeEdgeView(edge);
+			net.removeEdge(edge);
 		}
 		for(FNode n: nodesToRemove)
 		{
-		   view.removeNodeView(n);
+		   //view.removeNodeView(n);
 		   //removeNode(hg, n, true);
-		   //net.getRootGraph().removeNode(n);
+		   net.removeNode(n);
 		}
 	}
 

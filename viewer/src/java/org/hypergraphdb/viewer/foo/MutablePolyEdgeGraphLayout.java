@@ -15,34 +15,9 @@ public interface MutablePolyEdgeGraphLayout
 	public Iterator<FEdge> edgesIterator();
     public Iterator<FNode> nodesIterator();
      
-     public int edgeSource(int edge);
-     public int edgeTarget(int edge);
-     
+        
     
-  /**
-   * Deletes an edge anchor point.<p>
-   * The deletion of an anchor point is accomplished such that the ordering of
-   * remaining anchor points stays the same.  An anchor point [belonging
-   * to specified edge] with index greater than
-   * anchorIndex will be assigned a new index equal to its
-   * previous index minus one; an anchor point with index less than
-   * anchorIndex will keep its index.
-   *
-   * @param edge the edge to which the anchor point to be
-   *   deleted belongs.
-   * @param anchorIndex the index of anchor point, within specified edge,
-   *   which we're trying to delete.
-   * @exception IllegalArgumentException if specified edge is not
-   *   an edge in this graph.
-   * @exception IndexOutOfBoundsException if anchorIndex is not
-   *   in the interval [0, getNumAnchors(edge) - 1].
-   * @exception UnsupportedOperationException if specified edge
-   *   has source and target nodes that are both
-   *   non-movable.
-   **/
-  public void deleteAnchor(int edge, int anchorIndex);
-
-  /**
+   /**
    * Creates a new edge anchor point.<p>
    * The creation of an anchor point is accomplished such that the ordering
    * of existing anchor points stays the same.  An existing anchor point
@@ -64,7 +39,7 @@ public interface MutablePolyEdgeGraphLayout
    * @exception UnsupportedOperationException if specified edge
    *   source and target nodes that are both non-movable.
    **/
-  public void createAnchor(int edge, int anchorIndex);
+  public void createAnchor(FEdge edge, int anchorIndex);
 
   /**
    * Sets the X,Y position of an edge anchor point.<p>
@@ -94,23 +69,12 @@ public interface MutablePolyEdgeGraphLayout
    * @exception UnsupportedOperationException if specified edge
    *   has source and target nodes that are both non-movable.
    **/
-  public void setAnchorPosition(int edge,
+  public void setAnchorPosition(FEdge edge,
                                 int anchorIndex,
                                 double xPosition,
                                 double yPosition);
   
-  /**
-   * Tells us whether or not the specified node
-   * can be moved by setNodePosition().
-   *
-   * @param node node whose mobility we are querying.
-   * @exception IllegalArgumentException if specified node is not a node
-   *   in this graph.
-   * @see #setNodePosition(int, double, double)
-   */
-  public boolean isMovableNode(int node);
-
-  /**
+   /**
    * Sets the X,Y position of a node.
    * This is a hook for layout algorithms to actually set locations of
    * nodes.  Layout algorithms should call this method.<p>
@@ -146,7 +110,7 @@ public interface MutablePolyEdgeGraphLayout
    * @see #getNodePosition(int, boolean)
    * @see #isMovableNode(int)
    */
-  public void setNodePosition(int node, double xPos, double yPos);
+  public void setNodePosition(FNode node, double xPos, double yPos);
 
   
   /**
@@ -176,7 +140,7 @@ public interface MutablePolyEdgeGraphLayout
    * @exception IllegalArgumentException if specified node is not
    *   a node in this graph.
    **/
-  public double getNodePosition(int node, boolean xPosition);
+  public double getNodePosition(FNode node, boolean xPosition);
 
   /**
    * Returns the number of anchor points belonging to an edge.
@@ -190,7 +154,7 @@ public interface MutablePolyEdgeGraphLayout
    * @exception IllegalArgumentException if specified edge is not
    *   an edge in this graph.
    **/
-  public int getNumAnchors(int edge);
+  public int getNumAnchors(FEdge edge);
 
   /**
    * Returns the X or Y position of an edge anchor point.
@@ -212,7 +176,7 @@ public interface MutablePolyEdgeGraphLayout
    * @exception IndexOutOfBoundsException if anchorIndex is not
    *   in the interval [0, getNumAnchors(edge) - 1].
    **/
-  public double getAnchorPosition(int edge,
+  public double getAnchorPosition(FEdge edge,
                                   int anchorIndex,
                                   boolean xPosition);
 

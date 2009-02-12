@@ -40,7 +40,7 @@ public class RotationScaleLayoutAction extends HGVAction
   {
 	  if(HGVKit.getCurrentView() == null) return;
     final boolean noNodesSelected =
-      (HGVKit.getCurrentView().getSelectedNodeIndices().length == 0);
+      (HGVKit.getCurrentView().getSelectedNodes().size() == 0);
     final MutablePolyEdgeGraphLayout[] nativeGraph =
       new MutablePolyEdgeGraphLayout[] {
         GraphConverter2.getGraphReference(16.0d, true, false) };

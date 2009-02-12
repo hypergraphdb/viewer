@@ -193,11 +193,11 @@ abstract public class AbstractLayout  {
   public PNodeView getNodeView ( double x, double y ) {
     double minDistance = Double.MAX_VALUE;
     PNodeView closest = null;
-    for ( Iterator iter = graphView.getNodeViewsIterator();
+    for ( Iterator<PNodeView> iter = graphView.getNodeViewsIterator();
           iter.hasNext(); ) {
-      PNodeView v = ( PNodeView )iter.next();
-      double dx = graphView.getNodeDoubleProperty( v.getGraphPerspectiveIndex(), PGraphView.NODE_X_POSITION ) - x;
-      double dy = graphView.getNodeDoubleProperty( v.getGraphPerspectiveIndex(), PGraphView.NODE_Y_POSITION ) - y;
+      PNodeView v = iter.next();
+      double dx = graphView.getNodeDoubleProperty( v.getNode(), PGraphView.NODE_X_POSITION ) - x;
+      double dy = graphView.getNodeDoubleProperty( v.getNode(), PGraphView.NODE_Y_POSITION ) - y;
       double dist = dx * dx + dy * dy;
       if ( dist < minDistance ) {
         minDistance = dist;

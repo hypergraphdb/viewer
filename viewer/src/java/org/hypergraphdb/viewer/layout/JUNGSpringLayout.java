@@ -8,6 +8,8 @@ import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import fing.model.FNode;
 import phoebe.PEdgeView;
 import phoebe.PGraphView;
 import phoebe.PNodeView;
@@ -23,8 +25,8 @@ public class JUNGSpringLayout extends AbstractLayout
 	private LengthFunction lengthFunction;
 	public static int RANGE = 100;
 	private double FORCE_CONSTANT = 1.0 / 3.0;
-	private Map<Integer, SpringVertexData> nodeIndexToDataMap;
-	private Map<Integer, SpringEdgeData> edgeIndexToDataMap;
+	private Map<PNodeView, SpringVertexData> nodeIndexToDataMap;
+	private Map<PEdgeView, SpringEdgeData> edgeIndexToDataMap;
 	double increment;
 	double NUM_INCRMENTS = 100;
 	long relaxTime = 0;
@@ -50,8 +52,8 @@ public class JUNGSpringLayout extends AbstractLayout
 	{
 		super(g);
 		this.lengthFunction = f;
-		nodeIndexToDataMap = new HashMap<Integer, SpringVertexData>(graphView.getNodeViewCount());
-		edgeIndexToDataMap = new HashMap<Integer, SpringEdgeData>(graphView.getEdgeViewCount());
+		nodeIndexToDataMap = new HashMap<PNodeView, SpringVertexData>(graphView.getNodeViewCount());
+		edgeIndexToDataMap = new HashMap<PEdgeView, SpringEdgeData>(graphView.getEdgeViewCount());
 	}
 
 	public void doLayout()
@@ -79,7 +81,7 @@ public class JUNGSpringLayout extends AbstractLayout
 			if (sed == null)
 			{
 				sed = new SpringEdgeData(e);
-				edgeIndexToDataMap.put(e.getGraphPerspectiveIndex(), sed);
+				edgeIndexToDataMap.put(e, sed);
 			}
 			calcEdgeLength(sed, lengthFunction);
 		}
@@ -91,7 +93,7 @@ public class JUNGSpringLayout extends AbstractLayout
 		if (vud == null)
 		{
 			vud = new SpringVertexData();
-			nodeIndexToDataMap.put(v.getGraphPerspectiveIndex(), vud);
+			nodeIndexToDataMap.put(v, vud);
 		}
 	}
 
@@ -130,10 +132,8 @@ public class JUNGSpringLayout extends AbstractLayout
 		for (Iterator<PEdgeView> i = graphView.getEdgeViewsIterator(); i.hasNext();)
 		{
 			PEdgeView e = i.next();
-			int source_index = graphView.getGraphPerspective()
-					.getEdgeSourceIndex(e.getGraphPerspectiveIndex());
-			int target_index = graphView.getGraphPerspective()
-					.getEdgeTargetIndex(e.getGraphPerspectiveIndex());
+			FNode source_index = e.getEdge().getSource();
+			FNode target_index = e.getEdge().getTarget();
 			double source_x = graphView.getNodeDoubleProperty(source_index,
 					PGraphView.NODE_X_POSITION);
 			double source_y = graphView.getNodeDoubleProperty(source_index,
@@ -152,9 +152,9 @@ public class JUNGSpringLayout extends AbstractLayout
 			// why?
 			// System.out.println("Desired : " + getLength( e ));
 			double f = FORCE_CONSTANT * (desiredLen - len) / len;
-			int deg1 = graphView.getGraphPerspective().getAdjacentEdgeIndicesArray(
+			int deg1 = graphView.getNetwork().getAdjacentEdges(
 					  source_index, true, true, true).length;
-			int deg2 = graphView.getGraphPerspective().getAdjacentEdgeIndicesArray(
+			int deg2 = graphView.getNetwork().getAdjacentEdges(
 					target_index, true, true, true).length;
 			f = f
 					* Math.pow(STRETCH / 100.0, (deg1
@@ -164,8 +164,8 @@ public class JUNGSpringLayout extends AbstractLayout
 			double dx = f * vx;
 			double dy = f * vy;
 			SpringVertexData v1D, v2D;
-			v1D = getSpringData(source_index);
-			v2D = getSpringData(target_index);
+			v1D = getSpringData(graphView.getNodeView(source_index));
+			v2D = getSpringData(graphView.getNodeView(target_index));
 			SpringEdgeData sed = getSpringData(e);
 			sed.f = f;
 			v1D.edgedx += dx;
@@ -188,14 +188,10 @@ public class JUNGSpringLayout extends AbstractLayout
 			{
 				PNodeView v2 = iter2.next();
 				if (v == v2) continue;
-				double v_x = graphView.getNodeDoubleProperty(v
-						.getGraphPerspectiveIndex(), PGraphView.NODE_X_POSITION);
-				double v_y = graphView.getNodeDoubleProperty(v
-						.getGraphPerspectiveIndex(), PGraphView.NODE_Y_POSITION);
-				double v2_x = graphView.getNodeDoubleProperty(v2
-						.getGraphPerspectiveIndex(), PGraphView.NODE_X_POSITION);
-				double v2_y = graphView.getNodeDoubleProperty(v2
-						.getGraphPerspectiveIndex(), PGraphView.NODE_Y_POSITION);
+				double v_x = graphView.getNodeDoubleProperty(v.getNode(), PGraphView.NODE_X_POSITION);
+				double v_y = graphView.getNodeDoubleProperty(v.getNode(), PGraphView.NODE_Y_POSITION);
+				double v2_x = graphView.getNodeDoubleProperty(v2.getNode(), PGraphView.NODE_X_POSITION);
+				double v2_y = graphView.getNodeDoubleProperty(v2.getNode(), PGraphView.NODE_Y_POSITION);
 				double vx = v_x - v2_x;
 				double vy = v_y - v2_y;
 				double distance = vx * vx + vy * vy;
@@ -229,41 +225,35 @@ public class JUNGSpringLayout extends AbstractLayout
 				PNodeView v = i.next();
 				if (dontMove(v)) continue;
 				SpringVertexData vd = getSpringData(v);
-				double v_x = graphView.getNodeDoubleProperty(v
-						.getGraphPerspectiveIndex(), PGraphView.NODE_X_POSITION);
-				double v_y = graphView.getNodeDoubleProperty(v
-						.getGraphPerspectiveIndex(), PGraphView.NODE_Y_POSITION);
+				double v_x = graphView.getNodeDoubleProperty(v.getNode(), PGraphView.NODE_X_POSITION);
+				double v_y = graphView.getNodeDoubleProperty(v.getNode(), PGraphView.NODE_Y_POSITION);
 				vd.dx += vd.repulsiondx + vd.edgedx;
 				vd.dy += vd.repulsiondy + vd.edgedy;
 				// keeps nodes from moving any faster than 5 per time unit
-				graphView.setNodeDoubleProperty(v.getGraphPerspectiveIndex(),
+				graphView.setNodeDoubleProperty(v.getNode(),
 						PGraphView.NODE_X_POSITION, v_x
 								+ (Math.max(-5, Math.min(5, vd.dx))));
-				graphView.setNodeDoubleProperty(v.getGraphPerspectiveIndex(),
+				graphView.setNodeDoubleProperty(v.getNode(),
 						PGraphView.NODE_Y_POSITION, v_y
 								+ (Math.max(-5, Math.min(5, vd.dy))));
 				int width = getCurrentSize().width;
 				int height = getCurrentSize().height;
 				if (v_x < 0)
 				{
-					graphView.setNodeDoubleProperty(v
-							.getGraphPerspectiveIndex(),
+					graphView.setNodeDoubleProperty(v.getNode(),
 							PGraphView.NODE_X_POSITION, 0);
 				} else if (v_x > width)
 				{
-					graphView.setNodeDoubleProperty(v
-							.getGraphPerspectiveIndex(),
+					graphView.setNodeDoubleProperty(v.getNode(),
 							PGraphView.NODE_X_POSITION, width);
 				}
 				if (v_y < 0)
 				{
-					graphView.setNodeDoubleProperty(v
-							.getGraphPerspectiveIndex(),
+					graphView.setNodeDoubleProperty(v.getNode(),
 							PGraphView.NODE_Y_POSITION, 0);
 				} else if (v_y > height)
 				{
-					graphView.setNodeDoubleProperty(v
-							.getGraphPerspectiveIndex(),
+					graphView.setNodeDoubleProperty(v.getNode(),
 							PGraphView.NODE_Y_POSITION, height);
 				}
 			}
@@ -272,8 +262,7 @@ public class JUNGSpringLayout extends AbstractLayout
 
 	public SpringVertexData getSpringData(PNodeView v)
 	{
-		return (SpringVertexData) nodeIndexToDataMap.get(v
-				.getGraphPerspectiveIndex());
+		return (SpringVertexData) nodeIndexToDataMap.get(v);
 	}
 
 	public SpringVertexData getSpringData(int v)
@@ -283,12 +272,12 @@ public class JUNGSpringLayout extends AbstractLayout
 
 	public SpringEdgeData getSpringData(PEdgeView e)
 	{
-		return edgeIndexToDataMap.get(e.getGraphPerspectiveIndex());
+		return edgeIndexToDataMap.get(e);
 	}
 
 	public double getLength(PEdgeView e)
 	{
-		return edgeIndexToDataMap.get(e.getGraphPerspectiveIndex()).length;
+		return edgeIndexToDataMap.get(e).length;
 	}
 
 	/* ---------------Length Function------------------ */

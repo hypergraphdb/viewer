@@ -1,53 +1,67 @@
 package fing.model;
 
+public class FEdge {
 
-public class FEdge 
-{
+	// Variables specific to public get/set methods.
+	FNode source = null;
+	FNode target;
+	String m_identifier = null;
 
-  // Variables specific to public get/set methods.
-	FRootGraph m_rootGraph = null;
-  int m_rootGraphIndex = 0;
-  String m_identifier = null;
-
-  // Package visible constructor.
-  FEdge() { }
-
-  public FEdge(FRootGraph root, int rootGraphIndex) {
-		this.m_rootGraph = root;
-		this.m_rootGraphIndex = rootGraphIndex;
+	// Package visible constructor.
+	FEdge() {
 	}
-  
-  public FNode getSource()
-  {
-    return m_rootGraph.getNode
-      (m_rootGraph.getEdgeSourceIndex(m_rootGraphIndex));
-  }
 
-  public FNode getTarget()
-  {
-    return m_rootGraph.getNode
-      (m_rootGraph.getEdgeTargetIndex(m_rootGraphIndex));
-  }
+	public FEdge(FNode source, FNode target) {
+		this.source = source;
+		this.target = target;
+	}
 
-  public FRootGraph getRootGraph()
-  {
-    return m_rootGraph;
-  }
+	public FNode getSource() {
+		return source;
+	}
 
-  public int getRootGraphIndex()
-  {
-    return m_rootGraphIndex;
-  }
+	public FNode getTarget() {
+		return target;
+	}
 
-  public String getIdentifier()
-  {
-    return m_identifier;
-  }
+	public String getIdentifier() {
+		return m_identifier;
+	}
 
-  public boolean setIdentifier(String new_id)
-  {
-    m_identifier = new_id;
-    return true;
-  }
+	public boolean setIdentifier(String new_id) {
+		m_identifier = new_id;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((source == null) ? 0 : source.hashCode());
+		result = prime * result + ((target == null) ? 0 : target.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final FEdge other = (FEdge) obj;
+		if (source == null) {
+			if (other.source != null)
+				return false;
+		} else if (!source.equals(other.source))
+			return false;
+		if (target == null) {
+			if (other.target != null)
+				return false;
+		} else if (!target.equals(other.target))
+			return false;
+		return true;
+	}
 
 }

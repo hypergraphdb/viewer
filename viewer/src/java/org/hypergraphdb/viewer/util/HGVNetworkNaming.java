@@ -2,8 +2,6 @@ package org.hypergraphdb.viewer.util;
 
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
-import java.util.Iterator;
-import java.util.Set;
 
 public class HGVNetworkNaming
 {
@@ -26,7 +24,7 @@ public class HGVNetworkNaming
   private static boolean isNetworkTitleTaken(String titleCandidate)
   {
     for (HGVNetwork net: HGVKit.getNetworkMap().keySet()) 
-      if (net.getTitle().equals(titleCandidate))
+      if (titleCandidate.equals(net.getTitle()))
           return true; 
     return false;
   }

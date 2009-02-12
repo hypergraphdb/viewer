@@ -12,6 +12,8 @@ import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 import org.hypergraphdb.viewer.util.HGVAction;
+
+import fing.model.FEdge;
 import fing.model.FNode;
 
 import java.awt.event.ActionEvent;
@@ -34,12 +36,12 @@ public class NewWindowSelectedNodesOnlyAction extends HGVAction {
 		HGVNetworkView current_network_view = null;
 		if (HGVKit.viewExists(current_network))
 			current_network_view = HGVKit.getNetworkView(current_network);
-		Set nodes = current_network.getFlagger().getFlaggedNodes();
-		int[] n_idx = new int[nodes.size()];
+		Set<FNode> nodes = current_network.getFlagger().getFlaggedNodes();
+		FNode[] n_idx = new FNode[nodes.size()];
 		int n = 0;
 		for(Iterator it = nodes.iterator(); it.hasNext(); n++)
-			n_idx[n] = ((FNode) it.next()).getRootGraphIndex();
-		int[] edges = current_network.getConnectingEdgeIndicesArray(n_idx);
+			n_idx[n] = ((FNode) it.next());
+		FEdge[] edges = new FEdge[0];//current_network.getConnectingEdges(n_idx);
 		HGVNetwork new_network = HGVKit.createNetwork(n_idx, edges, null, current_network);
 		new_network.setTitle(HGVNetworkNaming
 				.getSuggestedSubnetworkTitle(current_network));
@@ -48,15 +50,13 @@ public class NewWindowSelectedNodesOnlyAction extends HGVAction {
 
 		if (current_network_view != null) {
 
-			Iterator i = new_network.nodesIterator();
+			Iterator<FNode> i = new_network.nodesIterator();
 			while (i.hasNext()) {
-				FNode node = (FNode) i.next();
+				FNode node = i.next();
 				new_view.getNodeView(node).setOffset(
-						current_network_view.getNodeDoubleProperty(node
-								.getRootGraphIndex(),
+						current_network_view.getNodeDoubleProperty(node,
 								HGVNetworkView.NODE_X_POSITION),
-						current_network_view.getNodeDoubleProperty(node
-								.getRootGraphIndex(),
+						current_network_view.getNodeDoubleProperty(node,
 								HGVNetworkView.NODE_Y_POSITION));
 			}
 		}

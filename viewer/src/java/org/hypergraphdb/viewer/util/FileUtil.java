@@ -65,8 +65,7 @@ public abstract class FileUtil {
 	 *            an array of CyFileFilters that let you filter based on
 	 *            extension
 	 * @param start_dir
-	 *            an alternate start dir, if null the default cytoscape MUD will
-	 *            be used
+	 *            an alternate start dir, if null the default MUD will  be used
 	 * @param custom_approve_text
 	 *            if this is a custom dialog, then custom text should be on the
 	 *            approve button.

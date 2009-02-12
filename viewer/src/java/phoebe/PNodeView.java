@@ -13,7 +13,6 @@ import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PBounds;
 import fing.model.FNode;
-import fing.model.FRootGraph;
 
 /**
  * @author Rowan Christmas
@@ -32,7 +31,7 @@ public class PNodeView extends PPath
 	 * The index of this node in the RootGraph note that this is always a
 	 * negative number.
 	 */
-	protected int rootGraphIndex;
+	protected FNode node;
 	/**
 	 * The View to which we belong.
 	 */
@@ -58,9 +57,9 @@ public class PNodeView extends PPath
 	// ----------------------------------------//
 	// Constructors and Initialization
 	// ----------------------------------------//
-	public PNodeView(int node_index, PGraphView view)
+	public PNodeView(FNode node, PGraphView view)
 	{
-		this(node_index, view, Double.MAX_VALUE, Double.MAX_VALUE,
+		this(node, view, Double.MAX_VALUE, Double.MAX_VALUE,
 				Integer.MAX_VALUE, (Paint) null, (Paint) null, (Paint) null,
 				Float.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE,
 				(String) null);
@@ -81,13 +80,12 @@ public class PNodeView extends PPath
 	 * @param height the height of the node
 	 * @param label the String to display on the label
 	 */
-	public PNodeView(int node_index, PGraphView view, double x_positon,
+	public PNodeView(FNode node, PGraphView view, double x_positon,
 			double y_positon, int shape, Paint paint, Paint selection_paint,
 			Paint border_paint, float border_width, double width,
 			double height, String label)
 	{
-		// Call PNode Super Constructor
-		super();
+		this.node = node;
 		// Set the PGraphView that we belong to
 		if (view == null)
 		{
@@ -96,77 +94,65 @@ public class PNodeView extends PPath
 		}
 		this.view = view;
 		// Set the Index
-		if (node_index == Integer.MAX_VALUE)
-		{
-			throw new IllegalArgumentException(
-					"A node_index must be passed to create a PNodeView");
-		}
-		if (node_index >= 0)
-		{
-			this.rootGraphIndex = view.getGraphPerspective()
-					.getRootGraphNodeIndex(node_index);
-		} else
-		{
-			this.rootGraphIndex = node_index;
-		}
+		
 		// set NODE_X_POSITION
 		if (x_positon != Double.MAX_VALUE)
 		{
-			view.setNodeDoubleProperty(rootGraphIndex,
+			view.setNodeDoubleProperty(node,
 					PGraphView.NODE_X_POSITION, x_positon);
 		}
 		// set NODE_Y_POSITION
 		if (y_positon != Double.MAX_VALUE)
 		{
-			view.setNodeDoubleProperty(rootGraphIndex,
+			view.setNodeDoubleProperty(node,
 					PGraphView.NODE_Y_POSITION, y_positon);
 		}
 		// set NODE_SHAPE
 		if (shape != Integer.MAX_VALUE)
 		{
-			view.setNodeIntProperty(rootGraphIndex, PGraphView.NODE_SHAPE,
+			view.setNodeIntProperty(node, PGraphView.NODE_SHAPE,
 					shape);
 		}
 		// set NODE_PAINT
 		if (paint != null)
 		{
-			view.setNodeObjectProperty(rootGraphIndex, PGraphView.NODE_PAINT,
+			view.setNodeObjectProperty(node, PGraphView.NODE_PAINT,
 					paint);
 		}
 		// set NODE_SELECTION_PAINT
 		if (paint != null)
 		{
-			view.setNodeObjectProperty(rootGraphIndex,
+			view.setNodeObjectProperty(node,
 					PGraphView.NODE_SELECTION_PAINT, selection_paint);
 		}
 		// set NODE_BORDER_PAINT
 		if (border_paint != null)
 		{
-			view.setNodeObjectProperty(rootGraphIndex,
+			view.setNodeObjectProperty(node,
 					PGraphView.NODE_BORDER_PAINT, border_paint);
 		}
 		// set NODE_BORDER_WIDTH
 		if (border_width != Float.MAX_VALUE)
 		{
-			view.setNodeFloatProperty(rootGraphIndex,
+			view.setNodeFloatProperty(node,
 					PGraphView.NODE_BORDER_WIDTH, border_width);
 		}
 		// set NODE_WIDTH
 		if (width != Double.MAX_VALUE)
 		{
-			view.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_WIDTH,
+			view.setNodeDoubleProperty(node, PGraphView.NODE_WIDTH,
 					width);
 		}
 		// set NODE_HEIGHT
 		if (height != Double.MAX_VALUE)
 		{
-			view.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_HEIGHT,
+			view.setNodeDoubleProperty(node, PGraphView.NODE_HEIGHT,
 					height);
 		}
 		// set NODE_LABEL
 		if (label != null)
 		{
-			view.setNodeObjectProperty(rootGraphIndex, PGraphView.NODE_LABEL,
+			view.setNodeObjectProperty(node, PGraphView.NODE_LABEL,
 					label);
 		}
 		initializeNodeView();
@@ -181,13 +167,13 @@ public class PNodeView extends PPath
 		// all x/y is done using offset as that operates on the nodes transform,
 		// and affects
 		// the nodes children
-		setOffset(view.getNodeDoubleProperty(rootGraphIndex,
+		setOffset(view.getNodeDoubleProperty(node,
 				PGraphView.NODE_X_POSITION), view.getNodeDoubleProperty(
-				rootGraphIndex, PGraphView.NODE_Y_POSITION));
+				node, PGraphView.NODE_Y_POSITION));
 		// all w/h is done in the nodes local coordinate system
-		setHeight(view.getNodeDoubleProperty(rootGraphIndex,
+		setHeight(view.getNodeDoubleProperty(node,
 				PGraphView.NODE_HEIGHT));
-		setWidth(view.getNodeDoubleProperty(rootGraphIndex,
+		setWidth(view.getNodeDoubleProperty(node,
 				PGraphView.NODE_WIDTH));
 		setStrokePaint(Color.black);
 		setPaint(Color.white);
@@ -199,20 +185,12 @@ public class PNodeView extends PPath
 	}
 
 	/**
-	 * @return the RootGraphIndex of the FNode we are associated with
-	 */
-	public int getIndex()
-	{
-		return rootGraphIndex;
-	}
-
-	/**
 	 * @return this currently returns the RootGraphIndex of the FNode we are
 	 * associated with
 	 */
 	public String toString()
 	{
-		return ("FNode: " + rootGraphIndex);
+		return ("FNode: " + node);
 	}
 
 	/**
@@ -228,27 +206,10 @@ public class PNodeView extends PPath
 	 */
 	public FNode getNode()
 	{
-		FRootGraph rootGraph = view.getGraphPerspective().getRootGraph();
-		return rootGraph.getNode(rootGraphIndex);
+		return node;
 	}
 
-	/**
-	 * @return the index of this node in the perspective to which we are in a
-	 * view on.
-	 */
-	public int getGraphPerspectiveIndex()
-	{
-		return (rootGraphIndex);
-	}
-
-	/**
-	 * @return the index of this node in the root graph to which we are in a
-	 * view on.
-	 */
-	public int getRootGraphIndex()
-	{
-		return rootGraphIndex;
-	}
+		
 
 	// ------------------------------------------------------//
 	// Get and Set Methods for all Common Viewable Elements
@@ -260,7 +221,7 @@ public class PNodeView extends PPath
 	 */
 	public int getShape()
 	{
-		return view.getNodeIntProperty(rootGraphIndex, PGraphView.NODE_SHAPE);
+		return view.getNodeIntProperty(node, PGraphView.NODE_SHAPE);
 	}
 
 	/**
@@ -270,7 +231,7 @@ public class PNodeView extends PPath
 	 */
 	public void setSelectedPaint(Paint paint)
 	{
-		view.setNodeObjectProperty(rootGraphIndex,
+		view.setNodeObjectProperty(node,
 				PGraphView.NODE_SELECTION_PAINT, paint);
 		if (selected)
 		{
@@ -283,14 +244,14 @@ public class PNodeView extends PPath
 	 */
 	public Paint getSelectedPaint()
 	{
-		return (Paint) view.getNodeObjectProperty(rootGraphIndex,
+		return (Paint) view.getNodeObjectProperty(node,
 				PGraphView.NODE_SELECTION_PAINT);
 	}
 
 	public void setUnselectedPaint(Paint paint)
 	{
 		view
-				.setNodeObjectProperty(rootGraphIndex, PGraphView.NODE_PAINT,
+				.setNodeObjectProperty(node, PGraphView.NODE_PAINT,
 						paint);
 		if (!selected)
 		{
@@ -305,7 +266,7 @@ public class PNodeView extends PPath
 	 */
 	public Paint getUnselectedPaint()
 	{
-		return (Paint) view.getNodeObjectProperty(rootGraphIndex,
+		return (Paint) view.getNodeObjectProperty(node,
 				PGraphView.NODE_PAINT);
 	}
 
@@ -314,7 +275,7 @@ public class PNodeView extends PPath
 	 */
 	public void setBorderPaint(Paint b_paint)
 	{
-		view.setNodeObjectProperty(rootGraphIndex,
+		view.setNodeObjectProperty(node,
 				PGraphView.NODE_BORDER_PAINT, b_paint);
 		super.setStrokePaint(b_paint);
 	}
@@ -324,7 +285,7 @@ public class PNodeView extends PPath
 	 */
 	public Paint getBorderPaint()
 	{
-		return (Paint) view.getNodeObjectProperty(rootGraphIndex,
+		return (Paint) view.getNodeObjectProperty(node,
 				PGraphView.NODE_BORDER_PAINT);
 	}
 
@@ -333,7 +294,7 @@ public class PNodeView extends PPath
 	 */
 	public void setBorderWidth(float border_width)
 	{
-		view.setNodeFloatProperty(rootGraphIndex, PGraphView.NODE_BORDER_WIDTH,
+		view.setNodeFloatProperty(node, PGraphView.NODE_BORDER_WIDTH,
 				border_width);
 		super.setStroke(new BasicStroke(border_width));
 	}
@@ -343,7 +304,7 @@ public class PNodeView extends PPath
 	 */
 	public float getBorderWidth()
 	{
-		return view.getNodeFloatProperty(rootGraphIndex,
+		return view.getNodeFloatProperty(node,
 				PGraphView.NODE_BORDER_WIDTH);
 	}
 
@@ -371,7 +332,7 @@ public class PNodeView extends PPath
 	{
 		double old_width = getWidth();
 		view
-				.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_WIDTH,
+				.setNodeDoubleProperty(node, PGraphView.NODE_WIDTH,
 						width);
 		super.setWidth(width);
 		// keep the node centered
@@ -395,7 +356,7 @@ public class PNodeView extends PPath
 	public boolean setHeight(double height)
 	{
 		double old_height = getHeight();
-		view.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_HEIGHT,
+		view.setNodeDoubleProperty(node, PGraphView.NODE_HEIGHT,
 				height);
 		super.setHeight(height);
 		// keep the node centered
@@ -449,9 +410,9 @@ public class PNodeView extends PPath
 		x -= getWidth() / 2;
 		y -= getHeight() / 2;
 		// System.out.println( "setOffset called x y: "+x+" "+y );
-		view.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_X_POSITION,
+		view.setNodeDoubleProperty(node, PGraphView.NODE_X_POSITION,
 				x);
-		view.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_Y_POSITION,
+		view.setNodeDoubleProperty(node, PGraphView.NODE_Y_POSITION,
 				y);
 		// this operates on the node's AffineTransform
 		super.setOffset(x, y);
@@ -490,9 +451,9 @@ public class PNodeView extends PPath
 		new_x_position -= getWidth() / 2;
 		double new_y_position = getYOffset() + getHeight() / 2 + dy;
 		new_y_position -= getHeight() / 2;
-		view.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_X_POSITION,
+		view.setNodeDoubleProperty(node, PGraphView.NODE_X_POSITION,
 				new_x_position);
-		view.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_Y_POSITION,
+		view.setNodeDoubleProperty(node, PGraphView.NODE_Y_POSITION,
 				new_y_position);
 		getTransformReference(true).setOffset(new_x_position, new_y_position);
 		invalidatePaint();
@@ -540,7 +501,7 @@ public class PNodeView extends PPath
 	public void setXPosition(double new_x_position, boolean no_sandbox)
 	{
 		new_x_position -= getWidth() / 2;
-		view.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_X_POSITION,
+		view.setNodeDoubleProperty(node, PGraphView.NODE_X_POSITION,
 				new_x_position);
 		if (no_sandbox)
 		{
@@ -562,7 +523,7 @@ public class PNodeView extends PPath
 		if (sandboxed)
 		{
 			// System.out.println( "sandboxedm returninf sandbox x pos" );
-			return view.getNodeDoubleProperty(rootGraphIndex,
+			return view.getNodeDoubleProperty(node,
 					PGraphView.NODE_X_POSITION);
 		} else
 		{
@@ -599,7 +560,7 @@ public class PNodeView extends PPath
 	public void setYPosition(double new_y_position, boolean no_sandbox)
 	{
 		new_y_position -= getHeight() / 2;
-		view.setNodeDoubleProperty(rootGraphIndex, PGraphView.NODE_Y_POSITION,
+		view.setNodeDoubleProperty(node, PGraphView.NODE_Y_POSITION,
 				new_y_position);
 		if (no_sandbox)
 		{
@@ -620,7 +581,7 @@ public class PNodeView extends PPath
 	{
 		if (sandboxed)
 		{
-			return view.getNodeDoubleProperty(rootGraphIndex,
+			return view.getNodeDoubleProperty(node,
 					PGraphView.NODE_Y_POSITION);
 		} else
 		{
@@ -638,17 +599,17 @@ public class PNodeView extends PPath
 		{
 			// animate the movement to the new position
 			PTransformActivity activity = this.animateToPositionScaleRotation(
-					view.getNodeDoubleProperty(rootGraphIndex,
+					view.getNodeDoubleProperty(node,
 							PGraphView.NODE_X_POSITION), view
-							.getNodeDoubleProperty(rootGraphIndex,
+							.getNodeDoubleProperty(node,
 									PGraphView.NODE_Y_POSITION), 1, 0, 2000);
 		} else
 		{
 			// do a manual setOffset
 			getTransformReference(true).setOffset(
-					view.getNodeDoubleProperty(rootGraphIndex,
+					view.getNodeDoubleProperty(node,
 							PGraphView.NODE_X_POSITION),
-					view.getNodeDoubleProperty(rootGraphIndex,
+					view.getNodeDoubleProperty(node,
 							PGraphView.NODE_Y_POSITION));
 			invalidatePaint();
 			invalidateFullBounds();
@@ -669,7 +630,7 @@ public class PNodeView extends PPath
 	public void select()
 	{
 		selected = true;
-		super.setPaint((Paint) view.getNodeObjectProperty(rootGraphIndex,
+		super.setPaint((Paint) view.getNodeObjectProperty(node,
 				PGraphView.NODE_SELECTION_PAINT));
 		view.nodeSelected(this);
 	}
@@ -680,7 +641,7 @@ public class PNodeView extends PPath
 	public void unselect()
 	{
 		selected = false;
-		super.setPaint((Paint) view.getNodeObjectProperty(rootGraphIndex,
+		super.setPaint((Paint) view.getNodeObjectProperty(node,
 				PGraphView.NODE_PAINT));
 		view.nodeUnselected(this);
 	}
@@ -757,7 +718,7 @@ public class PNodeView extends PPath
 		float x = (float) getWidth();
 		float y = (float) getHeight();
 		java.awt.geom.Point2D offset = getOffset();
-		view.setNodeIntProperty(rootGraphIndex, PGraphView.NODE_SHAPE, shape);
+		view.setNodeIntProperty(node, PGraphView.NODE_SHAPE, shape);
 		if (shape == TRIANGLE)
 		{
 			// make a trianlge

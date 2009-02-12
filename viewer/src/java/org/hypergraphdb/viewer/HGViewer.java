@@ -1,8 +1,8 @@
 package org.hypergraphdb.viewer;
 
 import edu.umd.cs.piccolo.util.PBounds;
+import fing.model.FEdge;
 import fing.model.FNode;
-import fing.model.FRootGraph;
 import java.awt.Component;
 import java.io.IOException;
 import java.io.Serializable;
@@ -97,8 +97,8 @@ public class HGViewer implements Serializable
 		HGWNReader reader = new HGWNReader(hg);
 		reader.read(handle, depth, getGenerator()); 
 		clearView();
-		final int[] nodes = reader.getNodeIndicesArray();
-		final int[] edges = reader.getEdgeIndicesArray();
+		final FNode[] nodes = reader.getNodeIndicesArray();
+		final FEdge[] edges = reader.getEdgeIndicesArray();
 		for(int i = 0; i<nodes.length; i++)
 			view.addNodeView(nodes[i]);
 		for(int i = 0; i<edges.length; i++)
@@ -195,26 +195,26 @@ public class HGViewer implements Serializable
 	{
 		final HGWNReader reader = new HGWNReader(hg);
 		reader.read(foc_handle, depth, getGenerator());
-		final int[] nodes = reader.getNodeIndicesArray();
-		final int[] edges = reader.getEdgeIndicesArray();
-		HGVNetwork net = view.getNetwork();
+		final FNode[] nodes = reader.getNodeIndicesArray();
+		final FEdge[] edges = reader.getEdgeIndicesArray();
+        HGVNetwork net = view.getNetwork();
 		for(int i = 0; i < nodes.length; i++)
-			net.restoreNode(nodes[i]);
+			net.addNode(nodes[i]);
 		for(int i = 0; i < edges.length; i++)
-			net.restoreEdge(edges[i]);
+			net.addEdge(edges[i]);
 		layout();
 	}
     
     private void clearView(){
-    	FRootGraph g = view.getNetwork().getRootGraph();
+    	
     	for(Iterator<PEdgeView> it = view.getEdgeViewsIterator(); it.hasNext();){
     		PEdgeView nv = (PEdgeView) it.next();
-    		view.removeEdgeView(nv.getEdge().getRootGraphIndex());
+    		view.removeEdgeView(nv.getEdge());
     		//g.removeEdge(nv.getEdge());
     	}
     	for(Iterator<PNodeView> it = view.getNodeViewsIterator(); it.hasNext();){
     		PNodeView nv = (PNodeView) it.next();
-    		view.removeNodeView(nv.getNode().getRootGraphIndex());
+    		view.removeNodeView(nv.getNode());
     		//g.removeNode(nv.getNode());
     	}
     }

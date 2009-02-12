@@ -27,6 +27,8 @@ import cytoscape.task.TaskMonitor;
 import cytoscape.task.ui.JTaskConfig;
 import cytoscape.task.util.TaskManager;
 import edu.umd.cs.piccolo.PCanvas;
+import fing.model.FEdge;
+import fing.model.FNode;
 
 /**
  */
@@ -203,8 +205,8 @@ public class LoadHyperGraphFileAction extends HGVAction
             
             //  Get the RootGraph indices of the nodes and
             //  Edges that were just created
-            final int[] nodes = reader.getNodeIndicesArray();
-            final int[] edges = reader.getEdgeIndicesArray();
+            final FNode[] nodes = reader.getNodeIndicesArray();
+            final FEdge[] edges = reader.getEdgeIndicesArray();
             
             final String title = db.getAbsolutePath();
             

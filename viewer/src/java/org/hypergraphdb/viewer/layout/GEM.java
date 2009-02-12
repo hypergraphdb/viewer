@@ -8,11 +8,9 @@ import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
-import org.hypergraphdb.viewer.layout.util.Graph;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
 import fing.model.FEdge;
-import fing.model.FGraphPerspective;
 import fing.model.FNode;
 
 /**
@@ -513,13 +511,12 @@ public class GEM implements Layout
 		iX += (centerX / nodeCount - pX) * p.mass * o_gravity;
 		iY += (centerY / nodeCount - pY) * p.mass * o_gravity;
 		Iterator<PEdgeView> edgeSet = HGVKit.getCurrentView().getEdgeViewsIterator();
-		HGVNetwork net = HGVKit.getCurrentNetwork();
 		while (edgeSet.hasNext())
 		{
 			FEdge e = edgeSet.next().getEdge();
-			int u = ((Integer) nodeNumbers.get(net.getNode(e.getSource().getRootGraphIndex())))
+			int u = ((Integer) nodeNumbers.get(e.getSource()))
 					.intValue();
-			int w = ((Integer) nodeNumbers.get(net.getNode(e.getTarget().getRootGraphIndex()))).intValue();
+			int w = ((Integer) nodeNumbers.get(e.getTarget()));
 			if (u != v && w != v)
 			{
 				GemP up = gemProp[u];
@@ -600,15 +597,15 @@ public class GEM implements Layout
 		invmap = new FNode[nodeCount];
 		adjacent = new ArrayList[nodeCount];
 		nodeNumbers = new HashMap<FNode, Integer>();
-		FGraphPerspective graphPerspective = HGVKit.getCurrentView()
-				.getGraphPerspective();
+		HGVNetwork graphPerspective = HGVKit.getCurrentView()
+				.getNetwork();
 		Iterator<PNodeView> nodeSet = HGVKit.getCurrentView()
 		.getNodeViewsIterator();
 		for (int i = 0; nodeSet.hasNext(); i++)
 		{
 			FNode n = nodeSet.next().getNode();
-			gemProp[i] = new GemP(graphPerspective.getAdjacentEdgeIndicesArray(
-					n.getRootGraphIndex(), true, true, true).length);
+			gemProp[i] = new GemP(graphPerspective.getAdjacentEdges(
+					n, true, true, true).length);
 			if(n == null)
 				System.out.println("GEM:" +	i +	":" + n);
 			invmap[i] = n;
@@ -617,13 +614,12 @@ public class GEM implements Layout
 		// Set nset;
 		for (int i = 0; i < nodeCount; i++)
 		{
-			int[] neighbors = graphPerspective.getAdjacentEdgeIndicesArray(
-					invmap[i].getRootGraphIndex(), true, true, true);
+			FEdge[] neighbors = graphPerspective.getAdjacentEdges(
+					invmap[i], true, true, true);
 			adjacent[i] = new ArrayList<Integer>(neighbors.length);
 			for (int j = 0; j < neighbors.length; j++)
 			{
-				FEdge e = graphPerspective.getEdge(neighbors[j]);
-				FNode n = HGVUtils.getOppositeNode(invmap[i], e);
+				FNode n = HGVUtils.getOppositeNode(invmap[i], neighbors[j]);
 				Integer nodeNr = nodeNumbers.get(n);
 				if(nodeNr != null)
 				   adjacent[i].add(nodeNr);

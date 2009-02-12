@@ -10,15 +10,15 @@ import java.util.*;
 import java.io.*;
 import fing.model.FEdge;
 import fing.model.FNode;
-import fing.model.FRootGraph;
 import org.hypergraphdb.viewer.data.FlagFilter;
 import org.hypergraphdb.viewer.data.FlagEventListener;
 import org.hypergraphdb.viewer.data.FlagEvent;
+import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
+import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
+
 import phoebe.PEdgeView;
 import phoebe.PGraphView;
 import phoebe.PNodeView;
-import phoebe.event.GraphViewChangeEvent;
-import phoebe.event.GraphViewChangeListener;
 
 //---------------------------------------------------------------------------
 /**
@@ -27,8 +27,8 @@ import phoebe.event.GraphViewChangeListener;
  * node and edge views in a GraphView. An object will be selected in the view if
  * the matching object is flagged in the FlagFilter.
  */
-public class FlagAndSelectionHandler implements FlagEventListener,
-		GraphViewChangeListener
+public class FlagAndSelectionHandler implements FlagEventListener
+//,HGVNetworkChangeListener
 {
 	FlagFilter flagFilter;
 	PGraphView view;
@@ -45,7 +45,6 @@ public class FlagAndSelectionHandler implements FlagEventListener,
 		this.view = view;
 		syncFilterAndView();
 		flagFilter.addFlagEventListener(this);
-		view.addGraphViewChangeListener(this);
 	}
 
 	/**
@@ -91,80 +90,79 @@ public class FlagAndSelectionHandler implements FlagEventListener,
 	 * Responds to selection events from the view by setting the matching
 	 * flagged state in the FlagFilter object.
 	 */
-	public void graphViewChanged(GraphViewChangeEvent event)
-	{
-		// GINY bug: the event we get frequently has the correct indices
-		// but incorrect FNode and FEdge objects. For now we get around this
-		// by converting indices to graph objects ourselves
-		PGraphView source = (PGraphView) event.getSource();
-		FRootGraph rootGraph = source.getGraphPerspective().getRootGraph();
-		if (event.isNodesSelectedType())
-		{
-			// System.out.println( "Nodes slected type:" );
-			// System.out.println( "FlagAndSelectionHandler: "+event);
-			// System.out.println( event.getSelectedNodeIndices()+" <- nodes
-			// selected" );
-			// int[] nodes = event.getSelectedNodeIndices();
-			// for ( int i = 0; i < nodes.length; ++i ) {
-			// System.out.println( "Selected mnode: "+nodes[i]);
-			// }
-			// FNode[] selNodes = event.getSelectedNodes();
-			// List selList = Arrays.asList(selNodes);
-			int[] selIndices = event.getSelectedNodeIndices();
-			List selList = new ArrayList();
-			for (int index = 0; index < selIndices.length; index++)
-			{
-				FNode node = rootGraph.getNode(selIndices[index]);
-				// System.out.println( "Adding node: "+node);
-				selList.add(node);
-			}
-			// System.out.println( "Contents of selList: " );
-			// for( Iterator i = selList.iterator(); i.hasNext(); ) {
-			// System.out.println( "NOde: "+i.next() );
-			// }
-			flagFilter.setFlaggedNodes(selList, true);
-		} else if (event.isNodesUnselectedType())
-		{
-			// FNode[] unselNodes = event.getUnselectedNodes();
-			// List unselList = Arrays.asList(unselNodes);
-			// System.out.println( "nodes UNse;ected" );
-			int[] unselIndices = event.getUnselectedNodeIndices();
-			List unselList = new ArrayList();
-			for (int index = 0; index < unselIndices.length; index++)
-			{
-				FNode node = rootGraph.getNode(unselIndices[index]);
-				unselList.add(node);
-				// System.out.println( "Unselected node:"+node+"
-				// "+node.getRootGraphIndex() );
-			}
-			flagFilter.setFlaggedNodes(unselList, false);
-		} else if (event.isEdgesSelectedType())
-		{
-			// FEdge[] selEdges = event.getSelectedEdges();
-			// List selList = Arrays.asList(selEdges);
-			int[] selIndices = event.getSelectedEdgeIndices();
-			List selList = new ArrayList();
-			for (int index = 0; index < selIndices.length; index++)
-			{
-				FEdge edge = rootGraph.getEdge(selIndices[index]);
-				selList.add(edge);
-			}
-			flagFilter.setFlaggedEdges(selList, true);
-		} else if (event.isEdgesUnselectedType())
-		{
-			// FEdge[] unselEdges = event.getUnselectedEdges();
-			// List unselList = Arrays.asList(unselEdges);
-			int[] unselIndices = event.getUnselectedEdgeIndices();
-			List unselList = new ArrayList();
-			for (int index = 0; index < unselIndices.length; index++)
-			{
-				FEdge edge = rootGraph.getEdge(unselIndices[index]);
-				unselList.add(edge);
-			}
-			flagFilter.setFlaggedEdges(unselList, false);
-		}
-	}
-
+//	public void networkChanged(HGVNetworkChangeEvent event)
+//	{
+//		// GINY bug: the event we get frequently has the correct indices
+//		// but incorrect FNode and FEdge objects. For now we get around this
+//		// by converting indices to graph objects ourselves
+//		PGraphView source = (PGraphView) event.getSource();
+//		if (event.isNodesSelectedType())
+//		{
+//			// System.out.println( "Nodes slected type:" );
+//			// System.out.println( "FlagAndSelectionHandler: "+event);
+//			// System.out.println( event.getSelectedNodeIndices()+" <- nodes
+//			// selected" );
+//			// int[] nodes = event.getSelectedNodeIndices();
+//			// for ( int i = 0; i < nodes.length; ++i ) {
+//			// System.out.println( "Selected mnode: "+nodes[i]);
+//			// }
+//			// FNode[] selNodes = event.getSelectedNodes();
+//			// List selList = Arrays.asList(selNodes);
+//			FNode[] selIndices = event.getSelectedNodes();
+//			List selList = new ArrayList();
+//			for (int index = 0; index < selIndices.length; index++)
+//			{
+//				FNode node = selIndices[index];
+//				// System.out.println( "Adding node: "+node);
+//				selList.add(node);
+//			}
+//			// System.out.println( "Contents of selList: " );
+//			// for( Iterator i = selList.iterator(); i.hasNext(); ) {
+//			// System.out.println( "NOde: "+i.next() );
+//			// }
+//			flagFilter.setFlaggedNodes(selList, true);
+//		} else if (event.isNodesUnselectedType())
+//		{
+//			// FNode[] unselNodes = event.getUnselectedNodes();
+//			// List unselList = Arrays.asList(unselNodes);
+//			// System.out.println( "nodes UNse;ected" );
+//			FNode[] unselIndices = event.getUnselectedNodes();
+//			List unselList = new ArrayList();
+//			for (int index = 0; index < unselIndices.length; index++)
+//			{
+//				FNode node = unselIndices[index];
+//				unselList.add(node);
+//				// System.out.println( "Unselected node:"+node+"
+//				// "+node.getRootGraphIndex() );
+//			}
+//			flagFilter.setFlaggedNodes(unselList, false);
+//		} else if (event.isEdgesSelectedType())
+//		{
+//			// FEdge[] selEdges = event.getSelectedEdges();
+//			// List selList = Arrays.asList(selEdges);
+//			FEdge[] selIndices = event.getSelectedEdges();
+//			List selList = new ArrayList();
+//			for (int index = 0; index < selIndices.length; index++)
+//			{
+//				FEdge edge = (selIndices[index]);
+//				selList.add(edge);
+//			}
+//			flagFilter.setFlaggedEdges(selList, true);
+//		} else if (event.isEdgesUnselectedType())
+//		{
+//			// FEdge[] unselEdges = event.getUnselectedEdges();
+//			// List unselList = Arrays.asList(unselEdges);
+//			FEdge[] unselIndices = event.getUnselectedEdges();
+//			List unselList = new ArrayList();
+//			for (int index = 0; index < unselIndices.length; index++)
+//			{
+//				FEdge edge = (unselIndices[index]);
+//				unselList.add(edge);
+//			}
+//			flagFilter.setFlaggedEdges(unselList, false);
+//		}
+//	}
+//
 	/**
 	 * Responds to events indicating a change in the flagged state of one or
 	 * more nodes or edges. Sets the corresponding selection state for views of
