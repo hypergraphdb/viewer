@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import fing.model.FNode;
+import org.hypergraphdb.viewer.FNode;
+
 import phoebe.PEdgeView;
 import phoebe.PGraphView;
 import phoebe.PNodeView;

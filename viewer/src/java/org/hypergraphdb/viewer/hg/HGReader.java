@@ -16,10 +16,10 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.IncidenceSet;
 import org.hypergraphdb.query.AtomTypeCondition;
 import org.hypergraphdb.type.HGAtomType;
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import cytoscape.task.TaskMonitor;
-import fing.model.FEdge;
-import fing.model.FNode;
 
 /**
  */

@@ -1,5 +1,6 @@
 package org.hypergraphdb.viewer.view;
 
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.VisualManager;
@@ -7,7 +8,6 @@ import org.hypergraphdb.viewer.view.HGVMenus;
 import org.hypergraphdb.viewer.visual.*;
 import org.hypergraphdb.viewer.props.*;
 import org.hypergraphdb.*;
-import fing.model.FNode;
 import phoebe.PGraphView;
 import phoebe.PNodeView;
 import java.awt.*;

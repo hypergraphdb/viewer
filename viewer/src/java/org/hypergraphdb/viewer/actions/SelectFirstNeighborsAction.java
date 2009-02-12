@@ -15,10 +15,10 @@ import java.util.Iterator;
 
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
-import fing.model.FEdge;
-import fing.model.FNode;
 //-------------------------------------------------------------------------
 /**
  *  select every first neighbor (directly connected nodes) of the currently

@@ -3,12 +3,13 @@ package org.hypergraphdb.viewer.layout;
 
 import java.awt.geom.Point2D;
 import java.util.*;
+
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.layout.util.NodeDistances;
 
 import edu.umd.cs.piccolo.PNode;
-import fing.model.FNode;
 import phoebe.PGraphView;
 import phoebe.PNodeView;
 

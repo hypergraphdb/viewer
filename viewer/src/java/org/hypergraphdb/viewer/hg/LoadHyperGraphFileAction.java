@@ -14,6 +14,8 @@ import java.text.NumberFormat;
 import javax.swing.SwingUtilities;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
@@ -27,8 +29,6 @@ import cytoscape.task.TaskMonitor;
 import cytoscape.task.ui.JTaskConfig;
 import cytoscape.task.util.TaskManager;
 import edu.umd.cs.piccolo.PCanvas;
-import fing.model.FEdge;
-import fing.model.FNode;
 
 /**
  */

@@ -7,9 +7,10 @@ package org.hypergraphdb.viewer.actions;
 
 //-------------------------------------------------------------------------
 
-import fing.model.FEdge;
-import fing.model.FNode;
 import java.util.*;
+
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import phoebe.PEdgeView;
 import phoebe.PGraphView;

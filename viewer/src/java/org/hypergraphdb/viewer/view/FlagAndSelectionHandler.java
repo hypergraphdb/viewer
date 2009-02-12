@@ -8,8 +8,9 @@ package org.hypergraphdb.viewer.view;
 //---------------------------------------------------------------------------
 import java.util.*;
 import java.io.*;
-import fing.model.FEdge;
-import fing.model.FNode;
+
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.data.FlagFilter;
 import org.hypergraphdb.viewer.data.FlagEventListener;
 import org.hypergraphdb.viewer.data.FlagEvent;

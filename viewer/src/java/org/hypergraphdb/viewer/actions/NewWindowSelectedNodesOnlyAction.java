@@ -7,14 +7,14 @@ package org.hypergraphdb.viewer.actions;
 
 //-------------------------------------------------------------------------
 import org.hypergraphdb.viewer.ActionManager;
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 import org.hypergraphdb.viewer.util.HGVAction;
 
-import fing.model.FEdge;
-import fing.model.FNode;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;

@@ -4,11 +4,11 @@ package org.hypergraphdb.viewer.actions;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-import fing.model.FEdge;
-import fing.model.FNode;
 import java.util.*;
 
 import org.hypergraphdb.viewer.ActionManager;
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.util.HGVAction;

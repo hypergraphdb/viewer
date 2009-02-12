@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGViewer;
@@ -18,7 +19,6 @@ import phoebe.PNodeView;
 import phoebe.PNodeView;
 
 import edu.umd.cs.piccolo.PNode;
-import fing.model.FNode;
 
 public class ContextMenuHelper {
 

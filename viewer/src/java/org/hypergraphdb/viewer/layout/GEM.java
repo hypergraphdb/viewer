@@ -2,6 +2,9 @@
 package org.hypergraphdb.viewer.layout;
 
 import java.util.*;
+
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
@@ -10,8 +13,6 @@ import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
-import fing.model.FEdge;
-import fing.model.FNode;
 
 /**
  * Java implementation of the gem 2D layout. <br>

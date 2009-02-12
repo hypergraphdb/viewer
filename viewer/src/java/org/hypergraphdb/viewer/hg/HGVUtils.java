@@ -1,7 +1,5 @@
 package org.hypergraphdb.viewer.hg;
 
-import fing.model.FEdge;
-import fing.model.FNode;
 import java.util.*;
 import org.hypergraphdb.*;
 import org.hypergraphdb.storage.BAtoHandle;
@@ -14,6 +12,8 @@ import org.hypergraphdb.handle.*;
 import org.hypergraphdb.indexing.ByPartIndexer;
 import org.hypergraphdb.query.*;
 import org.hypergraphdb.viewer.AppConfig;
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVKit;

@@ -7,13 +7,13 @@ package org.hypergraphdb.viewer.data;
 //---------------------------------------------------------------------------
 import java.util.*;
 
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
 
 
-import fing.model.FEdge;
-import fing.model.FNode;
 
 //---------------------------------------------------------------------------
 /**

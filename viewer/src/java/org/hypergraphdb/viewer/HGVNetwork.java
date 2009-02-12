@@ -10,6 +10,7 @@ import java.util.Set;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.IncidenceSet;
 import org.hypergraphdb.viewer.data.FlagFilter;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeListenerChain;
 import org.hypergraphdb.viewer.event.HGVNetworkEdgesRemovedEvent;
@@ -18,8 +19,6 @@ import org.hypergraphdb.viewer.event.HGVNetworkNodesRemovedEvent;
 import org.hypergraphdb.viewer.event.HGVNetworkNodesAddedEvent;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
 
-import fing.model.FEdge;
-import fing.model.FNode;
 
 /**
  * HGVNetwork is the primary class for algorithm writing.&nbsp; All algorithms
@@ -161,7 +160,7 @@ public class HGVNetwork
 		if (node == null)
 			return new FEdge[0];
 		HGHandle nH = node.getHandle();
-		HGHandle[] handles = hg.getIncidenceSet(node.getHandle());
+		IncidenceSet handles = hg.getIncidenceSet(node.getHandle());
 		Set<FEdge> res = new HashSet<FEdge>();
 		for (HGHandle h : handles) {
 			FEdge e = new FEdge(node, new FNode(h));

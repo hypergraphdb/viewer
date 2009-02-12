@@ -14,8 +14,6 @@ import org.hypergraphdb.viewer.*;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
 
-import fing.model.FEdge;
-import fing.model.FNode;
 
 
 //-------------------------------------------------------------------------
@@ -38,8 +36,7 @@ public class DeleteSelectedAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) { 
                        
     	HGVNetworkView view = HGVKit.getCurrentView();
-    	//FGraphPerspective perspective = view.getGraphPerspective();
-        // get the Selected node and edge indices
+    	 // get the Selected node and edge indices
     	//List<PNodeView> node_indicies = view.getSelectedNodes();
     	//List<PEdgeView> edge_indicies = view.getSelectedEdges();
         //and the node/edge vew objects

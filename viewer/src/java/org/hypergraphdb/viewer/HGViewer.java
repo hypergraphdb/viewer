@@ -1,8 +1,6 @@
 package org.hypergraphdb.viewer;
 
 import edu.umd.cs.piccolo.util.PBounds;
-import fing.model.FEdge;
-import fing.model.FNode;
 import java.awt.Component;
 import java.io.IOException;
 import java.io.Serializable;

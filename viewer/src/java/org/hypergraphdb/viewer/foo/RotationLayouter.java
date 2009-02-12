@@ -1,9 +1,11 @@
 package org.hypergraphdb.viewer.foo;
 
 import java.util.Iterator;
+
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
+
 import com.nerius.math.xform.*;
-import fing.model.FEdge;
-import fing.model.FNode;
 
 public final class RotationLayouter {
 	private final MutablePolyEdgeGraphLayout m_graph;

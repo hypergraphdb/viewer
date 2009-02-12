@@ -47,8 +47,6 @@ import edu.umd.cs.piccolo.event.PInputEventFilter;
 import edu.umd.cs.piccolo.nodes.PText;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolox.swing.PScrollPane;
-import fing.model.FEdge;
-import fing.model.FNode;
 
 /**
  * HGVNetworkView is responsible for actually getting a graph to show up on the

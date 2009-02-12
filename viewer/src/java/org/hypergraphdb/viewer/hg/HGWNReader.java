@@ -18,8 +18,7 @@ import org.hypergraphdb.algorithms.HGBreadthFirstTraversal;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.util.HGUtils;
 import org.hypergraphdb.viewer.*;
-import fing.model.FEdge;
-import fing.model.FNode;
+
 
 
 /**

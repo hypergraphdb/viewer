@@ -1,10 +1,11 @@
 // $Id: Radial.java,v 1.1 2006/02/27 19:59:19 bizi Exp $
 package org.hypergraphdb.viewer.layout; 
 
-import fing.model.FEdge;
-import fing.model.FNode;
 import java.util.*;
 import java.awt.geom.*;
+
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
@@ -117,7 +118,7 @@ public class Radial implements Layout
 		GEM.rescalePositions(0.25, 0, locations);
 	}
 
-	private FNode getOpposite(FNode center, fing.model.FEdge e)
+	private FNode getOpposite(FNode center, org.hypergraphdb.viewer.FEdge e)
 	{
 		if (e.getSource().equals(center)) return e.getTarget();
 		return e.getSource();

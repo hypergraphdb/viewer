@@ -30,8 +30,6 @@ import org.hypergraphdb.viewer.view.GraphViewController;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 
 import phoebe.PGraphView;
-import fing.model.FEdge;
-import fing.model.FNode;
 
 /**
  * This class, HGVKit is <i>the</i> primary class in the API.

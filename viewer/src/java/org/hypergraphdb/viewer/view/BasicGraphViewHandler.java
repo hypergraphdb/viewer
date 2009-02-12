@@ -34,14 +34,14 @@ package org.hypergraphdb.viewer.view;
 
 import java.util.*;
 
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
 
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
-import fing.model.FEdge;
-import fing.model.FNode;
 
 /**
  * A basic <code>GraphViewHandler</code> that simply reflects <code>GraphPerspective</code>

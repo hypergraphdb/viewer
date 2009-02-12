@@ -1,8 +1,10 @@
 package org.hypergraphdb.viewer.foo;
 
 import java.util.Iterator;
-import fing.model.FEdge;
-import fing.model.FNode;
+
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
+
 
 
 /**

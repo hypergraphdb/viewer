@@ -1,7 +1,6 @@
 package org.hypergraphdb.viewer.dialogs;
 
 import phoebe.*;
-import fing.model.FNode;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,6 +11,8 @@ import java.util.List;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.colorchooser.*;
+
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetworkView;
 
 /**

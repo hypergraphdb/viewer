@@ -7,8 +7,9 @@ package org.hypergraphdb.viewer.data;
 //---------------------------------------------------------------------------
 import java.util.Set;
 
-import fing.model.FEdge;
-import fing.model.FNode;
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
+
 //---------------------------------------------------------------------------
 /**
  * Events that are fired when the flagged state of a FNode or FEdge, or a group

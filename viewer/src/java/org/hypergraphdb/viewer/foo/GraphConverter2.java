@@ -1,12 +1,12 @@
 package org.hypergraphdb.viewer.foo;
 
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
-import fing.model.FEdge;
-import fing.model.FNode;
 
 import java.awt.geom.Point2D;
 import java.util.Iterator;

@@ -5,9 +5,9 @@ import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Stroke;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.LineType;
-import fing.model.FNode;
 import phoebe.PNodeView;
 import phoebe.util.PLabel;
 
