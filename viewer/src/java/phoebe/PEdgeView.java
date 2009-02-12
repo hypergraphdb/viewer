@@ -4,14 +4,15 @@ import edu.umd.cs.piccolo.*;
 import edu.umd.cs.piccolo.nodes.*;
 import edu.umd.cs.piccolo.util.*;
 import edu.umd.cs.piccolox.util.*;
-import fing.model.FEdge;
-import fing.model.FNode;
 import phoebe.event.*;
 import phoebe.util.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.beans.*;
 import java.util.*;
+
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 
 /**
  * This class extends a PNode and does most of what PPath would do but lets the

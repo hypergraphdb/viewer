@@ -6,13 +6,15 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.GeneralPath;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import org.hypergraphdb.viewer.FNode;
+
 import phoebe.util.PLabel;
 import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolo.util.PBounds;
-import fing.model.FNode;
 
 /**
  * @author Rowan Christmas

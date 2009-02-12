@@ -1,10 +1,10 @@
 package phoebe;
 
-import fing.model.FEdge;
-import fing.model.FNode;
 import java.util.*;
 import java.awt.Paint;
 
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.util.PrimeFinder;
 
