@@ -1,16 +1,12 @@
 package org.hypergraphdb.viewer.actions;
 
 import java.awt.event.ActionEvent;
-import javax.swing.*;
-import java.awt.event.*;
-import javax.swing.event.*;
 
 import java.awt.Dimension;
 import phoebe.event.BirdsEyeView;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 import java.beans.*;
 

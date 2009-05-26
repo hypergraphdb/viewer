@@ -1,15 +1,7 @@
 package phoebe.event;
 
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
-import java.util.Random;
-
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 
 
 import edu.umd.cs.piccolo.*;
@@ -17,21 +9,14 @@ import edu.umd.cs.piccolo.nodes.*;
 import edu.umd.cs.piccolox.nodes.*;
 import edu.umd.cs.piccolo.event.*;
 import edu.umd.cs.piccolo.util.*;
-import edu.umd.cs.piccolox.PFrame;
-import edu.umd.cs.piccolox.handles.*;
-import edu.umd.cs.piccolox.util.*;
-import edu.umd.cs.piccolox.event.*;
-import edu.umd.cs.piccolo.activities.PActivity;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.VetoableChangeListener;
-import javax.swing.*;
 import edu.umd.cs.piccolox.util.PFixedWidthStroke;
 /**
  * The Birds Eye View Class
  */
-public class BirdsEyeView extends PCanvas 
-  implements PropertyChangeListener  {
+public class BirdsEyeView extends PCanvas implements PropertyChangeListener  {
 
   /**
    * This is the node that shows the viewed area.

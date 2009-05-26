@@ -1,8 +1,6 @@
 package org.hypergraphdb.viewer;
 
-import edu.umd.cs.piccolo.util.PBounds;
 import java.awt.Component;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
 import org.hypergraphdb.HGHandle;
@@ -78,6 +76,7 @@ public class HGViewer implements Serializable
 		HGVComponent c = view.getComponent();
 		c.setPreferredSize(new java.awt.Dimension(600,400));
 		c.putClientProperty("HG_VIEWER", this);
+		c.view = this;
 		layout();
 		view.redrawGraph();
 		FNode node = HGVKit.getHGVNode(handle, false); 
