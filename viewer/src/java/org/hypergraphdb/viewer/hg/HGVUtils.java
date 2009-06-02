@@ -122,7 +122,7 @@ public class HGVUtils
 			}
 		if(!confirmExpanding(in_links.size() + out_links.length)) return;
 		expandLinks(view, node, out_links, false);
-		expandLinks(view, node, in_links.toArray(new HGHandle[0]), true);
+		expandLinks(view, node, in_links.toArray(new HGHandle[in_links.size()]), true);
 		view.redrawGraph();
 	}
 	
