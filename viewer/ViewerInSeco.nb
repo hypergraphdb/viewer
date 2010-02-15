@@ -1,18 +1,18 @@
-<notebook title="" engine="beanshell">
-    <cell-style bgColor="255,204,102"/>
+<notebook title="/home/borislav/hypergraphdb/viewer/ViewerInSeco.nb">
     <output-cell-style borderColor="255,255,255" fgColor="0,128,0"/>
-    <cell-group index="0">
-        <cell index="1" html-preview="true" engine="html">
-            <data><![CDATA[<h2 style="text-align:center;">Working with HyperGraph and HGViewer in Scriba
+    <cell-style bgColor="255,204,102"/>
+    <cell-group name="CG7">
+        <cell html-preview="true">
+            <data><![CDATA[
+<h2 style="text-align:center;">Working with HyperGraph and HGViewer in Seco
 </h2>
-<p style="text-align:left;">This is a short step-by-step tutorial describing some uses of HGViewer in Scriba. First let's write few import statements that we'll need later on and open an empty HyperGraph.
-</p>
-]]>            </data>
+<p style="text-align:left;">This is a short step-by-step tutorial describing some uses of HGViewer in Seco. First let's write few import statements that we'll need later on and open an empty HyperGraph.
+</p>]]>            </data>
         </cell>
 
     </cell-group>
-    <cell-group index="2">
-        <cell index="3">
+    <cell-group name="CG8">
+        <cell>
             <data><![CDATA[import org.hypergraphdb.*;
 import org.hypergraphdb.query.*; 
 import org.hypergraphdb.viewer.*;
@@ -24,105 +24,91 @@ import org.hypergraphdb.atom.*;
 import org.hypergraphdb.viewer.visual.*;
 import org.hypergraphdb.viewer.actions.*;
 
-hg = new org.hypergraphdb.HyperGraph("c:/tmp/graphs/wordnet");
-]]>            </data>
-            <output-cell>
-                <data><![CDATA[org.hypergraphdb.HyperGraph@afccbe
-]]>                </data>
-            </output-cell>
-        </cell>
-
-    </cell-group>
-    <cell-group index="4">
-        <cell index="5" html-preview="true" engine="html">
-            <data><![CDATA[<p>Next we'll create the HGViewer component, the depth of displayed HyperGraph elements and the handle to focus around. In this case this will be the Top handle.
-</p>
+graph = new org.hypergraphdb.HyperGraph("/tmp/hgviewer");
 ]]>            </data>
         </cell>
 
     </cell-group>
-    <cell-group index="6">
-        <cell index="8">
-            <data><![CDATA[comp = new HGViewer(hg);
-h = hg.getTypeSystem().getTypeHandle(Top.class);
+    <cell-group name="CG9">
+        <cell html-preview="true">
+            <data><![CDATA[
+<p>Next we'll create the HGViewer component, the depth of displayed HyperGraph elements and the handle to focus around. In this case this will be the Top handle.
+</p>]]>            </data>
+        </cell>
+
+    </cell-group>
+    <cell-group name="CG10">
+        <cell>
+            <data><![CDATA[comp = new HGViewer(graph);
+h = graph.getTypeSystem().getTypeHandle(Top.class);
 comp.setDepth(5);
 comp.focus(h);
 ]]>            </data>
         </cell>
 
     </cell-group>
-    <cell index="9" html-preview="true" engine="html">
-        <data><![CDATA[<p>
-  <span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
+    <cell html-preview="true">
+        <data><![CDATA[
+<p>
+  <span style="font-family:Dialog; font-style:normal; font-size:14; color:#000000;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
 </p>
 <ul>
-  <li><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Right Mouse Button Down + Drag Up = Zoom In</span>  
+  <li><span style="font-family:Dialog; font-style:normal; font-size:14; color:#000000;">Right Mouse Button Down + Drag Up = Zoom In</span>  
   </li>
-  <li><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Right Mouse Button Down + Drag Down = Zoom Out</span>  
+  <li><span style="font-family:Dialog; font-style:normal; font-size:14; color:#000000;">Right Mouse Button Down + Drag Down = Zoom Out</span>  
   </li>
-  <li><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Ctrl + F = View is scaled to display all presented nodes</span>  
+  <li><span style="font-family:Dialog; font-style:normal; font-size:14; color:#000000;">Ctrl + F = View is scaled to display all presented nodes</span>  
   </li>
-  <li><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">Ctrl + 1...4 Different layouts&#160;</span>  
+  <li><span style="font-family:Dialog; font-style:normal; font-size:14; color:#000000;">Ctrl + 1...4 Different layouts&#160;</span>  
   </li>
 </ul>
-<p><span style="font-family:Dialog; color:#000000; font-style:normal; font-size:14;">To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.</span>
-</p>
-]]>        </data>
+<p><span style="font-family:Dialog; font-style:normal; font-size:14; color:#000000;">To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.</span>
+</p>]]>        </data>
     </cell>
-    <cell index="10">
+    <cell>
         <data><![CDATA[list = HGVKit.getCurrentView().getSelectedNodes(); 
 node = list.get(0);
 hh = node.getNode().getHandle();
-hg.get(hh)
-]]>        </data>
-        <output-cell>
-            <data><![CDATA[org.hypergraphdb.type.javaprimitive.ByteType@1f3eab7
-]]>            </data>
-        </output-cell>
-    </cell>
-    <cell index="28" html-preview="true" engine="html">
-        <data><![CDATA[At this point the nodes in the viewer should look pretty ugly. So let's make them look better (For more information on painters and styles you could look at &quot;Painters And Styles.nb&quot;). We define few generic painters which are responsible for drawing the nodes of a given type.
+graph.get(hh)
 ]]>        </data>
     </cell>
-    <cell index="12">
+    <cell html-preview="true">
+        <data><![CDATA[At this point the nodes in the viewer should look pretty ugly. So let's make them look better (For more information on painters and styles you could look at &quot;Painters And Styles.nb&quot;). We define few generic painters which are responsible for drawing the nodes of a given type.]]>        </data>
+    </cell>
+    <cell>
         <data><![CDATA[//helper function for adding generic painters  
-public NodePainter makePainter(HyperGraph hg, Class cls, HGViewer view)
+public NodePainter makePainter(HyperGraph graph, Class cls, HGViewer view)
 {
     painter = new DefaultNodePainter();
-    typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(cls));
+    typeH = graph.getPersistentHandle(graph.getTypeSystem().getTypeHandle(cls));
     comp.setPainter(typeH, painter);
     return painter;
 }
 //adding generic and persistent painters 
-painter = makePainter(hg, HGSubsumes.class, comp);
+painter = makePainter(graph, HGSubsumes.class, comp);
 painter.setColor(Color.LIGHT_GRAY);
 painter.setShape(Shape.ROUND_RECT);
 //this is a very simple predefined painter, which returns the simple class name as a label and full class name as tooltip
 painter1 = new SimpleLabelTooltipNodePainter(); 
-typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(Top.class));
+typeH = graph.getPersistentHandle(graph.getTypeSystem().getTypeHandle(Top.class));
 painter1.setColor(Color.RED);
 painter1.setShape(Shape.DIAMOND);
 comp.setPainter(typeH, painter1);
 ]]>        </data>
-        <output-cell>
-            <data><![CDATA[null
-]]>            </data>
-        </output-cell>
     </cell>
-    <cell-group index="13">
-        <cell index="51" html-preview="true" engine="html">
-            <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
-]]>            </data>
+    <cell-group name="CG11">
+        <cell html-preview="true">
+            <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.]]>            </data>
         </cell>
-        <cell index="52">
+        <cell>
             <data><![CDATA[comp.setDepth(1);
 comp.refresh();
 ]]>            </data>
         </cell>
 
     </cell-group>
-    <cell-group index="53">
-        <cell index="54">
+    <cell-group name="CG12">
+        <cell>
             <data><![CDATA[mypainter =new org.hypergraphdb.viewer.painter.NodePainter()
 {
     public void paintNode(phoebe.PNodeView nodeView, org.hypergraphdb.viewer.HGVNetworkView network_view)
@@ -131,69 +117,33 @@ comp.refresh();
     } 
 }
 ]]>            </data>
-            <output-cell>
-                <data><![CDATA['this' reference (XThis) to Bsh object: NameSpace: AnonymousBlock (bsh.NameSpace@b27de5)
-implements: org.hypergraphdb.viewer.painter.NodePainter
-]]>                </data>
-            </output-cell>
         </cell>
 
     </cell-group>
-    <cell-group index="55">
-        <cell index="56">
-            <data><![CDATA[typeH = hg.getPersistentHandle(hg.getTypeSystem().getTypeHandle(Top.class));
+    <cell-group name="CG13">
+        <cell>
+            <data><![CDATA[typeH = graph.getPersistentHandle(graph.getTypeSystem().getTypeHandle(Top.class));
 comp.setPainter(typeH, mypainter);
 ]]>            </data>
-            <output-cell>
-                <data><![CDATA[null
-]]>                </data>
-            </output-cell>
         </cell>
         <cell>
             <data><![CDATA[comp.setDefaultNodePainter(mypainter)
 ]]>            </data>
-            <output-cell>
-                <data><![CDATA[null
-]]>                </data>
-            </output-cell>
         </cell>
         <cell>
             <data><![CDATA[import org.hypergraphdb.app.wordnet.data.Word;
 ]]>            </data>
-            <output-cell>
-                <data><![CDATA[null
-]]>                </data>
-            </output-cell>
         </cell>
         <cell>
-            <data><![CDATA[comp.focus(HGQuery.hg.findOne(hg, new And(HGQuery.hg.type(Word.class), HGQuery.hg.eq("lemma", "table"))))
+            <data><![CDATA[comp.focus(HGQuery.hg.findOne(graph, new And(HGQuery.hg.type(Word.class), HGQuery.hg.eq("lemma", "table"))))
 ]]>            </data>
-            <output-cell>
-                <data><![CDATA[
-]]>                </data>
-            </output-cell>
         </cell>
 
     </cell-group>
-    <cell-group index="57">
-        <cell index="58">
-            <data><![CDATA[hg.close()
-]]>            </data>
-            <output-cell>
-                <data><![CDATA[null
-]]>                </data>
-            </output-cell>
-        </cell>
-
-    </cell-group>
-    <cell-group index="61">
-        <cell index="62">
+    <cell-group name="CG15">
+        <cell>
             <data><![CDATA[comp.getView().setZoom(2)
 ]]>            </data>
-            <output-cell>
-                <data><![CDATA[null
-]]>                </data>
-            </output-cell>
         </cell>
 
     </cell-group>
