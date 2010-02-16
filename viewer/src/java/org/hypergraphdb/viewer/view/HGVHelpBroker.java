@@ -17,16 +17,16 @@ public class HGVHelpBroker {
 
     hb = null;
     hs = null;
-    URL hsURL = getClass().getResource("/org/hypergraphdb/viewer/help/org.hypergraphdb.viewer.hs");
-
-    ClassLoader cl = HGVKit.class.getClassLoader();
-    try {
-	hs = new HelpSet(null, hsURL);
-	hb = hs.createHelpBroker();
-    } catch (Exception e) {
-	System.out.println("HelpSet " + e.getMessage());
-	System.out.println("HelpSet " + hs + " not found.");
-    }
+//    URL hsURL = getClass().getResource("/org/hypergraphdb/viewer/help/org.hypergraphdb.viewer.hs");
+//
+//    ClassLoader cl = HGVKit.class.getClassLoader();
+//    try {
+//	hs = new HelpSet(null, hsURL);
+//	hb = hs.createHelpBroker();
+//    } catch (Exception e) {
+//	System.out.println("HelpSet " + e.getMessage());
+//	System.out.println("HelpSet " + hs + " not found.");
+//    }
   }
 
   public HelpBroker getHelpBroker() { return hb; }
