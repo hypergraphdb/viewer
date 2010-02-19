@@ -6,19 +6,15 @@
 package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import java.util.List;
-import java.util.Vector;
-import java.util.Set;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Set;
 
-import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 /**
  *  select every first neighbor (directly connected nodes) of the currently
@@ -36,7 +32,7 @@ public class SelectFirstNeighborsAction extends HGVAction {
       Set<FNode> set = net.getFlagger().getFlaggedNodes();
       Set<FNode> new_set = new HashSet<FNode>();
       for (FNode o: set){
-    	 FEdge[] ids  = net.getAdjacentEdges(o, true, true, true);
+    	 FEdge[] ids  = net.getAdjacentEdges(o, true, true);
     	 for(int i = 0; i < ids.length; i++){
     		 FEdge edge = ids[i];
     		 //System.out.println("E:" + edge + ":" + ((FEdge)edge).getTarget());

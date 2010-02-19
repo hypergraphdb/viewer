@@ -132,22 +132,14 @@ public class HGVUtils
 		for(int i = 0; i < links.length; i++){
 			FNode n = HGVKit.getHGVNode(links[i], true);
 			view.getNetwork().addNode(n);
-			//TODO:??? add getNodeView(n, boolean create)
 			PNodeView v = view.getNodeView(n);
-			if(v == null) {
-				view.addNodeView(n);
-				v = view.getNodeView(n);
-			}
-			view.showGraphObject(v);
+			if(v == null) 
+				v = view.addNodeView(n);
 			FEdge e = (incoming) ? HGVKit.getHGVEdge(links[i], node.getHandle()) :
 				HGVKit.getHGVEdge(node.getHandle(), links[i]);
 			view.getNetwork().addEdge(e);
-			PEdgeView ev = view.getEdgeView(e);
-			if(v == null) {
-				view.addEdgeView(e);
-				ev = view.getEdgeView(e);
-			}
-			view.showGraphObject(ev);
+			if(view.getEdgeView(e) == null)
+			   view.addEdgeView(e);
 		}
 	}
 	
@@ -206,16 +198,13 @@ public class HGVUtils
 		HGVNetwork net = view.getNetwork();
 		
 		Set<FNode> nodesToRemove = new HashSet<FNode>();
-		if( remove_center_too)	nodesToRemove.add(node);
 		Set<FEdge> edgesToRemove = new HashSet<FEdge>();
-		FEdge[] edges = net.getAdjacentEdges(
-				node, true, true, true);
+		FEdge[] edges = net.getAdjacentEdges(node, true, true);
 		for(int i = 0; i < edges.length; i++)
 		{
 			FEdge e = edges[i];
 			FNode out = getOppositeNode(node, e);
-			FEdge[] in_edges = net.getAdjacentEdges(
-					out, true, true, true);
+			FEdge[] in_edges = net.getAdjacentEdges(out, true, true);
 			if( in_edges.length <= 1)
 			{
 				nodesToRemove.add(out);
@@ -228,14 +217,17 @@ public class HGVUtils
 		for(FEdge edge: edgesToRemove)
 		{
 			//view.removeEdgeView(edge);
-			net.removeEdge(edge);
+		    net.removeEdge(edge);
 		}
+		if( remove_center_too)    
+		    //view.removeNodeView(node);
+		    net.removeNode(node);
+		
 		for(FNode n: nodesToRemove)
 		{
-		   //view.removeNodeView(n);
-		   //removeNode(hg, n, true);
-		   net.removeNode(n);
-		}
+		  // view.removeNodeView(n);
+		   removeNode(hg, n, true);
+	    }
 	}
 
 	public static FNode getOppositeNode(FNode center, FEdge e)

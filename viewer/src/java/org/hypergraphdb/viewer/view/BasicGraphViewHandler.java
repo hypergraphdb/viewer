@@ -372,7 +372,7 @@ public class BasicGraphViewHandler implements GraphViewHandler
   //  }
     //Iterator it = childGP.nodesIterator(); 
     
-    FEdge[] children = gp.getAdjacentEdges(node, true, true, true);
+    FEdge[] children = gp.getAdjacentEdges(node, true, true);
     double x = 0.0;
     double y = 0.0;
     double viewableChildren = 0;

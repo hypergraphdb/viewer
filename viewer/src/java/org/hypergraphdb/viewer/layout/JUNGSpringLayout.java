@@ -65,11 +65,8 @@ public class JUNGSpringLayout extends AbstractLayout
 			advancePositions();
 			// System.out.println( increment +" "+getStatus() );
 		}
-		Iterator<PNodeView> nodes = graphView.getNodeViewsIterator();
-		while (nodes.hasNext())
-		{
-			nodes.next().setNodePosition(true);
-		}
+		for (PNodeView n : graphView.getNodeViews())
+			n.setNodePosition(true);
 	}
 
 	protected void initialize_local()
@@ -109,9 +106,8 @@ public class JUNGSpringLayout extends AbstractLayout
 	public void advancePositions()
 	{
 		increment++;
-		for (Iterator<PNodeView> iter = graphView.getNodeViewsIterator(); iter.hasNext();)
+		for (PNodeView v : graphView.getNodeViews())
 		{
-			PNodeView v = iter.next();
 			SpringVertexData svd = getSpringData(v);
 			if (svd == null)
 			{
@@ -154,9 +150,9 @@ public class JUNGSpringLayout extends AbstractLayout
 			// System.out.println("Desired : " + getLength( e ));
 			double f = FORCE_CONSTANT * (desiredLen - len) / len;
 			int deg1 = graphView.getNetwork().getAdjacentEdges(
-					  source_index, true, true, true).length;
+					  source_index, true, true).length;
 			int deg2 = graphView.getNetwork().getAdjacentEdges(
-					target_index, true, true, true).length;
+					target_index, true, true).length;
 			f = f
 					* Math.pow(STRETCH / 100.0, (deg1
 							+ deg2 - 2));
@@ -178,16 +174,13 @@ public class JUNGSpringLayout extends AbstractLayout
 
 	private void calculateRepulsion()
 	{
-		for (Iterator<PNodeView> iter = graphView.getNodeViewsIterator(); iter.hasNext();)
+		for (PNodeView v : graphView.getNodeViews())
 		{
-			PNodeView v = iter.next();
 			if (dontMove(v)) continue;
 			SpringVertexData svd = getSpringData(v);
 			double dx = 0, dy = 0;
-			for (Iterator<PNodeView> iter2 = graphView.getNodeViewsIterator(); iter2
-					.hasNext();)
+			for (PNodeView v2 : graphView.getNodeViews())
 			{
-				PNodeView v2 = iter2.next();
 				if (v == v2) continue;
 				double v_x = graphView.getNodeDoubleProperty(v.getNode(), PGraphView.NODE_X_POSITION);
 				double v_y = graphView.getNodeDoubleProperty(v.getNode(), PGraphView.NODE_Y_POSITION);
@@ -221,9 +214,8 @@ public class JUNGSpringLayout extends AbstractLayout
 	{
 		synchronized (getCurrentSize())
 		{
-			for (Iterator<PNodeView> i = graphView.getNodeViewsIterator(); i.hasNext();)
+			for (PNodeView v : graphView.getNodeViews())
 			{
-				PNodeView v = i.next();
 				if (dontMove(v)) continue;
 				SpringVertexData vd = getSpringData(v);
 				double v_x = graphView.getNodeDoubleProperty(v.getNode(), PGraphView.NODE_X_POSITION);

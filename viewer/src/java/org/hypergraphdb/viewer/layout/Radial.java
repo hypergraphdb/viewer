@@ -102,10 +102,8 @@ public class Radial implements Layout
 		if(node_indicies.size() > 0)
 			center_view = (node_indicies.get(0));
 		done = false;
-		Iterator<PNodeView> it = view.getNodeViewsIterator();
-		while (it.hasNext())
+		for(PNodeView n : view.getNodeViews())
 		{
-			PNodeView n = it.next();
 			//if no center is specified, take the first view from the list
 			if(center_view == null)
 				center_view = n;
@@ -129,7 +127,7 @@ public class Radial implements Layout
 		HGVNetwork net = HGVKit.getCurrentNetwork();
 		Set<FEdge> totalEdges = new HashSet<FEdge>();
 		FEdge[] e = net.getAdjacentEdges(
-				node, true, true, true);
+				node, true, true);
 		for (int i = 0; i < e.length; i++)
 			totalEdges.add(e[i]);
 		return totalEdges;
@@ -190,10 +188,8 @@ public class Radial implements Layout
 		}
 		seen.clear();
 		layerDistance = 10;
-		Iterator<PNodeView> it = HGVKit.getCurrentView().getNodeViewsIterator();
-		while (it.hasNext())
+		for (PNodeView n : HGVKit.getCurrentView().getNodeViews())
 		{
-			PNodeView n = it.next();
 			if(n != null)
 			  layerDistance = Math.max(layerDistance, 
 					           (n.getWidth()+ n.getHeight()) * 2);
@@ -225,10 +221,8 @@ public class Radial implements Layout
 					rho, alpha1, alpha2, baseX);
 			alpha1 = alpha2;
 		}
-		it = HGVKit.getCurrentView().getNodeViewsIterator();
-		while (it.hasNext())
+		for (PNodeView n : HGVKit.getCurrentView().getNodeViews())
 		{
-			PNodeView n = (PNodeView) it.next();
 			if(n == null) continue;
 			Point2D loc = (Point2D) coords.get(n.getNode());
 			if (loc != null)

@@ -38,9 +38,11 @@ import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
 
+import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
 
-public class GraphViewController 
-  implements org.hypergraphdb.viewer.event.HGVNetworkChangeListener{
+
+public class GraphViewController implements HGVNetworkChangeListener
+{
   
   protected Map<HGVNetworkView, GraphViewHandler> graphViewToHandler;  // a map of GraphViews to GraphViewHandlers
   public static final GraphViewHandler DEFAULT_GRAPH_VIEW_HANDLER =
@@ -77,7 +79,7 @@ public class GraphViewController
    * <code>giny.view.GraphView</code>
    */
   public GraphViewHandler getGraphViewHandler (HGVNetworkView graph_view){
-    return (GraphViewHandler)this.graphViewToHandler.get(graph_view);
+    return graphViewToHandler.get(graph_view);
   }//getGraphViewHandler
   
   /**
@@ -189,69 +191,7 @@ public class GraphViewController
     return this.graphViewToHandler.containsKey(graph_view);
   }//containsGraphView
 
-  /**
-   * It temporarily removes this <code>GraphViewController</code> as a listener for
-   * all <code>giny.model.GraphPerspective</code> objects that it currently
-   * listens to
-   *
-   * @see #resumeListening() resumeListening
-   */
-  public void stopListening (){
-	  HGVNetworkView [] graphViews = getGraphViews();
-    for(int i = 0; i < graphViews.length; i++){
-    	HGVNetwork graphPerspective = graphViews[i].getNetwork();
-      graphPerspective.removeHGVNetworkChangeListener(this);
-    }//for i
-  }//stopListening
-  
-  /**
-   * It temporarily removes this <code>GraphViewController</code> listener
-   * from the <code>giny.model.GraphPerspective</code> object that the given
-   * <code>giny.view.GraphView</code> views.
-   *
-   * @see #resumeListening(GraphView)
-   */
-  // TODO: Catch all change events even of stopListening has been called, and when
-  // listening is resumed, update the graph view
-  public void stopListening (HGVNetworkView graph_view){
-	  HGVNetwork graphPerspective = graph_view.getNetwork();
-    graphPerspective.removeHGVNetworkChangeListener(this);
-  }//stopListening
-  
-  /**
-   * It adds this <code>GraphViewController</code> as a listener for
-   * all <code>giny.model.GraphPerspective</code> that were temporarily
-   * "removed" by calling <code>stopListening()</code>, it updates the <code>GraphViews</code>
-   * of the <code>GraphPerspectives</code> so that they are synchronized to reflect changes that
-   * may have occured while not listening.
-   *
-   * @see #stopListening() stopListening
-   */
-  public void resumeListening (){
-	HGVNetworkView [] graphViews = getGraphViews();
-    for(int i = 0; i < graphViews.length; i++){
-    	HGVNetwork graphPerspective = graphViews[i].getNetwork();
-      GraphViewHandler handler = (GraphViewHandler)this.graphViewToHandler.get(graphViews[i]);
-      //handler.updateGraphView(graphViews[i]);
-      graphPerspective.addHGVNetworkChangeListener(this);
-    }//for i
-  }//resumeListening
-
-  /**
-   * It adds this <code>GraphViewController</code> listener to the
-   * <code>giny.model.GraphPerspective</code> of the given <code>giny.view.GraphView</code>
-   * that was temporarily "removed" by a call to <code>stopListening(GraphView)</code>, it updates
-   * <code>graph_view</code> so that it's synchronized to its <code>GraphPerspective</code> 
-   * due to changes that may have occured while not listening.
-   *
-   * @see #stopListening(GraphView)
-   */
-  public void resumeListening (HGVNetworkView graph_view){
-    GraphViewHandler handler = (GraphViewHandler)this.graphViewToHandler.get(graph_view);
-    //handler.updateGraphView(graph_view);
-    HGVNetwork graphPerspective = graph_view.getNetwork();
-    graphPerspective.addHGVNetworkChangeListener(this);
-  }//resumeListening
+   
   
   /**
    * Invoked when a graph change to any of the <code>giny.model.GraphPerspective</code>

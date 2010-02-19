@@ -155,25 +155,50 @@ public class HGVNetwork
 		return true;
 	}
 
-	public FEdge[] getAdjacentEdges(FNode node, boolean undirected,
-			boolean incomingDirected, boolean outgoingDirected) {
-		if (node == null)
-			return new FEdge[0];
+	public FEdge[] getAdjacentEdges(FNode node, 
+			boolean incoming, boolean outgoing)
+	{
+		if (node == null || !nodes.contains(node))	return new FEdge[0];
 		HGHandle nH = node.getHandle();
 		IncidenceSet handles = hg.getIncidenceSet(node.getHandle());
 		Set<FEdge> res = new HashSet<FEdge>();
-		for (HGHandle h : handles) {
-			FEdge e = new FEdge(node, new FNode(h));
-			if (edges.contains(e))
-				res.add(e);
+		for (HGHandle h : handles) 
+		{
+		    FNode incNode = new FNode(h);
+		    if (!nodes.contains(incNode)) continue;
+		    if(outgoing)
+		    {
+			   FEdge e = new FEdge(node, incNode);
+			   if (edges.contains(e))
+				   res.add(e);
+			}
+		    
+		    if(incoming)
+            {
+               FEdge e = new FEdge(incNode, node);
+               if (edges.contains(e))
+                   res.add(e);
+            }
 		}
 		Object o = hg.get(nH);
 		if (o instanceof HGLink) {
 			HGLink link = ((HGLink) o);
-			for (int i = 0; i > link.getArity(); i++) {
-				FEdge e = new FEdge(new FNode(link.getTargetAt(i)), node);
-				if (edges.contains(e))
-					res.add(e);
+			for (int i = 0; i < link.getArity(); i++) 
+			{
+			    FNode incNode = new FNode(link.getTargetAt(i));
+			    if (!nodes.contains(incNode)) continue;
+			    if(outgoing)
+	            {
+				   FEdge e = new FEdge(incNode, node);
+				   if (edges.contains(e))
+					   res.add(e);
+				}
+			    if(incoming)
+                {
+                   FEdge e = new FEdge(node, incNode);
+                   if (edges.contains(e))
+                       res.add(e);
+                }
 			}
 		}
 		return res.toArray(new FEdge[res.size()]);

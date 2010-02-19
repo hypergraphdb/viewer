@@ -2,7 +2,6 @@ package org.hypergraphdb.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,9 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -24,6 +23,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
@@ -31,10 +31,12 @@ import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.painter.SimpleLabelTooltipNodePainter;
 import org.hypergraphdb.viewer.util.PrimeFinder;
+import org.hypergraphdb.viewer.view.ContextMenuHelper;
 import org.hypergraphdb.viewer.view.FlagAndSelectionHandler;
 import org.hypergraphdb.viewer.view.HGVMenus;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import org.hypergraphdb.viewer.visual.ui.DropDownButton;
+
 import phoebe.PEdgeView;
 import phoebe.PGraphView;
 import phoebe.PNodeView;
@@ -42,9 +44,7 @@ import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PLayer;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
-import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.event.PInputEventFilter;
-import edu.umd.cs.piccolo.nodes.PText;
 import edu.umd.cs.piccolo.util.PPaintContext;
 import edu.umd.cs.piccolox.swing.PScrollPane;
 
@@ -191,34 +191,6 @@ public class HGVNetworkView extends PGraphView
 		return toolbar;
 	}
 	
-	private static DropDownButton createDropDown(JToolBar toolbar, 
-			final JMenu m, final String name, String tooltip){
-		DropDownButton dropdown = new DropDownButton() {
-			protected JPopupMenu getPopupMenu()
-			{
-				JPopupMenu popup = new JPopupMenu();
-				for(final Component c : m.getMenuComponents())
-				{
-					if(c instanceof JMenuItem && ((JMenuItem) c).getAction() != null)
-						popup.add(new JMenuItem(((JMenuItem) c).getAction()));
-					else if(c instanceof JMenu){
-						JMenu menu = new JMenu(((JMenu) c).getText()); 
-						for(Component cc: ((JMenu) c).getMenuComponents())
-							if(cc instanceof JMenuItem && ((JMenuItem) cc).getAction() != null)
-								menu.add(new JMenuItem(((JMenuItem) cc).getAction()));
-						popup.add(menu);
-					}
-				}
-				return popup;
-			}
-		};
-		dropdown.addToToolBar(toolbar);
-		dropdown.putClientProperty("hideActionText", Boolean.TRUE);
-	    dropdown.setAction(createDummyAction(name));
-	    dropdown.setToolTipText(tooltip);
-	    return dropdown;
-	} 
-
 	protected void initialize()
 	{
 		// setup the StatusLabel
@@ -253,151 +225,18 @@ public class HGVNetworkView extends PGraphView
 		disableEdgeSelection();
 		flagAndSelectionHandler = new FlagAndSelectionHandler(
 				getNetwork().getFlagger(), this);
-		// TODO:
-		// Add NetworkView specific ToolBars
-		this.addContextMethod("phoebe.PNodeView",
-						"org.hypergraphdb.viewer.giny.ContextMenuHelper",
-						"expandNodeAction", new Class[] {}, getClass()
-								.getClassLoader());
-		this.addContextMethod("phoebe.PNodeView",
-				"org.hypergraphdb.viewer.giny.ContextMenuHelper",
-				"collapseNodeAction", new Class[] {}, getClass()
-						.getClassLoader());
-		this.addContextMethod("phoebe.PNodeView",
-				"org.hypergraphdb.viewer.giny.ContextMenuHelper",
-				"focusNodeAction", new Class[] {}, getClass()
-						.getClassLoader());
 	}
 
 	protected void initializeEventHandlers()
 	{
 		super.initializeEventHandlers();
-		keyEventHandler = new PBasicInputEventHandler() {
-			PText typeAheadNode = new PText();
-			// PPath background = new PPath();
-			StringBuffer typeBuffer = new StringBuffer();
-			int length = 0;
-			boolean space_down = false;
-			boolean slash_pressed = false;
-
-//			protected void selectAndZoom()
-//			{
-//				String search_string;
-//				if (length == 0)
-//				{
-//					search_string = "";
-//				} else
-//				{
-//					search_string = typeBuffer.toString() + "*";
-//				}
-//				GinyUtils.deselectAllNodes(HGVKit.getCurrentView());
-//				typeAheadNode.setText(typeBuffer.toString());
-//				HGVNetworkUtilities.selectNodesStartingWith(HGVKit
-//						.getCurrentNetwork(), search_string, HGVKit
-//						.getCurrentView());
-//				org.hypergraphdb.viewer.actions.ZoomSelectedAction
-//						.zoomSelected();
-//			}
-
-			protected void resetFind()
-			{
-				slash_pressed = false;
-				length = 0;
-				typeBuffer = new StringBuffer();
-				typeAheadNode.setText("");
-				getCanvas().getCamera().removeChild(typeAheadNode);
-			}
-
-			public void keyPressed(PInputEvent event)
-			{
-				// System.out.println( "Key Code Pressed: "+event.getKeyCode()
-				// );
-				// System.out.println( "Key text: "+KeyEvent.getKeyText(
-				// event.getKeyCode() ) );
-				if (event.getKeyCode() == KeyEvent.VK_SPACE)
-				{
-					space_down = true;
-					getCanvas().setCursor(
-							Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-					getCanvas().getPanEventHandler().setEventFilter(
-							new PInputEventFilter(InputEvent.BUTTON1_MASK));
-					if (nodeSelection)
-					{
-						getCanvas().removeInputEventListener(
-								getSelectionHandler());
-					}
-					if (edgeSelection)
-					{
-						getCanvas().removeInputEventListener(
-								getEdgeSelectionHandler());
-					}
-				} else if (!slash_pressed
-						&& event.getKeyCode() == KeyEvent.VK_SLASH)
-				{
-					// System.out.println( "start taf " );
-					slash_pressed = true;
-					getCanvas().getCamera().addChild(typeAheadNode);
-					typeAheadNode.setOffset(20, 20);
-					typeAheadNode.setPaint(new java.awt.Color(0f, 0f, 0f, .6f));
-					typeAheadNode.setTextPaint(java.awt.Color.white);
-					typeAheadNode.setFont(typeAheadNode.getFont().deriveFont(
-							30f));
-				}
-//				else if (slash_pressed
-//						&& event.getKeyCode() != KeyEvent.VK_ESCAPE
-//						&& event.getKeyCode() != KeyEvent.VK_BACK_SPACE)
-//				{
-//					// System.out.println( "Normal Press" );
-//					typeBuffer.append(KeyEvent.getKeyText(event.getKeyCode()));
-//					length++;
-//					selectAndZoom();
-//				} 
-			    else if (slash_pressed
-						&& event.getKeyCode() == KeyEvent.VK_ESCAPE)
-				{
-					// System.out.println( "ESCAPRE PRESSED" );
-					resetFind();
-				}
-//			    else if (slash_pressed
-//						&& event.getKeyCode() == KeyEvent.VK_BACK_SPACE)
-//				{
-//					// System.out.println( "back space: "+length+"
-//					// "+typeBuffer.toString() );
-//					if (length != 0)
-//					{
-//						typeBuffer.deleteCharAt(length - 1);
-//						length--;
-//					}
-//					selectAndZoom();
-//					return;
-//				}
-			}
-
-			public void keyReleased(PInputEvent event)
-			{
-				if (space_down)
-				{
-					space_down = false;
-					getCanvas().setCursor(
-							Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-					getCanvas().getPanEventHandler().setEventFilter(
-							new PInputEventFilter(InputEvent.BUTTON2_MASK));
-					if (nodeSelection)
-					{
-						getCanvas()
-								.addInputEventListener(getSelectionHandler());
-					}
-					if (edgeSelection)
-					{
-						getCanvas().addInputEventListener(
-								getEdgeSelectionHandler());
-					}
-				}
-			}
-		};
-		getCanvas().addInputEventListener(keyEventHandler);
-		getCanvas().getRoot().getDefaultInputManager().setKeyboardFocus(
-				keyEventHandler);
+		ContextMenuHelper ctxMenuHandler = new ContextMenuHelper(this);
+        ctxMenuHandler.setEventFilter(new PInputEventFilter(
+                InputEvent.BUTTON3_MASK));
+        getCanvas().addInputEventListener(ctxMenuHandler);
+        
+        getCanvas().getZoomEventHandler().getEventFilter().setAndMask(
+                InputEvent.BUTTON2_DOWN_MASK | InputEvent.SHIFT_MASK);
 	}
 
 	public void redrawGraph()
@@ -427,9 +266,8 @@ public class HGVNetworkView extends PGraphView
 	 */
 	public void applyNodeAppearances()
 	{
-		for (Iterator<PNodeView> i = getNodeViewsIterator(); i.hasNext();)
+		for (PNodeView nodeView : getNodeViews())
 		{
-			PNodeView nodeView = i.next();
 			if(nodeView == null)
 			{
 				System.out.println("VM - applyNodeAppearances - NULL NODE");
@@ -622,11 +460,36 @@ public class HGVNetworkView extends PGraphView
 		{
 			super.removeNotify();
 			removeFocusListener(this);
-			//HGVNetwork network = this.getView().getNetwork();
-			//HGVKit.getNetworkSet()
 		}
 	};
 
+	private static DropDownButton createDropDown(JToolBar toolbar, 
+            final JMenu m, final String name, String tooltip){
+        DropDownButton dropdown = new DropDownButton() {
+            protected JPopupMenu getPopupMenu()
+            {
+                JPopupMenu popup = new JPopupMenu();
+                for(final Component c : m.getMenuComponents())
+                {
+                    if(c instanceof JMenuItem && ((JMenuItem) c).getAction() != null)
+                        popup.add(new JMenuItem(((JMenuItem) c).getAction()));
+                    else if(c instanceof JMenu){
+                        JMenu menu = new JMenu(((JMenu) c).getText()); 
+                        for(Component cc: ((JMenu) c).getMenuComponents())
+                            if(cc instanceof JMenuItem && ((JMenuItem) cc).getAction() != null)
+                                menu.add(new JMenuItem(((JMenuItem) cc).getAction()));
+                        popup.add(menu);
+                    }
+                }
+                return popup;
+            }
+        };
+        dropdown.addToToolBar(toolbar);
+        dropdown.putClientProperty("hideActionText", Boolean.TRUE);
+        dropdown.setAction(createDummyAction(name));
+        dropdown.setToolTipText(tooltip);
+        return dropdown;
+    } 
 	private static Action createDummyAction(final String name)
 	{
 		return new AbstractAction(name) {

@@ -127,10 +127,8 @@ public class HierarchicalLayout implements Layout
                 nextNode++;
             }
         }
-        Iterator<PNodeView> iter = networkView.getNodeViewsIterator() ; /* all nodes */
-        while (iter.hasNext())
+        for (PNodeView nv: networkView.getNodeViews())
         {
-            PNodeView nv = iter.next();
             if (!ginyIndex2Index.containsKey(nv))
             {
                 nodeView[nextNode] = nv;

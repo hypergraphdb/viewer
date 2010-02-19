@@ -115,10 +115,8 @@ public class SpringEmbeddedLayout implements Layout
         //initialize the index map
         nodeIndexToMatrixIndexMap = new HashMap<PNodeView, Integer>();
         matrixIndexToNodeIndexMap = new TreeMap<Integer, PNodeView>();
-        Iterator<PNodeView> nodes = graphView.getNodeViewsIterator();
         int count=0;
-        while (nodes.hasNext()) {
-            PNodeView nodeView = nodes.next();
+        for (PNodeView nodeView: graphView.getNodeViews()) {
             nodeIndexToMatrixIndexMap.put(nodeView, new Integer(count));
             matrixIndexToNodeIndexMap.put(new Integer(count), nodeView);
             count++;
@@ -137,7 +135,7 @@ public class SpringEmbeddedLayout implements Layout
 
         List<PartialDerivatives> partials_list = new ArrayList<PartialDerivatives>();
         PotentialEnergy potential_energy = new PotentialEnergy();
-        PNodeView node_view;
+        
         PartialDerivatives partials;
         PartialDerivatives furthest_node_partials = null;
         double current_progress_temp;
@@ -153,10 +151,8 @@ public class SpringEmbeddedLayout implements Layout
             partials_list.clear();
 
             // Calculate all node distances.  Keep track of the furthest.
-            Iterator<PNodeView> node_views_iterator = graphView.getNodeViewsIterator();
-            while (node_views_iterator.hasNext()) {
-                node_view = node_views_iterator.next();
-
+            for (PNodeView node_view : graphView.getNodeViews())
+            {
                 partials = new PartialDerivatives(node_view);
                 calculatePartials(partials,
                         null,
@@ -319,7 +315,7 @@ public class SpringEmbeddedLayout implements Layout
 
         Iterator iterator;
         if (partials_list == null) {
-            iterator = graphView.getNodeViewsIterator();
+            iterator = graphView.getNodeViews().iterator();
         } else {
             iterator = partials_list.iterator();
         }

@@ -31,28 +31,45 @@
 package org.hypergraphdb.viewer.view;
 
 //------------------------------------------------------------------------------
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.MenuListener;
-import javax.swing.event.MenuEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.net.URL;
+
+import javax.help.CSH;
 import javax.help.HelpBroker;
-import javax.help.CSH.*;
-import javax.help.CSH; // Context Sensitive Help convenience object...
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.MenuElement;
+import javax.swing.SwingUtilities;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.actions.*;
-//import org.hypergraphdb.viewer.data.annotation.AnnotationGui;
-import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.util.CreditScreen;
+import org.hypergraphdb.viewer.actions.FitContentAction;
+import org.hypergraphdb.viewer.actions.HelpAboutAction;
+import org.hypergraphdb.viewer.actions.HideSelectedAction;
+import org.hypergraphdb.viewer.actions.LayoutsMenu;
+import org.hypergraphdb.viewer.actions.SelectionModeAction;
+import org.hypergraphdb.viewer.actions.ShowAllAction;
+import org.hypergraphdb.viewer.actions.SquiggleAction;
+import org.hypergraphdb.viewer.actions.ZoomAction;
+import org.hypergraphdb.viewer.actions.ZoomSelectedAction;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
-import org.hypergraphdb.viewer.hg.LoadHyperGraphFileAction;
-import org.hypergraphdb.viewer.hg.LoadWordNetAction;
-import java.net.URL;
-import org.hypergraphdb.viewer.beanshell.BeanShellAction;
 import org.hypergraphdb.viewer.util.RecentFilesProvider;
 
 //------------------------------------------------------------------------------
@@ -531,8 +548,7 @@ public class HGVMenus implements HGVNetworkChangeListener
 		editMenu.add(mi(ActionManager.PREFERENCES_ACTION));
 		// fill the Data menu
 		//dataMenu.add(mi(ActionManager.ADD_LINK_ACTION));
-		// addAction(new BeanShellAction());
-		// addAction(new RecordExplorerAction());
+	    // addAction(new RecordExplorerAction());
 		// fill the Select menu
 		selectMenu.add(new SelectionModeAction());
 		if (!HGVKit.isEmbeded())

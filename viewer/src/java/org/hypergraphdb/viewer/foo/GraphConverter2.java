@@ -41,13 +41,12 @@ public final class GraphConverter2 {
 		double minY = Double.MAX_VALUE;
 		double maxY = Double.MIN_VALUE;
 		final HGVNetworkView graphView = HGVKit.getCurrentView();
-		Iterator<PNodeView> it = graphView.getNodeViewsIterator();
-		while (it.hasNext()) {
-			PNodeView currentNodeView = it.next();
-			minX = Math.min(minX, currentNodeView.getXPosition());
-			maxX = Math.max(maxX, currentNodeView.getXPosition());
-			minY = Math.min(minY, currentNodeView.getYPosition());
-			maxY = Math.max(maxY, currentNodeView.getYPosition());
+		for (PNodeView currNodeView : graphView.getNodeViews())
+		{
+			minX = Math.min(minX, currNodeView.getXPosition());
+			maxX = Math.max(maxX, currNodeView.getXPosition());
+			minY = Math.min(minY, currNodeView.getYPosition());
+			maxY = Math.max(maxY, currNodeView.getYPosition());
 		}
 		final boolean noNodesSelected = (!onlySelectedNodesMovable)
 				|| (graphView.getSelectedNodes().size() == 0);

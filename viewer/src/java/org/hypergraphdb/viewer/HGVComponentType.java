@@ -36,7 +36,7 @@ public class HGVComponentType extends HGAtomTypeBase
 
     public HGPersistentHandle store(Object instance) 
     {       
-         HGAtomType stype = graph.getTypeSystem().getAtomType(String.class);
+        HGAtomType stype = graph.getTypeSystem().getAtomType(String.class);
         HGAtomType itype = graph.getTypeSystem().getAtomType(Integer.class);
         HGVComponent c = (HGVComponent)instance;
         HGViewer view = c.getViewer();

@@ -9,17 +9,17 @@ import phoebe.PNodeView;
 
 abstract public class AbstractLayout  {
 
-  protected Set staticNodes;
+  protected Set<PNodeView> staticNodes;
   protected PGraphView graphView;
   protected Dimension currentSize;
 
   public AbstractLayout (){
-	  this.staticNodes = new HashSet();
+	  this.staticNodes = new HashSet<PNodeView>();
   }
   
   public AbstractLayout ( PGraphView view  ) {
     this.graphView = view;
-    this.staticNodes = new HashSet();
+    this.staticNodes = new HashSet<PNodeView>();
   }
 
 
@@ -77,12 +77,11 @@ abstract public class AbstractLayout  {
 	 * set by calling <tt>initializeLocation</tt>.
 	 */
   protected void initializeLocations() {
-    for (Iterator iter = graphView.getNodeViewsIterator(); iter.hasNext();) {
-      PNodeView v = ( PNodeView ) iter.next();
-      
+    for (PNodeView v : graphView.getNodeViews())
+    {
       if ( !staticNodes.contains( v ) )
-        initializeLocation( v, currentSize);
-      initialize_local_node_view(v);
+         initializeLocation( v, currentSize);
+         initialize_local_node_view(v);
     }
   }
   
@@ -168,8 +167,7 @@ abstract public class AbstractLayout  {
 		int yOffset = (size.height - oldSize.height) / 2;
     
     // now, move each vertex to be at the new screen center
-    for (Iterator iter = graphView.getNodeViewsIterator(); iter.hasNext();) {
-			PNodeView e = ( PNodeView ) iter.next();
+    for (PNodeView e : graphView.getNodeViews()) {
 			e.setOffset( e.getXPosition() + xOffset, e.getYPosition() + yOffset );
     }
     // optionally, we may want to restart
@@ -193,9 +191,8 @@ abstract public class AbstractLayout  {
   public PNodeView getNodeView ( double x, double y ) {
     double minDistance = Double.MAX_VALUE;
     PNodeView closest = null;
-    for ( Iterator<PNodeView> iter = graphView.getNodeViewsIterator();
-          iter.hasNext(); ) {
-      PNodeView v = iter.next();
+    for (PNodeView v : graphView.getNodeViews())
+    {
       double dx = graphView.getNodeDoubleProperty( v.getNode(), PGraphView.NODE_X_POSITION ) - x;
       double dy = graphView.getNodeDoubleProperty( v.getNode(), PGraphView.NODE_Y_POSITION ) - y;
       double dist = dx * dx + dy * dy;

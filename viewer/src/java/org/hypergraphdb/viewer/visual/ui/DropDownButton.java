@@ -2,7 +2,10 @@ package org.hypergraphdb.viewer.visual.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -18,11 +21,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+
+import org.hypergraphdb.viewer.util.GUIUtilities;
 
 //@author  santhosh kumar - santhosh@in.fiorano.com 
 public abstract class DropDownButton extends JButton 
@@ -71,8 +77,14 @@ public abstract class DropDownButton extends JButton
  
     public void actionPerformed(ActionEvent ae){ 
          JPopupMenu popup = getPopupMenu(); 
-         popup.addPopupMenuListener(this); 
-         popup.show(mainButton, 0, mainButton.getHeight()); 
+         popup.addPopupMenuListener(this);
+         Point pt = new Point(mainButton.getX(), mainButton.getY() + mainButton.getHeight());
+         Frame f = GUIUtilities.getFrame(mainButton);
+         //TODO: fix this
+         pt = SwingUtilities.convertPoint(mainButton.getParent(), pt.x, pt.y, 
+                 mainButton.getParent().getParent());
+         pt = GUIUtilities.adjustPointInPicollo(mainButton, pt);
+         popup.show(f, pt.x, pt.y); 
      } 
  
     /*------------------------------[ PopupMenuListener ]---------------------------------------------------*/ 

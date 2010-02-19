@@ -600,23 +600,22 @@ public class GEM implements Layout
 		nodeNumbers = new HashMap<FNode, Integer>();
 		HGVNetwork graphPerspective = HGVKit.getCurrentView()
 				.getNetwork();
-		Iterator<PNodeView> nodeSet = HGVKit.getCurrentView()
-		.getNodeViewsIterator();
-		for (int i = 0; nodeSet.hasNext(); i++)
+		int k = 0;
+		for (PNodeView v : HGVKit.getCurrentView().getNodeViews())
 		{
-			FNode n = nodeSet.next().getNode();
-			gemProp[i] = new GemP(graphPerspective.getAdjacentEdges(
-					n, true, true, true).length);
-			if(n == null)
-				System.out.println("GEM:" +	i +	":" + n);
-			invmap[i] = n;
-			nodeNumbers.put(n, i);
+			FNode n = v.getNode();
+			gemProp[k] = new GemP(graphPerspective.getAdjacentEdges(
+					n, true, true).length);
+			//if(n == null)	System.out.println("GEM:" +	k +	":" + n);
+			invmap[k] = n;
+			nodeNumbers.put(n, k);
+			k++;
 		}
 		// Set nset;
 		for (int i = 0; i < nodeCount; i++)
 		{
 			FEdge[] neighbors = graphPerspective.getAdjacentEdges(
-					invmap[i], true, true, true);
+					invmap[i], true, true);
 			adjacent[i] = new ArrayList<Integer>(neighbors.length);
 			for (int j = 0; j < neighbors.length; j++)
 			{
@@ -659,12 +658,11 @@ public class GEM implements Layout
 		double yMax = Double.MIN_VALUE;
 		double xMin = Double.MAX_VALUE;
 		double yMin = Double.MAX_VALUE;
-		Iterator<PNodeView> it = view.getNodeViewsIterator();
 		int i = 0;
 		PNodeView[] views = new PNodeView[nNodes];
-		while (it.hasNext())
+		for (PNodeView v : view.getNodeViews())
 		{
-			views[i] = it.next();
+			views[i] = v;
 			nlist[i] = views[i].getNode();
 			Coordinates c = locations.get(nlist[i]);
 			xPos[i] = c.getX();

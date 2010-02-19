@@ -14,7 +14,6 @@ import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import phoebe.PEdgeView;
-import phoebe.PGraphView;
 import phoebe.PNodeView;
 
 public class HGViewer implements Serializable
@@ -209,8 +208,8 @@ public class HGViewer implements Serializable
     		view.removeEdgeView(nv.getEdge());
     		//g.removeEdge(nv.getEdge());
     	}
-    	for(Iterator<PNodeView> it = view.getNodeViewsIterator(); it.hasNext();){
-    		PNodeView nv = (PNodeView) it.next();
+    	for(PNodeView nv :  view.getNodeViews())
+    	{
     		view.removeNodeView(nv.getNode());
     		//g.removeNode(nv.getNode());
     	}

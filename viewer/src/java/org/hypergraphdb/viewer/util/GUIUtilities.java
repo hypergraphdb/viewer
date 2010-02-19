@@ -27,6 +27,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
 import java.net.*;
 import java.util.*;
 import java.io.File;
@@ -38,6 +39,11 @@ import org.hypergraphdb.viewer.*;
 import org.hypergraphdb.viewer.dialogs.VariableGridLayout;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 
+import edu.umd.cs.piccolo.PCanvas;
+import edu.umd.cs.piccolo.PNode;
+import edu.umd.cs.piccolo.util.PBounds;
+import edu.umd.cs.piccolox.pswing.PSwing;
+
 
 
 /**
@@ -47,6 +53,44 @@ public class GUIUtilities
 {
     private GUIUtilities()
     {}
+    
+    public static Point adjustPointInPicollo(JComponent c, Point pt)
+    {
+        PNode ps = getPSwingNode(c);
+        if (ps == null) return pt;
+        PCanvas canvas = getTopCanvas(c);
+        if (canvas == null) return pt;
+        PBounds r1c = ps.getBounds();
+        ps.localToGlobal(r1c);
+        canvas.getCamera().globalToLocal(r1c);
+        Rectangle2D r = canvas.getCamera().getViewTransform().createTransformedShape(r1c).getBounds2D();
+        return new Point((int) (r.getX() + pt.x), (int) (r.getY() + pt.y));
+    }
+    
+    public static PCanvas getTopCanvas(JComponent c)
+    {
+        PCanvas canvas = null;
+        Component par = c.getParent();
+        while(par != null)
+        {
+            if(par instanceof PCanvas)
+                canvas = (PCanvas) par;
+            par = par.getParent();
+        }
+        return canvas;
+    }
+    
+    public static PNode getPSwingNode(JComponent c)
+    {
+        if (c == null) return null;
+        PNode ps = (PNode) c
+                .getClientProperty(PSwing.PSWING_PROPERTY);
+        if (ps != null) return ps;
+        if (c.getParent() instanceof JComponent)
+            return getPSwingNode((JComponent) c.getParent());
+        return null;
+    }
+
     
     /**
      * Displays a dialog box.

@@ -49,10 +49,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 	 * Tabbed/InternalFrame/ExternalFrame
 	 */
 	protected NetworkViewManager networkViewManager;
-	/**
-	 * The HelpBroker provides access to JavaHelp
-	 */
-	protected HGVHelpBroker cyHelpBroker;
+	
 	// --------------------//
 	// Event Support
 	/**
@@ -86,10 +83,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				this.getClass().getClassLoader().getResource(
 						"org/hypergraphdb/viewer/images/c16.png")));
-		// initialize Help system with HGVKit help set - define
-		// context-sensitive
-		// help as we create components
-		cyHelpBroker = new HGVHelpBroker();
+		
 		JPanel main_panel = new JPanel();
 		main_panel.setLayout(new BorderLayout());
 		// enable context-sensitive help generally
@@ -207,16 +201,6 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 	public NetworkPanel getNetworkPanel()
 	{
 		return networkPanel;
-	}
-
-	public HelpBroker getHelpBroker()
-	{
-		return cyHelpBroker.getHelpBroker();
-	}
-
-	public HelpSet getHelpSet()
-	{
-		return cyHelpBroker.getHelpSet();
 	}
 
 	public HGVMenus getHGVMenus()

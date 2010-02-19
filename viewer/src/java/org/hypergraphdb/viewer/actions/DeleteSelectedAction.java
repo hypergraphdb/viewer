@@ -37,17 +37,12 @@ public class DeleteSelectedAction extends AbstractAction {
                        
     	HGVNetworkView view = HGVKit.getCurrentView();
     	 // get the Selected node and edge indices
-    	//List<PNodeView> node_indicies = view.getSelectedNodes();
-    	//List<PEdgeView> edge_indicies = view.getSelectedEdges();
-        //and the node/edge vew objects
-        List<PNodeView> selected_nodeViews = view.getSelectedNodes();
+    	List<PNodeView> selected_nodeViews = view.getSelectedNodes();
         List<PEdgeView> selected_edgeViews = view.getSelectedEdges();
 
         // Hide the viewable things and the perspective refs
         view.hideGraphObjects( selected_nodeViews );
         view.hideGraphObjects( selected_edgeViews );
-        //perspective.hideEdges( edge_indicies );
-        //perspective.hideNodes( node_indicies );
         
         view.redrawGraph();
      } // actionPerformed

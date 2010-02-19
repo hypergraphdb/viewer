@@ -47,13 +47,7 @@ public abstract class HeadlessGraphView
 	 * The Description and Class type associated with a FEdge Data Type
 	 */
 	protected Map<Integer, Object> edgeDataDescription;
-	/**
-	 * A GraphView can have associated with it an array of pointers that are
-	 * used to drive data-driven views. Models don't need this because the
-	 * algorithm that would use that data object would already be able to access
-	 * itself.
-	 */
-	protected ArrayList viewDataStore;
+	
 	
 	protected HGVNetwork network;
 	/**
@@ -81,13 +75,10 @@ public abstract class HeadlessGraphView
 	{
 		this.network = net;
 		this.identifier = identifier;
-		// System.out.println( "NAME OF VIEW: "+identifier );
-		// Create Data Stores and Data Descriptors
 		nodeDataStore = new HashMap<FNode, Object[]>(PrimeFinder
 				.nextPrime(net.getNodeCount()));
 		edgeDataStore = new HashMap<FEdge, Object>(PrimeFinder
 				.nextPrime(net.getEdgeCount()));
-		viewDataStore = new ArrayList();
 	}
 
 	public HGVNetwork getNetwork()

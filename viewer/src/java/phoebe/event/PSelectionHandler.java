@@ -130,13 +130,11 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 		if (isSelected(node)) {
 			return;
 		}
-		if (node.getPickable() && node instanceof PNodeView)
+		if (node.getPickable())
 			((PNodeView) node).select();
 
 		selection.put(node, Boolean.TRUE);
 		decorateSelectedNode(node);
-		// PNotificationCenter.defaultCenter().postNotification("SELECTION_ADDED_NOTIFICATION",
-		// node);
 	}
 
 	public void decorateSelectedNode(PNode node) {
@@ -330,9 +328,7 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 		// Option indicator not down - clear selection, and start fresh
 		if (!isSelected(pressNode)) {
 			unselectAll();
-			// if (isSelectable(pressNode)) {
 			select(pressNode);
-			// }
 		}
 	}
 
@@ -438,7 +434,8 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 		PDimension gDist = new PDimension();
 		for (PNode node : selection.keySet()) {
 			gDist.setSize(d);
-			node.getParent().globalToLocal(d);
+			if(node.getParent() != null)
+			   node.getParent().globalToLocal(d);
 			node.offset(d.getWidth(), d.getHeight());
 		}
 	}
@@ -508,8 +505,8 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 
 		public boolean isCameraLayer(PNode node) {
 			if (node instanceof PLayer) {
-				for (Iterator i = selectableParents.iterator(); i.hasNext();) {
-					PNode parent = (PNode) i.next();
+				for (PNode parent : selectableParents)
+				{
 					if (parent instanceof PCamera) {
 						if (((PCamera) parent).indexOfLayer((PLayer) node) != -1) {
 							return true;

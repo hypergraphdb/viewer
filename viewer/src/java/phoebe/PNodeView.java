@@ -663,14 +663,9 @@ public class PNodeView extends PPath
 	public boolean setSelected(boolean selected)
 	{
 		if (selected)
-		{
-			// select();
 			view.getSelectionHandler().select(this);
-		} else
-		{
-			// unselect();
+		 else
 			view.getSelectionHandler().unselect(this);
-		}
 		return this.selected;
 	}
 
@@ -693,13 +688,6 @@ public class PNodeView extends PPath
 	public boolean setBounds(double x, double y, double width, double height)
 	{
 		boolean b = super.setBounds(x, y, width, height);
-		// System.out.println( "Bounds Changed for: "+rootGraphIndex );
-		// try {
-		// int[] i = new int[0];
-		// i[2] = 1;
-		// } catch ( Exception e ) {
-		// e.printStackTrace();
-		// }
 		firePropertyChange(PNode.PROPERTY_CODE_BOUNDS, "BoundsChanged", null,
 				this);
 		if (label != null) label.updatePosition();
