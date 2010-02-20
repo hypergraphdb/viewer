@@ -27,7 +27,7 @@ public class RecordExplorerPanel extends javax.swing.JPanel
 	// RecordType[] recordTypes;
 	HGCompositeType[] recordTypes;
 	String[] recordTypeNames;
-	HGPersistentHandle[] recordTypeHandles;
+	HGHandle[] recordTypeHandles;
 	HyperGraph hg;
 
 	/** Creates new form RecordExplorerPanel */
@@ -152,15 +152,15 @@ public class RecordExplorerPanel extends javax.swing.JPanel
 		String[] col_labels;
 		// RecordType rtype;
 		HGCompositeType rtype;
-		HGPersistentHandle[] recHandles;
+		HGHandle[] recHandles;
 
 		
 		public AbstractProperty[][] getData()
 		{
-			HGPersistentHandle recTypeHandle = (HGPersistentHandle) bean;
+			HGHandle recTypeHandle = (HGHandle) bean;
 			rtype = HGVUtils.getRecordType(hg, recTypeHandle);
-			List labels = new LinkedList();
-			for (Iterator lab = rtype.getDimensionNames(); lab.hasNext();)
+			List<String> labels = new LinkedList<String>();
+			for (Iterator<String> lab = rtype.getDimensionNames(); lab.hasNext();)
 				labels.add(lab.next());
 			col_labels = (String[]) labels.toArray(new String[labels.size()]);// new
 																				// String[rtype.slotCount()];
@@ -173,8 +173,7 @@ public class RecordExplorerPanel extends javax.swing.JPanel
 				if (!(obj instanceof Record))
 				{
 					HGPersistentHandle handle = hg.getStore().getLink(
-							recHandles[i])[1]; // tova ti dava "value" za
-												// record type
+							hg.getPersistentHandle(recHandles[i]))[1]; // tova ti dava "value" za record type
 					obj = rtype.make(handle, null, null);
 				}
 				data0[j][i] = makeProperty(rtype.getProjection(col_labels[j]),

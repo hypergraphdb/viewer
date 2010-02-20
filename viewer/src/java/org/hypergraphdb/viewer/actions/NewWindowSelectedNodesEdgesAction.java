@@ -40,11 +40,11 @@ public class NewWindowSelectedNodesEdgesAction extends HGVAction
 			current_network_view = HGVKit.getNetworkView(current_network);
 		Set<FNode> nodes = current_network.getFlagger().getFlaggedNodes();
 		Set<FEdge> edges = current_network.getFlagger().getFlaggedEdges();
-		HGVNetwork new_network = HGVKit.createNetwork(nodes, edges, null,
-				current_network);
+		HGVNetwork new_network = HGVKit.createNetwork(nodes, edges, 
+		        current_network.getHyperGraph(), current_network);
 		new_network.setTitle(HGVNetworkNaming
 				.getSuggestedSubnetworkTitle(current_network));
-		String title = " selection";
+		//String title = " selection";
 		HGVNetworkView new_view = HGVKit.getNetworkView(new_network);
 		if (new_view == null) return;
 		if (current_network_view != null)

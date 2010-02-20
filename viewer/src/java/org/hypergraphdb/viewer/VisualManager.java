@@ -3,21 +3,16 @@ package org.hypergraphdb.viewer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.hypergraphdb.HGPersistentHandle;
+
 import org.hypergraphdb.HGSystemFlags;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.HGQuery.hg;
-import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
-import org.hypergraphdb.viewer.painter.DefaultNodePainter;
-import org.hypergraphdb.viewer.painter.EdgePainter;
-import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.visual.VisualStyle;
-import phoebe.PEdgeView;
 
 
 public class VisualManager

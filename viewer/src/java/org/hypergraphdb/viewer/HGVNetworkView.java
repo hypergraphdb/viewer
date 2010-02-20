@@ -24,7 +24,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
-import org.hypergraphdb.HGPersistentHandle;
+import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
 import org.hypergraphdb.viewer.painter.EdgePainter;
@@ -275,8 +275,7 @@ public class HGVNetworkView extends PGraphView
 			}
 			FNode node = nodeView.getNode();
 			HyperGraph hg = getNetwork().getHyperGraph();
-			HGPersistentHandle h = hg.getPersistentHandle(
-					hg.getTypeSystem().getTypeHandle(node.getHandle()));
+			HGHandle h = hg.getTypeSystem().getTypeHandle(node.getHandle());
 			NodePainter p = self_style.getNodePainter(h);
 			if(p == null)
 				p = getVisualStyle().getNodePainter(h);
@@ -303,8 +302,7 @@ public class HGVNetworkView extends PGraphView
 			 }
 			 FNode node = edgeView.getEdge().getSource();
 			 HyperGraph hg = getNetwork().getHyperGraph();
-			 HGPersistentHandle h = hg.getPersistentHandle(
-						hg.getTypeSystem().getTypeHandle(node.getHandle()));
+			 HGHandle h = hg.getTypeSystem().getTypeHandle(node.getHandle());
 			 EdgePainter p = self_style.getEdgePainter(h);
 			 if(p == null)	getVisualStyle().getEdgePainter(h);
 			 if(p == null)	p = def_edge_painter;

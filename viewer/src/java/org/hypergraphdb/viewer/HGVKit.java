@@ -126,7 +126,7 @@ public abstract class HGVKit
 	 * @param alias an alias of a node
 	 * @return will return a node, if one exists for the given alias
 	 */
-	public static FNode getHGVNode(HGPersistentHandle handle)
+	public static FNode getHGVNode(HGHandle handle)
 	{
 		return getHGVNode(handle, false);
 	}
@@ -169,9 +169,7 @@ public abstract class HGVKit
 		//+ " target:" + targetH);
 		FNode source = getHGVNode(sourceH, true);
 		FNode target = getHGVNode(targetH, true);
-		if (source == null || target == null) return null; // TODO: ???
-		// throw new NullPointerException("Can't create HGVEdge - source: " +
-		// source + " target: " + target);
+		
 		return getHGVEdge(source, target, true);
 	}
 
@@ -343,36 +341,13 @@ public abstract class HGVKit
 		}
 	}
 
-	
-	public static HGVNetwork createNetwork(FNode[] nodes, FEdge[] edges,
-			HyperGraph db)
-	{
-		return createNetwork(nodes, edges, db, null);
-	}
-	/**
-	 * Creates a new Network, that inherits from the given ParentNetwork
-	 * 
-	 */
-	public static HGVNetwork createNetwork(FNode[] nodes, FEdge[] edges,
-			HyperGraph db, HGVNetwork parent)
-	{
-		HGVNetwork network = createNetwork(db, nodes, edges);
-		addNetwork(network, parent);
-		return network;
-	}
-	
-	private static HGVNetwork createNetwork(HyperGraph db, FNode[] nodes, FEdge[] edges){
-		return new HGVNetwork(db, nodes, edges);
-	}
-
 	/**
 	 * Creates a new Network, that inherits from the given ParentNetwork
 	 */
 	public static HGVNetwork createNetwork(Collection<FNode> nodes, Collection<FEdge> edges,
 			HyperGraph db, HGVNetwork parent)
 	{
-		HGVNetwork network = createNetwork(db, nodes.toArray(new FNode[nodes.size()]), 
-				edges.toArray(new FEdge[edges.size()]));
+		HGVNetwork network = new HGVNetwork(db, nodes, edges);
 		addNetwork(network, parent);
 		return network;
 	}
@@ -557,11 +532,10 @@ public abstract class HGVKit
 		embeded = true;
 		try
 		{
-			final FNode[] nodes = reader.getNodeIndicesArray();
-			final FEdge[] edges = reader.getEdgeIndicesArray();
 			int realThreshold = AppConfig.getInstance().getViewThreshold();
 			AppConfig.getInstance().setViewThreshold(0);
-			HGVNetwork network = HGVKit.createNetwork(nodes, edges, graph);
+			HGVNetwork network = HGVKit.createNetwork( reader.getNodes(),
+			        reader.getEdges(), graph, null);
 			network.setTitle(graph.getStore().getDatabaseLocation());
 			AppConfig.getInstance().setViewThreshold(realThreshold);
 			return createView(network);

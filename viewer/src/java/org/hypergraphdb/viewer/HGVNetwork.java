@@ -52,12 +52,12 @@ public class HGVNetwork
 	private Set<FEdge> edges = new HashSet<FEdge>();
 	protected HyperGraph hg;
 	
-	public HGVNetwork(HyperGraph db, FNode[] nodes0, FEdge[] edges0)
+	public HGVNetwork(HyperGraph db, Collection<FNode> _nodes, Collection<FEdge> _edges)
 	{
 		hg = db;
-		for (FNode n : nodes0)
+		for (FNode n : _nodes)
 			nodes.add(n);
-		for (FEdge e : edges0)
+		for (FEdge e : _edges)
 			edges.add(e);
 		m_lis = new HGVNetworkChangeListener[1];
 		initialize();

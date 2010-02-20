@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Stroke;
-import org.hypergraphdb.HGPersistentHandle;
+
+import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.Arrow;
 import org.hypergraphdb.viewer.visual.LineType;
+
 import phoebe.PEdgeView;
 import phoebe.util.PLabel;
 
@@ -22,7 +24,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 	private String tooltip = "";
 	private Font font = new Font("Default", Font.PLAIN, 12);
 
-	private HGPersistentHandle targetNodeTypeHandle;
+	private HGHandle targetNodeTypeHandle;
 	
 	
 	/*
@@ -213,10 +215,10 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 		edgeView.setToolTip(getTooltip());
 	}
 	
-	public void setTargetNodeTypeHandle(HGPersistentHandle h){
+	public void setTargetNodeTypeHandle(HGHandle h){
 		targetNodeTypeHandle = h;
 	}
-	public HGPersistentHandle getTargetNodeTypeHandle(){
+	public HGHandle getTargetNodeTypeHandle(){
 		return targetNodeTypeHandle;
 	}
 }

@@ -18,6 +18,7 @@ import org.hypergraphdb.viewer.util.HGVAction;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -37,12 +38,10 @@ public class NewWindowSelectedNodesOnlyAction extends HGVAction {
 		if (HGVKit.viewExists(current_network))
 			current_network_view = HGVKit.getNetworkView(current_network);
 		Set<FNode> nodes = current_network.getFlagger().getFlaggedNodes();
-		FNode[] n_idx = new FNode[nodes.size()];
-		int n = 0;
-		for(Iterator it = nodes.iterator(); it.hasNext(); n++)
-			n_idx[n] = ((FNode) it.next());
-		FEdge[] edges = new FEdge[0];//current_network.getConnectingEdges(n_idx);
-		HGVNetwork new_network = HGVKit.createNetwork(n_idx, edges, null, current_network);
+		Set<FEdge> edges = Collections.emptySet();//current_network.getConnectingEdges(n_idx);
+		HGVNetwork new_network = HGVKit.createNetwork(nodes, edges, 
+		        current_network.getHyperGraph(), 
+		        current_network);
 		new_network.setTitle(HGVNetworkNaming
 				.getSuggestedSubnetworkTitle(current_network));
 		HGVNetworkView new_view = HGVKit.getNetworkView(new_network);

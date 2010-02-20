@@ -30,7 +30,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGPersistentHandle;
+import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.handle.UUIDPersistentHandle;
 import org.hypergraphdb.type.HGAtomType;
@@ -219,9 +219,9 @@ public class PaintersPanel extends JPanel
 
 	void populatePaintersList(VisualStyle vs)
 	{
-		Collection<HGPersistentHandle> res = new HashSet<HGPersistentHandle>();
-		Map<HGPersistentHandle, NodePainter> map = vs.getNodePaintersMap();
-		for (Map.Entry<HGPersistentHandle, NodePainter> e : map.entrySet())
+		Collection<HGHandle> res = new HashSet<HGHandle>();
+		Map<HGHandle, NodePainter> map = vs.getNodePaintersMap();
+		for (Map.Entry<HGHandle, NodePainter> e : map.entrySet())
 		{
 			// System.out.println("" + e.getValue() + ":" +
 			// (e.getValue() instanceof DefaultNodePainter));
@@ -304,7 +304,7 @@ public class PaintersPanel extends JPanel
 				NotifyDescriptor.OK_CANCEL_OPTION);
 		if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION)
 		{
-			HGPersistentHandle h = null;
+			HGHandle h = null;
 			try{
 				h = UUIDPersistentHandle.makeHandle(d.getInputText());
 			}catch(NumberFormatException ex){}
@@ -332,7 +332,7 @@ public class PaintersPanel extends JPanel
 
 	private void removePainter()
 	{
-		HGPersistentHandle h = (HGPersistentHandle) paintersList
+		HGHandle h = (HGHandle) paintersList
 				.getSelectedValue();
 		if (h == null) return;
 		NotifyDescriptor d = new NotifyDescriptor.Confirmation(null,
@@ -352,8 +352,7 @@ public class PaintersPanel extends JPanel
 		{
 			ClassLoader cl = Thread.currentThread().getContextClassLoader();
 			Class clazz = cl.loadClass(t_cls);
-			HGPersistentHandle h = hg.getPersistentHandle(hg.getTypeSystem()
-					.getTypeHandle(clazz));
+			HGHandle h = hg.getTypeSystem().getTypeHandle(clazz);
 			NodePainter p = (NodePainter) cl.loadClass(p_cls).newInstance();
 			vs.addNodePainter(h, p);
 		}

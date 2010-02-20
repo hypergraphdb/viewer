@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.hypergraphdb.HGPersistentHandle;
+import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
@@ -196,11 +196,11 @@ public class PaintersPanel extends JPanel
 	}
 	
 	 private void addNodePainter(HyperGraph hg, VisualStyle vs,
-     		ClassLoader cl, String t_cls, String p_cls){
+     		ClassLoader cl, String t_cls, String p_cls)
+	 {
      	try{
-     		Class clazz = cl
-				.loadClass(t_cls);
-     		HGPersistentHandle h = hg.getPersistentHandle(
+     		Class<?> clazz = cl.loadClass(t_cls);
+     		HGHandle h = hg.getPersistentHandle(
      				hg.getTypeSystem().getTypeHandle(clazz));
      		 NodePainter p = (NodePainter) cl.loadClass(p_cls).newInstance();
      	     vs.addNodePainter(h, p);

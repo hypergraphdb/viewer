@@ -196,30 +196,22 @@ public class LoadWordNetAction extends HGVAction
             final HGWNReader reader = new HGWNReader(db);
             open(reader);
                        
-            //  Get the RootGraph indices of the nodes and
-            //  Edges that were just created
-            final FNode[] nodes = reader.getNodeIndicesArray();
-            final FEdge[] edges = reader.getEdgeIndicesArray();
-            
             final String title = db.getAbsolutePath();
-            
-            // Create a new cytoscape.data.HGVNetwork from these nodes and edges
-            //taskMonitor.setStatus("Creating HG Network...");
             
             //  Create the HGVNetwork
             //  First, set the view threshold to 0.  By doing so, we can disable
             //  the auto-creating of the HGVNetworkView.
-            int realThreshold =AppConfig.getInstance().getViewThreshold();
+            int realThreshold = AppConfig.getInstance().getViewThreshold();
             AppConfig.getInstance().setViewThreshold(0);
-            HGVNetwork network = HGVKit.createNetwork(nodes, edges,
-            		reader.getHyperGraph());
+            HGVNetwork network = HGVKit.createNetwork(reader.getNodes(), reader.getEdges(),
+            		reader.getHyperGraph(), null);
             
             network.setTitle(title);
            // System.out.println("Network: " + network + " file_name: " + network.getFileName());
             //  Reset back to the real View Threshold
             AppConfig.getInstance().setViewThreshold(realThreshold);
             
-            if (network.getNodeCount() < AppConfig.getInstance().getViewThreshold()  )
+            if (network.getNodeCount() < AppConfig.getInstance().getViewThreshold())
             {
             	final HGVNetworkView view = createNetworkView(network);
                 SwingUtilities.invokeLater(new Runnable()
@@ -269,8 +261,7 @@ public class LoadWordNetAction extends HGVAction
         	try{
         		Class clazz = cl
 				.loadClass(t_cls);
-        		HGPersistentHandle h = hg.getPersistentHandle(
-        				hg.getTypeSystem().getTypeHandle(clazz));
+        		 HGHandle h = hg.getTypeSystem().getTypeHandle(clazz);
         		 NodePainter p = (NodePainter) cl.loadClass(p_cls).newInstance();
         	     vs.addNodePainter(h, p);
         	}catch(Exception ex){

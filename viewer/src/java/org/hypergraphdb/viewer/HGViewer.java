@@ -63,13 +63,13 @@ public class HGViewer implements Serializable
 		HGWNReader reader = new HGWNReader(hg);
 		reader.read(handle, depth, generator); 
 		view = HGVKit.getStandaloneView(hg, reader);
-		for(HGPersistentHandle h: tmp_style.getNodePaintersMap().keySet())
+		for(HGHandle h: tmp_style.getNodePaintersMap().keySet())
 			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
-		for(HGPersistentHandle h: tmp_style.getEdgePaintersMap().keySet())
+		for(HGHandle h: tmp_style.getEdgePaintersMap().keySet())
 			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
-		for(HGPersistentHandle h: tmp_style.getNonPersistentNodePaintersMap().keySet())
+		for(HGHandle h: tmp_style.getNonPersistentNodePaintersMap().keySet())
 			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
-		for(HGPersistentHandle h: tmp_style.getNonPersistentEdgePaintersMap().keySet())
+		for(HGHandle h: tmp_style.getNonPersistentEdgePaintersMap().keySet())
 			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
 		
 		HGVComponent c = view.getComponent();
@@ -93,12 +93,10 @@ public class HGViewer implements Serializable
 		HGWNReader reader = new HGWNReader(hg);
 		reader.read(handle, depth, getGenerator()); 
 		clearView();
-		final FNode[] nodes = reader.getNodeIndicesArray();
-		final FEdge[] edges = reader.getEdgeIndicesArray();
-		for(int i = 0; i<nodes.length; i++)
-			view.addNodeView(nodes[i]);
-		for(int i = 0; i<edges.length; i++)
-			view.addEdgeView(edges[i]);
+		for(FNode n: reader.getNodes())
+			view.addNodeView(n);
+		for(FEdge e: reader.getEdges())
+			view.addEdgeView(e);
 		layout();
 		view.redrawGraph();
 		FNode node = HGVKit.getHGVNode(handle, false); 
@@ -115,13 +113,13 @@ public class HGViewer implements Serializable
 			tmp_style = view.self_style;
 		this.foc_handle = handle;
 		view = HGVKit.getStandaloneView(hg, foc_handle, depth, null);
-		for(HGPersistentHandle h: tmp_style.getNodePaintersMap().keySet())
+		for(HGHandle h: tmp_style.getNodePaintersMap().keySet())
 			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
-		for(HGPersistentHandle h: tmp_style.getEdgePaintersMap().keySet())
+		for(HGHandle h: tmp_style.getEdgePaintersMap().keySet())
 			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
-		for(HGPersistentHandle h: tmp_style.getNonPersistentNodePaintersMap().keySet())
+		for(HGHandle h: tmp_style.getNonPersistentNodePaintersMap().keySet())
 			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
-		for(HGPersistentHandle h: tmp_style.getNonPersistentEdgePaintersMap().keySet())
+		for(HGHandle h: tmp_style.getNonPersistentEdgePaintersMap().keySet())
 			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
 		
 		Component c = view.getComponent();
@@ -189,21 +187,22 @@ public class HGViewer implements Serializable
 	    
     private void refreshView()
 	{
-		final HGWNReader reader = new HGWNReader(hg);
+		HGWNReader reader = new HGWNReader(hg);
 		reader.read(foc_handle, depth, getGenerator());
-		final FNode[] nodes = reader.getNodeIndicesArray();
-		final FEdge[] edges = reader.getEdgeIndicesArray();
-        HGVNetwork net = view.getNetwork();
-		for(int i = 0; i < nodes.length; i++)
-			net.addNode(nodes[i]);
-		for(int i = 0; i < edges.length; i++)
-			net.addEdge(edges[i]);
+		
+        //HGVNetwork net = view.getNetwork();
+        clearView();
+        for(FNode n: reader.getNodes())
+            view.addNodeView(n);
+        for(FEdge e: reader.getEdges())
+            view.addEdgeView(e);
 		layout();
 	}
     
     private void clearView(){
     	
-    	for(Iterator<PEdgeView> it = view.getEdgeViewsIterator(); it.hasNext();){
+    	for(Iterator<PEdgeView> it = view.getEdgeViewsIterator(); it.hasNext();)
+    	{
     		PEdgeView nv = (PEdgeView) it.next();
     		view.removeEdgeView(nv.getEdge());
     		//g.removeEdge(nv.getEdge());
@@ -232,7 +231,7 @@ public class HGViewer implements Serializable
 	     java.io.IOException{
     	depth = s.readInt();
     	String loc = (String) s.readObject();
-    	HGPersistentHandle h = (HGPersistentHandle) s.readObject();
+    	HGHandle h = (HGHandle) s.readObject();
     	hg = new HyperGraph(loc);
     	this.focus(h);
     }

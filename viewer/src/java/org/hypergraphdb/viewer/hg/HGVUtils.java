@@ -44,16 +44,16 @@ public class HGVUtils
 		return types;
 	}
 
-	public static HGPersistentHandle lookup(HyperGraph hg, String typeAlias,
+	public static HGHandle lookup(HyperGraph hg, String typeAlias,
 			String keyProperty, Object keyValue)
 	{
 		HGHandle typeHandle = hg.getTypeSystem().getTypeHandle(typeAlias);
 		ByPartIndexer byProperty = new ByPartIndexer(typeHandle, new String[] { keyProperty });
-		HGIndex<String, HGPersistentHandle> index = hg.getIndexManager().register(byProperty);
+		HGIndex<String, HGHandle> index = hg.getIndexManager().register(byProperty);
 		return index.findFirst((String)keyValue);
 	}
 
-	public static HGPersistentHandle[] getAllRecordTypes(HyperGraph graph)
+	public static HGHandle[] getAllRecordTypes(HyperGraph graph)
 	{
 		HGSearchResult it = null;
 		try
@@ -67,7 +67,7 @@ public class HGVUtils
 				list.add(graph.getPersistentHandle(
 						h.getSpecific()));
 			}
-			return (HGPersistentHandle[]) list.toArray(new HGPersistentHandle[list
+			return (HGHandle[]) list.toArray(new HGHandle[list
 					.size()]);
 		}
 		finally
@@ -77,7 +77,7 @@ public class HGVUtils
 		}
 	}
 
-	public static RecordType getRecordType(HyperGraph hg, HGPersistentHandle h)
+	public static RecordType getRecordType(HyperGraph hg, HGHandle h)
 	{
 		Object obj = hg.get(h);
 		if (obj instanceof JavaBeanBinding)
@@ -85,7 +85,7 @@ public class HGVUtils
 		return (RecordType) hg.get(h);
 	}
 
-	public static HGPersistentHandle[] getAllForType(HyperGraph graph, HGHandle handle)
+	public static HGHandle[] getAllForType(HyperGraph graph, HGHandle handle)
 	{
 		HGSearchResult ite = null;
 		try
@@ -97,8 +97,8 @@ public class HGVUtils
 				ite.next();
 				list.add((HGHandle) ite.current());
 			}
-			return (HGPersistentHandle[]) list.toArray(
-					new HGPersistentHandle[list.size()]);
+			return (HGHandle[]) list.toArray(
+					new HGHandle[list.size()]);
 		}
 		finally
 		{
@@ -236,7 +236,7 @@ public class HGVUtils
 		return e.getSource();
 	}
 	
-	public static String deduceAliasName(HyperGraph hg, HGPersistentHandle h)
+	public static String deduceAliasName(HyperGraph hg, HGHandle h)
 	{
 		HGTypeSystem ts = hg.getTypeSystem();
 		String total = "";
@@ -277,10 +277,10 @@ public class HGVUtils
 			filter_set.add(t.getClass().getName());
 		return filter_set;
 		
-//		HGPersistentHandle[] handles = getAllRecordTypes(h);
+//		HGHandle[] handles = getAllRecordTypes(h);
 //		System.out.println("NodeTypes: " + handles.length);
 //		Set<String> filter_set = new TreeSet<String>();
-//		for (HGPersistentHandle hh : handles)
+//		for (HGHandle hh : handles)
 //		   filter_set.add(deduceAliasName(h, hh)); //h.get(hh).getClass().getName());
 //		
 //		// nodeTypesCache.put(h, filter_set);
