@@ -48,7 +48,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         global_menu = new JPopupMenu();
         PNodeView node = (PNodeView) event.getPickedNode();
         global_menu.add(expandNodeAction(view, node));
-        global_menu.add(collapseNodeAction(view, node));
+        //global_menu.add(collapseNodeAction(view, node));
         global_menu.add(focusNodeAction(view, node));
         Point pt = new Point((int) event.getCanvasPosition().getX(),
                 (int) event.getCanvasPosition().getY());
