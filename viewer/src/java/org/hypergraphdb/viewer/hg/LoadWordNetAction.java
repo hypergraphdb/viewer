@@ -21,7 +21,6 @@ import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
@@ -69,7 +68,7 @@ public class LoadWordNetAction extends HGVAction
     public static void loadHyperGraph(File file)
     {
     	if(file == null) throw new NullPointerException("HG file is null");
-    	HGVNetwork network = HGVKit.getNetworkByFile(file);
+    	HGVNetworkView network = null;//HGVKit.getNetworkByFile(file);
     	if (network == null)
        {
             //  Create LoadNetwork Task
@@ -89,7 +88,7 @@ public class LoadWordNetAction extends HGVAction
     static class LoadTask implements Task
     {
         private File db;
-        private HGVNetwork cyNetwork;
+        private HGVNetworkView cyNetwork;
         private TaskMonitor taskMonitor;
         
         
@@ -109,12 +108,11 @@ public class LoadWordNetAction extends HGVAction
             {
             	if(!db.isDirectory())
             		throw new IOException("No such DB: " + db.getAbsolutePath());
-            	HGVNetworkView view = createNetwork();
-                cyNetwork = (view!= null) ? view.getNetwork(): null;
-                
+            	cyNetwork = createNetwork();
+                               
                 if (cyNetwork != null)
                 {
-                    informUserOfGraphStats(view.getNetwork());
+                    informUserOfGraphStats(cyNetwork);
                 } else
                 {
                     StringBuffer sb = new StringBuffer();
@@ -133,7 +131,7 @@ public class LoadWordNetAction extends HGVAction
         /**
          * Inform User of Network Stats.
          */
-        private void informUserOfGraphStats(HGVNetwork newNetwork)
+        private void informUserOfGraphStats(HGVNetworkView newNetwork)
         {
             NumberFormat formatter = new DecimalFormat("#,###,###");
             StringBuffer sb = new StringBuffer();
@@ -203,10 +201,10 @@ public class LoadWordNetAction extends HGVAction
             //  the auto-creating of the HGVNetworkView.
             int realThreshold = AppConfig.getInstance().getViewThreshold();
             AppConfig.getInstance().setViewThreshold(0);
-            HGVNetwork network = HGVKit.createNetwork(reader.getNodes(), reader.getEdges(),
-            		reader.getHyperGraph(), null);
+            HGVNetworkView network = HGVKit.createNetworkView(reader.getHyperGraph(), 
+                    reader.getNodes(), reader.getEdges());
             
-            network.setTitle(title);
+            //network.setTitle(title);
            // System.out.println("Network: " + network + " file_name: " + network.getFileName());
             //  Reset back to the real View Threshold
             AppConfig.getInstance().setViewThreshold(realThreshold);
@@ -228,6 +226,7 @@ public class LoadWordNetAction extends HGVAction
            return null;
         }
         private static final String WN_STYLE = "wordnet_style";
+        
         private void setVisualStyle(HGVNetworkView view){
         	VisualStyle vs = VisualManager.getInstance().getVisualStyle(WN_STYLE);
         	if(vs != null) {
@@ -237,7 +236,7 @@ public class LoadWordNetAction extends HGVAction
         		return;
         	}
         	vs = new VisualStyle(WN_STYLE);
-        	HyperGraph hg = view.getNetwork().getHyperGraph();
+        	HyperGraph hg = view.getHyperGraph();
         	ClassLoader cl = Thread.currentThread().getContextClassLoader();
         	addNodePainter(hg, vs, cl,
         			"org.hypergraphdb.app.wordnet.data.NounSynsetLink",
@@ -302,17 +301,14 @@ public class LoadWordNetAction extends HGVAction
          * view from the user, and I didn't want to use this hack in the core
          * HGVKit.java class.
          */
-        private HGVNetworkView createNetworkView(HGVNetwork network)
+        private HGVNetworkView createNetworkView(HGVNetworkView view)
         {
-            final HGVNetworkView view = new HGVNetworkView(network,
-            network.getTitle());
-            
             //  Start of Hack:  Hide the View
             PCanvas pCanvas = view.getCanvas();
             pCanvas.setVisible(false);
             //  End of Hack
             
-            HGVKit.getNetworkMap().put(network, view);
+          //  HGVKit.getNetworkMap().put(network, view);
             
             // if Squiggle function enabled, enable squiggling on the created view
             if (HGVKit.isSquiggleEnabled())

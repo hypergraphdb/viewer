@@ -1,7 +1,6 @@
 package org.hypergraphdb.viewer.view;
 
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
 
 import org.hypergraphdb.viewer.actions.CreateNetworkViewAction;
@@ -19,7 +18,8 @@ import javax.swing.event.*;
 import java.beans.*;
 
 public class NetworkPanel extends JPanel implements PropertyChangeListener,
-		TreeSelectionListener, FlagEventListener {
+		TreeSelectionListener//, FlagEventListener 
+		{
 
 	protected SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(
 			this);
@@ -103,7 +103,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		return pcs;
 	}
 
-	public void removeNetwork(HGVNetwork view) {
+	public void removeNetwork(HGVNetworkView view) {
 
 		NetworkTreeNode node = getNetworkNode(view);
 		Enumeration children = node.children();
@@ -118,7 +118,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 			child.removeFromParent();
 			root.add(child);
 		}
-		view.getFlagger().removeFlagEventListener(this);
+		//view.getFlagger().removeFlagEventListener(this);
 		node.removeFromParent();
 		treeTable.getTree().collapsePath(new TreePath(new TreeNode[] { root }));
 		treeTable.getTree().updateUI();
@@ -126,18 +126,18 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 
 	}
 
-	public void onFlagEvent(FlagEvent event) {
-		// System.out.println("NetworkPanel - onFlagEvent: " + event);
-		treeTable.getTree().updateUI();
-		if (event.getEventType())
-			HGVKit.getDesktop().updatePropsPanel();
-	}
+//	public void onFlagEvent(FlagEvent event) {
+//		// System.out.println("NetworkPanel - onFlagEvent: " + event);
+//		treeTable.getTree().updateUI();
+//		if (event.getEventType())
+//			HGVKit.getDesktop().updatePropsPanel();
+//	}
 
-	public void addNetwork(HGVNetwork net, HGVNetwork par) {
+	public void addNetwork(HGVNetworkView net, HGVNetworkView par) {
 		// first see if it exists
 		if (getNetworkNode(net) == null) {
-			NetworkTreeNode dmtn = new NetworkTreeNode(net.getTitle(), net);
-			net.getFlagger().addFlagEventListener(this);
+			NetworkTreeNode dmtn = new NetworkTreeNode(net.getIdentifier(), net);
+			//net.getFlagger().addFlagEventListener(this);
 			if (par != null) {
 				NetworkTreeNode parent = getNetworkNode(par);
 				parent.add(dmtn);
@@ -156,7 +156,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 	}
 
 	public void focusNetworkNode(HGVNetworkView view) {
-		DefaultMutableTreeNode node = getNetworkNode(view.getNetwork());
+		DefaultMutableTreeNode node = getNetworkNode(view);
 		if (node != null) {
 			treeTable.getTree().getSelectionModel().setSelectionPath(
 					new TreePath(node.getPath()));
@@ -165,7 +165,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		}
 	}
 
-	public NetworkTreeNode getNetworkNode(HGVNetwork view) {
+	public NetworkTreeNode getNetworkNode(HGVNetworkView view) {
 
 		Enumeration tree_node_enum = root.breadthFirstEnumeration();
 		while (tree_node_enum.hasMoreElements()) {
@@ -191,17 +191,17 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 			return;
 		if (node.getUserObject() == null)
 			return;
-		fireFocus(HGVKit.getNetworkView(node.getNetworkID()));
+		fireFocus(node.getNetworkID());
    }
 
 	public void propertyChange(PropertyChangeEvent e) {
 
-		if (e.getPropertyName() == HGVKit.NETWORK_CREATED) {
-			addNetwork((HGVNetwork) e.getNewValue(), (HGVNetwork) e.getOldValue());
+		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_CREATED) {
+			addNetwork((HGVNetworkView) e.getNewValue(), (HGVNetworkView) e.getOldValue());
 		}
 
-		if (e.getPropertyName() == HGVKit.NETWORK_DESTROYED) {
-			removeNetwork((HGVNetwork) e.getNewValue());
+		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED) {
+			removeNetwork((HGVNetworkView) e.getNewValue());
 		}
 
 		else if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUSED) {
@@ -266,20 +266,17 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		public Object getValueAt(Object node, int column) {
 			if (column == 0)
 				return ((DefaultMutableTreeNode) node).getUserObject();
-			HGVNetwork net = (((NetworkTreeNode) node).getNetworkID());
-			if(net == null) return "";
-			HGVNetworkView view = HGVKit.getNetworkView(net);
+			HGVNetworkView net = (((NetworkTreeNode) node).getNetworkID());
+			
 			String s = "";
 			if (column == 1) {
 				s = "" + net.getNodeCount(); 
-				if(view != null)
-					s += "(" + view.getNodeViewCount() + ")";
-				s += "(" + net.getFlagger().getFlaggedNodes().size() + ")";
+					s += "(" + net.getNodeViewCount() + ")";
+				s += "(" + net.getFlaggedNodes().size() + ")";
 			} else if (column == 2) {
 				s = "" + net.getEdgeCount(); 
-				if(view != null)
-					s += "(" + view.getEdgeViewCount() + ")";
-				s += "(" + net.getFlagger().getFlaggedEdges().size() + ")";
+				s += "(" + net.getEdgeViewCount() + ")";
+				s += "(" + net.getFlaggedEdges().size() + ")";
 			}
 			return s;
 
@@ -289,18 +286,18 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 
 	protected class NetworkTreeNode extends DefaultMutableTreeNode {
 
-		protected HGVNetwork view;
+		protected HGVNetworkView view;
 
-		public NetworkTreeNode(Object userobj, HGVNetwork id) {
+		public NetworkTreeNode(Object userobj, HGVNetworkView id) {
 			super(userobj);
 			view = id;
 		}
 
-		protected void setNetworkID(HGVNetwork id) {
+		protected void setNetworkID(HGVNetworkView id) {
 			view = id;
 		}
 
-		protected HGVNetwork getNetworkID() {
+		protected HGVNetworkView getNetworkID() {
 			return view;
 		}
 	}
@@ -337,7 +334,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 			NetworkTreeNode node = (NetworkTreeNode) value;
 			if(node.getNetworkID() == null) return false;
 					
-			setToolTipText(node.getNetworkID().getTitle());
+			setToolTipText(node.getNetworkID().getIdentifier());
 			return true;
 		}
 
@@ -378,14 +375,14 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 				if (row != -1) {
 					JTree tree = treeTable.getTree();
 					TreePath treePath = tree.getPathForRow(row);
-					HGVNetwork net = ((NetworkTreeNode) treePath
+					HGVNetworkView net = ((NetworkTreeNode) treePath
 							.getLastPathComponent()).getNetworkID();
 
 						
 						// disable or enable specific options with respect to
 						// the actual network
 						// that is selected
-						if (HGVKit.viewExists(net))
+						if (true)//HGVKit.viewExists(net))
 						{
 							// disable the view creation item
 							createViewItem.setEnabled(false);
@@ -428,7 +425,7 @@ class PopupActionListener implements ActionListener {
 	 * appropriately, the network associated with the ID associated with the row
 	 * associated with the JTable that originated the popup event
 	 */
-	protected HGVNetwork cyNetwork;
+	protected HGVNetworkView cyNetwork;
 
 	/**
 	 * Based on the action event, destroy or create a view, or destroy a network
@@ -442,9 +439,7 @@ class PopupActionListener implements ActionListener {
 		else if (label == CREATE_VIEW) {
 			CreateNetworkViewAction.createViewFromCurrentNetwork(cyNetwork);
 		} // end of if ()
-		else if (label == DESTROY_NETWORK) {
-			HGVKit.destroyNetwork(cyNetwork);
-		} // end of if ()
+		
 		else {
 			// throw an exception here?
 			System.err.println("Unexpected network panel popup option");
@@ -455,7 +450,7 @@ class PopupActionListener implements ActionListener {
 	 * Right before the popup menu is displayed, this function is called so we
 	 * know which network the user is clicking on to call for the popup menu
 	 */
-	public void setActiveNetwork(HGVNetwork cyNetwork) {
+	public void setActiveNetwork(HGVNetworkView cyNetwork) {
 		this.cyNetwork = cyNetwork;
 	}
 }

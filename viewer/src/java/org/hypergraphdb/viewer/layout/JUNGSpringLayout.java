@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.hypergraphdb.viewer.FNode;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 import phoebe.PEdgeView;
 import phoebe.PGraphView;
@@ -38,7 +39,7 @@ public class JUNGSpringLayout extends AbstractLayout
 	 * dimension--the input knows how big the graph is. Defaults to the unit
 	 * length function.
 	 */
-	public JUNGSpringLayout(PGraphView g)
+	public JUNGSpringLayout(HGVNetworkView g)
 	{
 		this(g, UNITLENGTHFUNCTION);
 	}
@@ -49,7 +50,7 @@ public class JUNGSpringLayout extends AbstractLayout
 	 * @param g the input Graph
 	 * @param f the length function
 	 */
-	public JUNGSpringLayout(PGraphView g, LengthFunction f)
+	public JUNGSpringLayout(HGVNetworkView g, LengthFunction f)
 	{
 		super(g);
 		this.lengthFunction = f;
@@ -149,9 +150,9 @@ public class JUNGSpringLayout extends AbstractLayout
 			// why?
 			// System.out.println("Desired : " + getLength( e ));
 			double f = FORCE_CONSTANT * (desiredLen - len) / len;
-			int deg1 = graphView.getNetwork().getAdjacentEdges(
+			int deg1 = graphView.getAdjacentEdges(
 					  source_index, true, true).length;
-			int deg2 = graphView.getNetwork().getAdjacentEdges(
+			int deg2 = graphView.getAdjacentEdges(
 					target_index, true, true).length;
 			f = f
 					* Math.pow(STRETCH / 100.0, (deg1

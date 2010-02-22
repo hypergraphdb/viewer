@@ -26,7 +26,7 @@ public class RecordTableModel  extends PropertiesTableModel
 	{
          this.rec = (Record) bean;
          type = (RecordType)
-         HGVKit.getCurrentNetwork().getHyperGraph().get(rec.getTypeHandle());
+         HGVKit.getCurrentView().getHyperGraph().get(rec.getTypeHandle());
         
         AbstractProperty[][] data0 = new AbstractProperty[2][type.slotCount()];
         //for (int i = 0; i < type.slotCount(); i++)

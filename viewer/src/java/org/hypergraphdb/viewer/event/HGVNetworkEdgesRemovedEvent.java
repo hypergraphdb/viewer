@@ -1,7 +1,7 @@
 package org.hypergraphdb.viewer.event;
 
 import org.hypergraphdb.viewer.FEdge;
-import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 
 
@@ -14,7 +14,7 @@ public final class HGVNetworkEdgesRemovedEvent
   // Note that no copy of the array hiddenEdges is made - the exact
   // array reference is kept.  However, copies are made in the return values
   // of methods of this class.  
-  public HGVNetworkEdgesRemovedEvent(HGVNetwork source,
+  public HGVNetworkEdgesRemovedEvent(HGVNetworkView source,
 		  FEdge[] hiddenEdges)
   {
     super(source);

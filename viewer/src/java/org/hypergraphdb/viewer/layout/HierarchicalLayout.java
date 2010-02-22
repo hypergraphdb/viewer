@@ -39,7 +39,6 @@
  **/
 package org.hypergraphdb.viewer.layout;
 
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import java.util.*;
@@ -102,11 +101,9 @@ public class HierarchicalLayout implements Layout
         //get the graph view object from the window.
         HGVNetworkView networkView = HGVKit.getCurrentView();
         if (networkView == null) return;
-        HGVNetwork network = networkView.getNetwork();
-        if (network == null)   return;
-        
+               
          //Select all nodes as the default action if none are selected
-        if(network.getNodeCount() <= 0)
+        if(networkView.getNodeCount() <= 0)
           return;
         
         /* construct node list with selected nodes first */

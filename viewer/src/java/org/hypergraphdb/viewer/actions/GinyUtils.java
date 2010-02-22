@@ -30,18 +30,12 @@ public class GinyUtils
 
         for (PNodeView nview : view.getSelectedNodes())
         {
-            // use GINY methods
-            view.hideGraphObject(nview);
-            FEdge[] edges = view.getNetwork().getAdjacentEdges(nview.getNode(),
+           FEdge[] edges = view.getAdjacentEdges(nview.getNode(),
                     true, true);
-            if (edges != null)
-            // System.out.println( "There are: "+edges.length+" edge between
-                // "+nview.getGraphPerspectiveIndex()+" and "+na[i2] );
-                for (int j = 0; j < edges.length; ++j)
-                {
-                    // use GINY methods
-                    view.hideGraphObject(view.getEdgeView(edges[j]));
-                }
+           if (edges != null)
+           for (int j = 0; j < edges.length; ++j)
+              view.hideGraphObject(view.getEdgeView(edges[j]));
+           view.hideGraphObject(nview);    
         }
     }
 
@@ -54,7 +48,7 @@ public class GinyUtils
         {
             view.showGraphObject(nview);
 
-            FEdge[] edges = view.getNetwork().getAdjacentEdges(nview.getNode(),
+            FEdge[] edges = view.getAdjacentEdges(nview.getNode(),
                     true, true);
             for (int j = 0; j < edges.length; ++j)
             {

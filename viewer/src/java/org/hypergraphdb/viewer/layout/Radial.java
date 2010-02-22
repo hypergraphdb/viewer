@@ -6,7 +6,6 @@ import java.awt.geom.*;
 
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
@@ -124,9 +123,8 @@ public class Radial implements Layout
 
 	private Collection<FEdge> getOutEdges(FNode node)
 	{
-		HGVNetwork net = HGVKit.getCurrentNetwork();
 		Set<FEdge> totalEdges = new HashSet<FEdge>();
-		FEdge[] e = net.getAdjacentEdges(
+		FEdge[] e = HGVKit.getCurrentView().getAdjacentEdges(
 				node, true, true);
 		for (int i = 0; i < e.length; i++)
 			totalEdges.add(e[i]);

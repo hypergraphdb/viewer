@@ -221,28 +221,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 					PGraphView.EDGE_TARGET_END_SELECTED_PAINT,
 					target_end_selected_paint);
 		}
-		// System.out.println( "Property: Source "+view.getEdgeIntProperty(
-		// rootGraphIndex,
-		// PGraphView.SOURCE_INDEX ) );
-		// System.out.println( "Property: Target "+view.getEdgeIntProperty(
-		// rootGraphIndex,
-		// PGraphView.TARGET_INDEX ) );
-		// System.out.println( "Property: Width "+view.getEdgeFloatProperty(
-		// rootGraphIndex,
-		// PGraphView.EDGE_WIDTH ) );
-		// System.out.println( "Property: Line Type "+view.getEdgeIntProperty(
-		// rootGraphIndex,
-		// PGraphView.EDGE_LINE_TYPE ) );
-		// System.out.println( "Property: Paint "+view.getEdgeObjectProperty(
-		// rootGraphIndex,
-		// PGraphView.EDGE_PAINT ) );
-		// System.out.println( "Property Source FEdge End Type
-		// "+view.getEdgeIntProperty( rootGraphIndex,
-		// PGraphView.EDGE_SOURCE_END_TYPE ) );
-		// System.out.println( "Property Target FEdge End Type
-		// "+view.getEdgeIntProperty( rootGraphIndex,
-		// PGraphView.EDGE_TARGET_END_TYPE ) );
-		// Initialize this PEdgeView0
+		
 		initializeEdgeView();
 	}
 

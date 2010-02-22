@@ -57,7 +57,6 @@ import javax.swing.event.MenuListener;
 
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.actions.FitContentAction;
 import org.hypergraphdb.viewer.actions.HelpAboutAction;
@@ -259,8 +258,8 @@ public class HGVMenus implements HGVNetworkChangeListener
 	 */
 	public void setNodesRequiredItemsEnabled()
 	{
-		boolean newState = HGVKit.getCurrentNetwork() != null
-				&& HGVKit.getCurrentNetwork().getNodeCount() > 0;
+		boolean newState = HGVKit.getCurrentView() != null
+				&& HGVKit.getCurrentView().getNodeCount() > 0;
 		newState = true; // TODO: remove this once the
 		// GraphViewChangeListener system is working
 		if (newState == nodesRequiredItemsEnabled) return;
@@ -424,7 +423,7 @@ public class HGVMenus implements HGVNetworkChangeListener
 
 			public void menuSelected(MenuEvent e)
 			{
-				HGVNetwork graph = HGVKit.getCurrentNetwork();
+				HGVNetworkView graph = HGVKit.getCurrentView();
 				boolean inactive = false;
 				if (graph == null || graph.getNodeCount() == 0)
 					inactive = true;

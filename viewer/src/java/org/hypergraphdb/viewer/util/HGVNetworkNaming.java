@@ -1,17 +1,18 @@
 package org.hypergraphdb.viewer.util;
 
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 public class HGVNetworkNaming
 {
 
-  public static String getSuggestedSubnetworkTitle(HGVNetwork parentNetwork)
+  public static String getSuggestedSubnetworkTitle(HGVNetworkView view)
   {
     for (int i = 0; true; i++) {
       String nameCandidate =
-        parentNetwork.getTitle() + "->child" + ((i == 0) ? "" : ("." + i));
-      if (!isNetworkTitleTaken(nameCandidate)) return nameCandidate; }
+        view.getIdentifier() + "->child" + ((i == 0) ? "" : ("." + i));
+      if (!isNetworkTitleTaken(nameCandidate)) 
+          return nameCandidate; }
   }
 
   public static String getSuggestedNetworkTitle(String desiredTitle)
@@ -23,8 +24,8 @@ public class HGVNetworkNaming
 
   private static boolean isNetworkTitleTaken(String titleCandidate)
   {
-    for (HGVNetwork net: HGVKit.getNetworkMap().keySet()) 
-      if (titleCandidate.equals(net.getTitle()))
+    for (HGVNetworkView v: HGVKit.getNetworkViewsList()) 
+      if (titleCandidate.equals(v.getIdentifier()))
           return true; 
     return false;
   }

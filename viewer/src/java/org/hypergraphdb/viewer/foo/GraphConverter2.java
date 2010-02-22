@@ -2,7 +2,6 @@ package org.hypergraphdb.viewer.foo;
 
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import phoebe.PEdgeView;
@@ -78,7 +77,7 @@ public final class GraphConverter2 {
 		final double xOff = minX - border;
 		final double yOff = minY - border;
 
-		final HGVNetwork fixedGraph = graphView.getNetwork();
+		final HGVNetworkView fixedGraph = graphView;
 
 		return new MutablePolyEdgeGraphLayout() {
 			public Iterator<FEdge> edgesIterator() {

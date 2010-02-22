@@ -124,14 +124,14 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 		}
 	}
 
-	public void select(PNode node) {
-		if (!(node instanceof PNodeView))
-			return;
+	public void select(PNode n) {
+		if (!(n instanceof PNodeView))	return;
+		PNodeView node = (PNodeView) n;
 		if (isSelected(node)) {
 			return;
 		}
 		if (node.getPickable())
-			((PNodeView) node).select();
+			node.select();
 
 		selection.put(node, Boolean.TRUE);
 		decorateSelectedNode(node);
@@ -157,8 +157,6 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 			((PNodeView) node).unselect();
 		undecorateSelectedNode(node);
 		selection.remove(node);
-		// PNotificationCenter.defaultCenter().postNotification("SELECTION_REMOVED_NOTIFICATION",
-		// node);
 	}
 
 	public void undecorateSelectedNode(PNode node) {
@@ -457,11 +455,17 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_DELETE:
 			if (deleteKeyActive) {
-				for (PNode node : selection.keySet())
-					node.removeFromParent();
-				selection.clear();
+			    deleteSelection();
 			}
 		}
+	}
+	
+	public void deleteSelection()
+	{
+	    //TODO: sync with View
+	    for (PNode node : selection.keySet())
+            node.removeFromParent();
+        selection.clear();
 	}
 
 	public boolean getSupportDeleteKey() {

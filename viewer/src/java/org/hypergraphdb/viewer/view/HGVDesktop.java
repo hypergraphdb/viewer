@@ -302,8 +302,8 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 		if (e.getPropertyName() == NETWORK_VIEW_CREATED)
 		{
 			// add the new view to the GraphViewController
-			HGVKit.getGraphViewController().addGraphView(
-					(HGVNetworkView) e.getNewValue());
+			//HGVKit.getGraphViewController().addGraphView(
+			//		(HGVNetworkView) e.getNewValue());
 			// pass on the event
 			pcs.firePropertyChange(e);
 			networkPanel.focusNetworkNode(((HGVNetworkView) e.getNewValue()));
@@ -319,19 +319,11 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 			// get Focus from NetworkPanel
 			updateFocus(((HGVNetworkView) e.getNewValue()));
 			pcs.firePropertyChange(e);
-		} else if (e.getPropertyName() == HGVKit.NETWORK_CREATED)
-		{
-			// fire the event so that the NetworkPanel can catch it
-			pcs.firePropertyChange(e);
-		} else if (e.getPropertyName() == HGVKit.NETWORK_DESTROYED)
-		{
-			// fire the event so that the NetworkPanel can catch it
-			pcs.firePropertyChange(e);
-		} else if (e.getPropertyName() == NETWORK_VIEW_DESTROYED)
+		}else if (e.getPropertyName() == NETWORK_VIEW_DESTROYED)
 		{
 			// remove the view from the GraphViewController
-			HGVKit.getGraphViewController().removeGraphView(
-					(HGVNetworkView) e.getNewValue());
+			//HGVKit.getGraphViewController().removeGraphView(
+			//		(HGVNetworkView) e.getNewValue());
 			// pass on the event
 			pcs.firePropertyChange(e);
 		} else if (e.getPropertyName() == BeanProperty.PROP_VALUE)
@@ -340,7 +332,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 			List selected_nodeViews = view.getSelectedNodes();
 			FNode node = ((PNodeView) selected_nodeViews.get(0))
 					.getNode();
-			HyperGraph hg = HGVKit.getCurrentNetwork().getHyperGraph();
+			HyperGraph hg = HGVKit.getCurrentView().getHyperGraph();
 			// System.out.println("HGVDesktop - replace: "
 			// + propsPanel.getModelObject());
 			hg.replace(node.getHandle(), propsPanel.getModelObject());
@@ -358,7 +350,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 			FNode node = ((PNodeView) selected_nodeViews.get(0)).getNode();
 			// System.out.println("updatePropsPanel()" +
 			// ((HGVNode)node).getHandle());
-			Object obj = view.getNetwork().getHyperGraph().get(node.getHandle());
+			Object obj = view.getHyperGraph().get(node.getHandle());
 			propsPanel.setModelObject(obj);
 			if (obj != null)
 			{

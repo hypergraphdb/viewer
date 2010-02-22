@@ -36,7 +36,6 @@ import java.util.*;
 
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
 
@@ -360,7 +359,7 @@ public class BasicGraphViewHandler implements GraphViewHandler
   static public void positionToBarycenter (PNodeView node_view){
     FNode node = node_view.getNode();
     HGVNetworkView graphView = (HGVNetworkView) node_view.getGraphView();
-    HGVNetwork gp = graphView.getNetwork();
+    
     
    // int [] childrenNodeIndices = gp.getNodeMetaChildIndicesArray(rootIndex);
    // if(childrenNodeIndices == null || childrenNodeIndices.length == 0){return;}
@@ -372,7 +371,7 @@ public class BasicGraphViewHandler implements GraphViewHandler
   //  }
     //Iterator it = childGP.nodesIterator(); 
     
-    FEdge[] children = gp.getAdjacentEdges(node, true, true);
+    FEdge[] children = graphView.getAdjacentEdges(node, true, true);
     double x = 0.0;
     double y = 0.0;
     double viewableChildren = 0;

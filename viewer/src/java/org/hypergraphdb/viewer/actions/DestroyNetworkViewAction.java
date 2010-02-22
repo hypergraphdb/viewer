@@ -21,6 +21,6 @@ public class DestroyNetworkViewAction extends HGVAction {
   }
 
   public static void destroyViewFromCurrentNetwork () {
-  	HGVKit.destroyNetworkView( HGVKit.getCurrentNetwork() );
+  	HGVKit.destroyNetworkView( HGVKit.getCurrentView() );
   }
 }

@@ -13,7 +13,7 @@ import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 /**
@@ -27,9 +27,9 @@ public class SelectFirstNeighborsAction extends HGVAction {
         setAcceleratorCombo( java.awt.event.KeyEvent.VK_F6,0 );
     }
     public void actionPerformed (ActionEvent e) {
-      HGVNetwork net = HGVKit.getCurrentNetwork();
+      HGVNetworkView net = HGVKit.getCurrentView();
       if(net == null) return;
-      Set<FNode> set = net.getFlagger().getFlaggedNodes();
+      Set<FNode> set = net.getFlaggedNodes();
       Set<FNode> new_set = new HashSet<FNode>();
       for (FNode o: set){
     	 FEdge[] ids  = net.getAdjacentEdges(o, true, true);
@@ -40,7 +40,7 @@ public class SelectFirstNeighborsAction extends HGVAction {
         	 new_set.add(edge.getSource());
     	 }
 	  }
-      net.getFlagger().setFlaggedNodes(new_set, true);
+      net.setFlaggedNodes(new_set, true);
     } // actionPerformed
 } // SelectFirstNeighborsAction
 

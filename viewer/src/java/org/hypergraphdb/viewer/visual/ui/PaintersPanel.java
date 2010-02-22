@@ -394,7 +394,7 @@ public class PaintersPanel extends JPanel
 	
 	public void setView(HGVNetworkView v){
 		view = v;
-		hg = v.getNetwork().getHyperGraph();
+		hg = v.getHyperGraph();
 		stylesCombo.setSelectedItem(view.getVisualStyle());
 	}
 

@@ -5,10 +5,11 @@
 package org.hypergraphdb.viewer;
 
 import java.beans.PropertyChangeEvent;
-import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +17,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.viewer.hg.HGWNReader;
@@ -25,11 +25,11 @@ import org.hypergraphdb.viewer.layout.HierarchicalLayout;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.Radial;
 import org.hypergraphdb.viewer.layout.SpringLayout;
-import org.hypergraphdb.viewer.util.HGVNetworkNaming;
-import org.hypergraphdb.viewer.view.GraphViewController;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 
+import phoebe.PEdgeView;
 import phoebe.PGraphView;
+import phoebe.PNodeView;
 
 /**
  * This class, HGVKit is <i>the</i> primary class in the API.
@@ -56,10 +56,9 @@ public abstract class HGVKit
 	protected static Object pcsO = new Object();
 	protected static SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(
 			pcsO);
-	protected static Map<HGVNetwork, HGVNetworkView> networkMap;
+	protected static List<HGVNetworkView> networkViewList;
 	protected static HGVDesktop defaultDesktop;
 	protected static HGVNetworkView currentView;
-	protected static HGVNetwork currentNetwork;
 	protected static Layout prefered_layout;
 	protected static Set<Layout> layouts = new HashSet<Layout>();
 	static
@@ -73,17 +72,7 @@ public abstract class HGVKit
 		layouts.add(l);
 		setPreferedLayout(l);
 	}
-	/**
-	 * The GraphViewController for all NetworkViews that we know about
-	 */
-	protected static GraphViewController graphViewController;
 
-	public static GraphViewController getGraphViewController()
-	{
-		if (graphViewController == null)
-			graphViewController = new GraphViewController();
-		return graphViewController;
-	}
 	static boolean embeded = false;
 
 	public static boolean isEmbeded()
@@ -173,73 +162,21 @@ public abstract class HGVKit
 		return getHGVEdge(source, target, true);
 	}
 
-	// --------------------//
-	// Network Methods
-	// --------------------//
-	/**
-	 * Return the Network that currently has the Focus. Can be different from
-	 * getCurrentNetworkView
-	 */
-	public static HGVNetwork getCurrentNetwork()
-	{
-		return currentNetwork;
-	}
-
-	/**
-	 */
-	public static void setCurrentNetwork(HGVNetwork net)
-	{
-		if (getNetworkMap().containsKey(net)) currentNetwork = net;
-		// System.out.println( "Currentnetworkid is: "+currentNetworkID+ " set
-		// from : "+id );
-	}
-
+	
 	/**
 	 * @return true if there is network view, false if not
 	 */
 	public static boolean setCurrentView(HGVNetworkView view)
 	{
+		boolean dif = currentView == view;
 		currentView = view;
-		if (view == null) return false;
-		if (getNetworkMap().containsKey(view.getNetwork()))
-		{
-			currentNetwork = view.getNetwork();
-			return true;
-		}
-		return false;
+		if (view == null || !dif) return false;
+		
+		return true;
 	}
-
-	public static HGVNetwork getNetworkByFile(File file)
-	{
-		for (HGVNetwork n : getNetworkMap().keySet())
-		{
-			if (n.getHyperGraph() != null
-					&& file.equals(new File(n.getHyperGraph().getStore()
-							.getDatabaseLocation()))) return n;
-		}
-		return null;
-	}
-
-	/**
-	 * @return a HGVNetworkView for the given HGVNetworkView, if one exists,
-	 * otherwise returns null
-	 */
-	public static HGVNetworkView getNetworkView(HGVNetwork net)
-	{
-		return getNetworkMap().get(net);
-	}
-
-	/**
-	 * @return if a view exists for a given network id
-	 */
-	public static boolean viewExists(HGVNetwork net)
-	{
-		return getNetworkMap().get(net) != null;
-	}
-
-	/**
-	 * Return the HGVNetworkView that currently has the focus. Can be different
-	 * from getCurrentNetwork
+	
+     /**
+	 * Return the HGVNetworkView that currently has the focus. 
 	 */
 	public static HGVNetworkView getCurrentView()
 	{
@@ -259,37 +196,14 @@ public abstract class HGVKit
 	 * This Map has keys that are Strings ( network_ids ) and values that are
 	 * networks.
 	 */
-	public static Map<HGVNetwork, HGVNetworkView> getNetworkMap()
+	public static List<HGVNetworkView> getNetworkViewsList()
 	{
-		if (networkMap == null)
-		{
-			networkMap = new HashMap<HGVNetwork, HGVNetworkView>();
-		}
-		return networkMap;
+		if (networkViewList == null)
+			networkViewList = new ArrayList<HGVNetworkView>();
+		return networkViewList;
 	}
 
-	/**
-	 * destroys the given network
-	 */
-	public static void destroyNetwork(HGVNetwork network)
-	{
-		HyperGraph hg = network.getHyperGraph();
-		boolean last_net = true;
-		for (HGVNetwork n : getNetworkMap().keySet())
-			if (!n.equals(network) && hg.equals(n.getHyperGraph()))
-			{
-				last_net = false;
-				break;
-			}
-		if (last_net) hg.close();
-		if (viewExists(network)) destroyNetworkView(network);
-		getNetworkMap().remove(network);
-		firePropertyChange(NETWORK_DESTROYED, null, network);
-		// theoretically this should not be set to null till after the events
-		// firing is done
-		network = null;
-	}
-
+	
 	/**
 	 * destroys the networkview, including any layout information
 	 */
@@ -297,7 +211,7 @@ public abstract class HGVKit
 	{
 		// System.out.println( "destroying: "+view.getIdentifier()+" :
 		// "+getNetworkViewMap().get( view.getIdentifier() ) );
-		getNetworkMap().put(view.getNetwork(), null);
+	    getNetworkViewsList().remove(view);
 		// System.out.println( "gone from hash: "+view.getIdentifier()+" :
 		// "+getNetworkViewMap().get( view.getIdentifier() ) );
 		firePropertyChange(HGVDesktop.NETWORK_VIEW_DESTROYED, null, view);
@@ -308,97 +222,50 @@ public abstract class HGVKit
 		System.gc();
 	}
 
-	/**
-	 * destroys the networkview, including any layout information
-	 */
-	public static void destroyNetworkView(HGVNetwork network)
+	public static HGVNetworkView createNetworkView(HGVNetworkView view)
 	{
-		HGVNetworkView view = getNetworkMap().get(network);
-		if (view == null) return;
-		getNetworkMap().put(network, null);
-		firePropertyChange(HGVDesktop.NETWORK_VIEW_DESTROYED, null, view);
+	    Collection<FNode> nodes = new ArrayList<FNode>();
+	    for(PNodeView nv : view.getNodeViews())
+	        nodes.add(nv.getNode());
+	    Collection<FEdge> edges  = new ArrayList<FEdge>();
+        for(PEdgeView ev : view.getEdgeViews())
+            edges.add(ev.getEdge()); 
+        return createNetworkView(view.getHyperGraph(), 
+                nodes, edges);
 	}
-
-	protected static void addNetwork(HGVNetwork network)
-	{
-		addNetwork(network, null);
-	}
-
-	protected static void addNetwork(HGVNetwork network, HGVNetwork parent)
-	{
-		System.out.println("HGVNetwork Added: " + network.getIdentifier());
-		getNetworkMap().put(network, null);
-		HyperGraph db = network.getHyperGraph();
-		if (db != null)
-		{
-			network.setTitle(HGVNetworkNaming.getSuggestedNetworkTitle(db
-					.getStore().getDatabaseLocation()));
-		}
-		firePropertyChange(NETWORK_CREATED, parent, network);
-		if (network.getNodeCount() < AppConfig.getInstance().getViewThreshold())
-		{
-			createNetworkView(network);
-		}
-	}
-
+		
 	/**
 	 * Creates a new Network, that inherits from the given ParentNetwork
 	 */
-	public static HGVNetwork createNetwork(Collection<FNode> nodes, Collection<FEdge> edges,
-			HyperGraph db, HGVNetwork parent)
+	public static HGVNetworkView createNetworkView(HyperGraph db, 
+	        Collection<FNode> nodes, Collection<FEdge> edges)
 	{
-		HGVNetwork network = new HGVNetwork(db, nodes, edges);
-		addNetwork(network, parent);
-		return network;
-	}
-
-	/**
-	 * Creates a HGVNetworkView, but doesn't do anything with it. Ifnn's you
-	 * want to use it
-	 * 
-	 * @param network the network to create a view of
-	 */
-	public static HGVNetworkView createNetworkView(HGVNetwork network)
-	{
-		return createNetworkView(network, network.getTitle());
-	}
-
-	/**
-	 * Creates a HGVNetworkView, but doesn't do anything with it. Ifnn's you
-	 * want to use it
-	 * 
-	 * @param network the network to create a view of
-	 */
-	public static HGVNetworkView createNetworkView(HGVNetwork network,
-			String title)
-	{
-		if (network == null) return null;
-		if (viewExists(network))
-		{
-			return getNetworkView(network);
-		}
-		final HGVNetworkView view = new HGVNetworkView(network, title);
-		getNetworkMap().put(network, view);
-		firePropertyChange(HGVDesktop.NETWORK_VIEW_CREATED, null, view);
-		// Instead of calling fitContent(), access PGraphView directly.
-		// This enables us to disable animation. Modified by Ethan Cerami.
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run()
-			{
-				view.getCanvas().getCamera().animateViewToCenterBounds(
-						view.getCanvas().getLayer().getFullBounds(), true, 0);
-				// if Squiggle function enabled, enable it on the view
-				if (squiggleEnabled)
-					view.getSquiggleHandler().beginSquiggling();
-				// set the selection mode on the view
-				setSelectionMode(currentSelectionMode, view);
-				HGVKit.getPreferedLayout().applyLayout();
-			}
-		});
-		view.redrawGraph();
+	    final HGVNetworkView view = new HGVNetworkView(db, nodes, edges, null);
+	    if (nodes.size() < AppConfig.getInstance().getViewThreshold())
+        {
+	         firePropertyChange(HGVDesktop.NETWORK_VIEW_CREATED, null, view);
+	        // Instead of calling fitContent(), access PGraphView directly.
+	        // This enables us to disable animation. Modified by Ethan Cerami.
+	        SwingUtilities.invokeLater(new Runnable() {
+	            public void run()
+	            {
+	                view.getCanvas().getCamera().animateViewToCenterBounds(
+	                        view.getCanvas().getLayer().getFullBounds(), true, 0);
+	                // if Squiggle function enabled, enable it on the view
+	                if (squiggleEnabled)
+	                    view.getSquiggleHandler().beginSquiggling();
+	                // set the selection mode on the view
+	                setSelectionMode(currentSelectionMode, view);
+	                HGVKit.getPreferedLayout().applyLayout();
+	            }
+	        });
+	        view.redrawGraph();
+	        return view;
+        }
 		return view;
 	}
 
+	
 	public static void firePropertyChange(String property_type,
 			Object old_value, Object new_value)
 	{
@@ -414,7 +281,7 @@ public abstract class HGVKit
 	private static void setSquiggleState(boolean isEnabled)
 	{
 		// enable Squiggle on all network views
-		for (HGVNetworkView view : getNetworkMap().values())
+		for (HGVNetworkView view : getNetworkViewsList())
 		{
 			if (view == null) continue;
 			if (isEnabled)
@@ -470,11 +337,9 @@ public abstract class HGVKit
 	public static void setSelectionMode(int selectionMode)
 	{
 		// set the selection mode on all the views
-		for (HGVNetworkView view : getNetworkMap().values())
-		{
-			if (view == null) continue;
+		for (HGVNetworkView view : getNetworkViewsList())
 			setSelectionMode(selectionMode, view);
-		}
+		
 		// update the global indicating the selection mode
 		currentSelectionMode = selectionMode;
 	}
@@ -534,11 +399,11 @@ public abstract class HGVKit
 		{
 			int realThreshold = AppConfig.getInstance().getViewThreshold();
 			AppConfig.getInstance().setViewThreshold(0);
-			HGVNetwork network = HGVKit.createNetwork( reader.getNodes(),
-			        reader.getEdges(), graph, null);
-			network.setTitle(graph.getStore().getDatabaseLocation());
+			HGVNetworkView network = HGVKit.createNetworkView(graph, reader.getNodes(),
+			        reader.getEdges());
+			network.setIdentifier(graph.getStore().getDatabaseLocation());
 			AppConfig.getInstance().setViewThreshold(realThreshold);
-			return createView(network);
+			return network;
 		}
 		catch (Exception ex)
 		{
@@ -557,20 +422,20 @@ public abstract class HGVKit
 		return getStandaloneView(hg, reader);
 	}
 
-	private static HGVNetworkView createView(HGVNetwork network)
-	{
-		final HGVNetworkView view = new HGVNetworkView(network, network
-				.getTitle());
-		getNetworkMap().put(network, view);
-		HGVKit.setCurrentView(view);
-		// if Squiggle function enabled, enable squiggling on the created view
-		if (HGVKit.isSquiggleEnabled())
-			view.getSquiggleHandler().beginSquiggling();
-		// set the selection mode on the view
-		HGVKit.setSelectionMode(HGVKit.getSelectionMode(), view);
-		HGVKit.getGraphViewController().addGraphView(view);
-		view.redrawGraph();
-    	return view;
-	}
+//	private static HGVNetworkView createView(HGVNetwork network)
+//	{
+//		final HGVNetworkView view = new HGVNetworkView(network, network
+//				.getTitle());
+//		getNetworkMap().put(network, view);
+//		HGVKit.setCurrentView(view);
+//		// if Squiggle function enabled, enable squiggling on the created view
+//		if (HGVKit.isSquiggleEnabled())
+//			view.getSquiggleHandler().beginSquiggling();
+//		// set the selection mode on the view
+//		HGVKit.setSelectionMode(HGVKit.getSelectionMode(), view);
+//		HGVKit.getGraphViewController().addGraphView(view);
+//		view.redrawGraph();
+//    	return view;
+//	}
 	
 }

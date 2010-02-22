@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.util.*;
 import org.hypergraphdb.viewer.*;
 import org.hypergraphdb.viewer.hg.LoadHyperGraphFileAction;
+import org.hypergraphdb.viewer.view.HGVDesktop;
 
 
 public class RecentFilesProvider implements PropertyChangeListener
@@ -37,22 +38,18 @@ public class RecentFilesProvider implements PropertyChangeListener
     public void propertyChange( PropertyChangeEvent e )
     {
         
-        if (//e.getPropertyName() == HGVKit.NETWORK_CREATED ||
-        e.getPropertyName() == HGVKit.NETWORK_DESTROYED
-        )
+        if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED)
         {
-           // System.out.println("RecentFilesProvider: - propertyChange: " + e.getNewValue());
-           // if(HGVKit.getCurrentNetwork() == null)
-            //    return;
-            String f = ((HGVNetwork) e.getNewValue()).getHyperGraph().getStore().getDatabaseLocation();
+            String f = ((HGVNetworkView) e.getNewValue()).getHyperGraph().getStore().getDatabaseLocation();
             System.out.println("RecentFilesProvider: - propertyChange - f: " + f + " net: " + e.getNewValue());
             if(!(AppConfig.getInstance().getMRUF().contains(f)))
             {
             	AppConfig.getInstance().getMRUF().add(f);
                 update(menu);
             }
-        }else if (e.getPropertyName() == HGVKit.EXIT){
-        	for(HGVNetwork net: HGVKit.getNetworkMap().keySet())
+        }else if (e.getPropertyName() == HGVKit.EXIT)
+        {
+        	for(HGVNetworkView net: HGVKit.getNetworkViewsList())
         		AppConfig.getInstance().getMRUF().add(
         				net.getHyperGraph().getStore().getDatabaseLocation());
         }

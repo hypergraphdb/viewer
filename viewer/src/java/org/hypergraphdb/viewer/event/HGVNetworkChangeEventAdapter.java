@@ -2,7 +2,7 @@ package org.hypergraphdb.viewer.event;
 
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 
 
@@ -10,7 +10,7 @@ public abstract class HGVNetworkChangeEventAdapter
   extends HGVNetworkChangeEvent
 {
 
-  HGVNetworkChangeEventAdapter(HGVNetwork source)
+  HGVNetworkChangeEventAdapter(HGVNetworkView source)
   {
     super(source);
   }

@@ -2,7 +2,7 @@ package org.hypergraphdb.viewer.actions;
 
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
@@ -24,11 +24,11 @@ public class CreateNetworkViewAction extends HGVAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        HGVNetwork cyNetwork = HGVKit.getCurrentNetwork();
+        HGVNetworkView cyNetwork = HGVKit.getCurrentView();
         createViewFromCurrentNetwork(cyNetwork);
     }
 
-    public static void createViewFromCurrentNetwork(HGVNetwork cyNetwork) {
+    public static void createViewFromCurrentNetwork(HGVNetworkView cyNetwork) {
         NumberFormat formatter = new DecimalFormat("#,###,###");
         if (cyNetwork.getNodeCount()
                 > AppConfig.getInstance().getSecondaryViewThreshold()) {

@@ -67,7 +67,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
             public void actionPerformed(ActionEvent e)
             {
                 HGVUtils.expandNode(
-                        v.getNetwork().getHyperGraph(),  node.getNode());
+                        v.getHyperGraph(),  node.getNode());
                 int def = 150;
                 removeExtraNodes(node, def);
                 adjust(node);
@@ -81,7 +81,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         return new JMenuItem(new AbstractAction("Collapse") {
             public void actionPerformed(ActionEvent e)
             {
-                HGVUtils.collapseNode(v.getNetwork().getHyperGraph(),
+                HGVUtils.collapseNode(v.getHyperGraph(),
                         node.getNode());
                 adjust(node);
             }
@@ -124,7 +124,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         {
             Double key = nodes.lastKey();
             FNode nn = nodes.get(key).getNode();
-            HGVUtils.removeNode(HGVKit.getCurrentNetwork().getHyperGraph(), nn,
+            HGVUtils.removeNode(HGVKit.getCurrentView().getHyperGraph(), nn,
                     true);
             nodes.remove(key);
         }

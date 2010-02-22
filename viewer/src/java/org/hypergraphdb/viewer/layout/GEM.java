@@ -5,7 +5,6 @@ import java.util.*;
 
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.hg.HGVUtils;
@@ -598,13 +597,12 @@ public class GEM implements Layout
 		invmap = new FNode[nodeCount];
 		adjacent = new ArrayList[nodeCount];
 		nodeNumbers = new HashMap<FNode, Integer>();
-		HGVNetwork graphPerspective = HGVKit.getCurrentView()
-				.getNetwork();
+		HGVNetworkView view = HGVKit.getCurrentView();
 		int k = 0;
 		for (PNodeView v : HGVKit.getCurrentView().getNodeViews())
 		{
 			FNode n = v.getNode();
-			gemProp[k] = new GemP(graphPerspective.getAdjacentEdges(
+			gemProp[k] = new GemP(view.getAdjacentEdges(
 					n, true, true).length);
 			//if(n == null)	System.out.println("GEM:" +	k +	":" + n);
 			invmap[k] = n;
@@ -614,7 +612,7 @@ public class GEM implements Layout
 		// Set nset;
 		for (int i = 0; i < nodeCount; i++)
 		{
-			FEdge[] neighbors = graphPerspective.getAdjacentEdges(
+			FEdge[] neighbors = view.getAdjacentEdges(
 					invmap[i], true, true);
 			adjacent[i] = new ArrayList<Integer>(neighbors.length);
 			for (int j = 0; j < neighbors.length; j++)

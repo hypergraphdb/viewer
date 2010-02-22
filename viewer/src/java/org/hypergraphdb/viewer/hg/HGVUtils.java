@@ -1,28 +1,37 @@
 package org.hypergraphdb.viewer.hg;
 
-import java.util.*;
-import org.hypergraphdb.*;
-import org.hypergraphdb.storage.BAtoHandle;
-import org.hypergraphdb.storage.DefaultIndexImpl;
-import org.hypergraphdb.type.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.hypergraphdb.HGHandle;
+import org.hypergraphdb.HGHandleFactory;
+import org.hypergraphdb.HGIndex;
+import org.hypergraphdb.HGLink;
+import org.hypergraphdb.HGQuery;
+import org.hypergraphdb.HGSearchResult;
+import org.hypergraphdb.HGTypeSystem;
+import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.IncidenceSet;
+import org.hypergraphdb.HGQuery.hg;
 import org.hypergraphdb.atom.HGSubsumes;
 import org.hypergraphdb.atom.HGTypeStructuralInfo;
-import org.hypergraphdb.handle.*;
 import org.hypergraphdb.indexing.ByPartIndexer;
-import org.hypergraphdb.query.*;
-import org.hypergraphdb.viewer.AppConfig;
+import org.hypergraphdb.query.AtomTypeCondition;
+import org.hypergraphdb.type.HGAtomType;
+import org.hypergraphdb.type.JavaBeanBinding;
+import org.hypergraphdb.type.RecordType;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetwork;
-import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.util.GUIUtilities;
-import phoebe.PEdgeView;
+
 import phoebe.PNodeView;
-import static org.hypergraphdb.HGQuery.hg;
 
 /**
  * 
@@ -110,7 +119,7 @@ public class HGVUtils
 	{
 		HGVNetworkView view = HGVKit.getCurrentView();
 		// select the view, because the popup doesn't do this automaticaly
-		view.getNetwork().getFlagger().unflagAllNodes();
+		view.unflagAllNodes();
 		view.getNodeView(node).setSelected(true);
 		IncidenceSet in_links = hg.getIncidenceSet(node.getHandle());
 		HGHandle[] out_links = new HGHandle[0];
@@ -131,13 +140,13 @@ public class HGVUtils
 		if(!confirmExpanding(links.length)) return;
 		for(int i = 0; i < links.length; i++){
 			FNode n = HGVKit.getHGVNode(links[i], true);
-			view.getNetwork().addNode(n);
+			view.addNode(n);
 			PNodeView v = view.getNodeView(n);
 			if(v == null) 
 				v = view.addNodeView(n);
 			FEdge e = (incoming) ? HGVKit.getHGVEdge(links[i], node.getHandle()) :
 				HGVKit.getHGVEdge(node.getHandle(), links[i]);
-			view.getNetwork().addEdge(e);
+			view.addEdge(e);
 			if(view.getEdgeView(e) == null)
 			   view.addEdgeView(e);
 		}
@@ -195,16 +204,15 @@ public class HGVUtils
 	{
 		if(node == null) return;
 	    HGVNetworkView view = HGVKit.getCurrentView();
-		HGVNetwork net = view.getNetwork();
-		
+				
 		Set<FNode> nodesToRemove = new HashSet<FNode>();
 		Set<FEdge> edgesToRemove = new HashSet<FEdge>();
-		FEdge[] edges = net.getAdjacentEdges(node, true, true);
+		FEdge[] edges = view.getAdjacentEdges(node, true, true);
 		for(int i = 0; i < edges.length; i++)
 		{
 			FEdge e = edges[i];
 			FNode out = getOppositeNode(node, e);
-			FEdge[] in_edges = net.getAdjacentEdges(out, true, true);
+			FEdge[] in_edges = view.getAdjacentEdges(out, true, true);
 			if( in_edges.length <= 1)
 			{
 				nodesToRemove.add(out);
@@ -217,11 +225,11 @@ public class HGVUtils
 		for(FEdge edge: edgesToRemove)
 		{
 			//view.removeEdgeView(edge);
-		    net.removeEdge(edge);
+		    view.removeEdge(edge);
 		}
 		if( remove_center_too)    
 		    //view.removeNodeView(node);
-		    net.removeNode(node);
+		    view.removeNode(node);
 		
 		for(FNode n: nodesToRemove)
 		{

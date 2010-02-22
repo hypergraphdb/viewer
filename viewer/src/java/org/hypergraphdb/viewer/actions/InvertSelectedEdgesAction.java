@@ -9,9 +9,12 @@ import java.awt.event.ActionEvent;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.HGVKit;
+
+import phoebe.PEdgeView;
 //-------------------------------------------------------------------------
 public class InvertSelectedEdgesAction extends HGVAction {
     
@@ -21,10 +24,16 @@ public class InvertSelectedEdgesAction extends HGVAction {
     }
 
     public void actionPerformed (ActionEvent e) {
-	HGVNetwork cyNetwork = HGVKit.getCurrentNetwork();
-	Set flaggedEdgeIndices = cyNetwork.getFlagger().getFlaggedEdges();
-	cyNetwork.getFlagger().flagAllEdges();
-	cyNetwork.getFlagger().setFlaggedEdges(flaggedEdgeIndices,false);
+        HGVNetworkView view = HGVKit.getCurrentView();
+        Set<FEdge> flaggedEdgeIndices = view.getFlaggedEdges();
+	    for(PEdgeView ev: view.getEdgeViews())
+	        ev.select();
+	    for(FEdge edge: flaggedEdgeIndices)
+	    {
+	        PEdgeView ev = view.getEdgeView(edge);
+	        if(ev != null)
+	            ev.unselect();
+	    }
     }
 }
 

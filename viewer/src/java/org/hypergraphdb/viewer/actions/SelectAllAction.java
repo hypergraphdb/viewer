@@ -20,9 +20,9 @@ public class SelectAllAction extends HGVAction  {
     public void actionPerformed (ActionEvent e) {		
         //GinyUtils.selectAllNodes( org.hypergraphdb.viewer.getCurrentNetworkView() );
         //GinyUtils.selectAllEdges( org.hypergraphdb.viewer.getCurrentNetworkView() );
-    	if(HGVKit.getCurrentNetwork() == null) return;
-    	HGVKit.getCurrentNetwork().getFlagger().flagAllNodes();
-        HGVKit.getCurrentNetwork().getFlagger().flagAllEdges();
+    	if(HGVKit.getCurrentView() == null) return;
+    	HGVKit.getCurrentView().flagAllNodes();
+        HGVKit.getCurrentView().flagAllEdges();
     }//action performed
 }
 

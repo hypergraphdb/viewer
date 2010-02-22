@@ -63,7 +63,7 @@ public class SpringEmbeddedLayout implements Layout
     protected double anticollisionSpringStrength =
             DEFAULT_ANTICOLLISION_SPRING_STRENGTH;
 
-    protected PGraphView graphView;
+    protected HGVNetworkView graphView;
     protected int nodeCount;
     protected int edgeCount;
     protected int layoutPass;
@@ -76,7 +76,7 @@ public class SpringEmbeddedLayout implements Layout
     	
     }
     
-    public SpringEmbeddedLayout(PGraphView graph_view) {
+    public SpringEmbeddedLayout(HGVNetworkView graph_view) {
         setGraphView(graph_view);
         initializeSpringEmbeddedLayouter();
     }
@@ -94,11 +94,11 @@ public class SpringEmbeddedLayout implements Layout
 		doLayout();
 	}
 
-    public void setGraphView(PGraphView new_graph_view) {
+    public void setGraphView(HGVNetworkView new_graph_view) {
         graphView = new_graph_view;
     } // setGraphView( GraphView )
 
-    public PGraphView getGraphView() {
+    public HGVNetworkView getGraphView() {
         return graphView;
     } // getGraphView()
 
@@ -214,7 +214,7 @@ public class SpringEmbeddedLayout implements Layout
             nodeList.add(i, nodeIndex.getNode());
             i++;
         }
-        NodeDistances ind = new NodeDistances(nodeList, graphView.getNetwork(), nodeIndexToMatrixIndexMap);
+        NodeDistances ind = new NodeDistances(nodeList, graphView, nodeIndexToMatrixIndexMap);
         int[][] node_distances = (int[][]) ind.calculate();
 
         if (node_distances == null) {

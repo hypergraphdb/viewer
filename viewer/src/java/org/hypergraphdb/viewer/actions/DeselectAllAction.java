@@ -20,11 +20,9 @@ public class DeselectAllAction extends HGVAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-      //GinyUtils.deselectAllNodes( org.hypergraphdb.viewer.getCurrentNetworkView() );
-      //GinyUtils.deselectAllEdges( org.hypergraphdb.viewer.getCurrentNetworkView() );
-     if(HGVKit.getCurrentNetwork() == null) return;
-    	HGVKit.getCurrentNetwork().getFlagger().unflagAllEdges();
-      HGVKit.getCurrentNetwork().getFlagger().unflagAllNodes();
+     if(HGVKit.getCurrentView() == null) return;
+      HGVKit.getCurrentView().unflagAllEdges();
+      HGVKit.getCurrentView().unflagAllNodes();
     }
 }
 

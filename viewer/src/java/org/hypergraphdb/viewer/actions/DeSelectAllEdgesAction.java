@@ -21,8 +21,8 @@ public class DeSelectAllEdgesAction extends HGVAction  {
 
     public void actionPerformed (ActionEvent e) {
       //GinyUtils.deselectAllEdges( org.hypergraphdb.viewer.getCurrentNetworkView() );
-    	if(HGVKit.getCurrentNetwork() != null)
-    	  HGVKit.getCurrentNetwork().getFlagger().unflagAllEdges();
+    	if(HGVKit.getCurrentView() != null)
+    	  HGVKit.getCurrentView().unflagAllEdges();
     }//action performed
 }
 

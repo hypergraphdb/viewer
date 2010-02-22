@@ -1,7 +1,7 @@
 package org.hypergraphdb.viewer.event;
 
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetwork;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 
 
@@ -17,7 +17,7 @@ public final class HGVNetworkNodesRemovedEvent
   // must contain valid RootGraph indices at the time this constructor is
   // called; further behavior of the FNode objects is not too important
   // because the getHiddenNodes() method has been deprecated.
-  public HGVNetworkNodesRemovedEvent(HGVNetwork source,
+  public HGVNetworkNodesRemovedEvent(HGVNetworkView source,
 		  FNode[] hiddenNodes)
   {
     super(source);

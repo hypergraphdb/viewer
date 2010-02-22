@@ -20,8 +20,8 @@ public class DeSelectAllNodesAction extends HGVAction  {
     }
 
     public void actionPerformed (ActionEvent e) {
-    	if(HGVKit.getCurrentNetwork() != null)
-          HGVKit.getCurrentNetwork().getFlagger().unflagAllNodes();
+    	if(HGVKit.getCurrentView() != null)
+          HGVKit.getCurrentView().unflagAllNodes();
     }
 }
 

@@ -2,22 +2,24 @@ package org.hypergraphdb.viewer.layout;
 
 import java.awt.Dimension;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
+
+import org.hypergraphdb.viewer.HGVNetworkView;
+
 import phoebe.PGraphView;
 import phoebe.PNodeView;
 
 abstract public class AbstractLayout  {
 
   protected Set<PNodeView> staticNodes;
-  protected PGraphView graphView;
+  protected HGVNetworkView graphView;
   protected Dimension currentSize;
 
   public AbstractLayout (){
 	  this.staticNodes = new HashSet<PNodeView>();
   }
   
-  public AbstractLayout ( PGraphView view  ) {
+  public AbstractLayout ( HGVNetworkView view  ) {
     this.graphView = view;
     this.staticNodes = new HashSet<PNodeView>();
   }

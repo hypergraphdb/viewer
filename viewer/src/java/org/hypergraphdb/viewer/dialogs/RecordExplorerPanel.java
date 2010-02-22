@@ -39,7 +39,7 @@ public class RecordExplorerPanel extends javax.swing.JPanel
 
 	private void initComponents2()
 	{
-		hg = HGVKit.getCurrentNetwork().getHyperGraph();
+		hg = HGVKit.getCurrentView().getHyperGraph();
 		recordTypeHandles = HGVUtils.getAllRecordTypes(hg);
 		recordTypes = new HGCompositeType[recordTypeHandles.length];
 		recordTypeNames = new String[recordTypeHandles.length];

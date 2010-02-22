@@ -7,7 +7,6 @@
 package org.hypergraphdb.viewer.actions;
 
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 

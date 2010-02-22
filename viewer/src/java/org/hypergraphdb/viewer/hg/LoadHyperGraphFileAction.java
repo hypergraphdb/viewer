@@ -14,10 +14,7 @@ import java.text.NumberFormat;
 import javax.swing.SwingUtilities;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.FEdge;
-import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetwork;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.FileUtil;
 import org.hypergraphdb.viewer.util.GUIUtilities;
@@ -62,7 +59,7 @@ public class LoadHyperGraphFileAction extends HGVAction
     public static void loadHyperGraph(File file)
     {
     	if(file == null) throw new NullPointerException("HG file is null");
-    	HGVNetwork network = HGVKit.getNetworkByFile(file);
+    	HGVNetworkView network = null;//HGVKit.getNetworkByFile(file);
     	if (network == null)
         {
             //  Create LoadNetwork Task
@@ -89,7 +86,7 @@ public class LoadHyperGraphFileAction extends HGVAction
     static class LoadHGNetworkTask implements Task
     {
         private File db;
-        private HGVNetwork cyNetwork;
+        private HGVNetworkView cyNetwork;
         private TaskMonitor taskMonitor;
         
         
@@ -131,7 +128,7 @@ public class LoadHyperGraphFileAction extends HGVAction
         /**
          * Inform User of Network Stats.
          */
-        private void informUserOfGraphStats(HGVNetwork newNetwork)
+        private void informUserOfGraphStats(HGVNetworkView newNetwork)
         {
             NumberFormat formatter = new DecimalFormat("#,###,###");
             StringBuffer sb = new StringBuffer();
@@ -194,15 +191,12 @@ public class LoadHyperGraphFileAction extends HGVAction
          *
          * @param location      the location of the file
          */
-        private HGVNetwork createNetwork() throws IOException
+        private HGVNetworkView createNetwork() throws IOException
         {
-            
             HGReader reader = new HGReader(db);
             reader.taskMonitor = taskMonitor;
-            
             //Have the GraphReader read the given file
             reader.read();
-            final String title = db.getAbsolutePath();
             taskMonitor.setStatus("Creating HG Network...");
             
             //  Create the HGVNetwork
@@ -210,11 +204,11 @@ public class LoadHyperGraphFileAction extends HGVAction
             //  the auto-creating of the HGVNetworkView.
             int realThreshold = AppConfig.getInstance().getViewThreshold();
             AppConfig.getInstance().setViewThreshold(0);
-            HGVNetwork network = HGVKit.createNetwork( reader.getNodes(),
-                    reader.getEdges(),
-            		reader.getHyperGraph(), null);
+            HGVNetworkView network = HGVKit.createNetworkView(
+                    reader.getHyperGraph(),
+                    reader.getNodes(),
+                    reader.getEdges());
             
-            network.setTitle(title);
             System.out.println("Network: " + network + " file_name: " + 
             		network.getHyperGraph().getStore().getDatabaseLocation());
             
@@ -230,8 +224,7 @@ public class LoadHyperGraphFileAction extends HGVAction
                 {
                     public void run()
                     {
-                        PGraphView view =(PGraphView)
-                        HGVKit.getCurrentView();
+                        PGraphView view =(PGraphView) HGVKit.getCurrentView();
                         PCanvas pCanvas = view.getCanvas();
                         pCanvas.setVisible(true);
                     }
@@ -247,17 +240,14 @@ public class LoadHyperGraphFileAction extends HGVAction
          * view from the user, and I didn't want to use this hack in the core
          * HGVKit.java class.
          */
-        private void createNetworkView(HGVNetwork network)
+        private void createNetworkView(HGVNetworkView view)
         {
-        	final HGVNetworkView view = new HGVNetworkView(network,
-            network.getTitle());
-           
             //  Start of Hack:  Hide the View
             PCanvas pCanvas = view.getCanvas();
             pCanvas.setVisible(false);
             //  End of Hack
             
-            HGVKit.getNetworkMap().put(network, view);
+            //HGVKit.getNetworkMap().put(network, view);
             
             // if Squiggle function enabled, enable squiggling on the created view
             if (HGVKit.isSquiggleEnabled())

@@ -229,6 +229,6 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 	
 	protected final HyperGraph getHG(){
 		if(network_view == null)return null;
-		return network_view.getNetwork().getHyperGraph();
+		return network_view.getHyperGraph();
 	}
 }
