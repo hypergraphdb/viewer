@@ -6,7 +6,11 @@ public class FNode
 {
 	protected HGHandle handle = null;
 	
-	public FNode(HGHandle h)
+	public FNode()
+    {
+    }
+
+    public FNode(HGHandle h)
 	{
 		this.handle = h;
 	}
@@ -15,11 +19,11 @@ public class FNode
 	{
 	   return this.handle;
 	}
-//	  
-//	public void setHandle(HGHandle h)
-//	{
-//	      handle = h;
-//	}
+	  
+	public void setHandle(HGHandle h)
+	{
+	      handle = h;
+	}
 
 	@Override
 	public int hashCode() {

@@ -4,20 +4,30 @@ package org.hypergraphdb.viewer;
 public class FEdge {
 
 	// Variables specific to public get/set methods.
-	FNode source = null;
+	FNode source;
 	FNode target;
-	String m_identifier = null;
+	
+	
+    public FEdge() 
+    {
+    }
 
-	// Package visible constructor.
-	FEdge() {
-	}
+    public FEdge(FNode source, FNode target) {
+        this.source = source;
+        this.target = target;
+    }
 
-	public FEdge(FNode source, FNode target) {
-		this.source = source;
-		this.target = target;
-	}
+	public void setSource(FNode source)
+    {
+        this.source = source;
+    }
 
-	public FNode getSource() {
+    public void setTarget(FNode target)
+    {
+        this.target = target;
+    }
+
+    public FNode getSource() {
 		return source;
 	}
 
@@ -25,15 +35,7 @@ public class FEdge {
 		return target;
 	}
 
-	public String getIdentifier() {
-		return m_identifier;
-	}
-
-	public boolean setIdentifier(String new_id) {
-		m_identifier = new_id;
-		return true;
-	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
