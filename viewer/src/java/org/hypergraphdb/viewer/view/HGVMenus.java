@@ -31,15 +31,12 @@
 package org.hypergraphdb.viewer.view;
 
 //------------------------------------------------------------------------------
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.net.URL;
 
-import javax.help.CSH;
-import javax.help.HelpBroker;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -49,7 +46,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
 import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MenuEvent;
@@ -59,11 +55,9 @@ import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.actions.FitContentAction;
-import org.hypergraphdb.viewer.actions.HelpAboutAction;
 import org.hypergraphdb.viewer.actions.HideSelectedAction;
 import org.hypergraphdb.viewer.actions.LayoutsMenu;
 import org.hypergraphdb.viewer.actions.SelectionModeAction;
-import org.hypergraphdb.viewer.actions.ShowAllAction;
 import org.hypergraphdb.viewer.actions.SquiggleAction;
 import org.hypergraphdb.viewer.actions.ZoomAction;
 import org.hypergraphdb.viewer.actions.ZoomSelectedAction;
@@ -90,15 +84,11 @@ public class HGVMenus implements HGVNetworkChangeListener
 	JMenu displayNWSubMenu;
 	JMenu layoutMenu;
 	JMenu vizMenu;
-	JMenu helpMenu;
 	JMenu zoomMenu;
 	Action menuPrintAction, menuExportAction;
-	JMenuItem helpContentsMenuItem, helpContextSensitiveMenuItem,
-			helpAboutMenuItem;
 	JButton loadButton, saveButton, zoomInButton, zoomOutButton,
 			zoomSelectedButton, zoomDisplayAllButton, showAllButton,
 			hideSelectedButton, annotationButton, vizButton;
-	JMenu opsMenu;
 	JToolBar toolBar;
 	boolean nodesRequiredItemsEnabled;
 	public static HGVMenus instance = null;
@@ -194,23 +184,6 @@ public class HGVMenus implements HGVNetworkChangeListener
 		return vizMenu;
 	}
 
-	/**
-	 * Returns the help menu.
-	 */
-	public JMenu getHelpMenu()
-	{
-		return helpMenu;
-	}
-
-	/**
-	 * Returns the menu with items associated with plug-ins. Most plug-ins grab
-	 * this menu and add their menu option. The plugins should then call
-	 * refreshOperationsMenu to update the menu.
-	 */
-	public JMenu getOperationsMenu()
-	{
-		return opsMenu;
-	}
 
 	/**
 	 * Returns the toolbar object constructed by this class.
@@ -218,36 +191,6 @@ public class HGVMenus implements HGVNetworkChangeListener
 	public JToolBar getToolBar()
 	{
 		return toolBar;
-	}
-
-	/**
-	 * Called when the window switches to edit mode, enabling the menu option
-	 * for deleting selected objects.
-	 * 
-	 * Again, the keeper of the edit modes should probably get a reference to
-	 * the menu item and manage its state.
-	 */
-	public void enableDeleteSelectionMenuItem()
-	{
-		if (deleteSelectionMenuItem != null)
-		{
-			deleteSelectionMenuItem.setEnabled(true);
-		}
-	}
-
-	/**
-	 * Called when the window switches to read-only mode, disabling the menu
-	 * option for deleting selected objects.
-	 * 
-	 * Again, the keeper of the edit modes should probably get a reference to
-	 * the menu item and manage its state.
-	 */
-	public void disableDeleteSelectionMenuItem()
-	{
-		if (deleteSelectionMenuItem != null)
-		{
-			deleteSelectionMenuItem.setEnabled(false);
-		}
 	}
 
 	/**
@@ -481,8 +424,7 @@ public class HGVMenus implements HGVNetworkChangeListener
 		});
 		menuBar.add(vizMenu = new JMenu("Visualization"));
 		menuBar.add(zoomMenu = new JMenu("Zoom"));
-		opsMenu = new JMenu("Plugins");
-		menuBar.add(helpMenu = new JMenu("Help"));
+
 	}
 
 	/**
@@ -587,25 +529,6 @@ public class HGVMenus implements HGVNetworkChangeListener
 			vizMenu.add(mi(ActionManager.TOGGLE_BIRDS_EYE_VIEW_ACTION));
 		vizMenu.add(mi(ActionManager.BACKGROUND_COLOR_ACTION));
 		vizMenu.add(mi(ActionManager.VISUAL_PROPERTIES_ACTION));
-		// Help menu
-		// use the usual *Action class for menu entries which have static
-		// actions
-		helpAboutMenuItem = new JMenuItem(new HelpAboutAction());
-		// for Contents and Context Sensitive help, don't use *Action class
-		// since actions encapsulated by HelpBroker and need run-time data
-		if (HGVKit.isEmbeded()) return;
-		helpContentsMenuItem = new JMenuItem("Contents...", KeyEvent.VK_C);
-		helpContentsMenuItem.setAccelerator(KeyStroke.getKeyStroke("F1"));
-		ImageIcon contextSensitiveHelpIcon = new ImageIcon(
-				getImgResource("contextSensitiveHelp.gif"));
-		helpContextSensitiveMenuItem = new JMenuItem("Context Sensitive...",
-				contextSensitiveHelpIcon);
-		helpContextSensitiveMenuItem.setAccelerator(KeyStroke
-				.getKeyStroke("shift F1"));
-		helpMenu.add(helpContentsMenuItem);
-		helpMenu.add(helpContextSensitiveMenuItem);
-		helpMenu.addSeparator();
-		helpMenu.add(helpAboutMenuItem);
 	}
 
 	/**
@@ -745,11 +668,11 @@ public class HGVMenus implements HGVNetworkChangeListener
 		zoomDisplayAllButton.setBorderPainted(false);
 		zoomDisplayAllButton.setText("");
 		// toolBar.addSeparator();
-		showAllButton = toolBar.add(new ShowAllAction());
-		showAllButton.setIcon(new ImageIcon(getImgResource("new/add36.gif")));
-		showAllButton
-				.setToolTipText("Show all Nodes and Edges (unhiding as necessary)");
-		showAllButton.setBorderPainted(false);
+//		showAllButton = toolBar.add(new ShowAllAction());
+//		showAllButton.setIcon(new ImageIcon(getImgResource("new/add36.gif")));
+//		showAllButton
+//				.setToolTipText("Show all Nodes and Edges (unhiding as necessary)");
+//		showAllButton.setBorderPainted(false);
 		hideSelectedButton = toolBar.add(new HideSelectedAction(false));
 		hideSelectedButton.setIcon(new ImageIcon(
 				getImgResource("new/delete36.gif")));
@@ -764,39 +687,7 @@ public class HGVMenus implements HGVNetworkChangeListener
 		vizButton.setText("");
 	}// createToolBar
 
-	/**
-	 * Register the help set and help broker with the various components
-	 */
-	void initializeHelp(HelpBroker hb)
-	{
-		hb.enableHelp(helpContentsMenuItem, "intro", null);
-		helpContentsMenuItem
-				.addActionListener(new CSH.DisplayHelpFromSource(hb));
-		helpContextSensitiveMenuItem
-				.addActionListener(new CSH.DisplayHelpAfterTracking(hb));
-		// add Help support for toolbar
-		hb.enableHelp(toolBar, "toolbar", null);
-		// add Help support for toolbar buttons
-		hb.enableHelp(loadButton, "toolbar-load", null);
-		hb.enableHelp(saveButton, "toolbar-load", null);
-		hb.enableHelp(zoomInButton, "toolbar-zoom", null);
-		hb.enableHelp(zoomOutButton, "toolbar-zoom", null);
-		hb.enableHelp(zoomSelectedButton, "toolbar-zoom", null);
-		hb.enableHelp(zoomDisplayAllButton, "toolbar-zoom", null);
-		hb.enableHelp(showAllButton, "toolbar-hide", null);
-		hb.enableHelp(hideSelectedButton, "toolbar-hide", null);
-		hb.enableHelp(annotationButton, "toolbar-annotate", null);
-		hb.enableHelp(vizButton, "toolbar-setVisProps", null);
-		// add Help support for visual properties combo box created elsewhere
-		// but in this toolbar
-		/*
-		 * MDA - can't get this to work... can't get access to public method?
-		 * VizMapUI vizMapUI = HGVKit.getDesktop().getVizMapUI();
-		 * hb.enableHelp(vizMapUI.getToolbarComboBox(),
-		 * "toolbar-setVisProps",null);
-		 */
-	}
-
+	
 	private static URL getImgResource(String res)
 	{
 		URL url = HGVMenus.class.getClassLoader().getResource(IMG_BASE + res);

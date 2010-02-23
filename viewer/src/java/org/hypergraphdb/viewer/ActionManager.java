@@ -69,14 +69,12 @@ public class ActionManager
 		actions.put(PREFERENCES_ACTION, new PreferenceAction());
 		actions.put(INVERT_NODE_SELECTION_ACTION, new InvertSelectedNodesAction());
 		actions.put(HIDE_NODE_SELECTION_ACTION, new HideSelectedNodesAction());
-		actions.put(SHOW_ALL_NODES_ACTION, new UnHideSelectedNodesAction());
 		actions.put(SELECT_ALL_NODES_ACTION, new SelectAllNodesAction());
 		actions.put(DESELECT_ALL_NODES_ACTION, new DeSelectAllNodesAction());
 		actions.put(SELECTED_FIRST_NEIGHBORS_ACTION, new SelectFirstNeighborsAction());
 		
 		actions.put(INVERT_EDGE_SELECTION_ACTION, new InvertSelectedEdgesAction());
 		actions.put(HIDE_EDGE_SELECTION_ACTION, new HideSelectedEdgesAction());
-		actions.put(SHOW_ALL_EDGES_ACTION, new UnHideSelectedEdgesAction());
 		actions.put(SELECT_ALL_EDGES_ACTION, new SelectAllEdgesAction());
 		actions.put(DESELECT_ALL_EDGES_ACTION, new DeSelectAllEdgesAction());
 		

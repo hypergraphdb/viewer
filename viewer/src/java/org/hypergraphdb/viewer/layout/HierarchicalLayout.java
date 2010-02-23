@@ -72,6 +72,7 @@ import phoebe.PNodeView;
  */
 public class HierarchicalLayout implements Layout
 {
+    HGVNetworkView view;
     
 	public String getName()
 	{
@@ -96,20 +97,19 @@ public class HierarchicalLayout implements Layout
      * the center of the component.
      * @param event Menu Selection Event.
      */
-	 public void applyLayout ()
+	 public void applyLayout (HGVNetworkView view)
     {
-        //get the graph view object from the window.
-        HGVNetworkView networkView = HGVKit.getCurrentView();
-        if (networkView == null) return;
+        this.view = view;
+        if (view == null) return;
                
          //Select all nodes as the default action if none are selected
-        if(networkView.getNodeCount() <= 0)
+        if(view.getNodeCount() <= 0)
           return;
         
         /* construct node list with selected nodes first */
-        List<PNodeView> selectedNodes = networkView.getSelectedNodes();
+        List<PNodeView> selectedNodes = view.getSelectedNodes();
         final int numSelectedNodes = selectedNodes.size();
-        final int numNodes = networkView.getNodeViewCount();
+        final int numNodes = view.getNodeViewCount();
         final int numLayoutNodes = (numSelectedNodes <= 1) ? numNodes : numSelectedNodes;
         PNodeView nodeView[] = new PNodeView[numNodes];
         int nextNode = 0;
@@ -124,7 +124,7 @@ public class HierarchicalLayout implements Layout
                 nextNode++;
             }
         }
-        for (PNodeView nv: networkView.getNodeViews())
+        for (PNodeView nv: view.getNodeViews())
         {
             if (!ginyIndex2Index.containsKey(nv))
             {
@@ -135,7 +135,7 @@ public class HierarchicalLayout implements Layout
         }
         /* create edge list from edges between selected nodes */
         LinkedList<Graph.Edge> edges = new LinkedList<Graph.Edge>();
-        Iterator<PEdgeView> iter2 = networkView.getEdgeViewsIterator();
+        Iterator<PEdgeView> iter2 = view.getEdgeViewsIterator();
         while (iter2.hasNext())
         {
             PEdgeView ev = iter2.next();

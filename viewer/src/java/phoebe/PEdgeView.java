@@ -833,9 +833,8 @@ public class PEdgeView extends PPath implements PropertyChangeListener
 	protected void setSourceEdgeEndType(int type)
 	{
 		if (sourceEdgeEnd != null)
-		{
 			removeChild(sourceEdgeEnd);
-		}
+		
 		sourceEdgeEnd = null;
 		view.setEdgeIntProperty(edge,
 				PGraphView.EDGE_SOURCE_END_TYPE, type);

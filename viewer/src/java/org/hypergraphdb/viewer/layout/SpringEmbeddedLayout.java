@@ -63,7 +63,7 @@ public class SpringEmbeddedLayout implements Layout
     protected double anticollisionSpringStrength =
             DEFAULT_ANTICOLLISION_SPRING_STRENGTH;
 
-    protected HGVNetworkView graphView;
+    protected HGVNetworkView view;
     protected int nodeCount;
     protected int edgeCount;
     protected int layoutPass;
@@ -71,14 +71,10 @@ public class SpringEmbeddedLayout implements Layout
     protected HashMap<PNodeView, Integer> nodeIndexToMatrixIndexMap; //maps a root graph index to a distance matrix index
     protected TreeMap<Integer, PNodeView> matrixIndexToNodeIndexMap; //maps a distance matrix index to a root graph instance
 
+    
     public SpringEmbeddedLayout()
     {
     	
-    }
-    
-    public SpringEmbeddedLayout(HGVNetworkView graph_view) {
-        setGraphView(graph_view);
-        initializeSpringEmbeddedLayouter();
     }
     
     public String getName()
@@ -86,8 +82,9 @@ public class SpringEmbeddedLayout implements Layout
 		return "Spring Embedded";
 	}
 	
-	public void applyLayout(){
-		HGVNetworkView view = HGVKit.getCurrentView();
+	public void applyLayout(HGVNetworkView view)
+	{
+		this.view = view;
 		if(view == null) return;
 		setGraphView(view);
 		initializeSpringEmbeddedLayouter();
@@ -95,11 +92,11 @@ public class SpringEmbeddedLayout implements Layout
 	}
 
     public void setGraphView(HGVNetworkView new_graph_view) {
-        graphView = new_graph_view;
+        view = new_graph_view;
     } // setGraphView( GraphView )
 
     public HGVNetworkView getGraphView() {
-        return graphView;
+        return view;
     } // getGraphView()
 
     protected void initializeSpringEmbeddedLayouter() {
@@ -109,14 +106,14 @@ public class SpringEmbeddedLayout implements Layout
 
     public void doLayout() {
         // initialize the layouting.
-        nodeCount = graphView.getNodeViewCount();
-        edgeCount = graphView.getEdgeViewCount();
+        nodeCount = view.getNodeViewCount();
+        edgeCount = view.getEdgeViewCount();
 
         //initialize the index map
         nodeIndexToMatrixIndexMap = new HashMap<PNodeView, Integer>();
         matrixIndexToNodeIndexMap = new TreeMap<Integer, PNodeView>();
         int count=0;
-        for (PNodeView nodeView: graphView.getNodeViews()) {
+        for (PNodeView nodeView: view.getNodeViews()) {
             nodeIndexToMatrixIndexMap.put(nodeView, new Integer(count));
             matrixIndexToNodeIndexMap.put(new Integer(count), nodeView);
             count++;
@@ -151,7 +148,7 @@ public class SpringEmbeddedLayout implements Layout
             partials_list.clear();
 
             // Calculate all node distances.  Keep track of the furthest.
-            for (PNodeView node_view : graphView.getNodeViews())
+            for (PNodeView node_view : view.getNodeViews())
             {
                 partials = new PartialDerivatives(node_view);
                 calculatePartials(partials,
@@ -214,7 +211,7 @@ public class SpringEmbeddedLayout implements Layout
             nodeList.add(i, nodeIndex.getNode());
             i++;
         }
-        NodeDistances ind = new NodeDistances(nodeList, graphView, nodeIndexToMatrixIndexMap);
+        NodeDistances ind = new NodeDistances(nodeList, view, nodeIndexToMatrixIndexMap);
         int[][] node_distances = (int[][]) ind.calculate();
 
         if (node_distances == null) {
@@ -315,7 +312,7 @@ public class SpringEmbeddedLayout implements Layout
 
         Iterator iterator;
         if (partials_list == null) {
-            iterator = graphView.getNodeViews().iterator();
+            iterator = view.getNodeViews().iterator();
         } else {
             iterator = partials_list.iterator();
         }

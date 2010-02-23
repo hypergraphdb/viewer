@@ -40,8 +40,7 @@ public class RecentFilesProvider implements PropertyChangeListener
         
         if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED)
         {
-            String f = ((HGVNetworkView) e.getNewValue()).getHyperGraph().getStore().getDatabaseLocation();
-            System.out.println("RecentFilesProvider: - propertyChange - f: " + f + " net: " + e.getNewValue());
+            String f = ((HGVNetworkView) e.getNewValue()).getHyperGraph().getLocation();
             if(!(AppConfig.getInstance().getMRUF().contains(f)))
             {
             	AppConfig.getInstance().getMRUF().add(f);
@@ -51,7 +50,8 @@ public class RecentFilesProvider implements PropertyChangeListener
         {
         	for(HGVNetworkView net: HGVKit.getNetworkViewsList())
         		AppConfig.getInstance().getMRUF().add(
-        				net.getHyperGraph().getStore().getDatabaseLocation());
+        				net.getHyperGraph().getLocation());
+        	AppConfig.getInstance().getGraph().update(AppConfig.getInstance());
         }
         
     }

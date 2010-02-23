@@ -4,7 +4,6 @@ import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 
 import org.hypergraphdb.viewer.actions.CreateNetworkViewAction;
-import org.hypergraphdb.viewer.data.*;
 
 import org.hypergraphdb.viewer.util.swing.*;
 
@@ -19,7 +18,7 @@ import java.beans.*;
 
 public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		TreeSelectionListener//, FlagEventListener 
-		{
+{
 
 	protected SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(
 			this);
@@ -31,7 +30,6 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 	PopupActionListener popupActionListener;
 	JMenuItem createViewItem;
 	JMenuItem destroyViewItem;
-	JMenuItem destroyNetworkItem;
 	JSplitPane split;
 
 	public NetworkPanel() {
@@ -77,17 +75,16 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		popup = new JPopupMenu();
 		createViewItem = new JMenuItem(PopupActionListener.CREATE_VIEW);
 		destroyViewItem = new JMenuItem(PopupActionListener.DESTROY_VIEW);
-		destroyNetworkItem = new JMenuItem(PopupActionListener.DESTROY_NETWORK);
+		
 
 		// action listener which performs the tasks associated with the popup
 		// listener
 		popupActionListener = new PopupActionListener();
 		createViewItem.addActionListener(popupActionListener);
 		destroyViewItem.addActionListener(popupActionListener);
-		destroyNetworkItem.addActionListener(popupActionListener);
 		popup.add(createViewItem);
 		popup.add(destroyViewItem);
-		popup.add(destroyNetworkItem);
+		
 	}
 
 	public void setNavigator(JComponent comp) {
@@ -270,11 +267,9 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 			
 			String s = "";
 			if (column == 1) {
-				s = "" + net.getNodeCount(); 
-					s += "(" + net.getNodeViewCount() + ")";
+				s += "(" + net.getNodeViewCount() + ")";
 				s += "(" + net.getFlaggedNodes().size() + ")";
 			} else if (column == 2) {
-				s = "" + net.getEdgeCount(); 
 				s += "(" + net.getEdgeViewCount() + ")";
 				s += "(" + net.getFlaggedEdges().size() + ")";
 			}
@@ -417,8 +412,6 @@ class PopupActionListener implements ActionListener {
 	public static String DESTROY_VIEW = "Destroy View";
 
 	public static String CREATE_VIEW = "Create View";
-
-	public static String DESTROY_NETWORK = "Destroy Network";
 
 	/**
 	 * This is the network which originated the mouse-click event (more

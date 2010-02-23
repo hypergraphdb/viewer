@@ -102,8 +102,8 @@ public class ContextMenuHelper extends PBasicInputEventHandler
 
     private static void adjust(PNode node)
     {
-        HGVKit.getPreferedLayout().applyLayout();
-        PGraphView view = HGVKit.getCurrentView();
+        HGVNetworkView view = HGVKit.getCurrentView();
+        HGVKit.getPreferedLayout().applyLayout(view);
         view.getCanvas().getCamera().animateViewToCenterBounds(
                 node.getFullBounds(), false, 1550l);
     }

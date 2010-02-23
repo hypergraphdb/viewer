@@ -12,8 +12,6 @@ import javax.swing.AbstractAction;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterJob;
 
-import org.hypergraphdb.viewer.giny.*;
-
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;

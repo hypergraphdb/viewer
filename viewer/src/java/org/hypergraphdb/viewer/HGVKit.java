@@ -36,14 +36,12 @@ import phoebe.PNodeView;
  * 
  * All Nodes and Edges must be created using the methods getHGVNode and
  * getHGVEdge, available only in this class. Once a node or edge is created
- * using these methods it can then be added to a HGVNetwork, where it can be
+ * using these methods it can then be added to a HGVNetworkView, where it can be
  * used algorithmically.<BR>
  * <BR>
  */
 public abstract class HGVKit
 {
-	public static String NETWORK_CREATED = "NETWORK_CREATED";
-	public static String NETWORK_DESTROYED = "NETWORK_DESTROYED";
 	public static String EXIT = "EXIT";
 	// constants for tracking selection mode globally
 	public static final int SELECT_NODES_ONLY = 1;
@@ -57,8 +55,6 @@ public abstract class HGVKit
 	protected static SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(
 			pcsO);
 	protected static List<HGVNetworkView> networkViewList;
-	protected static HGVDesktop defaultDesktop;
-	protected static HGVNetworkView currentView;
 	protected static Layout prefered_layout;
 	protected static Set<Layout> layouts = new HashSet<Layout>();
 	static
@@ -111,14 +107,6 @@ public abstract class HGVKit
 		return pcs;
 	}
 
-	/**
-	 * @param alias an alias of a node
-	 * @return will return a node, if one exists for the given alias
-	 */
-	public static FNode getHGVNode(HGHandle handle)
-	{
-		return getHGVNode(handle, false);
-	}
 
 	/**
 	 * @param handle a handle for the node
@@ -162,25 +150,13 @@ public abstract class HGVKit
 		return getHGVEdge(source, target, true);
 	}
 
-	
-	/**
-	 * @return true if there is network view, false if not
-	 */
-	public static boolean setCurrentView(HGVNetworkView view)
-	{
-		boolean dif = currentView == view;
-		currentView = view;
-		if (view == null || !dif) return false;
-		
-		return true;
-	}
-	
      /**
 	 * Return the HGVNetworkView that currently has the focus. 
 	 */
 	public static HGVNetworkView getCurrentView()
 	{
-		return currentView;
+	    HGVComponent comp = HGVComponent.getFocusedComponent();
+		return comp != null ? comp.getView() : null;
 	}
 
 	/**
@@ -188,8 +164,7 @@ public abstract class HGVKit
 	 */
 	public static HGVDesktop getDesktop()
 	{
-		if (defaultDesktop == null) defaultDesktop = new HGVDesktop();
-		return defaultDesktop;
+		return HGVDesktop.getInstance();
 	}
 
 	/**
@@ -205,7 +180,7 @@ public abstract class HGVKit
 
 	
 	/**
-	 * destroys the networkview, including any layout information
+	 * destroys the network view, including any layout information
 	 */
 	public static void destroyNetworkView(HGVNetworkView view)
 	{
@@ -222,7 +197,7 @@ public abstract class HGVKit
 		System.gc();
 	}
 
-	public static HGVNetworkView createNetworkView(HGVNetworkView view)
+	public static HGVComponent createHGVComponent(HGVNetworkView view)
 	{
 	    Collection<FNode> nodes = new ArrayList<FNode>();
 	    for(PNodeView nv : view.getNodeViews())
@@ -230,39 +205,19 @@ public abstract class HGVKit
 	    Collection<FEdge> edges  = new ArrayList<FEdge>();
         for(PEdgeView ev : view.getEdgeViews())
             edges.add(ev.getEdge()); 
-        return createNetworkView(view.getHyperGraph(), 
-                nodes, edges);
+        return createHGVComponent(view.getHyperGraph(), nodes, edges);
 	}
 		
 	/**
 	 * Creates a new Network, that inherits from the given ParentNetwork
 	 */
-	public static HGVNetworkView createNetworkView(HyperGraph db, 
+	public static HGVComponent createHGVComponent(HyperGraph db, 
 	        Collection<FNode> nodes, Collection<FEdge> edges)
 	{
-	    final HGVNetworkView view = new HGVNetworkView(db, nodes, edges, null);
-	    if (nodes.size() < AppConfig.getInstance().getViewThreshold())
-        {
-	         firePropertyChange(HGVDesktop.NETWORK_VIEW_CREATED, null, view);
-	        // Instead of calling fitContent(), access PGraphView directly.
-	        // This enables us to disable animation. Modified by Ethan Cerami.
-	        SwingUtilities.invokeLater(new Runnable() {
-	            public void run()
-	            {
-	                view.getCanvas().getCamera().animateViewToCenterBounds(
-	                        view.getCanvas().getLayer().getFullBounds(), true, 0);
-	                // if Squiggle function enabled, enable it on the view
-	                if (squiggleEnabled)
-	                    view.getSquiggleHandler().beginSquiggling();
-	                // set the selection mode on the view
-	                setSelectionMode(currentSelectionMode, view);
-	                HGVKit.getPreferedLayout().applyLayout();
-	            }
-	        });
-	        view.redrawGraph();
-	        return view;
-        }
-		return view;
+	    HGVComponent comp = new HGVComponent(db, nodes, edges);
+	    getNetworkViewsList().add(comp.getView());
+	    firePropertyChange(HGVDesktop.NETWORK_VIEW_CREATED, null, comp.getView());
+		return comp;
 	}
 
 	
@@ -397,13 +352,10 @@ public abstract class HGVKit
 		embeded = true;
 		try
 		{
-			int realThreshold = AppConfig.getInstance().getViewThreshold();
-			AppConfig.getInstance().setViewThreshold(0);
-			HGVNetworkView network = HGVKit.createNetworkView(graph, reader.getNodes(),
-			        reader.getEdges());
-			network.setIdentifier(graph.getStore().getDatabaseLocation());
-			AppConfig.getInstance().setViewThreshold(realThreshold);
-			return network;
+		    HGVComponent comp = 
+			    createHGVComponent(graph, reader.getNodes(), reader.getEdges());
+			comp.getView().setIdentifier(graph.getStore().getDatabaseLocation());
+			return comp.getView();
 		}
 		catch (Exception ex)
 		{
@@ -421,21 +373,5 @@ public abstract class HGVKit
 		reader.read(h, depth, cond); 
 		return getStandaloneView(hg, reader);
 	}
-
-//	private static HGVNetworkView createView(HGVNetwork network)
-//	{
-//		final HGVNetworkView view = new HGVNetworkView(network, network
-//				.getTitle());
-//		getNetworkMap().put(network, view);
-//		HGVKit.setCurrentView(view);
-//		// if Squiggle function enabled, enable squiggling on the created view
-//		if (HGVKit.isSquiggleEnabled())
-//			view.getSquiggleHandler().beginSquiggling();
-//		// set the selection mode on the view
-//		HGVKit.setSelectionMode(HGVKit.getSelectionMode(), view);
-//		HGVKit.getGraphViewController().addGraphView(view);
-//		view.redrawGraph();
-//    	return view;
-//	}
 	
 }

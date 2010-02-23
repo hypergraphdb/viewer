@@ -42,13 +42,13 @@ public class CreateNetworkViewAction extends HGVAction {
                     + "Do you wish to proceed?", "Rendering Large Network",
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
-            	HGVKit.createNetworkView(cyNetwork);
+            	HGVKit.createHGVComponent(cyNetwork);
             } else {
                 JOptionPane.showMessageDialog(HGVKit.getDesktop(),
                         "Create View Request Cancelled by User.");
             }
         } else {
-        	HGVKit.createNetworkView(cyNetwork);            
+        	HGVKit.createHGVComponent(cyNetwork);            
         }
     }
 }

@@ -25,33 +25,28 @@ public class Radial implements Layout
 {
 	protected double layerDistance = 10;
 	FNode center = null;
-	HashSet ve = null;
 	HashMap<FNode, Coordinates> locations = new HashMap<FNode, Coordinates>();
 	HashMap<FNode, Point2D> coords = new HashMap<FNode, Point2D>();
 	HashMap<FNode, Integer> radialWidth = new HashMap<FNode, Integer>();
 	HashSet<FNode> seen = new HashSet<FNode>();
 	HashSet<FEdge> validEdges = new HashSet<FEdge>();
 
+	HGVNetworkView view;
 	/**
 	 * ConstructorLink
 	 */
 	public Radial()
 	{
-		this(null, null);
+		this(null);
 	}
 	/*
 	 * 
 	 */
-	public Radial(FNode center, HashSet ve)
-	{
-		this.center = center;
-		this.ve = ve;
-	}
-
 	public Radial(FNode center)
 	{
-		this(center, null);
+		this.center = center;
 	}
+	
 	
 	public String getName()
 	{
@@ -61,7 +56,6 @@ public class Radial implements Layout
 	private void clear()
 	{
 		center = null;
-		ve = null;
 		locations.clear();
 		coords.clear();
 		radialWidth.clear();
@@ -69,33 +63,11 @@ public class Radial implements Layout
 		validEdges.clear();
 	}
 
-	// this one takes into account a predefined set of edges
-	public Vector<FNode> getNextLayerEdgesPredef(FNode center)
-	{
-		Vector<FNode> frontier = new Vector<FNode>();
-		Iterator it = getOutEdges(center).iterator();
-		seen.add(center);
-		while (it.hasNext())
-		{
-			PEdgeView e = (PEdgeView) it.next();
-			if (validEdges.contains(e))
-			{
-				FNode n = (FNode) getOpposite(center, e.getEdge());
-				if ((n != center) && (!seen.contains(n)))
-				{
-					// e.getRep().set("width",new Double(5));
-					frontier.addElement(n);
-					seen.add(n);
-				}
-			}
-		}
-		return (frontier);
-	}
-
-	public void applyLayout()
-	{
-		HGVNetworkView view = HGVKit.getCurrentView();
-		clear();
+	 public void applyLayout (HGVNetworkView view)
+	 {
+	        this.view = view;
+	        if (view == null) return;
+	    clear();
 		List<PNodeView> node_indicies = view.getSelectedNodes();
 		PNodeView center_view = null;
 		if(node_indicies.size() > 0)
@@ -106,25 +78,25 @@ public class Radial implements Layout
 			//if no center is specified, take the first view from the list
 			if(center_view == null)
 				center_view = n;
-			if(n!= null)
-			 locations.put(n.getNode(), new Coordinates(n.getXPosition(), n
+			locations.put(n.getNode(), new Coordinates(n.getXPosition(), n
 					.getYPosition()));
 		}
 		center = center_view.getNode();
 		advancePositions();
-		GEM.rescalePositions(0.25, 0, locations);
+		GEM.rescalePositions(view, 0.25, 0, locations);
 	}
 
-	private FNode getOpposite(FNode center, org.hypergraphdb.viewer.FEdge e)
+	private FNode getOpposite(FNode center, FEdge e)
 	{
-		if (e.getSource().equals(center)) return e.getTarget();
+		if (e.getSource().equals(center)) 
+		    return e.getTarget();
 		return e.getSource();
 	}
 
 	private Collection<FEdge> getOutEdges(FNode node)
 	{
 		Set<FEdge> totalEdges = new HashSet<FEdge>();
-		FEdge[] e = HGVKit.getCurrentView().getAdjacentEdges(
+		FEdge[] e = view.getAdjacentEdges(
 				node, true, true);
 		for (int i = 0; i < e.length; i++)
 			totalEdges.add(e[i]);
@@ -134,16 +106,13 @@ public class Radial implements Layout
 	public Vector<FNode> getNextLayer(FNode center)
 	{
 		Vector<FNode> frontier = new Vector<FNode>();
-		Iterator<FEdge> it = getOutEdges(center).iterator();
 		seen.add(center);
-		while (it.hasNext())
+		for (FEdge e : getOutEdges(center))
 		{
-			FEdge e = (FEdge) it.next();
-			FNode n = (FNode) getOpposite(center, e);
+			FNode n = getOpposite(center, e);
 			if ((n != center) && (!seen.contains(n)))
 			{
 				validEdges.add(e);
-				// e.getRep().set("width",new Double(5));
 				frontier.addElement(n);
 				seen.add(n);
 			}
@@ -154,42 +123,21 @@ public class Radial implements Layout
 	public void advancePositions()
 	{
 		if (done) return;
-		boolean predef = false;
-		if (ve != null)
-		{
-			predef = true;
-			validEdges = ve;
-		}
 		Vector<FNode> front = null;
-		if (!predef)
-		{
-			front = getNextLayer(center);
-		} else
-		{
-			front = getNextLayerEdgesPredef(center);
-		}
+		front = getNextLayer(center);
+		
 		while (front.size() > 0)
 		{
 			Vector<FNode> nextLayer = new Vector<FNode>();
 			for (int i = 0; i < front.size(); i++)
-			{
-				if (!predef)
-				{
 					nextLayer.addAll(getNextLayer(front.elementAt(i)));
-				} else
-				{
-					nextLayer.addAll(getNextLayerEdgesPredef(
-							front.elementAt(i)));
-				}
-			}
-			front = nextLayer;
+		    front = nextLayer;
 		}
 		seen.clear();
 		layerDistance = 10;
 		for (PNodeView n : HGVKit.getCurrentView().getNodeViews())
 		{
-			if(n != null)
-			  layerDistance = Math.max(layerDistance, 
+		    layerDistance = Math.max(layerDistance, 
 					           (n.getWidth()+ n.getHeight()) * 2);
 		}
 		double baseX = 0.0;
@@ -208,9 +156,7 @@ public class Radial implements Layout
 		{
 			FEdge e = (FEdge) neighbors.next();
 			if (!validEdges.contains(e))
-			{
 				continue;
-			}
 			FNode neighbor = getOpposite(center, e);
 			Integer i = (radialWidth.get(neighbor));
 			int neighborWidth = (i == null) ? 0 : i.intValue();
@@ -254,23 +200,17 @@ public class Radial implements Layout
 			s = (alpha2 - alpha1) / width;
 			// System.out.println("2: " + node + " " + s);
 		}
-		Iterator<FEdge> neighbors = getOutEdges(node).iterator();
-		while (neighbors.hasNext())
+		for (FEdge e: getOutEdges(node))
 		{
-			FEdge e = neighbors.next();
 			if (!validEdges.contains(e))
-			{
 				continue;
-			}
 			FNode neighbor = getOpposite(node, e);
-			if (neighbor != forbiddenNeighbor)
+			if (!neighbor.equals(forbiddenNeighbor))
 			{
 				Integer i = radialWidth.get(neighbor);
 				int neighborWidth = (i == null) ? 0 : i.intValue();
 				if (neighborWidth == 0)
-				{
 					System.out.println(neighbor);
-				}
 				RadialSubTreeUndirected(node, neighbor, neighborWidth, rho
 						+ layerDistance, alpha, alpha += s * neighborWidth,
 						baseX);
@@ -292,7 +232,7 @@ public class Radial implements Layout
 	 */
 	private int defineWidthProperty(FNode center, FNode enteringFrom)
 	{
-		//System.out.println("at: " + center);
+		System.out.println("defineWidthProperty: " + center + ":" +  enteringFrom);
 		if (radialWidth.containsKey(center))
 		{
 			System.out.println(center + " " + radialWidth.get(center));
@@ -306,15 +246,10 @@ public class Radial implements Layout
 		while (edges.hasNext())
 		{
 			FEdge edge = edges.next();
-			if (!validEdges.contains(edge))
-			{
-				continue;
-			}
+			if (!validEdges.contains(edge))	continue;
 			FNode goingTo = getOpposite(center, edge);
-			if (enteringFrom == goingTo)
-			{
+			if (enteringFrom == null || enteringFrom.equals(goingTo))
 				continue;
-			}
 			validNeighbors++;
 			width += defineWidthProperty(goingTo, center);
 		}
@@ -339,7 +274,7 @@ public class Radial implements Layout
 	
 	public Coordinates getCoordinates(FNode v)
 	{
-		return ((Coordinates) locations.get(v));
+		return locations.get(v);
 	}
 	public boolean done = false;
 

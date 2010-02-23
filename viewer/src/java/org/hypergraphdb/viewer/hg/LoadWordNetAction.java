@@ -20,6 +20,7 @@ import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
+import org.hypergraphdb.viewer.HGVComponent;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.VisualManager;
@@ -88,7 +89,6 @@ public class LoadWordNetAction extends HGVAction
     static class LoadTask implements Task
     {
         private File db;
-        private HGVNetworkView cyNetwork;
         private TaskMonitor taskMonitor;
         
         
@@ -108,11 +108,10 @@ public class LoadWordNetAction extends HGVAction
             {
             	if(!db.isDirectory())
             		throw new IOException("No such DB: " + db.getAbsolutePath());
-            	cyNetwork = createNetwork();
-                               
+            	HGVComponent cyNetwork = createNetwork();
                 if (cyNetwork != null)
                 {
-                    informUserOfGraphStats(cyNetwork);
+                    informUserOfGraphStats(cyNetwork.getView());
                 } else
                 {
                     StringBuffer sb = new StringBuffer();
@@ -188,42 +187,15 @@ public class LoadWordNetAction extends HGVAction
             return new String("Loading Network");
         }
         
-        private HGVNetworkView createNetwork() throws IOException
+        private HGVComponent createNetwork() throws IOException
         {
         	
             final HGWNReader reader = new HGWNReader(db);
             open(reader);
-                       
-            final String title = db.getAbsolutePath();
-            
-            //  Create the HGVNetwork
-            //  First, set the view threshold to 0.  By doing so, we can disable
-            //  the auto-creating of the HGVNetworkView.
-            int realThreshold = AppConfig.getInstance().getViewThreshold();
-            AppConfig.getInstance().setViewThreshold(0);
-            HGVNetworkView network = HGVKit.createNetworkView(reader.getHyperGraph(), 
+            HGVComponent comp = HGVKit.createHGVComponent(reader.getHyperGraph(), 
                     reader.getNodes(), reader.getEdges());
-            
-            //network.setTitle(title);
-           // System.out.println("Network: " + network + " file_name: " + network.getFileName());
-            //  Reset back to the real View Threshold
-            AppConfig.getInstance().setViewThreshold(realThreshold);
-            
-            if (network.getNodeCount() < AppConfig.getInstance().getViewThreshold())
-            {
-            	final HGVNetworkView view = createNetworkView(network);
-                SwingUtilities.invokeLater(new Runnable()
-                {
-                    public void run()
-                    {
-                        PCanvas pCanvas = view.getCanvas();
-                        pCanvas.setVisible(true);
-                    }
-                });
-                setVisualStyle(view);
-                return view;
-            }
-           return null;
+            setVisualStyle(comp.getView());
+            return comp;
         }
         private static final String WN_STYLE = "wordnet_style";
         
@@ -322,7 +294,7 @@ public class LoadWordNetAction extends HGVAction
             HGVKit.firePropertyChange
             (HGVDesktop.NETWORK_VIEW_CREATED, null, view);
             
-            HGVKit.getPreferedLayout().applyLayout();
+            HGVKit.getPreferedLayout().applyLayout(view);
 			
             //  Instead of calling fitContent(), access PGraphView directly.
             view.getCanvas().getCamera().animateViewToCenterBounds

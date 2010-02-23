@@ -14,17 +14,7 @@ import org.hypergraphdb.viewer.*;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
 
-
-
-//-------------------------------------------------------------------------
 /**
- * Giny version of the original class. Note that the original version was
- * only available when editing mode was enabled, and caused the selected
- * nodes to be permanently removed from the graph (and, necessarily, the view).
- * This version hides the selected nodes from both the graph and the view,
- * as there are currently no methods to remove a node view from the graph view
- * in Giny. The semantics of this and related classes for modifying the
- * graph and view should be clarified.
  */
 public class DeleteSelectedAction extends AbstractAction {
     

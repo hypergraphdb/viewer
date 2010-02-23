@@ -39,60 +39,16 @@ public class GinyUtils
         }
     }
 
-    public static void unHideSelectedNodes(HGVNetworkView view)
-    {
-        // hides nodes and edges between them
-        if (view == null) return;
-
-        for (PNodeView nview : view.getSelectedNodes())
-        {
-            view.showGraphObject(nview);
-
-            FEdge[] edges = view.getAdjacentEdges(nview.getNode(),
-                    true, true);
-            for (int j = 0; j < edges.length; ++j)
-            {
-                view.showGraphObject(view.getEdgeView(edges[j]));
-            }
-        }
-    }
-
-    public static void unHideAll(HGVNetworkView view)
-    {
-        if (view == null) { return; }
-
-        for (PNodeView nview : view.getSelectedNodes())
-            view.showGraphObject(nview);
-        
-        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext();)
-        {
-            PEdgeView eview = i.next();
-            view.showGraphObject(eview);
-        }
-    }
-
+  
     public static void hideSelectedEdges(HGVNetworkView view)
     {
         if (view == null) { return; }
 
-        for (Iterator i = view.getSelectedEdges().iterator(); i.hasNext();)
-        {
-            PEdgeView eview = (PEdgeView) i.next();
+        for (PEdgeView eview : view.getSelectedEdges())
             view.hideGraphObject(eview);
-        }
     }
 
-    public static void unHideSelectedEdges(HGVNetworkView view)
-    {
-        if (view == null) { return; }
-
-        for (Iterator i = view.getSelectedEdges().iterator(); i.hasNext();)
-        {
-            PEdgeView eview = (PEdgeView) i.next();
-            view.showGraphObject(eview);
-        }
-    }
-
+   
     public static void invertSelectedNodes(HGVNetworkView view)
     {
         if (view == null) { return; }
@@ -104,12 +60,9 @@ public class GinyUtils
     public static void invertSelectedEdges(HGVNetworkView view)
     {
         if (view == null) { return; }
-
-        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext();)
-        {
-            PEdgeView eview = i.next();
+        for (PEdgeView eview : view.getEdgeViews())
             eview.setSelected(!eview.isSelected());
-        }
+        
     }
 
     public static void selectAllNodes(HGVNetworkView view)
@@ -128,7 +81,7 @@ public class GinyUtils
             nview.setSelected(false);
     }
 
-    public static void selectAllEdges(PGraphView view)
+    public static void selectAllEdges(HGVNetworkView view)
     {
         if (view == null) { return; }
 
@@ -139,7 +92,7 @@ public class GinyUtils
         }
     }
 
-    public static void deselectAllEdges(PGraphView view)
+    public static void deselectAllEdges(HGVNetworkView view)
     {
         if (view == null) { return; }
 
@@ -150,7 +103,7 @@ public class GinyUtils
         }
     }
 
-    public static void hideAllEdges(PGraphView view)
+    public static void hideAllEdges(HGVNetworkView view)
     {
         if (view == null) { return; }
 
@@ -161,7 +114,7 @@ public class GinyUtils
         }
     }
 
-    public static void unHideAllEdges(PGraphView view)
+    public static void unHideAllEdges(HGVNetworkView view)
     {
         if (view == null) { return; }
 

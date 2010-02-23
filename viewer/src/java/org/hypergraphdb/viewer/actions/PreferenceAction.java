@@ -12,7 +12,6 @@ import javax.swing.AbstractAction;
 import org.hypergraphdb.viewer.dialogs.AppConfigPanel;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
-import org.hypergraphdb.viewer.giny.*;
 
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;

@@ -101,7 +101,7 @@ public class GEM implements Layout
 	private float o_rotation = OROTATIONDEF;
 	private float o_shake = OSHAKEDEF;
 
-	// private Graph g = null;
+	HGVNetworkView view;
 	/**
 	 * ConstructorLink
 	 */
@@ -510,7 +510,7 @@ public class GEM implements Layout
 		int iY = rand() % (2 * n + 1) - n;
 		iX += (centerX / nodeCount - pX) * p.mass * o_gravity;
 		iY += (centerY / nodeCount - pY) * p.mass * o_gravity;
-		Iterator<PEdgeView> edgeSet = HGVKit.getCurrentView().getEdgeViewsIterator();
+		Iterator<PEdgeView> edgeSet = view.getEdgeViewsIterator();
 		while (edgeSet.hasNext())
 		{
 			FEdge e = edgeSet.next().getEdge();
@@ -589,17 +589,17 @@ public class GEM implements Layout
 	/*
 	 * Royere main layout method
 	 */
-	public void applyLayout()
+	public void applyLayout(HGVNetworkView view)
 	{
+	    this.view = view;
 		long startTime = System.currentTimeMillis();
-		nodeCount = HGVKit.getCurrentView().getNodeViewCount();
+		nodeCount = view.getNodeViewCount();
 		gemProp = new GemP[nodeCount];
 		invmap = new FNode[nodeCount];
 		adjacent = new ArrayList[nodeCount];
 		nodeNumbers = new HashMap<FNode, Integer>();
-		HGVNetworkView view = HGVKit.getCurrentView();
 		int k = 0;
-		for (PNodeView v : HGVKit.getCurrentView().getNodeViews())
+		for (PNodeView v : view.getNodeViews())
 		{
 			FNode n = v.getNode();
 			gemProp[k] = new GemP(view.getAdjacentEdges(
@@ -631,7 +631,7 @@ public class GEM implements Layout
 			GemP p = gemProp[i];
 			myDone.put(invmap[i], new Coordinates(p.x, p.y));
 		}
-		rescalePositions(.25, 0, myDone);
+		rescalePositions(view, .25, 0, myDone);
 		long endTime = System.currentTimeMillis();
 	}
 
@@ -640,10 +640,9 @@ public class GEM implements Layout
 	 * 
 	 * @param nodes the nodes to rescale.
 	 */
-	public static void rescalePositions(double percent, int pad, 
+	public static void rescalePositions(HGVNetworkView view, double percent, int pad, 
 			Map<FNode, Coordinates> locations)
 	{
-		HGVNetworkView view = HGVKit.getCurrentView();
 		int nNodes = view.getNodeViewCount();
 		if (nNodes <= 1)
 		{

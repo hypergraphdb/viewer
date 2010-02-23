@@ -75,7 +75,7 @@ public class HGViewer implements Serializable
 		HGVComponent c = view.getComponent();
 		c.setPreferredSize(new java.awt.Dimension(600,400));
 		c.putClientProperty("HG_VIEWER", this);
-		c.view = this;
+		//c.view = this;
 		layout();
 		view.redrawGraph();
 		FNode node = HGVKit.getHGVNode(handle, false); 
@@ -108,29 +108,6 @@ public class HGViewer implements Serializable
 	public Component focus(HGHandle handle)
 	{
 		return focus(handle, getGenerator());
-		//we've been already focused
-/*		if(view != null)
-			tmp_style = view.self_style;
-		this.foc_handle = handle;
-		view = HGVKit.getStandaloneView(hg, foc_handle, depth, null);
-		for(HGHandle h: tmp_style.getNodePaintersMap().keySet())
-			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
-		for(HGHandle h: tmp_style.getEdgePaintersMap().keySet())
-			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
-		for(HGHandle h: tmp_style.getNonPersistentNodePaintersMap().keySet())
-			view.self_style.addNodePainter(h, tmp_style.getNodePainter(h));
-		for(HGHandle h: tmp_style.getNonPersistentEdgePaintersMap().keySet())
-			view.self_style.addEdgePainter(h, tmp_style.getEdgePainter(h));
-		
-		Component c = view.getComponent();
-		c.setPreferredSize(new java.awt.Dimension(600,400));
-		layout();
-		view.redrawGraph();
-		FNode node = HGVKit.getHGVNode(handle, false); 
-		view.getNodeView(node).setSelected(true);
-		view.getCanvas().getCamera().animateViewToCenterBounds( 
-				view.getNodeView(node).getFullBounds(), false, 1550l );
-		return c; */
 	}
 	
     public void refresh()
@@ -215,7 +192,7 @@ public class HGViewer implements Serializable
     }
     
     private void layout(){
-    	HGVKit.getPreferedLayout().applyLayout();
+    	HGVKit.getPreferedLayout().applyLayout(HGVKit.getCurrentView());
 	}
     
     private void writeObject(java.io.ObjectOutputStream s)

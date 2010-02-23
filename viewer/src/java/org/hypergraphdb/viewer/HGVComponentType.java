@@ -1,13 +1,23 @@
 package org.hypergraphdb.viewer;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.hypergraphdb.HGEnvironment;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGHandleFactory;
 import org.hypergraphdb.HGPersistentHandle;
+import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.IncidenceSetRef;
 import org.hypergraphdb.LazyRef;
 import org.hypergraphdb.type.HGAtomType;
 import org.hypergraphdb.type.HGAtomTypeBase;
+
+import phoebe.PEdgeView;
+import phoebe.PNodeView;
 
 public class HGVComponentType extends HGAtomTypeBase 
 {
@@ -18,11 +28,12 @@ public class HGVComponentType extends HGAtomTypeBase
     {
         HGPersistentHandle [] layout = graph.getStore().getLink(valueHandle);
         HGAtomType stype = graph.getTypeSystem().getAtomType(String.class);
-        HGAtomType itype = graph.getTypeSystem().getAtomType(Integer.class);
-        HGViewer view = new HGViewer(HGEnvironment.get((String)
-        		stype.make(layout[0], null, null)));
-        view.setDepth((Integer)itype.make(layout[2], null, null));
-        return view.focus(layout[1]);
+        HGAtomType collType = graph.getTypeSystem().getAtomType(Collection.class);  
+        HyperGraph db = HGEnvironment.get((String) stype.make(layout[0], null, null));
+        Collection<FNode> nodes = (Collection<FNode>)collType.make(layout[1], null, null);
+        Collection<FEdge> edges = (Collection<FEdge>)collType.make(layout[2], null, null);
+       
+        return new HGVComponent(db, nodes, edges);
     }
 
     public void release(HGPersistentHandle handle) 
@@ -37,13 +48,19 @@ public class HGVComponentType extends HGAtomTypeBase
     public HGPersistentHandle store(Object instance) 
     {       
         HGAtomType stype = graph.getTypeSystem().getAtomType(String.class);
-        HGAtomType itype = graph.getTypeSystem().getAtomType(Integer.class);
+        HGAtomType collType = graph.getTypeSystem().getAtomType(Collection.class);  
         HGVComponent c = (HGVComponent)instance;
-        HGViewer view = c.getViewer();
+       
         HGPersistentHandle [] layout = new HGPersistentHandle[3];
-        layout[0] = stype.store(view.hg.getLocation());
-        layout[1] = graph.getPersistentHandle(view.foc_handle);
-        layout[2] = itype.store(view.depth);
+        layout[0] = stype.store(c.getView().getHyperGraph().getLocation());
+        Collection<FNode> nodes = new ArrayList<FNode>();
+        for(PNodeView v : c.getView().getNodeViews())
+            nodes.add(v.getNode());
+        layout[1] = collType.store(nodes);
+        Collection<FEdge> edges = new ArrayList<FEdge>();
+        for(PEdgeView v : c.getView().getEdgeViews())
+            edges.add(v.getEdge());
+        layout[2] = collType.store(edges);
         return graph.getStore().store(layout);
     }
 }

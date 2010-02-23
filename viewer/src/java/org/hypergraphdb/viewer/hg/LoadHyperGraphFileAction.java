@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 import javax.swing.SwingUtilities;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
+import org.hypergraphdb.viewer.HGVComponent;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.FileUtil;
@@ -31,100 +32,94 @@ import edu.umd.cs.piccolo.PCanvas;
  */
 public class LoadHyperGraphFileAction extends HGVAction
 {
-     /**
+    /**
      * ConstructorLink.
-     *
+     * 
      */
     public LoadHyperGraphFileAction()
     {
         super(ActionManager.LOAD_HYPER_GRAPH_ACTION);
-        setAcceleratorCombo(java.awt.event.KeyEvent.VK_L,
-        ActionEvent.CTRL_MASK);
+        setAcceleratorCombo(java.awt.event.KeyEvent.VK_L, ActionEvent.CTRL_MASK);
     }
-    
-     /**
+
+    /**
      * User Initiated Request.
-     *
-     * @param e Action Event.
+     * 
+     * @param e
+     *            Action Event.
      */
     public void actionPerformed(ActionEvent e)
     {
         // Get the file name
-        File  file = FileUtil.getFile("Load Network File",
-        FileUtil.LOAD, null,null,null,true);
-        if(file != null)
-           loadHyperGraph(file);
+        File file = FileUtil.getFile("Load Network File", FileUtil.LOAD, null,
+                null, null, true);
+        if (file != null) loadHyperGraph(file);
     }
-    
+
     public static void loadHyperGraph(File file)
     {
-    	if(file == null) throw new NullPointerException("HG file is null");
-    	HGVNetworkView network = null;//HGVKit.getNetworkByFile(file);
-    	if (network == null)
-        {
-            //  Create LoadNetwork Task
-            LoadHGNetworkTask task = new LoadHGNetworkTask(file);
-            
-            //  Configure JTask Dialog Pop-Up Box
-            JTaskConfig jTaskConfig = new JTaskConfig();
-            jTaskConfig.setOwner(GUIUtilities.getFrame());
-            jTaskConfig.displayCloseButton(true);
-            jTaskConfig.displayStatus(true);
-            jTaskConfig.setAutoDispose(false);
-            
-            //  Execute Task in New Thread;  pops open JTask Dialog Box.
-            TaskManager.executeTask(task, jTaskConfig);
-        }
-    	//else
-    	//	HGVKit.getDesktop().setFocus(network);
+        if (file == null) throw new NullPointerException("HG file is null");
+        // Create LoadNetwork Task
+        LoadHGNetworkTask task = new LoadHGNetworkTask(file);
+
+        // Configure JTask Dialog Pop-Up Box
+        JTaskConfig taskConfig = new JTaskConfig();
+        taskConfig.setOwner(GUIUtilities.getFrame());
+        taskConfig.displayCloseButton(true);
+        taskConfig.displayStatus(true);
+        taskConfig.setAutoDispose(false);
+
+        // Execute Task in New Thread; pops open JTask Dialog Box.
+        TaskManager.executeTask(task, taskConfig);
     }
-    
-    
+
     /**
      * Task to Load New Network Data.
      */
     static class LoadHGNetworkTask implements Task
     {
         private File db;
-        private HGVNetworkView cyNetwork;
+        private HGVComponent comp;
         private TaskMonitor taskMonitor;
-        
-        
+
         public LoadHGNetworkTask(File db)
         {
             this.db = db;
         }
-        
+
         /**
          * Executes Task.
          */
         public void run()
         {
             taskMonitor.setStatus("Reading in Network Data...");
-            
+
             try
             {
-                cyNetwork = this.createNetwork();
-                
-                if (cyNetwork != null)
+                comp = createHGVComponent();
+                if (comp != null) 
                 {
-                    informUserOfGraphStats(cyNetwork);
-                } else
+                    informUserOfGraphStats(comp.getView());
+                }
+                else
                 {
                     StringBuffer sb = new StringBuffer();
-                    sb.append("Could not read network from DB: " + db.getAbsolutePath());
-                    sb.append("\nThis file may not be a valid GML or SIF file.");
-                    taskMonitor.setException(new IOException(sb.toString()),
-                    sb.toString());
+                    sb.append("Could not read network from DB: "
+                            + db.getAbsolutePath());
+                    sb
+                            .append("\nThis file may not be a valid GML or SIF file.");
+                    taskMonitor.setException(new IOException(sb.toString()), sb
+                            .toString());
                 }
                 taskMonitor.setPercentCompleted(100);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 taskMonitor.setException(e, "Unable to load network file.");
                 e.printStackTrace();
             }
         }
-        
+
         /**
          * Inform User of Network Stats.
          */
@@ -132,140 +127,87 @@ public class LoadHyperGraphFileAction extends HGVAction
         {
             NumberFormat formatter = new DecimalFormat("#,###,###");
             StringBuffer sb = new StringBuffer();
-            
-            //  Give the user some confirmation
-            sb.append("Succesfully loaded network from DB:  " + db.getAbsolutePath());
-            sb.append("\n\nNetwork contains " + formatter.format
-            (newNetwork.getNodeCount()));
-            sb.append(" nodes and " + formatter.format(newNetwork.getEdgeCount()));
+
+            // Give the user some confirmation
+            sb.append("Succesfully loaded network from DB:  "
+                    + db.getAbsolutePath());
+            sb.append("\n\nNetwork contains "
+                    + formatter.format(newNetwork.getNodeCount()));
+            sb.append(" nodes and "
+                    + formatter.format(newNetwork.getEdgeCount()));
             sb.append(" edges.\n\n");
-            
-            if (newNetwork.getNodeCount() < AppConfig.getInstance().getViewThreshold())
+
+            if (newNetwork.getNodeCount() < AppConfig.getInstance()
+                    .getViewThreshold())
             {
                 sb.append("Network is under "
-                + AppConfig.getInstance().getViewThreshold()
-                + " nodes.  A view will be automatically created.");
-            } else
+                        + AppConfig.getInstance().getViewThreshold()
+                        + " nodes.  A view will be automatically created.");
+            }
+            else
             {
                 sb.append("Network is over "
-                + AppConfig.getInstance().getViewThreshold()
-                + " nodes.  A view will not been created."
-                + "  If you wish to view this network, use "
-                + "\"Create View\" from the \"Edit\" menu.");
+                        + AppConfig.getInstance().getViewThreshold()
+                        + " nodes.  A view will not been created."
+                        + "  If you wish to view this network, use "
+                        + "\"Create View\" from the \"Edit\" menu.");
             }
             taskMonitor.setStatus(sb.toString());
         }
-        
+
         /**
-         * Halts the Task:  Not Currently Implemented.
+         * Halts the Task: Not Currently Implemented.
          */
         public void halt()
         {
-            //   Task can not currently be halted.
+            // Task can not currently be halted.
         }
-        
+
         /**
          * Sets the Task Monitor.
-         *
-         * @param taskMonitor TaskMonitor Object.
+         * 
+         * @param taskMonitor
+         *            TaskMonitor Object.
          */
         public void setTaskMonitor(TaskMonitor taskMonitor)
-        throws IllegalThreadStateException
+                throws IllegalThreadStateException
         {
             this.taskMonitor = taskMonitor;
         }
-        
+
         /**
          * Gets the Task Title.
-         *
+         * 
          * @return Task Title.
          */
         public String getTitle()
         {
             return new String("Loading Network");
         }
-        
+
         /**
-         * Creates a HGVNetwork from a file.
-         * This operation may take a long time to complete.
-         *
-         * @param location      the location of the file
+         * Creates a HGVComponent from a file. This operation may take a long time
+         * to complete.
+         * 
+         * @param location  the location of the file
          */
-        private HGVNetworkView createNetwork() throws IOException
+        private HGVComponent createHGVComponent() throws IOException
         {
             HGReader reader = new HGReader(db);
             reader.taskMonitor = taskMonitor;
-            //Have the GraphReader read the given file
+            // Have the GraphReader read the given file
             reader.read();
             taskMonitor.setStatus("Creating HG Network...");
-            
-            //  Create the HGVNetwork
-            //  First, set the view threshold to 0.  By doing so, we can disable
-            //  the auto-creating of the HGVNetworkView.
-            int realThreshold = AppConfig.getInstance().getViewThreshold();
-            AppConfig.getInstance().setViewThreshold(0);
-            HGVNetworkView network = HGVKit.createNetworkView(
-                    reader.getHyperGraph(),
-                    reader.getNodes(),
-                    reader.getEdges());
-            
-            System.out.println("Network: " + network + " file_name: " + 
-            		network.getHyperGraph().getStore().getDatabaseLocation());
-            
-            //  Reset back to the real View Threshold
-            AppConfig.getInstance().setViewThreshold(realThreshold);
-            
-            //  Conditionally, Create the HGVNetworkView
-            if (network.getNodeCount() < AppConfig.getInstance().getViewThreshold()  )
-            {
-            	createNetworkView(network);
-                //  Lastly, make the GraphView Canvas Visible.
-                SwingUtilities.invokeLater(new Runnable()
-                {
-                    public void run()
-                    {
-                        PGraphView view =(PGraphView) HGVKit.getCurrentView();
-                        PCanvas pCanvas = view.getCanvas();
-                        pCanvas.setVisible(true);
-                    }
-                });
-            }
-            return network;
+
+            HGVComponent comp = HGVKit.createHGVComponent(reader
+                    .getHyperGraph(), reader.getNodes(), reader.getEdges());
+           
+            System.out.println("Network: " + comp.getView() + " file_name: "
+                    + reader.getHyperGraph().getLocation());
+
+            return comp;
         }
-        
-        /**
-         * Creates the HGVNetworkView.
-         * Most of this code is copied directly from HGVKit.createHGVNetworkView.
-         * However, it requires a bit of a hack to actually hide the network
-         * view from the user, and I didn't want to use this hack in the core
-         * HGVKit.java class.
-         */
-        private void createNetworkView(HGVNetworkView view)
-        {
-            //  Start of Hack:  Hide the View
-            PCanvas pCanvas = view.getCanvas();
-            pCanvas.setVisible(false);
-            //  End of Hack
-            
-            //HGVKit.getNetworkMap().put(network, view);
-            
-            // if Squiggle function enabled, enable squiggling on the created view
-            if (HGVKit.isSquiggleEnabled())
-            {
-                view.getSquiggleHandler().beginSquiggling();
-            }
-            
-            // set the selection mode on the view
-            HGVKit.setSelectionMode(HGVKit.getSelectionMode(), view);
-            
-            HGVKit.firePropertyChange
-              (HGVDesktop.NETWORK_VIEW_CREATED, null, view);
-                    	
-            //  Instead of calling fitContent(), access PGraphView directly.
-            view.getCanvas().getCamera().animateViewToCenterBounds
-            (view.getCanvas().getLayer().getFullBounds(), true, 0);
-         
-        }
+     
     }
-    
+
 }

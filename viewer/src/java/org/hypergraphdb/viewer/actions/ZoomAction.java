@@ -9,7 +9,8 @@ import java.awt.event.ActionEvent;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.util.HGVAction;
 
-public class ZoomAction extends HGVAction {
+public class ZoomAction extends HGVAction
+{
   
     double factor;
     

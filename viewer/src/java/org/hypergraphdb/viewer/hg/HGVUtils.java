@@ -140,15 +140,10 @@ public class HGVUtils
 		if(!confirmExpanding(links.length)) return;
 		for(int i = 0; i < links.length; i++){
 			FNode n = HGVKit.getHGVNode(links[i], true);
-			view.addNode(n);
-			PNodeView v = view.getNodeView(n);
-			if(v == null) 
-				v = view.addNodeView(n);
+			view.addNodeView(n);
 			FEdge e = (incoming) ? HGVKit.getHGVEdge(links[i], node.getHandle()) :
 				HGVKit.getHGVEdge(node.getHandle(), links[i]);
-			view.addEdge(e);
-			if(view.getEdgeView(e) == null)
-			   view.addEdgeView(e);
+			view.addEdgeView(e);
 		}
 	}
 	
@@ -223,19 +218,13 @@ public class HGVUtils
 		}
 		
 		for(FEdge edge: edgesToRemove)
-		{
-			//view.removeEdgeView(edge);
-		    view.removeEdge(edge);
-		}
+			view.removeEdgeView(edge);
+		
 		if( remove_center_too)    
-		    //view.removeNodeView(node);
-		    view.removeNode(node);
+		    view.removeNodeView(node);
 		
 		for(FNode n: nodesToRemove)
-		{
-		  // view.removeNodeView(n);
 		   removeNode(hg, n, true);
-	    }
 	}
 
 	public static FNode getOppositeNode(FNode center, FEdge e)

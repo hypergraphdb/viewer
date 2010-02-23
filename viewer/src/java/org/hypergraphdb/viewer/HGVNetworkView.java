@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -78,258 +79,34 @@ public class HGVNetworkView extends PGraphView
 {
 	 static EdgePainter def_edge_painter = new DefaultEdgePainter();
 	 static NodePainter def_node_painter = new SimpleLabelTooltipNodePainter();
-	  
-	/**
-	 * This is the label that tells how many node/edges are in a HGVNetworkView
-	 * and how many are selected/hidden
-	 */
-	protected JLabel statusLabel;
-	/**
-	 * The FlagAndSelectionHandler keeps the selection state of view objects
-	 * in the HGVNetworkView nsync with the flagged state of those objects in the
-	 * default flagger of the associated HGVNetwork.
-	 */
-	//protected FlagAndSelectionHandler flagAndSelectionHandler;
+	
 	protected VisualStyle style;
 	VisualStyle self_style = new VisualStyle("self");
 	protected PBasicInputEventHandler keyEventHandler;
 	protected PCanvas canvas;
 	
-	public HGVNetworkView(HyperGraph db, 
-	        Collection<FNode> nodes, Collection<FEdge> edges,
-             String title)
+	public HGVNetworkView(HGVComponent comp, HyperGraph db, 
+	        Collection<FNode> nodes, Collection<FEdge> edges)
 	{
-		super(db, nodes, edges, title);
-		initialize();
+		super(db, nodes, edges);
+		viewComponent = comp;
+		initialize(nodes, edges);
 	}
 	
-	 /**
-     * Returns the set of all flagged nodes in the referenced GraphPespective.<P>
-     *
-     * WARNING: the returned set is the actual data object, not a copy. Don't
-     * directly modify this set.
-     */
-    public Set<FNode> getFlaggedNodes() 
-    {
-        HashSet<FNode> res = new HashSet<FNode>();
-        for(FNode n : nodeSelectionList)
-            res.add(n);
-        return res;
-    }
-    /**
-     * Returns the set of all flagged edges in the referenced GraphPespective.<P>
-     *
-     * WARNING: the returned set is the actual data object, not a copy. Don't
-     * directly modify this set.
-     */
-    public Set<FEdge> getFlaggedEdges() {
-        HashSet<FEdge> res = new HashSet<FEdge>();
-        for(PNode n : selectionHandler.getSelection())
-            if(n instanceof PEdgeView)
-                res.add(((PEdgeView)n).getEdge());
-        return res; 
-    }
-    
-    
-    /**
-     * Returns true if the argument is a flagged FNode in the referenced
-     * GraphPerspective, false otherwise.
-     */
-    public boolean isFlagged(FNode node)
-    {
-        return getNodeView(node) != null && getNodeView(node).isSelected();
-    }
-    /**
-     * Returns true if the argument is a flagged FEdge in the referenced
-     * GraphPerspective, false otherwise.
-     */
-    public boolean isFlagged(FEdge edge)
-    {
-        return getEdgeView(edge) != null && getEdgeView(edge).isSelected();
-    }
-    
-    /**
-     * Sets the flagged state to true for all Nodes in the GraphPerspective.
-     */
-    public void flagAllNodes() {
-        Set<FNode> changes = new HashSet<FNode>();
-        for (PNodeView nv : nodeViewMap.values())
-        {
-            if (!nv.isSelected()) {
-                changes.add(nv.getNode());
-                nv.select();
-            }
-        }
-//        if (changes.size() > 0) 
-//        {
-//            fireEvent(changes, true);
-//         }
-    }
-    
-    /**
-     * Sets the flagged state to true for all Edges in the GraphPerspective.
-     */
-    public void flagAllEdges() {
-        Set<FEdge> changes = new HashSet<FEdge>();
-        for (PEdgeView nv : edgeViewMap.values())
-        {
-            if (!nv.isSelected()) {
-                changes.add(nv.getEdge());
-                nv.select();
-            }
-        }
-        //if (changes.size() > 0) {fireEvent(changes, true);}
-    }
-    
-    /**
-     * Sets the flagged state to false for all Nodes in the GraphPerspective.
-     */
-    public void unflagAllNodes() {
-        //TODO
-//        if (flaggedNodes.size() == 0) {return;}
-//        Set<FNode> changes = new HashSet<FNode>(flaggedNodes);
-//        flaggedNodes.clear();
-//        fireEvent(changes, false);
-    }
-    
-    /**
-     * Sets the flagged state to false for all Edges in the GraphPerspective.
-     */
-    public void unflagAllEdges() {
-        //TODO
-//        if (flaggedEdges.size() == 0) {return;}
-//        Set<FEdge> changes = new HashSet<FEdge>(flaggedEdges);
-//        flaggedEdges.clear();
-//        fireEvent(changes, false);
-    }
-    
-    
-    /**
-     * Sets the flagged state defined by the second argument for all Nodes
-     * contained in the first argument, which should be a Collection of FNode objects
-     * contained in the referenced GraphPerspective. One event will be fired
-     * for the full set of changes. This method does nothing if the first
-     * argument is null.
-     *
-     * @return a Set containing the objects for which the flagged state changed
-     * @throws ClassCastException  if the first argument contains objects other
-     *                             than giny.model.FNode objects
-     */
-    public Set<FNode> setFlaggedNodes(Collection<FNode> nodesToSet, boolean newState) {
-        
-      //System.out.println( "SettingFlaggedNodes" );
-      Set<FNode> returnSet = new HashSet<FNode>();
-//        if (nodesToSet == null) {return returnSet;}
-//        if (newState == true) {
-//            for (FNode node : nodesToSet) {
-//                //System.out.println( "Flagging node"+node );
-//                if (node == null)
-//                    continue;
-//                boolean setChanged = flaggedNodes.add(node);
-//                if (setChanged) {returnSet.add(node);}
-//            }
-//            if (returnSet.size() > 0) {fireEvent(returnSet, true);}
-//        } else {
-//            for (FNode node : nodesToSet) {
-//                //System.out.println( "UNFlagging node"+node );
-//                boolean setChanged = flaggedNodes.remove(node);
-//                if (setChanged) {
-//                  //System.out.println( setChanged+" Set Changed: "+node);
-//                  returnSet.add(node);
-//                }
-//            }
-//            if (returnSet.size() > 0) {fireEvent(returnSet, false);}
-//        }
-        return returnSet;
-    }
-    
-    /**
-     * Sets the flagged state defined by the second argument for all Edges
-     * contained in the first argument, which should be a Collection of FEdge objects
-     * contained in the referenced GraphPerspective. One event will be fired
-     * for the full set of changes. This method does nothing if the first
-     * argument is null.
-     *
-     * @return a Set containing the objects for which the flagged state changed
-     * @throws ClassCastException  if the first argument contains objects other
-     *                             than giny.model.FEdge objects
-     */
-    public Set<FEdge> setFlaggedEdges(Collection<FEdge> edgesToSet, boolean newState) {
-        Set<FEdge> returnSet = new HashSet<FEdge>();
-//        if (edgesToSet == null) {return returnSet;}
-//        if (newState == true) {
-//            for (Iterator<FEdge> i = edgesToSet.iterator(); i.hasNext(); ) {
-//                FEdge edge = i.next();
-//                boolean setChanged = flaggedEdges.add(edge);
-//                if (setChanged) {returnSet.add(edge);}
-//            }
-//            if (returnSet.size() > 0) {fireEvent(returnSet, true);}
-//        } else {
-//            for (Iterator<FEdge> i = edgesToSet.iterator(); i.hasNext(); ) {
-//                FEdge edge = i.next();
-//                boolean setChanged = flaggedEdges.remove(edge);
-//                if (setChanged) {returnSet.add(edge);}
-//            }
-//            if (returnSet.size() > 0) {fireEvent(returnSet, false);}
-//        }
-        return returnSet;
-    }
-    
-    
+
 
 	public PCanvas getCanvas()
 	{
 		return canvas;
 	}
 
-	protected void initialize()
-    {
-        // setup the StatusLabel
-        statusLabel = new JLabel();
-        statusLabel.setAlignmentX(SwingConstants.LEADING);
-        statusLabel.setHorizontalTextPosition(SwingConstants.LEADING);
-        JPanel status = new JPanel(new GridBagLayout());
-        GridBagConstraints gbg = new GridBagConstraints();
-        gbg.gridy = 0;  gbg.gridx = 0;
-        gbg.fill = GridBagConstraints.HORIZONTAL;
-        gbg.anchor = GridBagConstraints.WEST;
-        gbg.weightx = 1.0;
-        
-        status.add(statusLabel, gbg);
-        //status.add(statusLabel, BorderLayout.WEST);
-        if(HGVKit.isEmbeded())
-        {
-            gbg = new GridBagConstraints();
-            gbg.gridy = 0;
-            gbg.gridx = 1;
-            gbg.insets = new Insets(0, 0, 0, 5);
-            gbg.anchor = GridBagConstraints.EAST;
-            //status.add(statusLabel, BorderLayout.EAST);
-            JToolBar bar = getBottomToolbar();
-            status.add(bar, gbg);
-            viewComponent.add(status, BorderLayout.SOUTH);
-        }else
-            viewComponent.add(statusLabel, BorderLayout.SOUTH);
-        
-        updateStatusLabel();
-        enableNodeSelection();
-        disableEdgeSelection();
-        //flagAndSelectionHandler = new FlagAndSelectionHandler(
-        //        getNetwork().getFlagger(), this);
-    }
-	
-	protected void initializePGraphView(Collection<FNode> nodes, Collection<FEdge> edges, boolean setup)
+	protected void initialize(Collection<FNode> nodes, Collection<FEdge> edges)
 	{
 		isInitialized = true;
-		viewComponent = new HGVComponent();
-		viewComponent.setLayout(new BorderLayout());
 		canvas = new Canvas();
-		canvas
-				.setInteractingRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
+		canvas.setInteractingRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
 		canvas.setAnimatingRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
 		canvas.setDefaultRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
-		PScrollPane scroll = new PScrollPane(canvas);
-		viewComponent.add(scroll, BorderLayout.CENTER);
 		getCanvas().getCamera().setPaint(DEFAULT_BACKGROUND_COLOR);
 		// System.out.println("Phoebe just built a canvas: " + canvas);
 		// Set up Layers
@@ -378,21 +155,10 @@ public class HGVNetworkView extends PGraphView
 		contextMenuStore = new HashMap(5);
 		// only create the node/edge view if requested
 		createViewableObjects(nodes, edges);
+		enableNodeSelection();
+	    disableEdgeSelection();
 	}
-	private /*static*/ JToolBar toolbar;
-
-	protected /*static*/ JToolBar getBottomToolbar()
-	{
-		//if (toolbar != null) return toolbar;
-		toolbar = new JToolBar();
-		toolbar.putClientProperty("JToolBar.isRollover", Boolean.TRUE); // NOI18N
-		final HGVMenus m = HGVMenus.getInstance();
-		toolbar.add(createDropDown(toolbar, m.getSelectMenu(), "hand", "Edit"));
-		toolbar.add(createDropDown(toolbar, m.getLayoutMenu(), "layout", "Layout"));
-		toolbar.add(createDropDown(toolbar, m.getVizMenu(), "visual", "Visual Properties"));
-		toolbar.add(createDropDown(toolbar, m.getZoomMenu(), "zoom", "Zooming"));
-		return toolbar;
-	}
+	
 	
 	protected void initializeEventHandlers()
 	{
@@ -415,15 +181,11 @@ public class HGVNetworkView extends PGraphView
 	
 	public void applyAppearances()
 	{
-		//Date start = new Date();
 		if(getVisualStyle()== null)
 			setVisualStyle(VisualManager.getInstance().getDefaultVisualStyle());
 		setBackgroundPaint(getVisualStyle().getBackgroundColor());
 		applyNodeAppearances();
 		applyEdgeAppearances();
-		//Date stop = new Date();
-		// System.out.println("Time to apply node styles: " + (stop.getTime() -
-		// start.getTime()));
 	}
 	
 	/**
@@ -488,21 +250,7 @@ public class HGVNetworkView extends PGraphView
 	}
 
 
-	/**
-	 * Resets the info label status bar text with the current number of nodes,
-	 * edges, selected nodes, and selected edges.
-	 */
-	public void updateStatusLabel()
-	{
-		int nodeCount = getNodeViewCount();
-		int edgeCount = getEdgeViewCount();
-		int selectedNodes = getSelectedNodes().size();
-		int selectedEdges = getSelectedEdges().size();
-		statusLabel.setText("  Nodes: " + nodeCount + " (" + selectedNodes
-				+ " selected)" + " Edges: " + edgeCount + " (" + selectedEdges
-				+ " selected)");
-	}
-
+	
 	// -------------------------------//
 	// Layouts and VizMaps
 	// --------------------//
@@ -567,7 +315,7 @@ public class HGVNetworkView extends PGraphView
 		return views;
 	}
 
-	public class Canvas extends PCanvas implements FocusListener
+	public class Canvas extends PCanvas 
 	{
 		public Canvas()
 		{
@@ -601,73 +349,20 @@ public class HGVNetworkView extends PGraphView
 			if (((x + w) > 1) || ((y + h) > 2)) super.repaint(a, x, y, w, h);
 		}
 
-		public void focusGained(FocusEvent e)
-		{
-			HGVKit.setCurrentView(getView());
-		}
-
-		public void focusLost(FocusEvent e)
-		{
-			// DO NOTHING
-		}
-
+		
 		@Override
 		public void addNotify()
 		{
 			super.addNotify();
-			addFocusListener(this);
 		}
 
 		@Override
 		public void removeNotify()
 		{
 			super.removeNotify();
-			removeFocusListener(this);
 		}
 	};
 
-	private static DropDownButton createDropDown(JToolBar toolbar, 
-            final JMenu m, final String name, String tooltip){
-        DropDownButton dropdown = new DropDownButton() {
-            protected JPopupMenu getPopupMenu()
-            {
-                JPopupMenu popup = new JPopupMenu();
-                for(final Component c : m.getMenuComponents())
-                {
-                    if(c instanceof JMenuItem && ((JMenuItem) c).getAction() != null)
-                        popup.add(new JMenuItem(((JMenuItem) c).getAction()));
-                    else if(c instanceof JMenu){
-                        JMenu menu = new JMenu(((JMenu) c).getText()); 
-                        for(Component cc: ((JMenu) c).getMenuComponents())
-                            if(cc instanceof JMenuItem && ((JMenuItem) cc).getAction() != null)
-                                menu.add(new JMenuItem(((JMenuItem) cc).getAction()));
-                        popup.add(menu);
-                    }
-                }
-                return popup;
-            }
-        };
-        dropdown.addToToolBar(toolbar);
-        dropdown.putClientProperty("hideActionText", Boolean.TRUE);
-        dropdown.setAction(createDummyAction(name));
-        dropdown.setToolTipText(tooltip);
-        return dropdown;
-    } 
-	private static Action createDummyAction(final String name)
-	{
-		return new AbstractAction(name) {
-			{
-				putValue(Action.SMALL_ICON, new ImageIcon(getClass()
-						.getResource(
-								"/org/hypergraphdb/viewer/images/" + name + ".gif")));
-			}
-
-			public void actionPerformed(ActionEvent e)
-			{
-			}
-		};
-	}
-	
 	 private Set<HGVNetworkChangeListener> view_listeners =
 	        new HashSet<HGVNetworkChangeListener>();
 	    public void addHGVNetworkChangeListener(
@@ -704,13 +399,6 @@ public class HGVNetworkView extends PGraphView
 	        return edgeViewMap.keySet().iterator();
 	    }
 
-	    public void removeNode(FNode node) {
-	        if(!nodeViewMap.containsKey(node)) return;
-	        nodeViewMap.remove(node);
-	        fireNetworkChanged(new HGVNetworkNodesRemovedEvent(
-	                this, new FNode[] { node }));
-	    }
-
 	    public void removeNodes(FNode[] nodes0)
 	    {
 	        for(FNode n: nodes0)
@@ -719,20 +407,7 @@ public class HGVNetworkView extends PGraphView
 	                new HGVNetworkNodesRemovedEvent(this, nodes0));
 	    }
 
-	    public void addNode(FNode node) {
-	        if (nodeViewMap.containsKey(node))return;
-	        addNodeView(node);
-	        fireNetworkChanged(new HGVNetworkNodesAddedEvent(
-	                            this, new FNode[] { node }));
-	    }
-
-	    public void removeEdge(FEdge e) {
-	        if (!edgeViewMap.containsKey(e))return;
-	        this.removeEdgeView(e);
-	       fireNetworkChanged(new HGVNetworkEdgesRemovedEvent(
-	                this, new FEdge[]{e}));
-	    }
-	    
+	  
 	    public void removeEdges(FEdge[] res) {
 	        for (FEdge e : res)
 	            edgeViewMap.remove(e);
@@ -740,22 +415,96 @@ public class HGVNetworkView extends PGraphView
 	                this, res));
 	    }
 
-	    public boolean addEdge(FEdge edge) {
-	        if (edgeViewMap.containsKey(edge))
-	            return false;
-	        addEdgeView(edge);
-
-	        fireNetworkChanged(new HGVNetworkEdgesAddedEvent(
-	                            this, new FEdge[] { edge }));
-	        return true;
+	  
+	    
+	    /**
+	     * This will entirely remove a PNodeView/PEdgeView from the GraphView.
+	     */
+	    public PNodeView removeNodeView(FNode node)
+	    {
+	        if(!nodeViewMap.containsKey(node)) return null;
+	        PNodeView node_view = getNodeView(node);
+	        getNodeView(node).removeFromParent();
+	              
+            nodeViewMap.remove(node);
+            nodeSelectionList.remove(node);
+            fireNetworkChanged(new HGVNetworkNodesRemovedEvent(this, new FNode[] { node }));
+	        return node_view;
 	    }
 
-	    public FEdge[] getAdjacentEdges(FNode node, 
+	    /**
+	     * This will entirely remove a PNodeView/PEdgeView from the GraphView.
+	     */
+	    public PEdgeView removeEdgeView(PEdgeView edge_view)
+	    {
+	        return removeEdgeView(edge_view.getEdge());
+	    }
+
+	    /**
+	     * This will entirely remove a PNodeView/PEdgeView from the GraphView.
+	     */
+	    public PEdgeView removeEdgeView(FEdge e)
+	    { 
+	        if (!edgeViewMap.containsKey(e)) return null;
+	        PEdgeView view = getEdgeView(e);
+	        view.removeFromParent();
+	        edgeSelectionList.remove(e);
+	        edgeViewMap.remove(e);
+	        fireNetworkChanged(new HGVNetworkEdgesRemovedEvent(
+	                this, new FEdge[]{e}));
+	        return view;
+	    }
+	    
+	    /**
+	     * @param node
+	     *            the index of a node to have a view created for it
+	     * @return a new PNodeView based on the node with the given index
+	     */
+	    public PNodeView addNodeView(FNode node)
+	    {
+	        if(nodeViewMap.containsKey(node))
+	            return nodeViewMap.get(node);
+	        
+	        if (DEFAULT_X % 2000 == 0)
+	        {
+	            DEFAULT_Y += 100;
+	            DEFAULT_X = 100;
+	        }
+	        else
+	        {
+	            DEFAULT_X += 100;
+	        }
+	        // Only need to Change the X and Y
+	        NODE_DEFAULTS[0] = new Double(DEFAULT_X);
+	        NODE_DEFAULTS[1] = new Double(DEFAULT_Y);
+	        setAllNodePropertyData(node, (Object[]) NODE_DEFAULTS.clone());
+	        PNodeView node_view = new PNodeView(node, this);
+	        nodeViewMap.put(node, node_view);
+	        addToNodeLayer(node_view);
+	        fireNetworkChanged(new HGVNetworkNodesAddedEvent(
+                    this, new FNode[] { node }));
+	        return node_view;
+	    }
+
+	    public PEdgeView addEdgeView(FEdge edge)
+	    {
+	        if(edgeViewMap.containsKey(edge))
+                return edgeViewMap.get(edge);
+	        setAllEdgePropertyData(edge, (Object[]) EDGE_DEFAULTS.clone());
+	        PEdgeView edge_view = new PEdgeView(edge, this);
+	        addToEdgeLayer(edge_view);
+	        edgeViewMap.put(edge, edge_view);
+	        fireNetworkChanged(new HGVNetworkEdgesAddedEvent(
+                    this, new FEdge[] { edge }));
+	        return edge_view;
+	    }
+
+	     public FEdge[] getAdjacentEdges(FNode node, 
 	            boolean incoming, boolean outgoing)
 	    {
 	        if (node == null || !nodeViewMap.containsKey(node))  return new FEdge[0];
 	        HGHandle nH = node.getHandle();
-	        IncidenceSet handles = graph.getIncidenceSet(node.getHandle());
+	        IncidenceSet handles = graph.getIncidenceSet(nH);
 	        Set<FEdge> res = new HashSet<FEdge>();
 	        for (HGHandle h : handles) 
 	        {
@@ -798,6 +547,218 @@ public class HGVNetworkView extends PGraphView
 	        }
 	        return res.toArray(new FEdge[res.size()]);
 	    }
+	    
+	    /**
+	     * Hides an Object that is in the Graph by removing it from the Piccolo
+	     * Scene Graph <B>Note:</B> The object must inherit from PNodeView or
+	     * PEdgeView
+	     */
+	    public void hideGraphObject(PNode obj)
+	    {
+	        if (obj instanceof PNodeView) 
+	            removeNodeView(((PNodeView) obj).getNode());
+	        else if (obj instanceof PEdgeView) 
+	            removeEdgeView(((PEdgeView) obj).getEdge());
+	    }
+
+	    /**
+	     * Shows an Object that is in the Graph by adding it to the Piccolo Scene
+	     * Graph
+	     * 
+	     * <B>Note:</B> The object must inherit from PNodeView or PEdgeView
+	     */
+	    public void showGraphObject(PNode object)
+	    {
+	        if (object == null) return;
+
+	        if (object instanceof PNodeView)
+	           addNodeView(((PNodeView) object).getNode());
+	        else if (object instanceof PEdgeView)
+	           addEdgeView(((PEdgeView) object).getEdge());
+	    }
+
+	    /**
+	     * Hides a group of GraphObjects
+	     */
+	    public void hideGraphObjects(List<? extends PNode> objects)
+	    {
+	        for (PNode node: objects)
+	            hideGraphObject(node);
+	    }
+	    
+	    /**
+	     * Returns the set of all flagged nodes in the referenced GraphPespective.<P>
+	     *
+	     * WARNING: the returned set is the actual data object, not a copy. Don't
+	     * directly modify this set.
+	     */
+	    public Set<FNode> getFlaggedNodes() 
+	    {
+	        HashSet<FNode> res = new HashSet<FNode>();
+	        for(FNode n : nodeSelectionList)
+	            res.add(n);
+	        return res;
+	    }
+	    /**
+	     * Returns the set of all flagged edges in the referenced GraphPespective.<P>
+	     *
+	     * WARNING: the returned set is the actual data object, not a copy. Don't
+	     * directly modify this set.
+	     */
+	    public Set<FEdge> getFlaggedEdges() {
+	        HashSet<FEdge> res = new HashSet<FEdge>();
+	        for(PNode n : selectionHandler.getSelection())
+	            if(n instanceof PEdgeView)
+	                res.add(((PEdgeView)n).getEdge());
+	        return res; 
+	    }
+	    
+	    
+	    /**
+	     * Returns true if the argument is a flagged FNode in the referenced
+	     * GraphPerspective, false otherwise.
+	     */
+	    public boolean isFlagged(FNode node)
+	    {
+	        return getNodeView(node) != null && getNodeView(node).isSelected();
+	    }
+	    /**
+	     * Returns true if the argument is a flagged FEdge in the referenced
+	     * GraphPerspective, false otherwise.
+	     */
+	    public boolean isFlagged(FEdge edge)
+	    {
+	        return getEdgeView(edge) != null && getEdgeView(edge).isSelected();
+	    }
+	    
+	    /**
+	     * Sets the flagged state to true for all Nodes in the GraphPerspective.
+	     */
+	    public void flagAllNodes() {
+	        Set<FNode> changes = new HashSet<FNode>();
+	        for (PNodeView nv : nodeViewMap.values())
+	        {
+	            if (!nv.isSelected()) {
+	                changes.add(nv.getNode());
+	                nv.select();
+	            }
+	        }
+//	        if (changes.size() > 0) 
+//	        {
+//	            fireEvent(changes, true);
+//	         }
+	    }
+	    
+	    /**
+	     * Sets the flagged state to true for all Edges in the GraphPerspective.
+	     */
+	    public void flagAllEdges() {
+	        Set<FEdge> changes = new HashSet<FEdge>();
+	        for (PEdgeView nv : edgeViewMap.values())
+	        {
+	            if (!nv.isSelected()) {
+	                changes.add(nv.getEdge());
+	                nv.select();
+	            }
+	        }
+	        //if (changes.size() > 0) {fireEvent(changes, true);}
+	    }
+	    
+	    /**
+	     * Sets the flagged state to false for all Nodes in the GraphPerspective.
+	     */
+	    public void unflagAllNodes() {
+	        //TODO
+//	        if (flaggedNodes.size() == 0) {return;}
+//	        Set<FNode> changes = new HashSet<FNode>(flaggedNodes);
+//	        flaggedNodes.clear();
+//	        fireEvent(changes, false);
+	    }
+	    
+	    /**
+	     * Sets the flagged state to false for all Edges in the GraphPerspective.
+	     */
+	    public void unflagAllEdges() {
+	        //TODO
+//	        if (flaggedEdges.size() == 0) {return;}
+//	        Set<FEdge> changes = new HashSet<FEdge>(flaggedEdges);
+//	        flaggedEdges.clear();
+//	        fireEvent(changes, false);
+	    }
+	    
+	    
+	    /**
+	     * Sets the flagged state defined by the second argument for all Nodes
+	     * contained in the first argument, which should be a Collection of FNode objects
+	     * contained in the referenced GraphPerspective. One event will be fired
+	     * for the full set of changes. This method does nothing if the first
+	     * argument is null.
+	     *
+	     * @return a Set containing the objects for which the flagged state changed
+	     * @throws ClassCastException  if the first argument contains objects other
+	     *                             than giny.model.FNode objects
+	     */
+	    public Set<FNode> setFlaggedNodes(Collection<FNode> nodesToSet, boolean newState) {
+	        
+	      //System.out.println( "SettingFlaggedNodes" );
+	      Set<FNode> returnSet = new HashSet<FNode>();
+//	        if (nodesToSet == null) {return returnSet;}
+//	        if (newState == true) {
+//	            for (FNode node : nodesToSet) {
+//	                //System.out.println( "Flagging node"+node );
+//	                if (node == null)
+//	                    continue;
+//	                boolean setChanged = flaggedNodes.add(node);
+//	                if (setChanged) {returnSet.add(node);}
+//	            }
+//	            if (returnSet.size() > 0) {fireEvent(returnSet, true);}
+//	        } else {
+//	            for (FNode node : nodesToSet) {
+//	                //System.out.println( "UNFlagging node"+node );
+//	                boolean setChanged = flaggedNodes.remove(node);
+//	                if (setChanged) {
+//	                  //System.out.println( setChanged+" Set Changed: "+node);
+//	                  returnSet.add(node);
+//	                }
+//	            }
+//	            if (returnSet.size() > 0) {fireEvent(returnSet, false);}
+//	        }
+	        return returnSet;
+	    }
+	    
+	    /**
+	     * Sets the flagged state defined by the second argument for all Edges
+	     * contained in the first argument, which should be a Collection of FEdge objects
+	     * contained in the referenced GraphPerspective. One event will be fired
+	     * for the full set of changes. This method does nothing if the first
+	     * argument is null.
+	     *
+	     * @return a Set containing the objects for which the flagged state changed
+	     * @throws ClassCastException  if the first argument contains objects other
+	     *                             than giny.model.FEdge objects
+	     */
+	    public Set<FEdge> setFlaggedEdges(Collection<FEdge> edgesToSet, boolean newState) {
+	        Set<FEdge> returnSet = new HashSet<FEdge>();
+//	        if (edgesToSet == null) {return returnSet;}
+//	        if (newState == true) {
+//	            for (Iterator<FEdge> i = edgesToSet.iterator(); i.hasNext(); ) {
+//	                FEdge edge = i.next();
+//	                boolean setChanged = flaggedEdges.add(edge);
+//	                if (setChanged) {returnSet.add(edge);}
+//	            }
+//	            if (returnSet.size() > 0) {fireEvent(returnSet, true);}
+//	        } else {
+//	            for (Iterator<FEdge> i = edgesToSet.iterator(); i.hasNext(); ) {
+//	                FEdge edge = i.next();
+//	                boolean setChanged = flaggedEdges.remove(edge);
+//	                if (setChanged) {returnSet.add(edge);}
+//	            }
+//	            if (returnSet.size() > 0) {fireEvent(returnSet, false);}
+//	        }
+	        return returnSet;
+	    }
+	    
+	    
 
 }
 
