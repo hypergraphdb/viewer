@@ -14,10 +14,10 @@ import phoebe.util.PLabel;
 public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 {
 	public static final String NOT_EDITABLE = "NOT EDITABLE";
-	private Color color = Color.WHITE; 
+	private Color color = Color.lightGray; 
 	private Color borderColor = Color.BLACK;
 	private LineType lineType = LineType.LINE_1; 
-	private byte shape = Shape.RECT;
+	private byte shape = Shape.ROUND_RECT;//RECT;//ELLIPSE;
 	private String label = "";
 	private Color labelColor = Color.BLACK; 
 	private String tooltip = ""; 
@@ -145,9 +145,9 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 	public void paintNode(PNodeView nodeView, HGVNetworkView network_view){
 		this.network_view = network_view;
 		this.nodeView = nodeView;
-		((phoebe.PGraphView) network_view).updateEdges = false;
+		network_view.updateEdges = false;
 		boolean change_made = false;
-		Paint existingUnselectedColor = nodeView.getUnselectedPaint();
+		Paint existingUnselectedColor = nodeView.getUnselectedPaint(); 
 		Paint newUnselectedColor = getColor();
 		if (!newUnselectedColor.equals(existingUnselectedColor))
 		{
@@ -216,10 +216,10 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 		}
 		nodeView.setToolTip(getTooltip());
 		
-		( ( phoebe.PGraphView )network_view ).updateEdges = true;
-        if (change_made) {
-          nodeView.setNodePosition(false );
-        }
+		network_view.updateEdges = true;
+        if (change_made) 
+            nodeView.invalidatePaint(); //.setNodePosition(false );
+       
 	}
 	
 	protected final FNode getNode(){

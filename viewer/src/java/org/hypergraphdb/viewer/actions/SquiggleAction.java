@@ -2,7 +2,6 @@ package org.hypergraphdb.viewer.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.*;
-import phoebe.PGraphView;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 
@@ -39,7 +38,7 @@ public class SquiggleAction extends JMenu {
         // Do this in the GUI Event Dispatch thread...
         SwingUtilities.invokeLater( new Runnable() {
           public void run() {
-            PGraphView view = (PGraphView)HGVKit.getCurrentView();
+              HGVNetworkView view = HGVKit.getCurrentView();
               view.getSquiggleHandler().clearSquiggles();
       } } ); } } );
     clearSquiggle.setEnabled(false);

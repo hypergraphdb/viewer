@@ -175,21 +175,9 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		return null;
 	}
 
-	public void fireFocus(HGVNetworkView view) {
-		pcs.firePropertyChange(new PropertyChangeEvent(this,
-				HGVDesktop.NETWORK_VIEW_FOCUS, null, view));
-	}
-
-	public void valueChanged(TreeSelectionEvent e) {
-		NetworkTreeNode node = (NetworkTreeNode) treeTable.getTree()
-				.getLastSelectedPathComponent();
-
-		if (node == null)
-			return;
-		if (node.getUserObject() == null)
-			return;
-		fireFocus(node.getNetworkID());
-   }
+	public void valueChanged(TreeSelectionEvent e) 
+	{
+    }
 
 	public void propertyChange(PropertyChangeEvent e) {
 

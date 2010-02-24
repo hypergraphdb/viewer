@@ -23,7 +23,6 @@ public class ActionManager
 	public final static String PREFERENCES_ACTION = "Preferences...";
 	public static final String INVERT_NODE_SELECTION_ACTION = "Invert selection";
 	public static final String HIDE_NODE_SELECTION_ACTION = "Hide selection";
-	public static final String SHOW_ALL_NODES_ACTION = "Show All";
 	public static final String SELECT_ALL_NODES_ACTION = "Select all nodes";
 	public static final String DESELECT_ALL_NODES_ACTION = "Deselect all nodes";
 	public static final String SELECTED_FIRST_NEIGHBORS_ACTION = "First neighbors of selected nodes";

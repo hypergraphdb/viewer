@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.hypergraphdb.viewer.HGVNetworkView;
 
-import phoebe.PGraphView;
 import phoebe.PNodeView;
 
 abstract public class AbstractLayout  {
@@ -97,8 +96,8 @@ abstract public class AbstractLayout  {
   protected void initializeLocation ( PNodeView v, Dimension d ) {
     double x = Math.random() * d.getWidth();
     double y = Math.random() * d.getHeight();
-    v.setXPosition( x, false );
-    v.setYPosition( y, false );
+    v.setXPosition( x);
+    v.setYPosition( y);
     }
   
   /**
@@ -195,8 +194,8 @@ abstract public class AbstractLayout  {
     PNodeView closest = null;
     for (PNodeView v : graphView.getNodeViews())
     {
-      double dx = graphView.getNodeDoubleProperty( v.getNode(), PGraphView.NODE_X_POSITION ) - x;
-      double dy = graphView.getNodeDoubleProperty( v.getNode(), PGraphView.NODE_Y_POSITION ) - y;
+      double dx = v.getX() - x;
+      double dy = v.getY() - y;
       double dist = dx * dx + dy * dy;
       if ( dist < minDistance ) {
         minDistance = dist;

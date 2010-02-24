@@ -9,10 +9,10 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 
 import org.hypergraphdb.viewer.FNode;
+import org.hypergraphdb.viewer.HGVNetworkView;
 
 import phoebe.util.PLabel;
 import edu.umd.cs.piccolo.PNode;
-import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
@@ -22,832 +22,622 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  */
 public class PNodeView extends PPath
 {
-	public static final int TRIANGLE = 0;
-	public static final int DIAMOND = 1;
-	public static final int ELLIPSE = 2;
-	public static final int HEXAGON = 3;
-	public static final int OCTAGON = 4;
-	public static final int PARALELLOGRAM = 5;
-	public static final int RECTANGLE = 6;
-	public static final int ROUNDED_RECTANGLE = 7;
-	/**
-	 * The index of this node in the RootGraph note that this is always a
-	 * negative number.
-	 */
-	protected FNode node;
-	/**
-	 * The View to which we belong.
-	 */
-	protected PGraphView view;
-	/**
-	 * Our label
-	 */
-	protected PLabel label;
-	/**
-	 * Our Selection toggle
-	 */
-	protected boolean selected;
-	/**
-	 * Our Visibility
-	 */
-	protected boolean visible;
-	/**
-	 * A boolean that tells us if we are updated to the current position, i.e.
-	 * after a layout
-	 */
-	protected boolean sandboxed;
+    // Default FNode Paint
+    public static Paint DEFAULT_NODE_PAINT = java.awt.Color.lightGray;
+    // Default FNode Selection Paint
+    public static Paint DEFAULT_NODE_SELECTION_PAINT = java.awt.Color.yellow;
+    // Deafult Border Paint
+    public static Paint DEFAULT_BORDER_PAINT = java.awt.Color.black;
 
-	// ----------------------------------------//
-	// Constructors and Initialization
-	// ----------------------------------------//
-	public PNodeView(FNode node, PGraphView view)
-	{
-		this(node, view, Double.MAX_VALUE, Double.MAX_VALUE,
-				Integer.MAX_VALUE, (Paint) null, (Paint) null, (Paint) null,
-				Float.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE,
-				(String) null);
-	}
+    public static Stroke DEFAULT_BORDER_STROKE = new BasicStroke(1);
 
-	/**
-	 * Create a new PNodeView with the given physical attributes.
-	 * @param node_index The RootGraph Index of this node
-	 * @param view the PGraphVIew that we belong to
-	 * @param x_positon the x_positon desired for this node
-	 * @param y_positon the y_positon desired for this node
-	 * @param shape the shape type
-	 * @param paint the Paint for this node
-	 * @param selection_paint the Paint when this node is selected
-	 * @param border_paint the boder Paint
-	 * @param border_width the width of the border
-	 * @param width the width of the node
-	 * @param height the height of the node
-	 * @param label the String to display on the label
-	 */
-	public PNodeView(FNode node, PGraphView view, double x_positon,
-			double y_positon, int shape, Paint paint, Paint selection_paint,
-			Paint border_paint, float border_width, double width,
-			double height, String label)
-	{
-		this.node = node;
-		// Set the PGraphView that we belong to
-		if (view == null)
-		{
-			throw new IllegalArgumentException(
-					"A PNodeView must belong to a PGraphView");
-		}
-		this.view = view;
-		// Set the Index
-		
-		// set NODE_X_POSITION
-		if (x_positon != Double.MAX_VALUE)
-		{
-			view.setNodeDoubleProperty(node,
-					PGraphView.NODE_X_POSITION, x_positon);
-		}
-		// set NODE_Y_POSITION
-		if (y_positon != Double.MAX_VALUE)
-		{
-			view.setNodeDoubleProperty(node,
-					PGraphView.NODE_Y_POSITION, y_positon);
-		}
-		// set NODE_SHAPE
-		if (shape != Integer.MAX_VALUE)
-		{
-			view.setNodeIntProperty(node, PGraphView.NODE_SHAPE,
-					shape);
-		}
-		// set NODE_PAINT
-		if (paint != null)
-		{
-			view.setNodeObjectProperty(node, PGraphView.NODE_PAINT,
-					paint);
-		}
-		// set NODE_SELECTION_PAINT
-		if (paint != null)
-		{
-			view.setNodeObjectProperty(node,
-					PGraphView.NODE_SELECTION_PAINT, selection_paint);
-		}
-		// set NODE_BORDER_PAINT
-		if (border_paint != null)
-		{
-			view.setNodeObjectProperty(node,
-					PGraphView.NODE_BORDER_PAINT, border_paint);
-		}
-		// set NODE_BORDER_WIDTH
-		if (border_width != Float.MAX_VALUE)
-		{
-			view.setNodeFloatProperty(node,
-					PGraphView.NODE_BORDER_WIDTH, border_width);
-		}
-		// set NODE_WIDTH
-		if (width != Double.MAX_VALUE)
-		{
-			view.setNodeDoubleProperty(node, PGraphView.NODE_WIDTH,
-					width);
-		}
-		// set NODE_HEIGHT
-		if (height != Double.MAX_VALUE)
-		{
-			view.setNodeDoubleProperty(node, PGraphView.NODE_HEIGHT,
-					height);
-		}
-		// set NODE_LABEL
-		if (label != null)
-		{
-			view.setNodeObjectProperty(node, PGraphView.NODE_LABEL,
-					label);
-		}
-		initializeNodeView();
-	}
+    public static final int TRIANGLE = 0;
+    public static final int DIAMOND = 1;
+    public static final int ELLIPSE = 2;
+    public static final int HEXAGON = 3;
+    public static final int OCTAGON = 4;
+    public static final int PARALELLOGRAM = 5;
+    public static final int RECTANGLE = 6;
+    public static final int ROUNDED_RECTANGLE = 7;
+    /**
+     * The index of this node in the RootGraph note that this is always a
+     * negative number.
+     */
+    protected FNode node;
+    /**
+     * The View to which we belong.
+     */
+    protected HGVNetworkView view;
+    /**
+     * Our label
+     */
+    protected PLabel label;
+    /**
+     * Our Selection toggle
+     */
+    protected boolean selected;
+    /**
+     * Our Visibility
+     */
+    protected boolean visible;
 
-	/**
-	 * This does a default paint and positioning of the PNodeView based on the
-	 * values passed on its initial construction.
-	 */
-	protected void initializeNodeView()
-	{
-		// all x/y is done using offset as that operates on the nodes transform,
-		// and affects
-		// the nodes children
-		setOffset(view.getNodeDoubleProperty(node,
-				PGraphView.NODE_X_POSITION), view.getNodeDoubleProperty(
-				node, PGraphView.NODE_Y_POSITION));
-		// all w/h is done in the nodes local coordinate system
-		setHeight(view.getNodeDoubleProperty(node,
-				PGraphView.NODE_HEIGHT));
-		setWidth(view.getNodeDoubleProperty(node,
-				PGraphView.NODE_WIDTH));
-		setStrokePaint(Color.black);
-		setPaint(Color.white);
-		this.visible = true;
-		this.selected = false;
-		this.sandboxed = false;
-		setPickable(true);
-		invalidatePaint();
-	}
+    protected Paint selectedPaint = DEFAULT_NODE_SELECTION_PAINT;
 
-	/**
-	 * @return this currently returns the RootGraphIndex of the FNode we are
-	 * associated with
-	 */
-	public String toString()
-	{
-		return ("FNode: " + node);
-	}
+    protected Paint unselectedPaint = DEFAULT_NODE_PAINT;
+    protected int shape = PNodeView.OCTAGON;
 
-	/**
-	 * @return the view we are in
-	 */
-	public PGraphView getGraphView()
-	{
-		return view;
-	}
+    // ----------------------------------------//
+    // Constructors and Initialization
+    // ----------------------------------------//
+    public PNodeView(FNode node, HGVNetworkView view)
+    {
+        this.node = node;
+        this.view = view;
+        initializeNodeView();
+    }
 
-	/**
-	 * @return The FNode we are a view on
-	 */
-	public FNode getNode()
-	{
-		return node;
-	}
+ 
+    protected void initializeNodeView()
+    {
+        // all x/y is done using offset as that operates on the nodes transform,
+        // and affects the nodes children
+        //setOffset(100, 100);
+        // all w/h is done in the nodes local coordinate system
+        setSize(30, 30);
+        setStrokePaint(Color.black);
+        setPaint(Color.white);
+        this.visible = true;
+        this.selected = false;
+        setPickable(true);
+        invalidatePaint();
+    }
 
-		
+    /**
+     * @return this currently returns the RootGraphIndex of the FNode we are
+     *         associated with
+     */
+    public String toString()
+    {
+        return ("FNode: " + node);
+    }
 
-	// ------------------------------------------------------//
-	// Get and Set Methods for all Common Viewable Elements
-	// ------------------------------------------------------//
-	/**
-	 * Shape is currently defined via predefined variables in the PNodeView
-	 * interface. To get the actual java.awt.Shape use getPathReference()
-	 * @return the current int-tpye shape
-	 */
-	public int getShape()
-	{
-		return view.getNodeIntProperty(node, PGraphView.NODE_SHAPE);
-	}
+    /**
+     * @return the view we are in
+     */
+    public HGVNetworkView getGraphView()
+    {
+        return view;
+    }
 
-	/**
-	 * This sets the Paint that will be used by this node when it is painted as
-	 * selected.
-	 * @param paint The Paint to be used
-	 */
-	public void setSelectedPaint(Paint paint)
-	{
-		view.setNodeObjectProperty(node,
-				PGraphView.NODE_SELECTION_PAINT, paint);
-		if (selected)
-		{
-			setPaint(paint);
-		}
-	}
+    /**
+     * @return The FNode we are a view on
+     */
+    public FNode getNode()
+    {
+        return node;
+    }
 
-	/**
-	 * @return the currently set selection Paint
-	 */
-	public Paint getSelectedPaint()
-	{
-		return (Paint) view.getNodeObjectProperty(node,
-				PGraphView.NODE_SELECTION_PAINT);
-	}
+    // ------------------------------------------------------//
+    // Get and Set Methods for all Common Viewable Elements
+    // ------------------------------------------------------//
+    /**
+     * Shape is currently defined via predefined variables in the PNodeView
+     * interface. To get the actual java.awt.Shape use getPathReference()
+     * 
+     * @return the current int-tpye shape
+     */
+    public int getShape()
+    {
+        return shape;
+    }
 
-	public void setUnselectedPaint(Paint paint)
-	{
-		view
-				.setNodeObjectProperty(node, PGraphView.NODE_PAINT,
-						paint);
-		if (!selected)
-		{
-			// System.out.println( "UN-Selected, drawing: value of selection
-			// is"+selected );
-			setPaint(paint);
-		}
-	}
+    /**
+     * @return the currently set selection Paint
+     */
+    public Paint getSelectedPaint()
+    {
+        return selectedPaint;
+    }
 
-	/**
-	 * @return the currently set paint
-	 */
-	public Paint getUnselectedPaint()
-	{
-		return (Paint) view.getNodeObjectProperty(node,
-				PGraphView.NODE_PAINT);
-	}
+    /**
+     * This sets the Paint that will be used by this node when it is painted as
+     * selected.
+     * 
+     * @param paint
+     *            The Paint to be used
+     */
+    public void setSelectedPaint(Paint paint)
+    {
+        selectedPaint = paint;
+        if (selected) setPaint(selectedPaint);
+    }
 
-	/**
-	 * @param b_paint the paint the border will use
-	 */
-	public void setBorderPaint(Paint b_paint)
-	{
-		view.setNodeObjectProperty(node,
-				PGraphView.NODE_BORDER_PAINT, b_paint);
-		super.setStrokePaint(b_paint);
-	}
+    /**
+     * @return the currently set selection Paint
+     */
+    public Paint getUnselectedPaint()
+    {
+        return unselectedPaint;
+    }
 
-	/**
-	 * @return the currently set BOrder Paint
-	 */
-	public Paint getBorderPaint()
-	{
-		return (Paint) view.getNodeObjectProperty(node,
-				PGraphView.NODE_BORDER_PAINT);
-	}
+    /**
+     * This sets the Paint that will be used by this node when it is painted as
+     * selected.
+     * 
+     * @param paint
+     *            The Paint to be used
+     */
+    public void setUnselectedPaint(Paint paint)
+    {
+        unselectedPaint = paint;
+        if (!selected) setPaint(unselectedPaint);
+    }
 
-	/**
-	 * @param border_width The width of the border.
-	 */
-	public void setBorderWidth(float border_width)
-	{
-		view.setNodeFloatProperty(node, PGraphView.NODE_BORDER_WIDTH,
-				border_width);
-		super.setStroke(new BasicStroke(border_width));
-	}
+    /**
+     * @param b_paint
+     *            the paint the border will use
+     */
+    public void setBorderPaint(Paint b_paint)
+    {
+        super.setStrokePaint(b_paint);
+    }
 
-	/**
-	 * @return the currently set Border width
-	 */
-	public float getBorderWidth()
-	{
-		return view.getNodeFloatProperty(node,
-				PGraphView.NODE_BORDER_WIDTH);
-	}
+    /**
+     * @return the currently set BOrder Paint
+     */
+    public Paint getBorderPaint()
+    {
+        return getStrokePaint();
+    }
 
-	/**
-	 * @param stroke the new stroke for the border
-	 */
-	public void setBorder(Stroke stroke)
-	{
-		super.setStroke(stroke);
-	}
+    /**
+     * @param stroke
+     *            the new stroke for the border
+     */
+    public void setBorder(Stroke stroke)
+    {
+        super.setStroke(stroke);
+    }
 
-	/**
-	 * @return the current border
-	 */
-	public Stroke getBorder()
-	{
-		return super.getStroke();
-	}
+    /**
+     * @return the current border
+     */
+    public Stroke getBorder()
+    {
+        return super.getStroke();
+    }
 
-	/**
-	 * Width is a property in the nodes local coordinate system.
-	 * @param width the currently set width of this node
-	 */
-	public boolean setWidth(double width)
-	{
-		double old_width = getWidth();
-		view
-				.setNodeDoubleProperty(node, PGraphView.NODE_WIDTH,
-						width);
-		super.setWidth(width);
-		// keep the node centered
-		offset(old_width / 2 - width / 2, 0);
-		return true;
-	}
+    /**
+     * Width is a property in the nodes local coordinate system.
+     * 
+     * @param width
+     *            the currently set width of this node
+     */
+    public boolean setWidth(double width)
+    {
+        double old_width = getWidth();
+        super.setWidth(width);
+        // keep the node centered
+        offset(old_width / 2 - width / 2, 0);
+        return true;
+    }
 
-	/**
-	 * Width is a property in the nodes local coordinate system.
-	 * @return the currently set width of this node
-	 */
-	public double getWidth()
-	{
-		return super.getWidth();
-	}
+    /**
+     * Width is a property in the nodes local coordinate system.
+     * 
+     * @return the currently set width of this node
+     */
+    public double getWidth()
+    {
+        return super.getWidth();
+    }
 
-	/**
-	 * Height is a property in the nodes local coordinate system.
-	 * @param height the currently set height of this node
-	 */
-	public boolean setHeight(double height)
-	{
-		double old_height = getHeight();
-		view.setNodeDoubleProperty(node, PGraphView.NODE_HEIGHT,
-				height);
-		super.setHeight(height);
-		// keep the node centered
-		offset(0, old_height / 2 - height / 2);
-		return true;
-	}
+    /**
+     * Height is a property in the nodes local coordinate system.
+     * 
+     * @param height
+     *            the currently set height of this node
+     */
+    public boolean setHeight(double height)
+    {
+        double old_height = getHeight();
+        super.setHeight(height);
+        // keep the node centered
+        offset(0, old_height / 2 - height / 2);
+        return true;
+    }
 
-	/**
-	 * Height is a property in the nodes local coordinate system.
-	 * @return the currently set height of this node
-	 */
-	public double getHeight()
-	{
-		return super.getHeight();
-	}
+    /**
+     * Height is a property in the nodes local coordinate system.
+     * 
+     * @return the currently set height of this node
+     */
+    public double getHeight()
+    {
+        return super.getHeight();
+    }
 
-	/**
-	 * @param label_text the new value to be displayed by the Label
-	 */
-	public void setLabelText(String label_text)
-	{
-		getLabel().setText(label_text);
-	}
+    /**
+     * @param label_text
+     *            the new value to be displayed by the Label
+     */
+    public void setLabelText(String label_text)
+    {
+        getLabel().setText(label_text);
+    }
 
-	/**
-	 * @return The label that is also a Child of this node
-	 */
-	public PLabel getLabel()
-	{
-		if (label == null)
-		{
-			label = new PLabel(null, this);
-			label.setPickable(false);
-			addChild(label);
-			label.updatePosition();
-		}
-		return label;
-	}
+    /**
+     * @return The label that is also a Child of this node
+     */
+    public PLabel getLabel()
+    {
+        if (label == null)
+        {
+            label = new PLabel(null, this);
+            label.setPickable(false);
+            addChild(label);
+            label.updatePosition();
+        }
+        return label;
+    }
 
+    /**
+     * X and Y are a Global coordinate system property of this node, and affect
+     * the nodes children
+     * 
+     * setOffset moves the node to a specified location, offset increments the
+     * node by a specified amount
+     */
+    public void setOffset(double x, double y)
+    {
+        // setOffset automatically centers the node based on its width
+        x -= getWidth() / 2;
+        y -= getHeight() / 2;
 
-	/**
-	 * X and Y are a Global coordinate system property of this node, and affect
-	 * the nodes children
-	 * 
-	 * setOffset moves the node to a specified location, offset increments the
-	 * node by a specified amount
-	 */
-	public void setOffset(double x, double y)
-	{
-		// setOffset automatically centers the node based on its width
-		x -= getWidth() / 2;
-		y -= getHeight() / 2;
-		// System.out.println( "setOffset called x y: "+x+" "+y );
-		view.setNodeDoubleProperty(node, PGraphView.NODE_X_POSITION,
-				x);
-		view.setNodeDoubleProperty(node, PGraphView.NODE_Y_POSITION,
-				y);
-		// this operates on the node's AffineTransform
-		super.setOffset(x, y);
-	}
+        // this operates on the node's AffineTransform
+        super.setOffset(x, y);
+    }
 
-	/**
-	 * X and Y are a Global coordinate system property of this node, and affect
-	 * the nodes children
-	 * 
-	 * setOffset moves the node to a specified location, offset increments the
-	 * node by a specified amount
-	 */
-	public void offset(double dx, double dy)
-	{
-		// System.out.println( "offset called dx dy: "+dx+" "+dy );
-		// apply the change to the node's transform directly, otherwise
-		// setOffset will get called
-		// getTransformReference(true).setOffset(getTransformReference(true).getTranslateX()
-		// + dx,
-		// getTransformReference(true).getTranslateY() + dy );
-		// System.out.println( "XOffset: "+ getXOffset() +"YOffset:
-		// "+getYOffset() );
-		// set the stored values to the new values from the transform
-		// view.setNodeDoubleProperty( rootGraphIndex,
-		// PGraphView.NODE_X_POSITION,
-		// getXOffset() - getWidth()/2 );
-		// view.setNodeDoubleProperty( rootGraphIndex,
-		// PGraphView.NODE_Y_POSITION,
-		// getYOffset() - getHeight()/2 );
-		// fire the appropriate events
-		// invalidatePaint();
-		// invalidateFullBounds();
-		// super.firePropertyChange( PNode.PROPERTY_CODE_TRANSFORM,
-		// PNode.PROPERTY_TRANSFORM, null, getTransformReference(true) );
-		double new_x_position = getXOffset() + getWidth() / 2 + dx;
-		new_x_position -= getWidth() / 2;
-		double new_y_position = getYOffset() + getHeight() / 2 + dy;
-		new_y_position -= getHeight() / 2;
-		view.setNodeDoubleProperty(node, PGraphView.NODE_X_POSITION,
-				new_x_position);
-		view.setNodeDoubleProperty(node, PGraphView.NODE_Y_POSITION,
-				new_y_position);
-		getTransformReference(true).setOffset(new_x_position, new_y_position);
-		invalidatePaint();
-		invalidateFullBounds();
-		super.firePropertyChange(PNode.PROPERTY_CODE_TRANSFORM,
-				PNode.PROPERTY_TRANSFORM, null, getTransformReference(true));
-		// setXPosition( getXPosition() + dx );
-		// setYPosition( getYPosition() + dy );
-	}
+    /**
+     * X and Y are a Global coordinate system property of this node, and affect
+     * the nodes children
+     * 
+     * setOffset moves the node to a specified location, offset increments the
+     * node by a specified amount
+     */
+    public void offset(double dx, double dy)
+    {
+        double new_x_position = getXOffset() + getWidth() / 2 + dx;
+        new_x_position -= getWidth() / 2;
+        double new_y_position = getYOffset() + getHeight() / 2 + dy;
+        new_y_position -= getHeight() / 2;
+        getTransformReference(true).setOffset(new_x_position, new_y_position);
+        invalidatePaint();
+        invalidateFullBounds();
+        super.firePropertyChange(PNode.PROPERTY_CODE_TRANSFORM,
+                PNode.PROPERTY_TRANSFORM, null, getTransformReference(true));
+        // setXPosition( getXPosition() + dx );
+        // setYPosition( getYPosition() + dy );
+    }
 
-	/**
-	 * @return if sandboxing is being used
-	 */
-	public boolean isSandboxed()
-	{
-		return sandboxed;
-	}
+    /**
+     * This immediatly moves the node to a new X coordinate.
+     * 
+     * @see{setOffset
+     * @param the
+     *            new_x_position for this node
+     */
+    public void setXPosition(double new_x_position)
+    {
+        // System.out.println( "Setxposition called: "+new_x_position );
+        setXPosition(new_x_position, true);
+    }
 
-	/**
-	 * This immediatly moves the node to a new X coordinate.
-	 * @see{setOffset}
-	 * @param the new_x_position for this node
-	 */
-	public void setXPosition(double new_x_position)
-	{
-		// System.out.println( "Setxposition called: "+new_x_position );
-		setXPosition(new_x_position, true);
-	}
+    /**
+     * Passing "false" to this method will use the built-in sandbox for storing
+     * node positions. If using the sandbox, getXPosition will return the
+     * sandbox value. After calling setNodePosition the sandboxed values will be
+     * applied to the PNodeView.<BR>
+     * <BR>
+     * Sandbox usage:<BR>
+     * 1) setNodeX/YPosition( value, <b>false</b> );<BR>
+     * 2) getNodeX/YPosition();<BR>
+     * repeat... 3) setNodePosition( boolean animate ); // true will animate the
+     * node to the sandboxed position.<BR>
+     * 
+     * @param new_x_position
+     *            for this node
+     * @param no_sandbox
+     *            if this is true, the node will move immediatly.
+     */
+    public void setXPosition(double new_x_position, boolean no_sandbox)
+    {
+        new_x_position -= getWidth() / 2;
+        offset(new_x_position, 0);
+    }
 
-	/**
-	 * Passing "false" to this method will use the built-in sandbox for storing
-	 * node positions. If using the sandbox, getXPosition will return the
-	 * sandbox value. After calling setNodePosition the sandboxed values will be
-	 * applied to the PNodeView.<BR>
-	 * <BR>
-	 * Sandbox usage:<BR>
-	 * 1) setNodeX/YPosition( value, <b>false</b> );<BR>
-	 * 2) getNodeX/YPosition();<BR>
-	 * repeat... 3) setNodePosition( boolean animate ); // true will animate the
-	 * node to the sandboxed position.<BR>
-	 * 
-	 * @param new_x_position for this node
-	 * @param no_sandbox if this is true, the node will move immediatly.
-	 */
-	public void setXPosition(double new_x_position, boolean no_sandbox)
-	{
-		new_x_position -= getWidth() / 2;
-		view.setNodeDoubleProperty(node, PGraphView.NODE_X_POSITION,
-				new_x_position);
-		if (no_sandbox)
-		{
-			setNodePosition(false);
-		} else
-		{
-			sandboxed = true;
-		}
-	}
+    /**
+     * If the nodes sandbox is being used, then this method will return the
+     * sandboxed postion.
+     * 
+     * @return the current x position of this node, or sandboxed position
+     * @see setXPosition
+     */
+    public double getXPosition()
+    {
+        return getXOffset() + getWidth() / 2;
+    }
 
-	/**
-	 * If the nodes sandbox is being used, then this method will return the
-	 * sandboxed postion.
-	 * @return the current x position of this node, or sandboxed position
-	 * @see setXPosition
-	 */
-	public double getXPosition()
-	{
-		if (sandboxed)
-		{
-			// System.out.println( "sandboxedm returninf sandbox x pos" );
-			return view.getNodeDoubleProperty(node,
-					PGraphView.NODE_X_POSITION);
-		} else
-		{
-			// System.out.println( "Not sandboxed: getXOffset: "+getXOffset() );
-			return getXOffset() + getWidth() / 2;
-		}
-	}
+    /**
+     * This immediatly moves the node to a new Y coordinate.
+     * 
+     * @see{setOffset
+     * @param the
+     *            new_y_position for this node
+     */
+    public void setYPosition(double new_y_position)
+    {
+        setYPosition(new_y_position, true);
+    }
 
-	/**
-	 * This immediatly moves the node to a new Y coordinate.
-	 * @see{setOffset}
-	 * @param the new_y_position for this node
-	 */
-	public void setYPosition(double new_y_position)
-	{
-		setYPosition(new_y_position, true);
-	}
+    /**
+     * Passing "false" to this method will use the built-in sandbox for storing
+     * node positions. If using the sandbox, getYPosition will return the
+     * sandbox value. After calling setNodePosition the sandboxed values will be
+     * applied to the PNodeView.<BR>
+     * <BR>
+     * Sandbox usage:<BR>
+     * 1) setNodeX/YPosition( value, <b>false</b> );<BR>
+     * 2) getNodeX/YPosition();<BR>
+     * repeat... 3) setNodePosition( boolean animate ); // true will animate the
+     * node to the sandboxed position.<BR>
+     * 
+     * @param new_y_position
+     *            for this node
+     * @param no_sandbox
+     *            if this is true, the node will move immediatly.
+     */
+    public void setYPosition(double new_y_position, boolean no_sandbox)
+    {
+        new_y_position -= getHeight() / 2;
+        offset(0, new_y_position);
+    }
 
-	/**
-	 * Passing "false" to this method will use the built-in sandbox for storing
-	 * node positions. If using the sandbox, getYPosition will return the
-	 * sandbox value. After calling setNodePosition the sandboxed values will be
-	 * applied to the PNodeView.<BR>
-	 * <BR>
-	 * Sandbox usage:<BR>
-	 * 1) setNodeX/YPosition( value, <b>false</b> );<BR>
-	 * 2) getNodeX/YPosition();<BR>
-	 * repeat... 3) setNodePosition( boolean animate ); // true will animate the
-	 * node to the sandboxed position.<BR>
-	 * 
-	 * @param new_y_position for this node
-	 * @param no_sandbox if this is true, the node will move immediatly.
-	 */
-	public void setYPosition(double new_y_position, boolean no_sandbox)
-	{
-		new_y_position -= getHeight() / 2;
-		view.setNodeDoubleProperty(node, PGraphView.NODE_Y_POSITION,
-				new_y_position);
-		if (no_sandbox)
-		{
-			setNodePosition(false);
-		} else
-		{
-			sandboxed = true;
-		}
-	}
+    /**
+     * If the nodes sandbox is being used, then this method will return the
+     * sandboxed postion.
+     * 
+     * @return the current y position of this node, or sandboxed position
+     * @see setYPosition
+     */
+    public double getYPosition()
+    {
+        return getYOffset() + getHeight() / 2;
+    }
 
-	/**
-	 * If the nodes sandbox is being used, then this method will return the
-	 * sandboxed postion.
-	 * @return the current y position of this node, or sandboxed position
-	 * @see setYPosition
-	 */
-	public double getYPosition()
-	{
-		if (sandboxed)
-		{
-			return view.getNodeDoubleProperty(node,
-					PGraphView.NODE_Y_POSITION);
-		} else
-		{
-			return getYOffset() + getHeight() / 2;
-		}
-	}
+    /**
+     * This draws us as selected
+     */
+    public void select()
+    {
+        selected = true;
+        super.setPaint(getSelectedPaint());
+        view.nodeSelected(this);
+    }
 
-	/**
-	 * moves this node to its stored x and y locations.
-	 */
-	public void setNodePosition(boolean animate)
-	{
-		// if (sandboxed) {
-		if (animate)
-		{
-			// animate the movement to the new position
-			PTransformActivity activity = this.animateToPositionScaleRotation(
-					view.getNodeDoubleProperty(node,
-							PGraphView.NODE_X_POSITION), view
-							.getNodeDoubleProperty(node,
-									PGraphView.NODE_Y_POSITION), 1, 0, 2000);
-		} else
-		{
-			// do a manual setOffset
-			getTransformReference(true).setOffset(
-					view.getNodeDoubleProperty(node,
-							PGraphView.NODE_X_POSITION),
-					view.getNodeDoubleProperty(node,
-							PGraphView.NODE_Y_POSITION));
-			invalidatePaint();
-			invalidateFullBounds();
-			super
-					.firePropertyChange(PNode.PROPERTY_CODE_TRANSFORM,
-							PNode.PROPERTY_TRANSFORM, null,
-							getTransformReference(true));
-		}
-		// }
-		// not sandboxed, therefore we are up to date
-		firePropertyChange(0, "Offset", null, this);
-		sandboxed = false;
-	}
+    /**
+     * This draws us as unselected
+     */
+    public void unselect()
+    {
+        selected = false;
+        super.setPaint(getUnselectedPaint());
+        view.nodeUnselected(this);
+    }
 
-	/**
-	 * This draws us as selected
-	 */
-	public void select()
-	{
-		selected = true;
-		super.setPaint((Paint) view.getNodeObjectProperty(node,
-				PGraphView.NODE_SELECTION_PAINT));
-		view.nodeSelected(this);
-	}
-
-	/**
-	 * This draws us as unselected
-	 */
-	public void unselect()
-	{
-		selected = false;
-		super.setPaint((Paint) view.getNodeObjectProperty(node,
-				PGraphView.NODE_PAINT));
-		view.nodeUnselected(this);
-	}
-
-	/**
+    /**
 	 * 
 	 */
-	public boolean isSelected()
-	{
-		return selected;
-	}
+    public boolean isSelected()
+    {
+        return selected;
+    }
 
-	/**
+    /**
 	 * 
 	 */
-	public boolean setSelected(boolean selected)
-	{
-		if (selected)
-			view.getSelectionHandler().select(this);
-		 else
-			view.getSelectionHandler().unselect(this);
-		return this.selected;
-	}
+    public void setSelected(boolean selected)
+    {
+        if (selected) view.getSelectionHandler().select(this);
+        else
+            view.getSelectionHandler().unselect(this);
+    }
 
-	// ****************************************************************
-	// Painting
-	// ****************************************************************
-	/**
+    // ****************************************************************
+    // Painting
+    // ****************************************************************
+    /**
 	 * 
 	 */
-	protected void paint(PPaintContext paintContext)
-	{
-		super.paint(paintContext);
-	}
+    protected void paint(PPaintContext paintContext)
+    {
+        super.paint(paintContext);
+    }
 
-	/**
-	 * Overridden method so that this node is aware of its bounds being changed
-	 * so that it can tell its label and edges to change their position
-	 * accordingly.
-	 */
-	public boolean setBounds(double x, double y, double width, double height)
-	{
-		boolean b = super.setBounds(x, y, width, height);
-		firePropertyChange(PNode.PROPERTY_CODE_BOUNDS, "BoundsChanged", null,
-				this);
-		if (label != null) label.updatePosition();
-		return b;
-	}
+    /**
+     * Overridden method so that this node is aware of its bounds being changed
+     * so that it can tell its label and edges to change their position
+     * accordingly.
+     */
+    public boolean setBounds(double x, double y, double width, double height)
+    {
+        boolean b = super.setBounds(x, y, width, height);
+        firePropertyChange(PNode.PROPERTY_CODE_BOUNDS, "BoundsChanged", null,
+                this);
+        if (label != null) label.updatePosition();
+        return b;
+    }
 
-	/**
-	 * Set a new shape for the FNode, based on one of the pre-defined shapes
-	 * <B>Note:</B> calling setPathTo( Shape ), allows one to define their own
-	 * java.awt.Shape ( i.e. A picture of Johnny Cash )
-	 */
-	public void setShape(int shape)
-	{
-		// float x = ( new Float( view.getNodeDoubleProperty( rootGraphIndex,
-		// PGraphView.NODE_WIDTH ) ) ).floatValue();
-		// float y = ( new Float( view.getNodeDoubleProperty( rootGraphIndex,
-		// PGraphView.NODE_HEIGHT) ) ).floatValue();
-		PBounds bounds = getBounds();
-		float x = (float) getWidth();
-		float y = (float) getHeight();
-		java.awt.geom.Point2D offset = getOffset();
-		view.setNodeIntProperty(node, PGraphView.NODE_SHAPE, shape);
-		if (shape == TRIANGLE)
-		{
-			// make a trianlge
-			setPathTo((PPath.createPolyline(new float[] { 0f * x, 2f * x,
-					1f * x, 0f * x }, new float[] { 2f * y, 2f * y, 0f * y,
-					2f * y })).getPathReference());
-		} else if (shape == ROUNDED_RECTANGLE)
-		{
-			GeneralPath path = new GeneralPath();
-			path.moveTo(1, 0);
-			path.lineTo(2, 0);
-			path.quadTo(3, 0, 3, 1);
-			path.lineTo(3, 2);
-			path.quadTo(3, 3, 2, 3);
-			path.lineTo(1, 3);
-			path.quadTo(0, 3, 0, 2);
-			path.lineTo(0, 1);
-			path.quadTo(0, 0, 1, 0);
-			path.closePath();
-			setPathTo(path);
-		} else if (shape == DIAMOND)
-		{
-			setPathTo((PPath.createPolyline(new float[] { 1f * x, 2f * x,
-					1f * x, 0f * x, 1f * x }, new float[] { 0f * y, 1f * y,
-					2f * y, 1f * y, 0f * y })).getPathReference());
-		} else if (shape == ELLIPSE)
-		{
-			setPathTo((PPath.createEllipse((float) getBounds().getX(),
-					(float) getBounds().getY(), (float) getBounds().getWidth(),
-					(float) getBounds().getHeight())).getPathReference());
-		} else if (shape == HEXAGON)
-		{
-			setPathTo((PPath.createPolyline(new float[] { 0f * x, 1f * x,
-					2f * x, 3f * x, 2f * x, 1f * x, 0f * x }, new float[] {
-					1f * y, 2f * y, 2f * y, 1f * y, 0f * y, 0f * y, 1f * y }))
-					.getPathReference());
-		} else if (shape == OCTAGON)
-		{
-			setPathTo((PPath.createPolyline(new float[] { 0f * x, 0f * x,
-					1f * x, 2f * x, 3f * x, 3f * x, 2f * x, 1f * x, 0f * x },
-					new float[] { 1f * y, 2f * y, 3f * y, 3f * y, 2f * y,
-							1f * y, 0f * y, 0f * y, 1f * y }))
-					.getPathReference());
-		} else if (shape == PARALELLOGRAM)
-		{
-			setPathTo((PPath.createPolyline(new float[] { 0f * x, 1f * x,
-					3f * x, 2f * x, 0f * x }, new float[] { 0f * y, 1f * y,
-					1f * y, 0f * y, 0f * y })).getPathReference());
-		} else if (shape == RECTANGLE)
-		{
-			setPathToRectangle((float) getX(), (float) getY(), x, y);
-		}
-		// setOffset( offset );
-		// setHeight( x );
-		// setWidth( y );
-		setX(bounds.getX());
-		setY(bounds.getY());
-		setWidth(bounds.getWidth());
-		setHeight(bounds.getHeight());
-		if (label != null) label.updatePosition();
-		firePropertyChange(0, "Offset", null, this);
-	}
+    /**
+     * Set a new shape for the FNode, based on one of the pre-defined shapes
+     * <B>Note:</B> calling setPathTo( Shape ), allows one to define their own
+     * java.awt.Shape ( i.e. A picture of Johnny Cash )
+     */
+    public void setShape(int shape)
+    {
+        PBounds bounds = getBounds();
+        float x = (float) getWidth();
+        float y = (float) getHeight();
+        Point2D offset = getOffset();
+        this.shape = shape;
+        if (shape == TRIANGLE)
+        {
+            // make a trianlge
+            setPathTo((PPath.createPolyline(new float[] { 0f * x, 2f * x,
+                    1f * x, 0f * x }, new float[] { 2f * y, 2f * y, 0f * y,
+                    2f * y })).getPathReference());
+        }
+        else if (shape == ROUNDED_RECTANGLE)
+        {
+            GeneralPath path = new GeneralPath();
+            path.moveTo(1, 0);
+            path.lineTo(2, 0);
+            path.quadTo(3, 0, 3, 1);
+            path.lineTo(3, 2);
+            path.quadTo(3, 3, 2, 3);
+            path.lineTo(1, 3);
+            path.quadTo(0, 3, 0, 2);
+            path.lineTo(0, 1);
+            path.quadTo(0, 0, 1, 0);
+            path.closePath();
+            setPathTo(path);
+        }
+        else if (shape == DIAMOND)
+        {
+            setPathTo((PPath.createPolyline(new float[] { 1f * x, 2f * x,
+                    1f * x, 0f * x, 1f * x }, new float[] { 0f * y, 1f * y,
+                    2f * y, 1f * y, 0f * y })).getPathReference());
+        }
+        else if (shape == ELLIPSE)
+        {
+            setPathTo((PPath.createEllipse((float) getBounds().getX(),
+                    (float) getBounds().getY(), (float) getBounds().getWidth(),
+                    (float) getBounds().getHeight())).getPathReference());
+        }
+        else if (shape == HEXAGON)
+        {
+            setPathTo((PPath.createPolyline(new float[] { 0f * x, 1f * x,
+                    2f * x, 3f * x, 2f * x, 1f * x, 0f * x }, new float[] {
+                    1f * y, 2f * y, 2f * y, 1f * y, 0f * y, 0f * y, 1f * y }))
+                    .getPathReference());
+        }
+        else if (shape == OCTAGON)
+        {
+            setPathTo((PPath.createPolyline(new float[] { 0f * x, 0f * x,
+                    1f * x, 2f * x, 3f * x, 3f * x, 2f * x, 1f * x, 0f * x },
+                    new float[] { 1f * y, 2f * y, 3f * y, 3f * y, 2f * y,
+                            1f * y, 0f * y, 0f * y, 1f * y }))
+                    .getPathReference());
+        }
+        else if (shape == PARALELLOGRAM)
+        {
+            setPathTo((PPath.createPolyline(new float[] { 0f * x, 1f * x,
+                    3f * x, 2f * x, 0f * x }, new float[] { 0f * y, 1f * y,
+                    1f * y, 0f * y, 0f * y })).getPathReference());
+        }
+        else if (shape == RECTANGLE)
+        {
+            setPathToRectangle((float) getX(), (float) getY(), x, y);
+        }
+        // setOffset( offset );
+        // setHeight( x );
+        // setWidth( y );
+        setX(bounds.getX());
+        setY(bounds.getY());
+        setWidth(bounds.getWidth());
+        setHeight(bounds.getHeight());
+        if (label != null) label.updatePosition();
+        firePropertyChange(0, "Offset", null, this);
+    }
 
-	/**
-	 * Set the new shape of the node, with a given new height and width
-	 * 
-	 * @param shape the shape type
-	 * @param width the new width
-	 * @param height the new height
-	 */
-	public void setShape(int shape, double width, double height)
-	{
-		setWidth(width);
-		setHeight(height);
-		setShape(shape);
-		firePropertyChange(0, "Offset", null, this);
-	}
+    /**
+     * Set the new shape of the node, with a given new height and width
+     * 
+     * @param shape
+     *            the shape type
+     * @param width
+     *            the new width
+     * @param height
+     *            the new height
+     */
+    public void setShape(int shape, double width, double height)
+    {
+        setWidth(width);
+        setHeight(height);
+        setShape(shape);
+        firePropertyChange(0, "Offset", null, this);
+    }
 
-	public void firePropertyChange(java.lang.String propertyName,
-			java.lang.Object oldValue, java.lang.Object newValue)
-	{
-		super.firePropertyChange(0, propertyName, oldValue, newValue);
-	}
+    public void firePropertyChange(java.lang.String propertyName,
+            java.lang.Object oldValue, java.lang.Object newValue)
+    {
+        super.firePropertyChange(0, propertyName, oldValue, newValue);
+    }
 
-	/**
-	 * @see PNodeView#setLabel( String ) setLabel <B>Note:</B> this replaces:
-	 * <I>NodeLabel nl = nr.getLabel(); nl.setFont(na.getFont());</I>
-	 */
-	public void setFont(Font font)
-	{
-		label.setFont(font);
-	}
+    /**
+     * @see PNodeView#setLabel(String ) setLabel <B>Note:</B> this replaces:
+     *      <I>NodeLabel nl = nr.getLabel(); nl.setFont(na.getFont());</I>
+     */
+    public void setFont(Font font)
+    {
+        label.setFont(font);
+    }
 
-	/**
-	 * 
-	 * @see phoebe.PNodeView#addClientProperty( String, String ) setToolTip
-	 */
-	public void setToolTip(String tip)
-	{
-		addClientProperty("tooltip", tip);
-	}
+    /**
+     * 
+     * @see phoebe.PNodeView#addClientProperty(String, String ) setToolTip
+     */
+    public void setToolTip(String tip)
+    {
+        addClientProperty("tooltip", tip);
+    }
 
-	/**
-	 * 
-	 */
-	public void setCenter(double x, double y)
-	{
-		setOffset(x - getWidth() / 2, y - getHeight() / 2);
-	}
-
-	public Point2D getCenter()
-	{
-		return new Point2D.Double(getXOffset() + getWidth() / 2, getYOffset()
-				+ getHeight() / 2);
-	}
-
-	/**
+    /**
 	 * 
 	 */
-	public void setLocation(double x, double y)
-	{
-		setOffset(x, y);
-	}
+    public void setCenter(double x, double y)
+    {
+        setOffset(x - getWidth() / 2, y - getHeight() / 2);
+    }
 
-	/**
+    public Point2D getCenter()
+    {
+        return new Point2D.Double(getXOffset() + getWidth() / 2, getYOffset()
+                + getHeight() / 2);
+    }
+
+    /**
 	 * 
 	 */
-	public void setSize(double w, double h)
-	{
-		setHeight(h);
-		setWidth(w);
-	}
+    public void setLocation(double x, double y)
+    {
+        setOffset(x, y);
+    }
 
-	/**
+    /**
 	 * 
 	 */
-	public String getLabelText()
-	{
-		return label.getText();
-	}
+    public void setSize(double w, double h)
+    {
+        setHeight(h);
+        setWidth(w);
+    }
+
+    /**
+	 * 
+	 */
+    public String getLabelText()
+    {
+        return label.getText();
+    }
 } // class PNodeView

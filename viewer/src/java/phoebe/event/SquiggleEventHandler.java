@@ -1,29 +1,27 @@
 package phoebe.event;
 
-import phoebe.PGraphView;
-
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Paint;
+import java.awt.Stroke;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
+import org.hypergraphdb.viewer.HGVNetworkView;
+
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.event.PDragSequenceEventHandler;
 import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.event.PInputEventFilter;
 import edu.umd.cs.piccolo.nodes.PPath;
-import edu.umd.cs.piccolox.PFrame;
-
-import javax.swing.*;
-import java.awt.event.*;
 
 /**
  * The Squiggle Event Handler
  */
 public class SquiggleEventHandler extends PDragSequenceEventHandler {
 
-  private PGraphView view;
+  private HGVNetworkView view;
   private PLayer squiggle_layer;
   private PCanvas canvas;
   private PPath squiggle;
@@ -33,7 +31,7 @@ public class SquiggleEventHandler extends PDragSequenceEventHandler {
   /**
    * Must pass the layer to Squiggle on, as well the canvas.
    */
-  public SquiggleEventHandler ( PLayer layer, PCanvas canvas, PGraphView view  ) {
+  public SquiggleEventHandler ( PLayer layer, PCanvas canvas, HGVNetworkView view  ) {
     this.squiggle_layer = layer;
     this.canvas = canvas;
     this.view = view;

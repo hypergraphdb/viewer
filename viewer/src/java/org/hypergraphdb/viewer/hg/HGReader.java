@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.hypergraphdb.HGEnvironment;
 import org.hypergraphdb.HGException;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGLink;
@@ -57,7 +58,7 @@ public class HGReader
         System.out.println("HGReader -read: " + db_name);
         try
         {
-            hypergraph = new HyperGraph(db_name);
+            hypergraph = HGEnvironment.get(db_name);
         }
         catch (HGException ex)
         {

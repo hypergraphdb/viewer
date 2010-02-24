@@ -12,6 +12,8 @@ public class SimpleLabelTooltipNodePainter extends DefaultNodePainter
 		String val = getTooltip();
 		if("".equals(val) || NOT_EDITABLE.equals(val))
 		  return "";
+		if(val.length() > 15)
+		    val = getHG().get(getNode().getHandle()).getClass().getSimpleName();
 		return val.substring(val.lastIndexOf('.') + 1);
 	}
 

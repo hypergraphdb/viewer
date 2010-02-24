@@ -6,14 +6,11 @@ package org.hypergraphdb.viewer.layout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVNetworkView;
 
 import phoebe.PEdgeView;
-import phoebe.PGraphView;
 import phoebe.PNodeView;
 
 /**
@@ -70,8 +67,8 @@ public class JUNGSpringLayout extends AbstractLayout
             advancePositions();
             // System.out.println( increment +" "+getStatus() );
         }
-        for (PNodeView n : graphView.getNodeViews())
-            n.setNodePosition(true);
+       // for (PNodeView n : graphView.getNodeViews())
+       //     n.setNodePosition(true);
     }
 
     protected void initialize_local()
@@ -132,16 +129,12 @@ public class JUNGSpringLayout extends AbstractLayout
     {
         for (PEdgeView e : graphView.getEdgeViews())
         {
-            FNode source_index = e.getEdge().getSource();
-            FNode target_index = e.getEdge().getTarget();
-            double source_x = graphView.getNodeDoubleProperty(source_index,
-                    PGraphView.NODE_X_POSITION);
-            double source_y = graphView.getNodeDoubleProperty(source_index,
-                    PGraphView.NODE_Y_POSITION);
-            double target_x = graphView.getNodeDoubleProperty(target_index,
-                    PGraphView.NODE_X_POSITION);
-            double target_y = graphView.getNodeDoubleProperty(target_index,
-                    PGraphView.NODE_Y_POSITION);
+            PNodeView source = graphView.getNodeView(e.getEdge().getSource());
+            PNodeView target = graphView.getNodeView(e.getEdge().getTarget());
+            double source_x = source.getX();
+            double source_y = source.getY();
+            double target_x = target.getX();
+            double target_y = target.getY();
             double vx = source_x - target_x;
             double vy = source_y - target_y;
             double len = Math.sqrt(vx * vx + vy * vy);
@@ -152,18 +145,16 @@ public class JUNGSpringLayout extends AbstractLayout
             // why?
             // System.out.println("Desired : " + getLength( e ));
             double f = FORCE_CONSTANT * (desiredLen - len) / len;
-            int deg1 = graphView.getAdjacentEdges(source_index, true, true).length;
-            int deg2 = graphView.getAdjacentEdges(target_index, true, true).length;
+            int deg1 = graphView.getAdjacentEdges(source.getNode(), true, true).length;
+            int deg2 = graphView.getAdjacentEdges(target.getNode(), true, true).length;
             f = f * Math.pow(STRETCH / 100.0, (deg1 + deg2 - 2));
             // the actual movement distance 'dx' is the force multiplied by the
             // distance to go.
             double dx = f * vx;
             double dy = f * vy;
 
-            SpringVertexData v1D = getSpringData(graphView
-                    .getNodeView(source_index));
-            SpringVertexData v2D = getSpringData(graphView
-                    .getNodeView(target_index));
+            SpringVertexData v1D = getSpringData(source);
+            SpringVertexData v2D = getSpringData(target);
             SpringEdgeData sed = getSpringData(e);
             sed.f = f;
             if (v1D != null)
@@ -189,14 +180,10 @@ public class JUNGSpringLayout extends AbstractLayout
             for (PNodeView v2 : graphView.getNodeViews())
             {
                 if (v == v2) continue;
-                double v_x = graphView.getNodeDoubleProperty(v.getNode(),
-                        PGraphView.NODE_X_POSITION);
-                double v_y = graphView.getNodeDoubleProperty(v.getNode(),
-                        PGraphView.NODE_Y_POSITION);
-                double v2_x = graphView.getNodeDoubleProperty(v2.getNode(),
-                        PGraphView.NODE_X_POSITION);
-                double v2_y = graphView.getNodeDoubleProperty(v2.getNode(),
-                        PGraphView.NODE_Y_POSITION);
+                double v_x = v.getX();
+                double v_y = v.getY();
+                double v2_x = v2.getX();
+                double v2_y = v2.getY();
                 double vx = v_x - v2_x;
                 double vy = v_y - v2_y;
                 double distance = vx * vx + vy * vy;
@@ -230,41 +217,24 @@ public class JUNGSpringLayout extends AbstractLayout
             {
                 if (dontMove(v)) continue;
                 SpringVertexData vd = getSpringData(v);
-                double v_x = graphView.getNodeDoubleProperty(v.getNode(),
-                        PGraphView.NODE_X_POSITION);
-                double v_y = graphView.getNodeDoubleProperty(v.getNode(),
-                        PGraphView.NODE_Y_POSITION);
+                double v_x = v.getX();
+                double v_y = v.getY();
                 vd.dx += vd.repulsiondx + vd.edgedx;
                 vd.dy += vd.repulsiondy + vd.edgedy;
                 // keeps nodes from moving any faster than 5 per time unit
-                graphView.setNodeDoubleProperty(v.getNode(),
-                        PGraphView.NODE_X_POSITION, v_x
-                                + (Math.max(-5, Math.min(5, vd.dx))));
-                graphView.setNodeDoubleProperty(v.getNode(),
-                        PGraphView.NODE_Y_POSITION, v_y
-                                + (Math.max(-5, Math.min(5, vd.dy))));
+                v.offset(v_x + (Math.max(-5, Math.min(5, vd.dx))), 
+                       v_y  + (Math.max(-5, Math.min(5, vd.dy))));
+               
                 int width = getCurrentSize().width;
                 int height = getCurrentSize().height;
                 if (v_x < 0)
-                {
-                    graphView.setNodeDoubleProperty(v.getNode(),
-                            PGraphView.NODE_X_POSITION, 0);
-                }
+                    v.setOffset(0, 0);
                 else if (v_x > width)
-                {
-                    graphView.setNodeDoubleProperty(v.getNode(),
-                            PGraphView.NODE_X_POSITION, width);
-                }
+                    v.setOffset(width,0);
                 if (v_y < 0)
-                {
-                    graphView.setNodeDoubleProperty(v.getNode(),
-                            PGraphView.NODE_Y_POSITION, 0);
-                }
+                    v.setOffset(0, 0);
                 else if (v_y > height)
-                {
-                    graphView.setNodeDoubleProperty(v.getNode(),
-                            PGraphView.NODE_Y_POSITION, height);
-                }
+                   v.setOffset(0, height);
             }
         }
     }

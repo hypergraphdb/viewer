@@ -28,7 +28,6 @@ import org.hypergraphdb.viewer.layout.SpringLayout;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 
 import phoebe.PEdgeView;
-import phoebe.PGraphView;
 import phoebe.PNodeView;
 
 /**
@@ -306,7 +305,7 @@ public abstract class HGVKit
 	 * SELECT_NODES_AND_EDGES.
 	 * @param view the GraphView to set the selection mode on.
 	 */
-	public static void setSelectionMode(int selectionMode, PGraphView view)
+	public static void setSelectionMode(int selectionMode, HGVNetworkView view)
 	{
 		// first, disable node and edge selection on the view
 		view.disableNodeSelection();

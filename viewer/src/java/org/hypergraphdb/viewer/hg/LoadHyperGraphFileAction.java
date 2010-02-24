@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import javax.swing.SwingUtilities;
+
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGVComponent;
@@ -20,13 +20,11 @@ import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.FileUtil;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.view.HGVDesktop;
-import phoebe.PGraphView;
+
 import cytoscape.task.Task;
 import cytoscape.task.TaskMonitor;
 import cytoscape.task.ui.JTaskConfig;
 import cytoscape.task.util.TaskManager;
-import edu.umd.cs.piccolo.PCanvas;
 
 /**
  */

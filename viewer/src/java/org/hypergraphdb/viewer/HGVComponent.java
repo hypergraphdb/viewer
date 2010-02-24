@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Collection;
@@ -35,22 +36,12 @@ import edu.umd.cs.piccolox.swing.PScrollPane;
 
 public class HGVComponent extends JPanel
 {
-    // HGViewer view;
-    // public HGViewer getViewer()
-    // {
-    // return view;
-    // }
     /**
      * This is the label that tells how many node/edges are in a HGVNetworkView
      * and how many are selected/hidden
      */
     protected JLabel statusLabel;
-    HGVNetworkView view;
-
-    public HGVNetworkView getView()
-    {
-        return view;
-    }
+    protected HGVNetworkView view;
 
     private/* static */JToolBar toolbar;
 
@@ -89,6 +80,20 @@ public class HGVComponent extends JPanel
             add(statusLabel, BorderLayout.SOUTH);
         
         view = new HGVNetworkView(this, db, nodes, edges);
+        view.getCanvas().addFocusListener(new FocusAdapter()
+        {
+            public void focusGained(FocusEvent e)
+            {
+                focused(HGVComponent.this);
+            }
+        });
+        view.addSelectionListener(new HGVNetworkView.SelectionListener()
+        {
+            public void selectionChanged()
+            {
+                updateStatusLabel();
+            }
+        });
         PScrollPane scroll = new PScrollPane(view.canvas);
         add(scroll, BorderLayout.CENTER);
         addComponentListener(new ComponentAdapter(){
@@ -98,17 +103,7 @@ public class HGVComponent extends JPanel
             {
                 PCanvas pCanvas = view.getCanvas();
                 pCanvas.setVisible(false);
-                // End of Hack
-
-                // if Squiggle function enabled, enable squiggling on the created
-                // view
-                if (HGVKit.isSquiggleEnabled())
-                    view.getSquiggleHandler().beginSquiggling();
-
-                // set the selection mode on the view
-                HGVKit.setSelectionMode(HGVKit.getSelectionMode(), view);
-
-                // Lastly, make the GraphView Canvas Visible.
+               
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run()
                     {
@@ -123,6 +118,11 @@ public class HGVComponent extends JPanel
                 });
             }
        });
+    }
+    
+    public HGVNetworkView getView()
+    {
+        return view;
     }
 
     protected/* static */JToolBar getBottomToolbar()
@@ -224,7 +224,7 @@ public class HGVComponent extends JPanel
         setFocusedComponent((HGVComponent) c);
     }
 
-    private static class HGVFocusListener implements FocusListener
+    private static class HGVFocusListener extends FocusAdapter
     {
         public void focusGained(FocusEvent e)
         {

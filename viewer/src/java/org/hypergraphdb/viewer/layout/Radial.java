@@ -65,30 +65,25 @@ public class Radial implements Layout
 
 	 public void applyLayout (HGVNetworkView view)
 	 {
-	        this.view = view;
-	        if (view == null) return;
+	    this.view = view;
+	    if (view == null) return;
 	    clear();
-		List<PNodeView> node_indicies = view.getSelectedNodes();
-		PNodeView center_view = null;
-		if(node_indicies.size() > 0)
-			center_view = (node_indicies.get(0));
+		PNodeView center_view = view.getSelectedNodeView();
 		done = false;
 		for(PNodeView n : view.getNodeViews())
 		{
 			//if no center is specified, take the first view from the list
-			if(center_view == null)
-				center_view = n;
-			locations.put(n.getNode(), new Coordinates(n.getXPosition(), n
-					.getYPosition()));
+			if(center_view == null)	center_view = n;
+			locations.put(n.getNode(), new Coordinates(n.getX(), n.getY()));
 		}
 		center = center_view.getNode();
 		advancePositions();
 		GEM.rescalePositions(view, 0.25, 0, locations);
 	}
 
-	private FNode getOpposite(FNode center, FEdge e)
+	private FNode getOpposite(FNode main, FEdge e)
 	{
-		if (e.getSource().equals(center)) 
+		if (e.getSource().equals(main)) 
 		    return e.getTarget();
 		return e.getSource();
 	}
@@ -96,10 +91,9 @@ public class Radial implements Layout
 	private Collection<FEdge> getOutEdges(FNode node)
 	{
 		Set<FEdge> totalEdges = new HashSet<FEdge>();
-		FEdge[] e = view.getAdjacentEdges(
-				node, true, true);
-		for (int i = 0; i < e.length; i++)
-			totalEdges.add(e[i]);
+		FEdge[] e = view.getAdjacentEdges(node, true, true);
+		for (FEdge edge: e)
+			totalEdges.add(edge);
 		return totalEdges;
 	}
 
@@ -110,7 +104,7 @@ public class Radial implements Layout
 		for (FEdge e : getOutEdges(center))
 		{
 			FNode n = getOpposite(center, e);
-			if ((n != center) && (!seen.contains(n)))
+			if (!n.equals(center) && (!seen.contains(n)))
 			{
 				validEdges.add(e);
 				frontier.addElement(n);
@@ -135,11 +129,9 @@ public class Radial implements Layout
 		}
 		seen.clear();
 		layerDistance = 10;
-		for (PNodeView n : HGVKit.getCurrentView().getNodeViews())
-		{
+		for (PNodeView n : view.getNodeViews())
 		    layerDistance = Math.max(layerDistance, 
 					           (n.getWidth()+ n.getHeight()) * 2);
-		}
 		double baseX = 0.0;
 		// System.out.println("\tsetting width prop...");
 		defineWidthProperty(center, null);
@@ -165,7 +157,7 @@ public class Radial implements Layout
 					rho, alpha1, alpha2, baseX);
 			alpha1 = alpha2;
 		}
-		for (PNodeView n : HGVKit.getCurrentView().getNodeViews())
+		for (PNodeView n : view.getNodeViews())
 		{
 			if(n == null) continue;
 			Point2D loc = (Point2D) coords.get(n.getNode());
@@ -175,7 +167,7 @@ public class Radial implements Layout
 						.getY()));
 			} else
 			{
-				//System.out.println("oops... ");
+				System.out.println("oops... ");
 			}
 		}
 		done = true;

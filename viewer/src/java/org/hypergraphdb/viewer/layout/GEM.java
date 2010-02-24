@@ -586,10 +586,16 @@ public class GEM implements Layout
 		}
 	}
 
+	public void applyLayout(HGVNetworkView view)
+	{
+	    GEM g = new GEM();
+	    g.view = view;
+	    g.applyLayout();
+	}
 	/*
 	 * Royere main layout method
 	 */
-	public void applyLayout(HGVNetworkView view)
+	public void applyLayout()
 	{
 	    this.view = view;
 		long startTime = System.currentTimeMillis();
@@ -644,10 +650,7 @@ public class GEM implements Layout
 			Map<FNode, Coordinates> locations)
 	{
 		int nNodes = view.getNodeViewCount();
-		if (nNodes <= 1)
-		{
-			return;
-		}
+		if (nNodes <= 1)	return;
 		double[] xPos = new double[nNodes];
 		double[] yPos = new double[nNodes];
 		FNode[] nlist = new FNode[nNodes];

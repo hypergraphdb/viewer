@@ -2,15 +2,17 @@ package org.hypergraphdb.viewer.layout;
 
 
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeMap;
 
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.layout.util.NodeDistances;
 
-import edu.umd.cs.piccolo.PNode;
-import phoebe.PGraphView;
 import phoebe.PNodeView;
 
 /**

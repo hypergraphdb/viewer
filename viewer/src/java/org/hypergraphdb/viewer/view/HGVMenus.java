@@ -504,7 +504,6 @@ public class HGVMenus implements HGVNetworkChangeListener
 		selectMenu.add(nodes);
 		nodes.add(mi(ActionManager.INVERT_NODE_SELECTION_ACTION));
 		nodes.add(mi(ActionManager.HIDE_NODE_SELECTION_ACTION));
-		nodes.add(mi(ActionManager.SHOW_ALL_NODES_ACTION));
 		nodes.add(mi(ActionManager.SELECT_ALL_NODES_ACTION));
 		nodes.add(mi(ActionManager.DESELECT_ALL_NODES_ACTION));
 		nodes.add(mi(ActionManager.SELECTED_FIRST_NEIGHBORS_ACTION));

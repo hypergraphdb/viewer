@@ -26,6 +26,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.hypergraphdb.viewer.FNode;
+import org.hypergraphdb.viewer.HGVComponent;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.VisualManager;
@@ -33,6 +34,7 @@ import org.hypergraphdb.viewer.props.PropertySetPanel;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
 import phoebe.PNodeView;
+
 
 /**
  * The HGVDesktop is the central Window for working with HGVKit
@@ -42,7 +44,6 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
     private static HGVDesktop instance;
     // Static variables
     public static String NETWORK_VIEW_FOCUSED = "NETWORK_VIEW_FOCUSED";
-    public static String NETWORK_VIEW_FOCUS = "NETWORK_VIEW_FOCUS";
     public static String NETWORK_VIEW_CREATED = "NETWORK_VIEW_CREATED";
     public static String NETWORK_VIEW_DESTROYED = "NETWORK_VIEW_DESTROYED";
     // Member varaibles
@@ -125,6 +126,16 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
                 this);
         tabbedPane = new JTabbedPane(JTabbedPane.TOP,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e)
+            {
+                if (tabbedPane.getSelectedIndex() == -1) return;
+                HGVComponent comp = (HGVComponent) tabbedPane.getComponentAt(
+                        tabbedPane.getSelectedIndex());
+                HGVComponent.setFocusedComponent(comp);
+                firePropertyChange(HGVDesktop.NETWORK_VIEW_FOCUSED, null, comp.getView());
+            }
+        });
         JScrollPane scroll_tab = new JScrollPane(tabbedPane);
         propsPanel = new PropertySetPanel(this);
         propsPanel.getSwingPropertyChangeSupport().addPropertyChangeListener(
@@ -235,28 +246,27 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
 
     protected void updateFocus(HGVNetworkView view)
     {
-        // deal with the new Network
-        VisualStyle new_style = view.getVisualStyle();
-        if (new_style == null)
-        {
-            new_style = VisualManager.getInstance().getDefaultVisualStyle();
-            if (new_style != null) view.setVisualStyle(new_style);
-        }
-        System.out.println("HGVDesktop - updateFocus network: "
-                + view.getIdentifier() + ":" + view.getVisualStyle() + ":"
-                + new_style);
-
-        styleBox.setSelectedItem(new_style);
-        cyMenus.setNodesRequiredItemsEnabled();
-        view.redrawGraph();
+//        // deal with the new Network
+//        VisualStyle new_style = view.getVisualStyle();
+//        if (new_style == null)
+//        {
+//            new_style = VisualManager.getInstance().getDefaultVisualStyle();
+//            if (new_style != null) view.setVisualStyle(new_style);
+//        }
+//        System.out.println("HGVDesktop - updateFocus network: "
+//                + view.getIdentifier() + ":" + view.getVisualStyle() + ":"
+//                + new_style);
+//
+//        styleBox.setSelectedItem(new_style);
+//        cyMenus.setNodesRequiredItemsEnabled();
+//        view.redrawGraph();
     }
 
     public void setFocus(HGVNetworkView view)
     {
         pcs.firePropertyChange(new PropertyChangeEvent(this,
                 NETWORK_VIEW_FOCUSED, null, view));
-        pcs.firePropertyChange(new PropertyChangeEvent(this,
-                NETWORK_VIEW_FOCUS, null, view));
+        updateFocus(view);
     }
 
     public SwingPropertyChangeSupport getSwingPropertyChangeSupport()
@@ -276,7 +286,6 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
             // pass on the event
             pcs.firePropertyChange(e);
             networkPanel.focusNetworkNode(view);
-            networkPanel.fireFocus(((HGVNetworkView) e.getNewValue()));
         }
         else if (e.getPropertyName() == NETWORK_VIEW_FOCUSED)
         {
@@ -284,12 +293,6 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
             updateFocus(((HGVNetworkView) e.getNewValue()));
             pcs.firePropertyChange(e);
             // attachPopupMenu(HGVKit.getCurrentNetworkView().getComponent());
-        }
-        else if (e.getPropertyName() == NETWORK_VIEW_FOCUS)
-        {
-            // get Focus from NetworkPanel
-            updateFocus(((HGVNetworkView) e.getNewValue()));
-            pcs.firePropertyChange(e);
         }
         else if (e.getPropertyName() == NETWORK_VIEW_DESTROYED)
         {

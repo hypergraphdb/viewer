@@ -11,15 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import javax.swing.SwingUtilities;
+
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.FEdge;
-import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVComponent;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
@@ -31,6 +28,7 @@ import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 import org.hypergraphdb.viewer.visual.VisualStyle;
+
 import cytoscape.task.Task;
 import cytoscape.task.TaskMonitor;
 import cytoscape.task.util.TaskManager;

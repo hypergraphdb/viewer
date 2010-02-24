@@ -23,8 +23,8 @@ public class BirdsEyeViewAction extends HGVAction implements
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
-		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUSED
-				|| e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUS) {
+		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUSED)
+		{
 			bev.disconnect();
 			try {
 				bev.connect(HGVKit

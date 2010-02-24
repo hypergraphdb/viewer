@@ -2,7 +2,6 @@ package org.hypergraphdb.viewer.view;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.util.Iterator;
 import java.util.TreeMap;
 
 import javax.swing.AbstractAction;
@@ -16,7 +15,6 @@ import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 
-import phoebe.PGraphView;
 import phoebe.PNodeView;
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PCanvas;

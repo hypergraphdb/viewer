@@ -12,7 +12,6 @@ import java.util.*;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import phoebe.PEdgeView;
-import phoebe.PGraphView;
 import phoebe.PNodeView;
 
 //-------------------------------------------------------------------------
