@@ -43,6 +43,7 @@ public class ActionManager
 	public static final String BACKGROUND_COLOR_ACTION = "Change Background Color";
 	public static final String VISUAL_PROPERTIES_ACTION = "Set Visual Properties";
 	public static final String ABOUT_ACTION = "About";
+	public static final String FIT_ACTION = "Zoom To Fit";
 
 	
 	private static ActionManager instance;
@@ -89,6 +90,7 @@ public class ActionManager
 		actions.put(BACKGROUND_COLOR_ACTION, new BackgroundColorAction());
 		actions.put(VISUAL_PROPERTIES_ACTION, new SetVisualPropertiesAction());
 		actions.put(ABOUT_ACTION, new HelpAboutAction());
+		actions.put(FIT_ACTION, new FitContentAction());
 		
 	}
 

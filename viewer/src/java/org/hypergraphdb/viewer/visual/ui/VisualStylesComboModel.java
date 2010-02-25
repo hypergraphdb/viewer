@@ -6,8 +6,6 @@ import java.util.Vector;
 
 import javax.swing.AbstractListModel;
 import javax.swing.MutableComboBoxModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.visual.VisualStyle;

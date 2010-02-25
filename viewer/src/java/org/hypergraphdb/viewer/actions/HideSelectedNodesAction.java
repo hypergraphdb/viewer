@@ -24,7 +24,7 @@ public class HideSelectedNodesAction extends HGVAction   {
 
     public void actionPerformed ( ActionEvent e ) {
     	if(HGVKit.getCurrentView()!= null)
-      GinyUtils.hideSelectedNodes( HGVKit.getCurrentView() );
+           GinyUtils.hideSelectedNodes( HGVKit.getCurrentView() );
     }
 
 }

@@ -115,25 +115,32 @@ public class HGVUtils
 		}
 	}
 
-	public static void expandNode(HyperGraph hg, FNode node)
+	public static void expandNodes()
 	{
 		HGVNetworkView view = HGVKit.getCurrentView();
 		// select the view, because the popup doesn't do this automaticaly
-		view.unflagAllNodes();
-		view.getNodeView(node).setSelected(true);
-		IncidenceSet in_links = hg.getIncidenceSet(node.getHandle());
-		HGHandle[] out_links = new HGHandle[0];
-		Object obj = hg.get(node.getHandle());
-		if (obj instanceof HGLink){
-			out_links = new HGHandle[((HGLink) obj).getArity()];
-				for(int i = 0; i < out_links.length; i++)
-					out_links[i] = ((HGLink) obj).getTargetAt(i);
-			}
-		if(!confirmExpanding(in_links.size() + out_links.length)) return;
-		expandLinks(view, node, out_links, false);
-		HGHandle[] inA = in_links.toArray(new HGHandle[0]);
-		expandLinks(view, node, inA, true);
+		//view.unflagAllNodes();
+		for(PNodeView v : view.getSelectedNodes())
+		    expandNode(v);
+		
 		view.redrawGraph();
+	}
+	
+	private static void expandNode(PNodeView node)
+	{
+	    HyperGraph graph = node.getGraphView().getHyperGraph();
+        IncidenceSet in_links = graph.getIncidenceSet(node.getNode().getHandle());
+        HGHandle[] out_links = new HGHandle[0];
+        Object obj = graph.get(node.getNode().getHandle());
+        if (obj instanceof HGLink){
+            out_links = new HGHandle[((HGLink) obj).getArity()];
+                for(int i = 0; i < out_links.length; i++)
+                    out_links[i] = ((HGLink) obj).getTargetAt(i);
+            }
+        if(!confirmExpanding(in_links.size() + out_links.length)) return;
+        expandLinks(node.getGraphView(), node.getNode(), out_links, false);
+        HGHandle[] inA = in_links.toArray(new HGHandle[0]);
+        expandLinks(node.getGraphView(), node.getNode(), inA, true);
 	}
 	
 	private static void expandLinks(HGVNetworkView view, FNode node, HGHandle[] links, boolean incoming){

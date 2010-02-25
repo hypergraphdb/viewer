@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.atom.HGStats;
+import org.hypergraphdb.viewer.HGVComponent;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
@@ -32,9 +33,9 @@ public class TestPainterProps extends PropertySheetPanel
 		//p.init(new DefaultNodePainter());
 		//p.init(new DefaultEdgePainter());
 		f.getContentPane().add(p);
-		HyperGraph hg = new HyperGraph("E:/temp/xxx2");
+		HyperGraph hg = new HyperGraph("F:/temp/xxx2");
 		p.setHyperGraph(hg);
-		//f.getContentPane().add(getView(hg));
+		f.getContentPane().add(getView(hg));
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setMinimumSize(new Dimension(600, 400));
 		f.setVisible(true);
@@ -42,12 +43,14 @@ public class TestPainterProps extends PropertySheetPanel
 	
 	public static Component getView(HyperGraph hg){
 		HGHandle h = hg.getTypeSystem().getTypeHandle(HGStats.class);
-		Component c = null;
+		HGVComponent c = null;
 		try{
 		HGVNetworkView view = HGVKit.getStandaloneView(hg, h, 3, null);
 		view.redrawGraph();
 		c = view.getComponent();
+		//c = new HGVComponent(hg, h, 3, null);
 		c.setPreferredSize(new java.awt.Dimension(600,400));
+		c.getView().redrawGraph();
 		}
 		catch(Throwable t){
 			t.printStackTrace();

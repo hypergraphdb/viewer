@@ -6,16 +6,13 @@
 package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 import java.awt.event.ActionEvent;
-import java.util.Set;
-import javax.swing.AbstractAction;
+import java.util.List;
+
 import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.FEdge;
-import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVAction;
 
-import phoebe.PEdgeView;
 import phoebe.PNodeView;
 //-------------------------------------------------------------------------
 public class InvertSelectedNodesAction extends HGVAction {
@@ -27,15 +24,12 @@ public class InvertSelectedNodesAction extends HGVAction {
 
     public void actionPerformed (ActionEvent e) {
         HGVNetworkView view = HGVKit.getCurrentView();
-        Set<FNode> flaggedEdgeIndices = view.getFlaggedNodes();
+        List<PNodeView> selNodes = view.getSelectedNodes();
         for(PNodeView ev: view.getNodeViews())
             ev.select();
-        for(FNode edge: flaggedEdgeIndices)
-        {
-            PNodeView ev = view.getNodeView(edge);
-            if(ev != null)
-                ev.unselect();
-        }
+        for(PNodeView ev: selNodes)
+                     ev.unselect();
+       
     }
 }
 

@@ -67,13 +67,22 @@ public class VisualManager
 		listeners.remove(l);
 	}
     
-	protected void fireStateChanged(){
+	protected void fireStateChanged()
+	{
 		for(ChangeListener l: listeners)
 			l.stateChanged(new ChangeEvent(this));
+		save();
+	}
+	
+	public void save()
+	{
+	    System.out.println("VisualManager saving styles: " + this);
+	    HyperGraph graph = AppConfig.getInstance().getGraph();
+        graph.update(this);
 	}
 	
 	public VisualStyle getDefaultVisualStyle() {
-		System.out.println("VM: " + visualStylesMap);
+		//System.out.println("VM: " + visualStylesMap);
 		return getVisualStyle(DEFAULT_STYLE_NAME);
 	}
 

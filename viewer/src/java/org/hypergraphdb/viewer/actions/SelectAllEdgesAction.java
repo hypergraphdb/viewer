@@ -20,7 +20,7 @@ public class SelectAllEdgesAction extends HGVAction  {
     public void actionPerformed (ActionEvent e) {		
       //GinyUtils.selectAllEdges( org.hypergraphdb.viewer.getCurrentNetworkView() );
     	if(HGVKit.getCurrentView()!=null)
-    	  HGVKit.getCurrentView().flagAllEdges();
+    	  HGVKit.getCurrentView().selectAllEdges();
     }//action performed
 }
 

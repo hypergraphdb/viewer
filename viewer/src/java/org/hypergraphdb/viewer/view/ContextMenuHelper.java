@@ -1,19 +1,36 @@
 package org.hypergraphdb.viewer.view;
 
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.TreeMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 
+import org.hypergraphdb.HGHandle;
+import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.VisualManager;
+import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
+import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
+import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.hg.HGVUtils;
+import org.hypergraphdb.viewer.painter.DefaultNodePainter;
+import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
+import org.hypergraphdb.viewer.visual.VisualStyle;
+import org.hypergraphdb.viewer.visual.ui.PainterPropsPanel;
 
 import phoebe.PNodeView;
 import edu.umd.cs.piccolo.PCamera;
@@ -43,18 +60,99 @@ public class ContextMenuHelper extends PBasicInputEventHandler
 
     private void showMenu(PInputEvent event)
     {
-        global_menu = new JPopupMenu();
         PNodeView node = (PNodeView) event.getPickedNode();
-        global_menu.add(expandNodeAction(view, node));
-        //global_menu.add(collapseNodeAction(view, node));
-        global_menu.add(focusNodeAction(view, node));
+        createPopup(node);
         Point pt = new Point((int) event.getCanvasPosition().getX(),
                 (int) event.getCanvasPosition().getY());
-        pt = GUIUtilities.adjustPointInPicollo((PCanvas) event.getComponent(),
-                pt);
-        System.out.println("ContextMenuHelper: showMenu");
+        pt = GUIUtilities.adjustPointInPicollo((PCanvas) event.getComponent(), pt);
         global_menu.show(GUIUtilities.getFrame((PCanvas) event.getComponent()),
                 pt.x + 10, pt.y);
+     }
+    
+     private void createPopup(final PNodeView node)
+     {
+         global_menu = new JPopupMenu();
+         global_menu.add(expandNodeAction(view, node));
+         //global_menu.add(collapseNodeAction(view, node));
+         global_menu.add(focusNodeAction(view, node));
+         JMenuItem menuItem = new JMenuItem("Add Painter");
+         menuItem.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e)
+             {
+                 HyperGraph hg = view.getHyperGraph();
+                 HGHandle h = node.getNode().getHandle();
+                 Object o = hg.get(h);
+                 
+                 //putInClipboard(o.getClass().getName());
+                 
+                 h = hg.getTypeSystem().getTypeHandle(o.getClass());
+                 if(h == null) return;
+                 VisualStyle vs = view.getVisualStyle();
+                 NodePainter p = vs.getNodePainter(h);
+                 if(p == null)
+                     p = new DefaultNodePainter();
+                 PainterPropsPanel propsPanel = new PainterPropsPanel();
+                 propsPanel.setBorder(new TitledBorder(null, "Properties",
+                         TitledBorder.DEFAULT_JUSTIFICATION,
+                         TitledBorder.DEFAULT_POSITION, null, null));
+                 propsPanel.setMinimumSize(new Dimension(300, 300));
+                 propsPanel.setPreferredSize(new Dimension(300, 300));
+                 propsPanel.setPainter(p);
+                 
+                 DialogDescriptor dd = new DialogDescriptor(
+                         GUIUtilities.getFrame(), propsPanel,
+                 ActionManager.VISUAL_PROPERTIES_ACTION);
+                 if(DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION)
+                 {
+                     vs.addNodePainter(h, p);
+                     VisualManager.getInstance().save();
+                     view.redrawGraph();
+                 }
+//                 final PaintersPanel p = new PaintersPanel();
+//                 p.setView(view);
+//                 DialogDescriptor dd = new DialogDescriptor(GUIUtilities.getFrame(), p,
+//                            ActionManager.VISUAL_PROPERTIES_ACTION);
+//                 DialogDisplayer.getDefault().notify(dd);
+//                 SwingUtilities.invokeLater(new Runnable()
+//                 {
+//                     public void run()
+//                     { 
+//                         p.addPainter(class_name);
+//                     }
+//                 });
+//                
+//                 view.redrawGraph();
+             }
+         });
+         global_menu.add(menuItem);
+         menuItem = new JMenuItem("Copy Class");
+         menuItem.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e)
+             {
+                 HyperGraph hg = view.getHyperGraph();
+                 HGHandle h = node.getNode().getHandle();
+                 Object o = hg.get(h);
+                 putInClipboard(o.getClass().getName());
+             }
+         });
+         menuItem = new JMenuItem("Copy Handle");
+         menuItem.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e)
+             {
+                 HyperGraph hg = view.getHyperGraph();
+                 HGHandle h = node.getNode().getHandle();
+                 putInClipboard("" + hg.getPersistentHandle(h));
+             }
+         });   
+                 
+     }
+      
+    
+    // This method writes a string to the system clipboard.
+    // otherwise it returns null.
+    private void putInClipboard(String s) {
+        StringSelection ss = new StringSelection(s);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
     }
 
      static JMenuItem expandNodeAction(final HGVNetworkView v,
@@ -64,10 +162,8 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         return new JMenuItem(new AbstractAction("Expand") {
             public void actionPerformed(ActionEvent e)
             {
-                HGVUtils.expandNode(
-                        v.getHyperGraph(),  node.getNode());
-                int def = 150;
-                removeExtraNodes(node, def);
+                HGVUtils.expandNodes();
+                //removeExtraNodes(node, 150);
                 adjust(node);
             }
         });
@@ -88,12 +184,10 @@ public class ContextMenuHelper extends PBasicInputEventHandler
 
     static JMenuItem focusNodeAction(final HGVNetworkView v, final PNodeView node)
     {
-
         return new JMenuItem(new AbstractAction("Focus") {
             public void actionPerformed(ActionEvent e)
             {
-                HGViewer vvv = (HGViewer) v.getComponent().getClientProperty("HG_VIEWER");
-                vvv.normal_focus(node.getNode().getHandle());
+                v.getComponent().focus(node.getNode().getHandle());
             }
         });
     }

@@ -256,10 +256,10 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 			String s = "";
 			if (column == 1) {
 				s += "(" + net.getNodeViewCount() + ")";
-				s += "(" + net.getFlaggedNodes().size() + ")";
+				s += "(" + net.getSelectedNodes().size() + ")";
 			} else if (column == 2) {
 				s += "(" + net.getEdgeViewCount() + ")";
-				s += "(" + net.getFlaggedEdges().size() + ")";
+				s += "(" + net.getSelectedEdges().size() + ")";
 			}
 			return s;
 

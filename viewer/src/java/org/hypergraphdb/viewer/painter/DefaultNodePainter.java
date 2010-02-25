@@ -18,9 +18,9 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 	private Color borderColor = Color.BLACK;
 	private LineType lineType = LineType.LINE_1; 
 	private byte shape = Shape.ROUND_RECT;//RECT;//ELLIPSE;
-	private String label = "";
+	private String label = null;
 	private Color labelColor = Color.BLACK; 
-	private String tooltip = ""; 
+	private String tooltip = null; 
 	private Font font = new Font("Default", Font.PLAIN , 12);
 	private double height = 30.0;
 	private double width = 30.0;
@@ -154,6 +154,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 			change_made = true;
 			nodeView.setUnselectedPaint(newUnselectedColor);
 		}
+		
 		Paint existingBorderPaint = nodeView.getBorderPaint();
 		Paint newBorderPaint = getBorderColor();
 		if (!newBorderPaint.equals(existingBorderPaint))
@@ -194,7 +195,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 		PLabel label = nodeView.getLabel();
 		String existingLabel = label.getText();
 		String newLabel = this.getLabel();
-		if (!newLabel.equals(existingLabel))
+		if (newLabel != null && !newLabel.equals(existingLabel))
 		{
 			change_made = true;
 			label.setText(newLabel);
@@ -214,11 +215,15 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 			change_made = true;
 			label.setTextPaint(newTextColor);
 		}
-		nodeView.setToolTip(getTooltip());
+		if(getTooltip() != null)
+		   nodeView.setToolTip(getTooltip());
 		
 		network_view.updateEdges = true;
         if (change_made) 
+        {
             nodeView.invalidatePaint(); //.setNodePosition(false );
+            nodeView.invalidateFullBounds();
+        }
        
 	}
 	

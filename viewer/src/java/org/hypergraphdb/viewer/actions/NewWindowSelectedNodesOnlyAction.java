@@ -7,6 +7,8 @@ package org.hypergraphdb.viewer.actions;
 
 //-------------------------------------------------------------------------
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -19,6 +21,8 @@ import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 
+import phoebe.PNodeView;
+
 public class NewWindowSelectedNodesOnlyAction extends HGVAction {
 
 	public NewWindowSelectedNodesOnlyAction() {
@@ -30,7 +34,9 @@ public class NewWindowSelectedNodesOnlyAction extends HGVAction {
 		
 	    HGVNetworkView view = HGVKit.getCurrentView();
 		if(view == null || HGVKit.isEmbeded()) return;
-		Set<FNode> nodes = view.getFlaggedNodes();
+		Collection<FNode> nodes = new ArrayList<FNode>();
+        for(PNodeView v :  view.getSelectedNodes())
+            nodes.add(v.getNode());
 		Set<FEdge> edges = Collections.emptySet();//current_network.getConnectingEdges(n_idx);
 		HGVComponent new_view = 
 		    HGVKit.createHGVComponent( view.getHyperGraph(), nodes, edges);

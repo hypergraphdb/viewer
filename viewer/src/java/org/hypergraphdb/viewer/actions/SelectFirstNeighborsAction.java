@@ -6,6 +6,8 @@
 package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +17,8 @@ import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.HGVAction;
+
+import phoebe.PNodeView;
 //-------------------------------------------------------------------------
 /**
  *  select every first neighbor (directly connected nodes) of the currently
@@ -29,7 +33,9 @@ public class SelectFirstNeighborsAction extends HGVAction {
     public void actionPerformed (ActionEvent e) {
       HGVNetworkView net = HGVKit.getCurrentView();
       if(net == null) return;
-      Set<FNode> set = net.getFlaggedNodes();
+      Set<FNode> set = new HashSet<FNode>();
+      for(PNodeView v :  net.getSelectedNodes())
+          set.add(v.getNode());
       Set<FNode> new_set = new HashSet<FNode>();
       for (FNode o: set){
     	 FEdge[] ids  = net.getAdjacentEdges(o, true, true);
@@ -40,7 +46,7 @@ public class SelectFirstNeighborsAction extends HGVAction {
         	 new_set.add(edge.getSource());
     	 }
 	  }
-      net.setFlaggedNodes(new_set, true);
+      net.selectNodes(new_set, true);
     } // actionPerformed
 } // SelectFirstNeighborsAction
 

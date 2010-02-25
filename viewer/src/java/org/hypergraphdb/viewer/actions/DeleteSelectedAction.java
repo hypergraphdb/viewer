@@ -7,7 +7,6 @@ package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import java.util.*;
 
 import org.hypergraphdb.viewer.*;
 
@@ -26,14 +25,11 @@ public class DeleteSelectedAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) { 
                        
     	HGVNetworkView view = HGVKit.getCurrentView();
-    	 // get the Selected node and edge indices
-    	List<PNodeView> selected_nodeViews = view.getSelectedNodes();
-        List<PEdgeView> selected_edgeViews = view.getSelectedEdges();
-
-        // Hide the viewable things and the perspective refs
-        view.hideGraphObjects( selected_nodeViews );
-        view.hideGraphObjects( selected_edgeViews );
+    	for(PNodeView v: view.getSelectedNodes())
+    	    view.removeNodeView(v.getNode());    
+    	for (PEdgeView eview : view.getSelectedEdges())
+             view.removeEdgeView(eview);
         
         view.redrawGraph();
-     } // actionPerformed
-} // inner class DeleteSelectedAction
+     } 
+} 

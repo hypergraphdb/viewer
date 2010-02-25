@@ -19,10 +19,10 @@ import phoebe.PNodeView;
 public class HGViewer implements Serializable
 {
 	transient HyperGraph hg;
-	transient int depth;
 	private transient HGVNetworkView view;
 	transient HGHandle foc_handle;
 	private transient VisualStyle tmp_style = new VisualStyle("tmp");
+	transient int depth;
 	private HGALGenerator generator = null;
 		
 	private HGViewer()
@@ -92,7 +92,7 @@ public class HGViewer implements Serializable
 		this.foc_handle = handle;
 		HGWNReader reader = new HGWNReader(hg);
 		reader.read(handle, depth, getGenerator()); 
-		clearView();
+		view.getComponent().clearView();
 		for(FNode n: reader.getNodes())
 			view.addNodeView(n);
 		for(FEdge e: reader.getEdges())
@@ -113,7 +113,7 @@ public class HGViewer implements Serializable
     public void refresh()
     {
     	if(view == null) return;
-    	clearView();
+    	//clearView();
     	refreshView();
     }
     
@@ -167,8 +167,7 @@ public class HGViewer implements Serializable
 		HGWNReader reader = new HGWNReader(hg);
 		reader.read(foc_handle, depth, getGenerator());
 		
-        //HGVNetwork net = view.getNetwork();
-        clearView();
+		view.getComponent().clearView();
         for(FNode n: reader.getNodes())
             view.addNodeView(n);
         for(FEdge e: reader.getEdges())
@@ -176,21 +175,7 @@ public class HGViewer implements Serializable
 		layout();
 	}
     
-    private void clearView(){
-    	
-    	for(Iterator<PEdgeView> it = view.getEdgeViewsIterator(); it.hasNext();)
-    	{
-    		PEdgeView nv = (PEdgeView) it.next();
-    		view.removeEdgeView(nv.getEdge());
-    		//g.removeEdge(nv.getEdge());
-    	}
-    	for(PNodeView nv :  view.getNodeViews())
-    	{
-    		view.removeNodeView(nv.getNode());
-    		//g.removeNode(nv.getNode());
-    	}
-    }
-    
+      
     private void layout(){
     	HGVKit.getPreferedLayout().applyLayout(HGVKit.getCurrentView());
 	}

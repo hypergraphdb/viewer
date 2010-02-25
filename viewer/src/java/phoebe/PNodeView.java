@@ -89,6 +89,11 @@ public class PNodeView extends PPath
         this.visible = true;
         this.selected = false;
         setPickable(true);
+        String tip = "" + view.getHyperGraph().get(node.getHandle());
+        this.setToolTip(tip);
+        if(tip.length() > 15)
+            tip = view.getHyperGraph().get(node.getHandle()).getClass().getSimpleName();
+        this.setLabelText(tip);
         invalidatePaint();
     }
 
@@ -170,7 +175,8 @@ public class PNodeView extends PPath
     public void setUnselectedPaint(Paint paint)
     {
         unselectedPaint = paint;
-        if (!selected) setPaint(unselectedPaint);
+        if (!selected) 
+            setPaint(unselectedPaint);
     }
 
     /**

@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collection;
@@ -188,6 +190,15 @@ public class PaintersPanel extends JPanel
 		gridBagConstraints8.gridx = 3;
 		add(removePainterButton, gridBagConstraints8);
 		paintersList.setModel(new TypeHandleListModel());
+
+        addComponentListener(new ComponentAdapter(){
+
+            @Override
+            public void componentHidden(ComponentEvent e)
+            {
+                VisualManager.getInstance().save();
+            }
+          });
 	}
 	
 	void populatePaintersList(VisualStyle vs){
@@ -204,6 +215,7 @@ public class PaintersPanel extends JPanel
      				hg.getTypeSystem().getTypeHandle(clazz));
      		 NodePainter p = (NodePainter) cl.loadClass(p_cls).newInstance();
      	     vs.addNodePainter(h, p);
+     	     
      	}catch(Exception ex){
      		ex.printStackTrace();
      	}

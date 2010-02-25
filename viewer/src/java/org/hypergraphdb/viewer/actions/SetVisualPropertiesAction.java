@@ -11,6 +11,7 @@ import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.util.*;
 import org.hypergraphdb.viewer.visual.ui.PainterPropsPanel;
 import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
@@ -33,6 +34,7 @@ public class SetVisualPropertiesAction extends HGVAction   {
 	 DialogDescriptor dd = new DialogDescriptor(GUIUtilities.getFrame(), p,
 				ActionManager.VISUAL_PROPERTIES_ACTION);
 	 DialogDisplayer.getDefault().notify(dd);
+	 VisualManager.getInstance().save();
 	 view.redrawGraph();
   }
 }

@@ -163,14 +163,16 @@ public class VisualStyle implements Cloneable
 
     public void addNodePainter(HGHandle h, NodePainter p)
     {
-        if (p.getClass().getPackage() == null) npNodePaintersMap.put(h, p);
+        if (p.getClass().getPackage() == null) 
+            npNodePaintersMap.put(h, p);
         else
             nodePaintersMap.put(h, p);
     }
 
     public void addEdgePainter(HGHandle h, EdgePainter p)
     {
-        if (p.getClass().getPackage() == null) npEdgePaintersMap.put(h, p);
+        if (p.getClass().getPackage() == null) 
+            npEdgePaintersMap.put(h, p);
         else
             edgePaintersMap.put(h, p);
     }

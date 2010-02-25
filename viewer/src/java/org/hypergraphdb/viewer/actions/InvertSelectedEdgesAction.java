@@ -6,6 +6,7 @@
 package org.hypergraphdb.viewer.actions;
 //-------------------------------------------------------------------------
 import java.awt.event.ActionEvent;
+import java.util.List;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import org.hypergraphdb.viewer.ActionManager;
@@ -25,15 +26,12 @@ public class InvertSelectedEdgesAction extends HGVAction {
 
     public void actionPerformed (ActionEvent e) {
         HGVNetworkView view = HGVKit.getCurrentView();
-        Set<FEdge> flaggedEdgeIndices = view.getFlaggedEdges();
+        List<PEdgeView> flaggedEdgeIndices = view.getSelectedEdges();
 	    for(PEdgeView ev: view.getEdgeViews())
 	        ev.select();
-	    for(FEdge edge: flaggedEdgeIndices)
-	    {
-	        PEdgeView ev = view.getEdgeView(edge);
-	        if(ev != null)
-	            ev.unselect();
-	    }
+	    for(PEdgeView ev : flaggedEdgeIndices)
+	        ev.unselect();
+	 
     }
 }
 

@@ -43,11 +43,13 @@ public abstract class DropDownButton extends JButton
     public DropDownButton(){ 
         mainButton.getModel().addChangeListener(this); 
         arrowButton.getModel().addChangeListener(this); 
-        arrowButton.addActionListener(this); 
+        arrowButton.addActionListener(this);
         arrowButton.setMargin(new Insets(3, 0, 3, 0)); 
         mainButton.addPropertyChangeListener("enabled", this); //NOI18N 
     } 
  
+    protected abstract JPopupMenu getPopupMenu(); 
+    
     /*------------------------------[ PropertyChangeListener ]---------------------------------------------------*/ 
  
     public void propertyChange(PropertyChangeEvent evt){ 
@@ -76,16 +78,20 @@ public abstract class DropDownButton extends JButton
     /*------------------------------[ ActionListener ]---------------------------------------------------*/ 
  
     public void actionPerformed(ActionEvent ae){ 
-         JPopupMenu popup = getPopupMenu(); 
-         popup.addPopupMenuListener(this);
-         Point pt = new Point(mainButton.getX(), mainButton.getY() + mainButton.getHeight());
-         Frame f = GUIUtilities.getFrame(mainButton);
-         //TODO: fix this
-         pt = SwingUtilities.convertPoint(mainButton.getParent(), pt.x, pt.y, 
-                 mainButton.getParent().getParent());
-         pt = GUIUtilities.adjustPointInPicollo(mainButton, pt);
-         popup.show(f, pt.x, pt.y); 
+        showDropDown(ae); 
      } 
+    
+    public void showDropDown(ActionEvent ae)
+    {
+        JPopupMenu popup = getPopupMenu(); 
+        popup.addPopupMenuListener(this);
+        Point pt = new Point(0, mainButton.getY() + mainButton.getHeight());
+        Frame f = GUIUtilities.getFrame(mainButton);
+        //TODO: fix this
+        pt = SwingUtilities.convertPoint(mainButton, pt.x, pt.y, f);
+        pt = GUIUtilities.adjustPointInPicollo(mainButton, pt);
+        popup.show(f, pt.x, pt.y); 
+    }
  
     /*------------------------------[ PopupMenuListener ]---------------------------------------------------*/ 
  
@@ -108,8 +114,6 @@ public abstract class DropDownButton extends JButton
     } 
  
     /*------------------------------[ Other Methods ]---------------------------------------------------*/ 
- 
-    protected abstract JPopupMenu getPopupMenu(); 
  
     public JButton addToToolBar(JComponent toolbar){ 
     	   JToolBar tempBar = new JToolBar();

@@ -16,9 +16,14 @@ import org.hypergraphdb.viewer.util.HGVAction;
 
 import org.hypergraphdb.viewer.FEdge;
 
+import phoebe.PEdgeView;
+import phoebe.PNodeView;
+
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 //-------------------------------------------------------------------------
@@ -36,8 +41,13 @@ public class NewWindowSelectedNodesEdgesAction extends HGVAction
 	    // save the vizmapper catalog
 		if (HGVKit.isEmbeded()) return;
 		HGVNetworkView view =  HGVKit.getCurrentView();
-		Collection<FNode> nodes = view.getFlaggedNodes();
-		Collection<FEdge> edges = view.getFlaggedEdges();
+		Collection<FNode> nodes = new ArrayList<FNode>();
+		for(PNodeView v :  view.getSelectedNodes())
+		    nodes.add(v.getNode());
+		Collection<FEdge> edges = new ArrayList<FEdge>();
+		for(PEdgeView v : view.getSelectedEdges())
+		    edges.add(v.getEdge());
+       	
 		HGVComponent new_view = HGVKit.createHGVComponent(view.getHyperGraph(), nodes, edges);
 		new_view.getView().setIdentifier(HGVNetworkNaming.getSuggestedSubnetworkTitle(view));
 	}

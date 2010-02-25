@@ -21,8 +21,8 @@ public class DeselectAllAction extends HGVAction {
 
     public void actionPerformed(ActionEvent e) {
      if(HGVKit.getCurrentView() == null) return;
-      HGVKit.getCurrentView().unflagAllEdges();
-      HGVKit.getCurrentView().unflagAllNodes();
+      HGVKit.getCurrentView().unselectAllEdges();
+      HGVKit.getCurrentView().unselectAllNodes();
     }
 }
 

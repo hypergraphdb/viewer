@@ -26,16 +26,19 @@ public class GinyUtils
     {
         // hides nodes and edges between them
         if (view == null) return;
-
-        for (PNodeView nview : view.getSelectedNodes())
+        Set<FEdge> del_edges = new HashSet<FEdge>(); 
+        List<PNodeView> sel_nodes = view.getSelectedNodes();
+        for (PNodeView nview : sel_nodes)
         {
            FEdge[] edges = view.getAdjacentEdges(nview.getNode(),
                     true, true);
-           if (edges != null)
-           for (int j = 0; j < edges.length; ++j)
-              view.hideGraphObject(view.getEdgeView(edges[j]));
-           view.hideGraphObject(nview);    
+          for (int j = 0; j < edges.length; j++)
+               del_edges.add(edges[j]);
         }
+        for(FEdge e: del_edges)
+            view.removeEdgeView(e);
+        for (PNodeView nview : sel_nodes)
+            view.removeNodeView(nview.getNode()); 
     }
 
   
@@ -44,7 +47,7 @@ public class GinyUtils
         if (view == null) { return; }
 
         for (PEdgeView eview : view.getSelectedEdges())
-            view.hideGraphObject(eview);
+            view.removeEdgeView(eview);
     }
 
    
@@ -84,43 +87,23 @@ public class GinyUtils
     {
         if (view == null) { return; }
 
-        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext();)
-        {
-            PEdgeView eview = i.next();
+        for (PEdgeView eview : view.getEdgeViews())
             eview.setSelected(true);
-        }
     }
 
     public static void deselectAllEdges(HGVNetworkView view)
     {
         if (view == null) { return; }
 
-        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext();)
-        {
-            PEdgeView eview = i.next();
+        for (PEdgeView eview : view.getEdgeViews())
             eview.setSelected(false);
-        }
     }
 
     public static void hideAllEdges(HGVNetworkView view)
     {
         if (view == null) { return; }
 
-        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext();)
-        {
-            PEdgeView eview = i.next();
-            view.hideGraphObject(eview);
-        }
-    }
-
-    public static void unHideAllEdges(HGVNetworkView view)
-    {
-        if (view == null) { return; }
-
-        for (Iterator<PEdgeView> i = view.getEdgeViewsIterator(); i.hasNext();)
-        {
-            PEdgeView eview = i.next();
-            view.showGraphObject(eview);
-        }
+        for (PEdgeView eview : view.getEdgeViews())
+           view.removeEdgeView(eview);
     }
 }

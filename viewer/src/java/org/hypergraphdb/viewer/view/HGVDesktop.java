@@ -223,11 +223,8 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
             public void itemStateChanged(ItemEvent e)
             {
                 HGVNetworkView view = HGVKit.getCurrentView();
-                // System.out.println("StyleSel: " + view.getTitle());
                 if (view == null) return;
                 VisualStyle vs = ((VisualStyle) styleBox.getSelectedItem());
-                // System.out.println("StyleSel: " + vs + " old:"
-                // + view.getVisualStyle());
                 if (!vs.equals(view.getVisualStyle()))
                 {
                     view.setVisualStyle(vs);

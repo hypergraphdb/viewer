@@ -82,11 +82,11 @@ public class HGVNetworkView
     protected PBasicInputEventHandler keyEventHandler;
     // The Piccolo PCanvas that we will draw on
     protected PCanvas canvas;
-    
+
     public boolean updateEdges = true;
     // init
     protected boolean isInitialized = false;
-  
+
     protected Map<FNode, PNodeView> nodeViewMap;
     protected Map<FEdge, PEdgeView> edgeViewMap;
     // PCS support
@@ -114,17 +114,12 @@ public class HGVNetworkView
     protected Set<FEdge> edgeSelectionList = new HashSet<FEdge>();
     protected static boolean firePiccoloEvents = true;
 
-     /**
+    /**
      * A unique Identifier for the Model
      */
     protected String identifier;
 
     protected HyperGraph graph;
-
-    public HyperGraph getHyperGraph()
-    {
-        return graph;
-    }
 
     public HGVNetworkView(HGVComponent comp, HyperGraph db,
             Collection<FNode> nodes, Collection<FEdge> edges)
@@ -156,8 +151,7 @@ public class HGVNetworkView
             public void addChild(int index, PNode child)
             {
                 PNode oldParent = child.getParent();
-                if (oldParent != null)
-                    oldParent.removeChild(child);
+                if (oldParent != null) oldParent.removeChild(child);
                 child.setParent(this);
                 getChildrenReference().add(index, child);
                 child.invalidatePaint();
@@ -171,8 +165,7 @@ public class HGVNetworkView
             public void addChild(int index, PNode child)
             {
                 PNode oldParent = child.getParent();
-                if (oldParent != null)
-                    oldParent.removeChild(child);
+                if (oldParent != null) oldParent.removeChild(child);
                 child.setParent(this);
                 getChildrenReference().add(index, child);
                 child.invalidatePaint();
@@ -209,7 +202,7 @@ public class HGVNetworkView
                 getCanvas().getLayer(), getEdgeLayer(), getCanvas().getCamera());
         edgeSelectionHandler.setEventFilter(new PInputEventFilter(
                 InputEvent.BUTTON1_MASK));
-       
+
         // Only allow panning via Middle Mouse button
         getCanvas().getPanEventHandler().setEventFilter(
                 new PInputEventFilter(InputEvent.BUTTON2_MASK));
@@ -247,7 +240,8 @@ public class HGVNetworkView
                 InputEvent.BUTTON3_MASK));
         getCanvas().addInputEventListener(ctxMenuHandler);
 
-        getCanvas().getZoomEventHandler().getEventFilter().setAndMask(InputEvent.SHIFT_MASK);
+        getCanvas().getZoomEventHandler().getEventFilter().setAndMask(
+                InputEvent.SHIFT_MASK);
     }
 
     public void redrawGraph()
@@ -256,7 +250,12 @@ public class HGVNetworkView
         applyAppearances();
         getCanvas().setInteracting(false);
     }
-    
+
+    public HyperGraph getHyperGraph()
+    {
+        return graph;
+    }
+
     public PEdgeHandler getEdgeHandler()
     {
         return edgeHandler;
@@ -265,25 +264,25 @@ public class HGVNetworkView
     public void nodeSelected(PNodeView node)
     {
         nodeSelectionList.add(node.getNode());
-        selectionChanged();
+        fireSelectionChanged();
     }
 
     public void nodeUnselected(PNodeView node)
     {
         nodeSelectionList.remove(node.getNode());
-        selectionChanged();
+        fireSelectionChanged();
     }
 
     public void edgeSelected(PEdgeView edge)
     {
         edgeSelectionList.add(edge.getEdge());
-        selectionChanged();
+        fireSelectionChanged();
     }
 
     public void edgeUnselected(PEdgeView edge)
     {
         edgeSelectionList.remove(edge.getEdge());
-        selectionChanged();
+        fireSelectionChanged();
     }
 
     /**
@@ -417,9 +416,7 @@ public class HGVNetworkView
     }
 
     /**
-     * 
      * @return HGVComponent that can be added to most screen things
-     * 
      */
     public HGVComponent getComponent()
     {
@@ -563,7 +560,7 @@ public class HGVNetworkView
         });
     }
 
-     /**
+    /**
      * nodeViewsList only returns the NodeViews that are explicitly associated
      * with this GraphView
      */
@@ -642,11 +639,11 @@ public class HGVNetworkView
     {
         for (PNodeView nodeView : getNodeViews())
         {
-//            if (nodeView == null)
-//            {
-//                System.out.println("VM - applyNodeAppearances - NULL NODE");
-//                continue;
-//            }
+            // if (nodeView == null)
+            // {
+            // System.out.println("VM - applyNodeAppearances - NULL NODE");
+            // continue;
+            // }
             FNode node = nodeView.getNode();
             HGHandle h = graph.getTypeSystem().getTypeHandle(node.getHandle());
             NodePainter p = self_style.getNodePainter(h);
@@ -665,11 +662,11 @@ public class HGVNetworkView
     {
         for (PEdgeView edgeView : getEdgeViews())
         {
-//            if (edgeView == null)
-//            {
-//                System.out.println("VMM -applyNodeAppearances - NULL NODE");
-//                continue;
-//            }
+            // if (edgeView == null)
+            // {
+            // System.out.println("VMM -applyNodeAppearances - NULL NODE");
+            // continue;
+            // }
             FNode node = edgeView.getEdge().getSource();
             HGHandle h = graph.getTypeSystem().getTypeHandle(node.getHandle());
             EdgePainter p = self_style.getEdgePainter(h);
@@ -686,14 +683,10 @@ public class HGVNetworkView
 
     public void setVisualStyle(VisualStyle style)
     {
-       this.style = style;
+        this.style = style;
         // redrawGraph();
     }
 
-    // -------------------------------//
-    // Layouts and VizMaps
-    // --------------------//
-    // Convience Methods
     /**
      * Sets the Given nodes Selected
      */
@@ -816,12 +809,12 @@ public class HGVNetworkView
         for (HGVNetworkChangeListener l : view_listeners)
             l.networkChanged(event);
     }
-    
+
     public static interface SelectionListener
     {
         void selectionChanged();
     }
-    
+
     private Set<SelectionListener> selection_listeners = new HashSet<SelectionListener>();
 
     public void addSelectionListener(SelectionListener listener)
@@ -834,7 +827,7 @@ public class HGVNetworkView
         selection_listeners.remove(listener);
     }
 
-    void selectionChanged()
+    void fireSelectionChanged()
     {
         for (SelectionListener l : selection_listeners)
             l.selectionChanged();
@@ -988,77 +981,9 @@ public class HGVNetworkView
     }
 
     /**
-     * Hides an Object that is in the Graph by removing it from the Piccolo
-     * Scene Graph <B>Note:</B> The object must inherit from PNodeView or
-     * PEdgeView
-     */
-    public void hideGraphObject(PNode obj)
-    {
-        if (obj instanceof PNodeView) removeNodeView(((PNodeView) obj)
-                .getNode());
-        else if (obj instanceof PEdgeView)
-            removeEdgeView(((PEdgeView) obj).getEdge());
-    }
-
-    /**
-     * Shows an Object that is in the Graph by adding it to the Piccolo Scene
-     * Graph
-     * 
-     * <B>Note:</B> The object must inherit from PNodeView or PEdgeView
-     */
-    public void showGraphObject(PNode object)
-    {
-        if (object == null) return;
-
-        if (object instanceof PNodeView) addNodeView(((PNodeView) object)
-                .getNode());
-        else if (object instanceof PEdgeView)
-            addEdgeView(((PEdgeView) object).getEdge());
-    }
-
-    /**
-     * Hides a group of GraphObjects
-     */
-    public void hideGraphObjects(List<? extends PNode> objects)
-    {
-        for (PNode node : objects)
-            hideGraphObject(node);
-    }
-
-    /**
-     * Returns the set of all flagged nodes in the referenced GraphPespective.
-     * <P>
-     * 
-     * WARNING: the returned set is the actual data object, not a copy. Don't
-     * directly modify this set.
-     */
-    public Set<FNode> getFlaggedNodes()
-    {
-        HashSet<FNode> res = new HashSet<FNode>();
-        for (FNode n : nodeSelectionList)
-            res.add(n);
-        return res;
-    }
-
-    /**
-     * Returns the set of all flagged edges in the referenced GraphPespective.
-     * <P>
-     * 
-     * WARNING: the returned set is the actual data object, not a copy. Don't
-     * directly modify this set.
-     */
-    public Set<FEdge> getFlaggedEdges()
-    {
-        HashSet<FEdge> res = new HashSet<FEdge>();
-        for (FEdge e : edgeSelectionList)
-            res.add(e);
-        return res;
-    }
-
-     /**
      * Sets the flagged state to true for all Nodes in the GraphPerspective.
      */
-    public void flagAllNodes()
+    public void selectAllNodes()
     {
         Set<FNode> changes = new HashSet<FNode>();
         for (PNodeView nv : nodeViewMap.values())
@@ -1074,7 +999,7 @@ public class HGVNetworkView
     /**
      * Sets the flagged state to true for all Edges in the GraphPerspective.
      */
-    public void flagAllEdges()
+    public void selectAllEdges()
     {
         Set<FEdge> changes = new HashSet<FEdge>();
         for (PEdgeView nv : edgeViewMap.values())
@@ -1090,25 +1015,19 @@ public class HGVNetworkView
     /**
      * Sets the flagged state to false for all Nodes in the GraphPerspective.
      */
-    public void unflagAllNodes()
+    public void unselectAllNodes()
     {
-        // TODO
-        // if (flaggedNodes.size() == 0) {return;}
-        // Set<FNode> changes = new HashSet<FNode>(flaggedNodes);
-        // flaggedNodes.clear();
-        // fireEvent(changes, false);
+        for (PNodeView v : getSelectedNodes())
+            v.unselect();
     }
 
     /**
      * Sets the flagged state to false for all Edges in the GraphPerspective.
      */
-    public void unflagAllEdges()
+    public void unselectAllEdges()
     {
-        // TODO
-        // if (flaggedEdges.size() == 0) {return;}
-        // Set<FEdge> changes = new HashSet<FEdge>(flaggedEdges);
-        // flaggedEdges.clear();
-        // fireEvent(changes, false);
+        for (PEdgeView v : getSelectedEdges())
+            v.unselect();
     }
 
     /**
@@ -1119,12 +1038,8 @@ public class HGVNetworkView
      * argument is null.
      * 
      * @return a Set containing the objects for which the flagged state changed
-     * @throws ClassCastException
-     *             if the first argument contains objects other than
-     *             giny.model.FNode objects
      */
-    public Set<FNode> setFlaggedNodes(Collection<FNode> nodesToSet, 
-            boolean newState)
+    public Set<FNode> selectNodes(Collection<FNode> nodesToSet, boolean newState)
     {
         Set<FNode> returnSet = new HashSet<FNode>();
         if (nodesToSet == null) { return returnSet; }
@@ -1133,10 +1048,10 @@ public class HGVNetworkView
             for (FNode node : nodesToSet)
             {
                 if (node == null) continue;
-                if(!nodeSelectionList.contains(node))
+                if (!nodeSelectionList.contains(node))
                 {
-                   returnSet.add(node);
-                   getSelectionHandler().select(getNodeView(node));
+                    returnSet.add(node);
+                    getSelectionHandler().select(getNodeView(node));
                 }
             }
         }
@@ -1145,14 +1060,15 @@ public class HGVNetworkView
             for (FNode node : nodesToSet)
             {
                 if (node == null) continue;
-                if(nodeSelectionList.contains(node))
+                if (nodeSelectionList.contains(node))
                 {
-                   returnSet.add(node);
-                   getSelectionHandler().unselect(getNodeView(node));
+                    returnSet.add(node);
+                    getSelectionHandler().unselect(getNodeView(node));
                 }
-               
             }
         }
+        if(returnSet.size() > 0)
+           fireSelectionChanged();
         return returnSet;
     }
 
@@ -1164,38 +1080,36 @@ public class HGVNetworkView
      * argument is null.
      * 
      * @return a Set containing the objects for which the flagged state changed
-     * @throws ClassCastException
-     *             if the first argument contains objects other than
-     *             giny.model.FEdge objects
      */
-    public Set<FEdge> setFlaggedEdges(Collection<FEdge> edgesToSet,
-            boolean newState)
+    public Set<FEdge> selectEdges(Collection<FEdge> edgesToSet, boolean newState)
     {
         Set<FEdge> returnSet = new HashSet<FEdge>();
-        // if (edgesToSet == null) {return returnSet;}
-        // if (newState == true) {
-        // for (Iterator<FEdge> i = edgesToSet.iterator(); i.hasNext(); ) {
-        // FEdge edge = i.next();
-        // boolean setChanged = flaggedEdges.add(edge);
-        // if (setChanged) {returnSet.add(edge);}
-        // }
-        // if (returnSet.size() > 0) {fireEvent(returnSet, true);}
-        // } else {
-        // for (Iterator<FEdge> i = edgesToSet.iterator(); i.hasNext(); ) {
-        // FEdge edge = i.next();
-        // boolean setChanged = flaggedEdges.remove(edge);
-        // if (setChanged) {returnSet.add(edge);}
-        // }
-        // if (returnSet.size() > 0) {fireEvent(returnSet, false);}
-        // }
+        if (edgesToSet == null) { return returnSet; }
+        if (newState == true)
+        {
+            for (FEdge edge: edgesToSet)
+            {
+                if (!edgeSelectionList.contains(edge))
+                {
+                    returnSet.add(edge);
+                    getSelectionHandler().select(getEdgeView(edge));
+                }
+            }
+        }
+        else
+        {
+            for (FEdge edge: edgesToSet)
+            {
+                if (edgeSelectionList.contains(edge))
+                {
+                    returnSet.add(edge);
+                    getSelectionHandler().unselect(getEdgeView(edge));
+                }
+            }
+        }
+        if(returnSet.size() > 0)
+            fireSelectionChanged();
         return returnSet;
     }
-
-    // public enum NodeProps
-    // {
-    // X_POSITION, Y_POSITION, SHAPE, PAINT, SELECTION_PAINT,
-    // BORDER_PAINT, BORDER_WIDTH, WIDTH, HEIGHT, LABEL,
-    // Z_POSITION;
-    // }
 
 }

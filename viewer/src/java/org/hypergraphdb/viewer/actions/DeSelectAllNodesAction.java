@@ -21,7 +21,7 @@ public class DeSelectAllNodesAction extends HGVAction  {
 
     public void actionPerformed (ActionEvent e) {
     	if(HGVKit.getCurrentView() != null)
-          HGVKit.getCurrentView().unflagAllNodes();
+          HGVKit.getCurrentView().unselectAllNodes();
     }
 }
 

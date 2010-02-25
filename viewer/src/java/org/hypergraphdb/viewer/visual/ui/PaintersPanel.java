@@ -204,7 +204,7 @@ public class PaintersPanel extends JPanel
 		addPainterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				addPainter();
+				addPainter(null);
 			}
 		});
 		final GridBagConstraints gridBagConstraints_7 = new GridBagConstraints();
@@ -296,24 +296,25 @@ public class PaintersPanel extends JPanel
 		}
 	}
 
-	private void addPainter()
+	public void addPainter(String class_name)
 	{
 		NotifyDescriptor.InputLine d = new NotifyDescriptor.InputLine(
 				GUIUtilities.getFrame(), "ClassName/TypeHandle:",
 				"Specify painter's type class or handle", NotifyDescriptor.PLAIN_MESSAGE,
 				NotifyDescriptor.OK_CANCEL_OPTION);
+		d.setInputText(class_name);
 		if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION)
 		{
 			HGHandle h = null;
 			try{
 				h = UUIDPersistentHandle.makeHandle(d.getInputText());
 			}catch(NumberFormatException ex){}
+			
 			try
 			{
 				ClassLoader cl = Thread.currentThread().getContextClassLoader();
 				Class clazz = cl.loadClass(d.getInputText());
-				h = hg.getPersistentHandle(hg
-						.getTypeSystem().getTypeHandle(clazz));
+				h = hg.getTypeSystem().getTypeHandle(clazz);
 			}
 			catch (Exception ex)
 			{
