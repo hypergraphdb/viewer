@@ -2,9 +2,6 @@ package org.hypergraphdb.viewer;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import org.hypergraphdb.HGEnvironment;
 import org.hypergraphdb.HGHandle;
@@ -19,7 +16,7 @@ import org.hypergraphdb.type.HGAtomTypeBase;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
 
-public class HGVComponentType extends HGAtomTypeBase 
+public class HGViewerType extends HGAtomTypeBase 
 {
     public static final HGPersistentHandle HGHANDLE = 
         HGHandleFactory.makeHandle("f7c68999-f9b6-11dc-a7b2-19766bcee0fa");
@@ -33,7 +30,7 @@ public class HGVComponentType extends HGAtomTypeBase
         Collection<FNode> nodes = (Collection<FNode>)collType.make(layout[1], null, null);
         Collection<FEdge> edges = (Collection<FEdge>)collType.make(layout[2], null, null);
        
-        return new HGVComponent(db, nodes, edges);
+        return new HGViewer(db, nodes, edges);
     }
 
     public void release(HGPersistentHandle handle) 
@@ -49,7 +46,7 @@ public class HGVComponentType extends HGAtomTypeBase
     {       
         HGAtomType stype = graph.getTypeSystem().getAtomType(String.class);
         HGAtomType collType = graph.getTypeSystem().getAtomType(Collection.class);  
-        HGVComponent c = (HGVComponent)instance;
+        HGViewer c = (HGViewer)instance;
        
         HGPersistentHandle [] layout = new HGPersistentHandle[3];
         layout[0] = stype.store(c.getView().getHyperGraph().getLocation());

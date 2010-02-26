@@ -49,7 +49,7 @@ import sun.awt.AppContext;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolox.swing.PScrollPane;
 
-public class HGVComponent extends JPanel
+public class HGViewer extends JPanel
 {
     /**
      * This is the label that tells how many node/edges are in a HGVNetworkView
@@ -64,9 +64,9 @@ public class HGVComponent extends JPanel
     private HGALGenerator generator = null;
     protected HyperGraph graph;
     
-    public HGVComponent(HyperGraph db, HGHandle h, int depth, HGALGenerator generator)
+    public HGViewer(HyperGraph db, HGHandle h, int depth, HGALGenerator generator)
     {
-        super(new BorderLayout());
+         super(new BorderLayout());
          this.graph = db;
          this.depth = depth;
          this.generator = generator;
@@ -77,7 +77,7 @@ public class HGVComponent extends JPanel
          init(reader.getNodes(), reader.getEdges());
     } 
 
-    public HGVComponent(HyperGraph db, Collection<FNode> nodes,  Collection<FEdge> edges)
+    public HGViewer(HyperGraph db, Collection<FNode> nodes,  Collection<FEdge> edges)
     {
         super(new BorderLayout());
         addFocusListener(new HGVFocusListener());
@@ -89,10 +89,11 @@ public class HGVComponent extends JPanel
     protected void init(Collection<FNode> nodes, Collection<FEdge> edges)
     {
         view = new HGVNetworkView(this, graph, nodes, edges);
+        HGVKit.getViewersList().add(view);
         view.getCanvas().addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e)
             {
-                focused(HGVComponent.this);
+                focused(HGViewer.this);
             }
         });
         view.addSelectionListener(new HGVNetworkView.SelectionListener() {
@@ -161,7 +162,7 @@ public class HGVComponent extends JPanel
             view.addEdgeView(e);
         HGVKit.getPreferedLayout().applyLayout(HGVKit.getCurrentView());
         view.redrawGraph();
-        FNode node = HGVKit.getHGVNode(handle, false); 
+        FNode node = new FNode(handle); 
         view.getNodeView(node).setSelected(true);
         view.getCanvas().getCamera().animateViewToCenterBounds( 
         view.getNodeView(node).getFullBounds(), false, 1550l );
@@ -312,19 +313,19 @@ public class HGVComponent extends JPanel
     public static final Object FOCUSED_COMPONENT = new StringBuilder(
             "HGVComponent");
 
-    public static final HGVComponent getFocusedComponent()
+    public static final HGViewer getFocusedComponent()
     {
-        return (HGVComponent) AppContext.getAppContext().get(FOCUSED_COMPONENT);
+        return (HGViewer) AppContext.getAppContext().get(FOCUSED_COMPONENT);
     }
 
-    public static final void setFocusedComponent(HGVComponent ui)
+    public static final void setFocusedComponent(HGViewer ui)
     {
-        AppContext.getAppContext().put(FOCUSED_COMPONENT, (HGVComponent) ui);
+        AppContext.getAppContext().put(FOCUSED_COMPONENT, (HGViewer) ui);
     }
 
     private static void focused(Component c)
     {
-        if (c instanceof HGVComponent) setFocusedComponent((HGVComponent) c);
+        if (c instanceof HGViewer) setFocusedComponent((HGViewer) c);
     }
 
     private static class HGVFocusListener extends FocusAdapter
