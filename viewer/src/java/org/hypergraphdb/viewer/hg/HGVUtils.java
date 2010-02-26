@@ -146,10 +146,10 @@ public class HGVUtils
 	private static void expandLinks(HGVNetworkView view, FNode node, HGHandle[] links, boolean incoming){
 		if(!confirmExpanding(links.length)) return;
 		for(int i = 0; i < links.length; i++){
-			FNode n = HGVKit.getHGVNode(links[i], true);
+			FNode n = new FNode(links[i]);
 			view.addNodeView(n);
-			FEdge e = (incoming) ? HGVKit.getHGVEdge(links[i], node.getHandle()) :
-				HGVKit.getHGVEdge(node.getHandle(), links[i]);
+			FEdge e = (incoming) ? new FEdge(new FNode(links[i]), node) :
+			    new FEdge(node, new FNode(links[i]));
 			view.addEdgeView(e);
 		}
 	}

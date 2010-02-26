@@ -24,7 +24,7 @@ public class HGVNetworkNaming
 
   private static boolean isNetworkTitleTaken(String titleCandidate)
   {
-    for (HGVNetworkView v: HGVKit.getNetworkViewsList()) 
+    for (HGVNetworkView v: HGVKit.getViewersList()) 
       if (titleCandidate.equals(v.getIdentifier()))
           return true; 
     return false;

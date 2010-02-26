@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.hypergraphdb.type.Record;
 import org.hypergraphdb.type.RecordType;
 import org.hypergraphdb.type.Slot;
-import org.hypergraphdb.viewer.HGVLogger;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.props.AbstractProperty;
 import org.hypergraphdb.viewer.props.AbstractPropertySupport;
@@ -64,7 +63,6 @@ public class ArrayListModel extends PropertiesTableModel
     
     public void setValueAt(Object value,   int    row,    int    col)
     {
-        HGVLogger.getInstance().debug("RecordTableModel - setValueAt: " + value);
         //Slot slot = type.getAt(row);
         list.set(row, value);
         fireTableCellUpdated(row, col);

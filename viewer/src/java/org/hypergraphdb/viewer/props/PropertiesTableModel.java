@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.*;
 import javax.swing.table.AbstractTableModel;
 import org.hypergraphdb.type.Slot;
-import org.hypergraphdb.viewer.HGVLogger;
 import java.lang.reflect.InvocationTargetException;
 
 /**

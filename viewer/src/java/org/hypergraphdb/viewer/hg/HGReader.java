@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.hypergraphdb.HGEnvironment;
@@ -19,7 +18,6 @@ import org.hypergraphdb.query.AtomTypeCondition;
 import org.hypergraphdb.type.HGAtomType;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVKit;
 
 import cytoscape.task.TaskMonitor;
 
@@ -27,12 +25,12 @@ import cytoscape.task.TaskMonitor;
  */
 public class HGReader
 {
-    TaskMonitor taskMonitor;
-    private HyperGraph hypergraph;
     /**
      * The DB to be loaded
      */
     protected File db;
+    TaskMonitor taskMonitor;
+    private HyperGraph graph;
     ArrayList<FNode> nodes;
     HashSet<FEdge> edges;
 
@@ -49,7 +47,7 @@ public class HGReader
 
     public HyperGraph getHyperGraph()
     {
-        return hypergraph;
+        return graph;
     }
 
     public void read() throws IOException
@@ -58,7 +56,7 @@ public class HGReader
         System.out.println("HGReader -read: " + db_name);
         try
         {
-            hypergraph = HGEnvironment.get(db_name);
+            graph = HGEnvironment.get(db_name);
         }
         catch (HGException ex)
         {
@@ -67,38 +65,30 @@ public class HGReader
                 taskMonitor.setException(ex, "Unable to load HyperGraph");
                 taskMonitor.setStatus(ex.toString());
             }
-            if (hypergraph != null) hypergraph.close();
+            if (graph != null) graph.close();
             throw new IOException(ex.toString());
         }
         Set<HGHandle> nodesH = new HashSet<HGHandle>();
         Set<HGHandle> links = new HashSet<HGHandle>();
-        Iterator<HGAtomType> it = HGVUtils.getAllAtomTypes(hypergraph)
-                .iterator();
-        while (it.hasNext())
-            loadHG(hypergraph, it.next(), nodesH, links);
+        for (HGAtomType type : HGVUtils.getAllAtomTypes(graph))
+            loadHG(graph, type, nodesH, links);
         nodes = new ArrayList<FNode>(nodesH.size());
         edges = new HashSet<FEdge>();
-        for (Iterator<HGHandle> si = nodesH.iterator(); si.hasNext();)
-        {
-            HGHandle handle = hypergraph.getPersistentHandle(si.next());
-            // System.out.println("FNode: " + handle);
-            FNode node = HGVKit.getHGVNode(handle, true);
-            nodes.add(node);
-        }
+        for (HGHandle handle: nodesH)
+            nodes.add(new FNode(handle));
+       
         // ---------------------------------------------------------------------------
         // now loop over the interactions again, this time creating edges
         // between all sources and each of their respective targets.
         // ---------------------------------------------------------------------------
-        for (Iterator t = links.iterator(); t.hasNext();)
+        for ( HGHandle link_handle: links)
         {
-            HGHandle link_handle = hypergraph.getPersistentHandle((HGHandle) t
-                    .next());
-            HGLink link = (HGLink) hypergraph.get(link_handle);
+            FNode link_node = new FNode(link_handle);
+            HGLink link = (HGLink) graph.get(link_handle);
             for (int l = 0; l < link.getArity(); l++)
             {
-                HGHandle handle = hypergraph.getPersistentHandle(link
-                        .getTargetAt(l));
-                FEdge edge = HGVKit.getHGVEdge(link_handle, handle);
+                HGHandle handle = link.getTargetAt(l);
+                FEdge edge = new FEdge(link_node, new FNode(handle));
                 edges.add(edge);
             } // for t
         } // for i
@@ -108,14 +98,13 @@ public class HGReader
             Set<HGHandle> nodes, Set<HGHandle> links)
     {
         HGHandle sHandle = h.getHandle(type);
-        AtomTypeCondition cond = new AtomTypeCondition(h
-                .getPersistentHandle(sHandle));
-        HGQuery query = HGQuery.make(h, cond);
-        HGSearchResult it = query.execute();
+        AtomTypeCondition cond = new AtomTypeCondition(sHandle);
+        HGQuery<HGHandle> query = HGQuery.make(h, cond);
+        HGSearchResult<HGHandle> it = query.execute();
         while (it.hasNext())
         {
             it.next();
-            processHandles(h, (HGHandle) it.current(), nodes, links);
+            processHandles(h, it.current(), nodes, links);
         }
     }
 

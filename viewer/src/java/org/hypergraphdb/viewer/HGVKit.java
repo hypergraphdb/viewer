@@ -7,13 +7,10 @@ package org.hypergraphdb.viewer;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import javax.swing.SwingUtilities;
 import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.hypergraphdb.HGHandle;
@@ -107,54 +104,12 @@ public abstract class HGVKit
 	}
 
 
-	/**
-	 * @param handle a handle for the node
-	 * @param create will create a node if one does not exist
-	 * @return will always return a node, if <code>create</code> is true
-	 */
-	public static FNode getHGVNode(HGHandle handle, boolean create)
-	{
-		FNode node = new FNode(handle);
-		return node;
-	}
-
-	/**
-	 * Gets the first Edge found.
-	 * 
-	 * @param node_1 one end of the edge
-	 * @param node_2 the other end of the edge
-	 * @param type the type of the edge
-	 * @param create will create an edge if one does not exist
-	 * @return returns an existing HGVEdge if present, or creates one if
-	 * <code>create</code> is true, otherwise returns null.
-	 */
-	public static FEdge getHGVEdge(FNode node_1, FNode node_2, boolean create)
-	{
-		FEdge edge = new FEdge(node_1, node_2);
-		return edge;
-	}
-
-	/**
-	 * @param source_alias an source node handle
-	 * @param target_alias an target node handle
-	 * @return will always return an edge or null
-	 */
-	public static FEdge getHGVEdge(HGHandle sourceH, HGHandle targetH)
-	{
-		// System.out.println("getHGVEdge - source: " + sourceH + " edge: "
-		//+ " target:" + targetH);
-		FNode source = getHGVNode(sourceH, true);
-		FNode target = getHGVNode(targetH, true);
-		
-		return getHGVEdge(source, target, true);
-	}
-
-     /**
+	 /**
 	 * Return the HGVNetworkView that currently has the focus. 
 	 */
 	public static HGVNetworkView getCurrentView()
 	{
-	    HGVComponent comp = HGVComponent.getFocusedComponent();
+	    HGViewer comp = HGViewer.getFocusedComponent();
 		return comp != null ? comp.getView() : null;
 	}
 
@@ -170,7 +125,7 @@ public abstract class HGVKit
 	 * This Map has keys that are Strings ( network_ids ) and values that are
 	 * networks.
 	 */
-	public static List<HGVNetworkView> getNetworkViewsList()
+	public static List<HGVNetworkView> getViewersList() 
 	{
 		if (networkViewList == null)
 			networkViewList = new ArrayList<HGVNetworkView>();
@@ -185,7 +140,7 @@ public abstract class HGVKit
 	{
 		// System.out.println( "destroying: "+view.getIdentifier()+" :
 		// "+getNetworkViewMap().get( view.getIdentifier() ) );
-	    getNetworkViewsList().remove(view);
+	    getViewersList().remove(view);
 		// System.out.println( "gone from hash: "+view.getIdentifier()+" :
 		// "+getNetworkViewMap().get( view.getIdentifier() ) );
 		firePropertyChange(HGVDesktop.NETWORK_VIEW_DESTROYED, null, view);
@@ -196,7 +151,7 @@ public abstract class HGVKit
 		System.gc();
 	}
 
-	public static HGVComponent createHGVComponent(HGVNetworkView view)
+	public static HGViewer createHGVComponent(HGVNetworkView view)
 	{
 	    Collection<FNode> nodes = new ArrayList<FNode>();
 	    for(PNodeView nv : view.getNodeViews())
@@ -210,11 +165,11 @@ public abstract class HGVKit
 	/**
 	 * Creates a new Network, that inherits from the given ParentNetwork
 	 */
-	public static HGVComponent createHGVComponent(HyperGraph db, 
+	public static HGViewer createHGVComponent(HyperGraph db, 
 	        Collection<FNode> nodes, Collection<FEdge> edges)
 	{
-	    HGVComponent comp = new HGVComponent(db, nodes, edges);
-	    getNetworkViewsList().add(comp.getView());
+	    HGViewer comp = new HGViewer(db, nodes, edges);
+	    getViewersList().add(comp.getView());
 	    firePropertyChange(HGVDesktop.NETWORK_VIEW_CREATED, null, comp.getView());
 		return comp;
 	}
@@ -235,7 +190,7 @@ public abstract class HGVKit
 	private static void setSquiggleState(boolean isEnabled)
 	{
 		// enable Squiggle on all network views
-		for (HGVNetworkView view : getNetworkViewsList())
+		for (HGVNetworkView view : getViewersList())
 		{
 			if (view == null) continue;
 			if (isEnabled)
@@ -291,7 +246,7 @@ public abstract class HGVKit
 	public static void setSelectionMode(int selectionMode)
 	{
 		// set the selection mode on all the views
-		for (HGVNetworkView view : getNetworkViewsList())
+		for (HGVNetworkView view : getViewersList())
 			setSelectionMode(selectionMode, view);
 		
 		// update the global indicating the selection mode
@@ -351,7 +306,7 @@ public abstract class HGVKit
 		embeded = true;
 		try
 		{
-		    HGVComponent comp = 
+		    HGViewer comp = 
 			    createHGVComponent(graph, reader.getNodes(), reader.getEdges());
 			comp.getView().setIdentifier(graph.getStore().getDatabaseLocation());
 			return comp.getView();

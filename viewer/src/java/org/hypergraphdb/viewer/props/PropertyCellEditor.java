@@ -18,7 +18,6 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellRenderer;
-import org.hypergraphdb.viewer.HGVLogger;
 
 /***/
 public class PropertyCellEditor extends DefaultCellEditor implements TableCellRenderer

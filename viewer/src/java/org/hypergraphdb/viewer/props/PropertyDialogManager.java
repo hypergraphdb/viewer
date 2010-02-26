@@ -21,7 +21,6 @@ import java.beans.*;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JComponent;
-import org.hypergraphdb.viewer.HGVLogger;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
@@ -335,7 +334,7 @@ final class PropertyDialogManager
 		Throwable d = doNotNotify;
 		doNotNotify = null;
 		if (d == ex) return;
-		HGVLogger.getInstance().exception(ex);
+		ex.printStackTrace();
 	}
 
 	/**
@@ -349,7 +348,7 @@ final class PropertyDialogManager
 		Throwable d = doNotNotify;
 		doNotNotify = null;
 		if (d == ex) return;
-		HGVLogger.getInstance().exception(ex);
+		ex.printStackTrace();
 	}
 
 	/**
@@ -363,7 +362,7 @@ final class PropertyDialogManager
 	 */
 	private static void notifyUser(Exception e)
 	{
-		HGVLogger.getInstance().exception(e);
+		e.printStackTrace();
 	}
 
 	static class CreateDialogInvoker implements Runnable

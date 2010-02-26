@@ -20,132 +20,146 @@ import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.util.HGUtils;
 import org.hypergraphdb.viewer.*;
 
-
-
 /**
  */
-public class HGWNReader 
+public class HGWNReader
 {
-	private HyperGraph hypergraph;
-	/**
-	 * The DB to be loaded
-	 */
-	protected File db;
-	Set<FNode> nodes = new HashSet<FNode>();
+    private HyperGraph hypergraph;
+    /**
+     * The DB to be loaded
+     */
+    protected File db;
+    Set<FNode> nodes = new HashSet<FNode>();
     Set<FEdge> edges = new HashSet<FEdge>();
-	private boolean showLinksAsNodes = true;
-	
-	public HGWNReader(File db)
-	{
-		this.db = db;
-		hypergraph = new HyperGraph(db.getAbsolutePath());
-	}
-	
-	public HGWNReader(HyperGraph hg)
-	{
-		hypergraph = hg;
-	}
+    private boolean showLinksAsNodes = true;
 
-	public HyperGraph getHyperGraph()
-	{
-		return hypergraph;
-	}
+    public HGWNReader(File db)
+    {
+        this.db = db;
+        hypergraph = new HyperGraph(db.getAbsolutePath());
+    }
 
-	// ----------------------------------------------------------------------------------------
-	public void read(HGHandle handle, int depth, HGAtomPredicate cond)
-	{
-		nodes.clear();
-		edges.clear();
-		addNode(handle, depth, cond);
-	}
-	
-	public void read(HGHandle handle, int depth, HGALGenerator generator)
-	{
-	    nodes.clear();
+    public HGWNReader(HyperGraph hg)
+    {
+        hypergraph = hg;
+    }
+
+    public HyperGraph getHyperGraph()
+    {
+        return hypergraph;
+    }
+
+    // ----------------------------------------------------------------------------------------
+    public void read(HGHandle handle, int depth, HGAtomPredicate cond)
+    {
+        nodes.clear();
         edges.clear();
-		LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
-		depth--;
-		FNode node = HGVKit.getHGVNode(handle, true);
-		nodes.add(node);		
-		remaining.add(handle);		
-		while (remaining.size() > 0)
-		{
-			HGHandle h = remaining.removeLast();
-			node = HGVKit.getHGVNode(h, false);
-			if (h == null)
-			{
-				depth++;
-				continue;
-			}
-			HGSearchResult<HGHandle> i = generator.generate(h);
-			if (depth > 0)
-				remaining.add(null);
-			HGHandle currLink = null;
-			FNode linkNode = node;
-			while (i.hasNext())
-			{
-				HGHandle a = i.next();	
-				
-				if (showLinksAsNodes && !HGUtils.eq(generator.getCurrentLink(), currLink))
-				{
-					currLink = generator.getCurrentLink();
-					linkNode = HGVKit.getHGVNode(currLink, true);
-					nodes.add(linkNode);
-					FEdge edge = HGVKit.getHGVEdge(node, linkNode, true);
-					edges.add(edge);
-				}
-				FNode an = HGVKit.getHGVNode(a, true);				
-				nodes.add(an);
-				FEdge edge = HGVKit.getHGVEdge(linkNode, an, true);
-				edges.add(edge);
-				if (depth > 0)
-					remaining.add(a);
-			}
-			i.close();
-			if (depth > 0)
-			{
-				depth--;
-			}
-		}
-		
-		System.out.println("focus0: " + nodes.size() + ":" + edges.size());
-	}
-	
-	
-//	 The node should be presented in HG, this method adds it to the View
-	private FNode addNode(HGHandle handle, int level, HGAtomPredicate cond)
-	{
-		FNode node = HGVKit.getHGVNode(handle, true);
-		nodes.add(node);
-		if (level > 0)
-		{
-			IncidenceSet h_links = hypergraph.getIncidenceSet(handle);
-			for (HGHandle linkHandle : h_links)
-			{
-				if(cond != null && !cond.satisfies(hypergraph, linkHandle))
-						continue;
-				FEdge edge = HGVKit.getHGVEdge(addNode(linkHandle,
-						level - 1, cond), node, true);
-				if(edge != null)  
-				  edges.add(edge);
-			}
-		}
-		Object obj = hypergraph.get(handle);
-		if (obj instanceof HGLink)
-		{
-			if (level < 1) return node;
-			HGLink link = ((HGLink) obj);
-			for (int i = 0; i < link.getArity(); i++)
-			{
-				FEdge edge = HGVKit.getHGVEdge(node, addNode(link
-						.getTargetAt(i), level - 1, cond), true);
-				edges.add(edge);
-			}
-		}
-		return node;
-	}
+        addNode(handle, depth, cond);
+    }
 
-	public Collection<FNode> getNodes()
+    public void read(HGHandle handle, int depth, HGALGenerator generator)
+    {
+        nodes.clear();
+        edges.clear();
+        LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
+        depth--;
+        FNode node = new FNode(handle);
+        nodes.add(node);
+        remaining.add(handle);
+        while (remaining.size() > 0)
+        {
+            HGHandle h = remaining.removeLast();
+            if (h == null)
+            {
+                depth++;
+                continue;
+            }
+            node = new FNode(h);
+            HGSearchResult<HGHandle> i = generator.generate(h);
+            if (depth > 0) remaining.add(null);
+            HGHandle currLink = null;
+            FNode linkNode = node;
+            while (i.hasNext())
+            {
+                HGHandle a = i.next();
+
+                if (!HGUtils.eq(generator.getCurrentLink(), currLink))
+                {
+                    currLink = generator.getCurrentLink();
+                    linkNode = new FNode(currLink);
+                    nodes.add(linkNode);
+                    FEdge edge = getFEdge(node, linkNode);
+                    if(edge != null)
+                       edges.add(edge);
+                }
+                FNode an = new FNode(a);
+                nodes.add(an);
+                FEdge edge = getFEdge(linkNode, an);
+                if(edge != null)
+                   edges.add(edge);
+                if (depth > 0) remaining.add(a);
+            }
+            i.close();
+            if (depth > 0)
+            {
+                depth--;
+            }
+        }
+
+        System.out.println("focus0: " + nodes.size() + ":" + edges.size());
+    }
+    
+    //check if such edge is possible and creates one if true
+    //source node should be link, and 
+    //the target node should be in the target set of the source link
+    FEdge getFEdge(FNode source, FNode target)
+    {
+        Object o = hypergraph.get(source.getHandle());
+        if(!(o instanceof HGLink)) return null;
+        HGLink link = (HGLink) o;
+        for(int i = 0; i < link.getArity(); i++)
+           if(link.getTargetAt(i).equals(target.getHandle()))
+               new FEdge(source, target);
+        //if(!hypergraph.getIncidenceSet(target.getHandle()).contains(
+        //        source.getHandle()))
+            return null;
+        //return new FEdge(source, target);
+    }
+
+    // The node should be presented in HG, this method adds it and related edges
+    // to arrays
+    private FNode addNode(HGHandle handle, int level, HGAtomPredicate cond)
+    {
+        FNode node = new FNode(handle);
+        nodes.add(node);
+        if (level > 0)
+        {
+            IncidenceSet h_links = hypergraph.getIncidenceSet(handle);
+            for (HGHandle linkHandle : h_links)
+            {
+                if (cond != null && !cond.satisfies(hypergraph, linkHandle))
+                    continue;
+                FEdge edge = new FEdge(addNode(linkHandle, level - 1, cond),
+                        node);
+                edges.add(edge);
+            }
+        }
+        Object obj = hypergraph.get(handle);
+        if (obj instanceof HGLink)
+        {
+            if (level < 1) return node;
+            HGLink link = ((HGLink) obj);
+            for (int i = 0; i < link.getArity(); i++)
+            {
+                FEdge edge = new FEdge(node, addNode(link.getTargetAt(i),
+                        level - 1, cond));
+                edges.add(edge);
+            }
+        }
+        return node;
+    }
+
+    public Collection<FNode> getNodes()
     {
         return nodes;
     }

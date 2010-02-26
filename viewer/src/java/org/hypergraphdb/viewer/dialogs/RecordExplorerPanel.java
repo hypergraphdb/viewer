@@ -13,7 +13,6 @@ import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.handle.HGLiveHandle;
 import org.hypergraphdb.type.*;
-import org.hypergraphdb.viewer.HGVLogger;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.props.*;
@@ -24,7 +23,6 @@ import org.hypergraphdb.viewer.props.*;
  */
 public class RecordExplorerPanel extends javax.swing.JPanel
 {
-	// RecordType[] recordTypes;
 	HGCompositeType[] recordTypes;
 	String[] recordTypeNames;
 	HGHandle[] recordTypeHandles;

@@ -38,7 +38,6 @@ import javax.swing.SwingUtilities;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import javax.swing.text.Document;
-import org.hypergraphdb.viewer.HGVLogger;
 
 /**
  * Visual Java Bean for editing of properties. It takes the model and represents
@@ -574,7 +573,7 @@ public class PropertyPanelEx extends JComponent
 		catch (Exception e)
 		{
 			// exception while getAsText () | isPaintable ()
-			HGVLogger.getInstance().exception(e);
+			e.printStackTrace();
 			c = getTextView(getExceptionString(e));
 		}
 		// we should never return null (dstrupl)
@@ -680,9 +679,6 @@ public class PropertyPanelEx extends JComponent
 		
 		getWriteComponentListener().setOldValue(editor.getValue());
 		boolean existsCustomEditor = editor.supportsCustomEditor();
-		HGVLogger.getInstance().debug(
-				"PropertyPanelEx: " + editor + " existsCustomEditor: "
-						+ existsCustomEditor + " stringValue: " + stringValue);
 		if (!bean.canWrite())
 		{
 			if (existsCustomEditor)
@@ -928,7 +924,7 @@ public class PropertyPanelEx extends JComponent
 			PropertyPanelEx.notifyUser(iae, bean.getDisplayName());
 		} else
 		{
-			HGVLogger.getInstance().exception(iae);
+		    iae.printStackTrace();
 		}
 	}
 
@@ -951,17 +947,7 @@ public class PropertyPanelEx extends JComponent
 			userMessage = ((InvocationTargetException) e).getTargetException()
 					.getLocalizedMessage();
 		}
-		HGVLogger em = HGVLogger.getInstance();
-		if ((userMessage != null))
-		{
-			em.information("Error Setting Property: " + userMessage + " for: "
-					+ propertyName);
-			e.printStackTrace();
-			em.exception(e);
-		} else
-		{
-			em.exception(e);
-		}
+	    e.printStackTrace();
 	}
 
 	/**
@@ -974,11 +960,7 @@ public class PropertyPanelEx extends JComponent
 		{
 			throw (ThreadDeath) throwable;
 		}
-		HGVLogger em = HGVLogger.getInstance();
-		em.information("Error Setting Property: "
-				+ throwable.getLocalizedMessage());
 		throwable.printStackTrace();
-		em.exception(throwable);
 	}
 
 	/**

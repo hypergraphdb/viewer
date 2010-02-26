@@ -17,7 +17,7 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.HGVComponent;
+import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.VisualManager;
@@ -106,7 +106,7 @@ public class LoadWordNetAction extends HGVAction
             {
             	if(!db.isDirectory())
             		throw new IOException("No such DB: " + db.getAbsolutePath());
-            	HGVComponent cyNetwork = createNetwork();
+            	HGViewer cyNetwork = createNetwork();
                 if (cyNetwork != null)
                 {
                     informUserOfGraphStats(cyNetwork.getView());
@@ -185,12 +185,12 @@ public class LoadWordNetAction extends HGVAction
             return new String("Loading Network");
         }
         
-        private HGVComponent createNetwork() throws IOException
+        private HGViewer createNetwork() throws IOException
         {
         	
             final HGWNReader reader = new HGWNReader(db);
             open(reader);
-            HGVComponent comp = HGVKit.createHGVComponent(reader.getHyperGraph(), 
+            HGViewer comp = HGVKit.createHGVComponent(reader.getHyperGraph(), 
                     reader.getNodes(), reader.getEdges());
             setVisualStyle(comp.getView());
             return comp;

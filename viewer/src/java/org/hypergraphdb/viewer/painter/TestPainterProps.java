@@ -13,7 +13,7 @@ import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.atom.HGStats;
 import org.hypergraphdb.viewer.*;
-import org.hypergraphdb.viewer.HGVComponent;
+import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
@@ -45,12 +45,13 @@ public class TestPainterProps extends PropertySheetPanel
 	
 	public static Component getView(HyperGraph hg){
 		HGHandle h = hg.getTypeSystem().getTypeHandle(HGStats.class);
-		HGVComponent c = null;
+		HGViewer c = null;
 		try{
 		//HGVNetworkView view = HGVKit.getStandaloneView(hg, h, 3, null);
 		//view.redrawGraph();
 		//c = view.getComponent();
-		c = new HGVComponent(hg, h, 0, null);
+		c = new HGViewer(hg, h, 3, null);
+		
 		//c.setPreferredSize(new java.awt.Dimension(600,400));
 		
 		//c = new HGVComponent(hg, (Collection<FNode>) new ArrayList<FNode>(), 

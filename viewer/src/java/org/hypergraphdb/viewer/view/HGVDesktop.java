@@ -26,7 +26,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVComponent;
+import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.VisualManager;
@@ -130,9 +130,9 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
             public void stateChanged(ChangeEvent e)
             {
                 if (tabbedPane.getSelectedIndex() == -1) return;
-                HGVComponent comp = (HGVComponent) tabbedPane.getComponentAt(
+                HGViewer comp = (HGViewer) tabbedPane.getComponentAt(
                         tabbedPane.getSelectedIndex());
-                HGVComponent.setFocusedComponent(comp);
+                HGViewer.setFocusedComponent(comp);
                 firePropertyChange(HGVDesktop.NETWORK_VIEW_FOCUSED, null, comp.getView());
             }
         });

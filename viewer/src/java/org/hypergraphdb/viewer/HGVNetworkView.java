@@ -94,7 +94,7 @@ public class HGVNetworkView
     // PCS support
     protected PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     // A JPanel for the Canvas in the middle, and some other stuff around
-    protected HGVComponent viewComponent;
+    protected HGViewer viewComponent;
     // Piccolo Stuff for this class
     protected PSelectionHandler selectionHandler;
     protected PEdgeSelectionHandler edgeSelectionHandler;
@@ -123,7 +123,7 @@ public class HGVNetworkView
 
     protected HyperGraph graph;
 
-    public HGVNetworkView(HGVComponent comp, HyperGraph db,
+    public HGVNetworkView(HGViewer comp, HyperGraph db,
             Collection<FNode> nodes, Collection<FEdge> edges)
     {
         this.graph = db;
@@ -420,7 +420,7 @@ public class HGVNetworkView
     /**
      * @return HGVComponent that can be added to most screen things
      */
-    public HGVComponent getComponent()
+    public HGViewer getComponent()
     {
         return viewComponent;
     }
@@ -486,20 +486,10 @@ public class HGVNetworkView
         firePiccoloEvents = false;
         long time = System.currentTimeMillis();
         for (FNode node : nodes)
-        {
-            // setAllNodePropertyData(node, (Object[]) NODE_DEFAULTS.clone());
-            PNodeView node_view = new PNodeView(node, this);
-            nodeViewMap.put(node, node_view);
-            addToNodeLayer(node_view);
-        }
-        System.out.println("Create Nodes took: "
-                + (System.currentTimeMillis() - time));
+            addNodeView(node);
+        System.out.println("Create Nodes took: "  + (System.currentTimeMillis() - time));
         for (FEdge edge : edges)
-        {
-            PEdgeView edge_view = new PEdgeView(edge, this);
-            addToEdgeLayer(edge_view);
-            edgeViewMap.put(edge, edge_view);
-        }
+            addEdgeView(edge);
         firePiccoloEvents = true;
         System.out.println("Create Viewable Object took: "
                 + (System.currentTimeMillis() - time));
@@ -742,10 +732,10 @@ public class HGVNetworkView
         public Canvas()
         {
             super();
-            initKeyBindings();
+            setKeyBindings();
         }
 
-        protected void initKeyBindings()
+        protected void setKeyBindings()
         {
             InputMap inputMap = getInputMap();
             for (Action a : ActionManager.getInstance().getActions())
@@ -886,6 +876,7 @@ public class HGVNetworkView
     public PNodeView addNodeView(FNode node)
     {
         if (nodeViewMap.containsKey(node)) return nodeViewMap.get(node);
+        
         PNodeView node_view = new PNodeView(node, this);
         nodeViewMap.put(node, node_view);
         addToNodeLayer(node_view);
@@ -897,6 +888,12 @@ public class HGVNetworkView
     public PEdgeView addEdgeView(FEdge edge)
     {
         if (edgeViewMap.containsKey(edge)) return edgeViewMap.get(edge);
+        if(!(graph.get(edge.getSource().getHandle()) instanceof HGLink))
+            System.err.println("Impossible PEdgeView - source is not HGLink: " + edge);
+        if(!graph.getIncidenceSet(edge.getTarget().getHandle()).contains(
+                edge.getSource().getHandle()))
+            System.err.println("Impossible PEdgeView - target is not pointed by source: " + edge);
+        
         PEdgeView edge_view = new PEdgeView(edge, this);
         addToEdgeLayer(edge_view);
         edgeViewMap.put(edge, edge_view);

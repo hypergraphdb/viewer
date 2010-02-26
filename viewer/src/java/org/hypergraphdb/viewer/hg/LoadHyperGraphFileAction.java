@@ -14,7 +14,7 @@ import java.text.NumberFormat;
 
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.HGVComponent;
+import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.util.FileUtil;
@@ -77,7 +77,7 @@ public class LoadHyperGraphFileAction extends HGVAction
     static class LoadHGNetworkTask implements Task
     {
         private File db;
-        private HGVComponent comp;
+        private HGViewer comp;
         private TaskMonitor taskMonitor;
 
         public LoadHGNetworkTask(File db)
@@ -189,7 +189,7 @@ public class LoadHyperGraphFileAction extends HGVAction
          * 
          * @param location  the location of the file
          */
-        private HGVComponent createHGVComponent() throws IOException
+        private HGViewer createHGVComponent() throws IOException
         {
             HGReader reader = new HGReader(db);
             reader.taskMonitor = taskMonitor;
@@ -197,7 +197,7 @@ public class LoadHyperGraphFileAction extends HGVAction
             reader.read();
             taskMonitor.setStatus("Creating HG Network...");
 
-            HGVComponent comp = HGVKit.createHGVComponent(reader
+            HGViewer comp = HGVKit.createHGVComponent(reader
                     .getHyperGraph(), reader.getNodes(), reader.getEdges());
            
             System.out.println("Network: " + comp.getView() + " file_name: "

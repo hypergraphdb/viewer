@@ -1,15 +1,11 @@
 package org.hypergraphdb.viewer.props;
 
-import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.hypergraphdb.type.Record;
 import org.hypergraphdb.type.RecordType;
 import org.hypergraphdb.type.Slot;
-import org.hypergraphdb.viewer.HGVLogger;
 import org.hypergraphdb.viewer.HGVKit;
 
 /**
@@ -65,7 +61,6 @@ public class RecordTableModel  extends PropertiesTableModel
     
     public void setValueAt(Object value,   int    row,    int    col)
     {
-        HGVLogger.getInstance().debug("RecordTableModel - setValueAt: " + value);
         //Slot slot = type.getAt(row);
        // rec.set(slot, value);
         //fireTableCellUpdated(row, col);

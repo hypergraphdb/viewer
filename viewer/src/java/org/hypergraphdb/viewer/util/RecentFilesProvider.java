@@ -48,7 +48,7 @@ public class RecentFilesProvider implements PropertyChangeListener
             }
         }else if (e.getPropertyName() == HGVKit.EXIT)
         {
-        	for(HGVNetworkView net: HGVKit.getNetworkViewsList())
+        	for(HGVNetworkView net: HGVKit.getViewersList())
         		AppConfig.getInstance().getMRUF().add(
         				net.getHyperGraph().getLocation());
         	AppConfig.getInstance().getGraph().update(AppConfig.getInstance());
