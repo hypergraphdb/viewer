@@ -597,9 +597,9 @@ public class GEM implements Layout
 	 */
 	public void applyLayout()
 	{
-	    this.view = view;
-		long startTime = System.currentTimeMillis();
+	    long startTime = System.currentTimeMillis();
 		nodeCount = view.getNodeViewCount();
+		if(nodeCount == 0) return;
 		gemProp = new GemP[nodeCount];
 		invmap = new FNode[nodeCount];
 		adjacent = new ArrayList[nodeCount];
@@ -608,8 +608,7 @@ public class GEM implements Layout
 		for (PNodeView v : view.getNodeViews())
 		{
 			FNode n = v.getNode();
-			gemProp[k] = new GemP(view.getAdjacentEdges(
-					n, true, true).length);
+			gemProp[k] = new GemP(view.getAdjacentEdges(n, true, true).length);
 			//if(n == null)	System.out.println("GEM:" +	k +	":" + n);
 			invmap[k] = n;
 			nodeNumbers.put(n, k);

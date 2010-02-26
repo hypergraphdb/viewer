@@ -66,17 +66,18 @@ public class HGVComponent extends JPanel
     
     public HGVComponent(HyperGraph db, HGHandle h, int depth, HGALGenerator generator)
     {
+        super(new BorderLayout());
          this.graph = db;
          this.depth = depth;
          this.generator = generator;
+         focused(this);
          HGWNReader reader = new HGWNReader(db);
          reader.read(h, depth, getGenerator()); 
          HGVKit.embeded = true;
          init(reader.getNodes(), reader.getEdges());
     } 
 
-    public HGVComponent(HyperGraph db, Collection<FNode> nodes,
-            Collection<FEdge> edges)
+    public HGVComponent(HyperGraph db, Collection<FNode> nodes,  Collection<FEdge> edges)
     {
         super(new BorderLayout());
         addFocusListener(new HGVFocusListener());
@@ -86,6 +87,27 @@ public class HGVComponent extends JPanel
     }
     
     protected void init(Collection<FNode> nodes, Collection<FEdge> edges)
+    {
+        view = new HGVNetworkView(this, graph, nodes, edges);
+        view.getCanvas().addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent e)
+            {
+                focused(HGVComponent.this);
+            }
+        });
+        view.addSelectionListener(new HGVNetworkView.SelectionListener() {
+            public void selectionChanged()
+            {
+                updateStatusLabel();
+            }
+        });
+        PScrollPane scroll = new PScrollPane(view.canvas);
+        add(scroll, BorderLayout.CENTER);
+        addStatusBar();
+        initKeyBindings();
+    }
+    
+    protected void addStatusBar()
     {
         // setup the StatusLabel
         statusLabel = new JLabel();
@@ -113,24 +135,8 @@ public class HGVComponent extends JPanel
         }
         else
             add(statusLabel, BorderLayout.SOUTH);
-
-        view = new HGVNetworkView(this, graph, nodes, edges);
-        view.getCanvas().addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent e)
-            {
-                focused(HGVComponent.this);
-            }
-        });
-        view.addSelectionListener(new HGVNetworkView.SelectionListener() {
-            public void selectionChanged()
-            {
-                updateStatusLabel();
-            }
-        });
-        PScrollPane scroll = new PScrollPane(view.canvas);
-        add(scroll, BorderLayout.CENTER);
-        initKeyBindings();
     }
+    
     protected void initKeyBindings()
     {
         InputMap inputMap = getInputMap();

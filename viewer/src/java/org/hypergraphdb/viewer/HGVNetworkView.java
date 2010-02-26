@@ -1,6 +1,7 @@
 package org.hypergraphdb.viewer;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Paint;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.Action;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -639,11 +641,6 @@ public class HGVNetworkView
     {
         for (PNodeView nodeView : getNodeViews())
         {
-            // if (nodeView == null)
-            // {
-            // System.out.println("VM - applyNodeAppearances - NULL NODE");
-            // continue;
-            // }
             FNode node = nodeView.getNode();
             HGHandle h = graph.getTypeSystem().getTypeHandle(node.getHandle());
             NodePainter p = self_style.getNodePainter(h);
@@ -662,11 +659,6 @@ public class HGVNetworkView
     {
         for (PEdgeView edgeView : getEdgeViews())
         {
-            // if (edgeView == null)
-            // {
-            // System.out.println("VMM -applyNodeAppearances - NULL NODE");
-            // continue;
-            // }
             FNode node = edgeView.getEdge().getSource();
             HGHandle h = graph.getTypeSystem().getTypeHandle(node.getHandle());
             EdgePainter p = self_style.getEdgePainter(h);
@@ -750,23 +742,15 @@ public class HGVNetworkView
         public Canvas()
         {
             super();
-            addKeyBindings();
+            initKeyBindings();
         }
 
-        private void addKeyBindings()
+        protected void initKeyBindings()
         {
+            InputMap inputMap = getInputMap();
             for (Action a : ActionManager.getInstance().getActions())
-            {
-                KeyStroke key = (KeyStroke) a.getValue(Action.ACCELERATOR_KEY);
-                if (key != null)
-                {
-                    String name = (String) a.getValue(Action.NAME);
-                    getInputMap().put(key, name);
-                    getActionMap().put(name, a);
-                    // System.out.println("Action: " + name + ":" + key);
-                }// else
-                // System.out.println("Action: " + name + ":" + key);
-            }
+                if (a.getValue(Action.ACCELERATOR_KEY) != null)
+                    inputMap.put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), a);
         }
 
         public HGVNetworkView getView()
@@ -777,18 +761,6 @@ public class HGVNetworkView
         public void repaint(long a, int x, int y, int w, int h)
         {
             if (((x + w) > 1) || ((y + h) > 2)) super.repaint(a, x, y, w, h);
-        }
-
-        @Override
-        public void addNotify()
-        {
-            super.addNotify();
-        }
-
-        @Override
-        public void removeNotify()
-        {
-            super.removeNotify();
         }
     };
 

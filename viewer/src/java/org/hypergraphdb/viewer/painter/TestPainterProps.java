@@ -6,11 +6,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import javax.swing.JFrame;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.atom.HGStats;
+import org.hypergraphdb.viewer.*;
 import org.hypergraphdb.viewer.HGVComponent;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.HGVNetworkView;
@@ -45,12 +47,16 @@ public class TestPainterProps extends PropertySheetPanel
 		HGHandle h = hg.getTypeSystem().getTypeHandle(HGStats.class);
 		HGVComponent c = null;
 		try{
-		HGVNetworkView view = HGVKit.getStandaloneView(hg, h, 3, null);
-		view.redrawGraph();
-		c = view.getComponent();
-		//c = new HGVComponent(hg, h, 3, null);
-		c.setPreferredSize(new java.awt.Dimension(600,400));
-		c.getView().redrawGraph();
+		//HGVNetworkView view = HGVKit.getStandaloneView(hg, h, 3, null);
+		//view.redrawGraph();
+		//c = view.getComponent();
+		c = new HGVComponent(hg, h, 0, null);
+		//c.setPreferredSize(new java.awt.Dimension(600,400));
+		
+		//c = new HGVComponent(hg, (Collection<FNode>) new ArrayList<FNode>(), 
+		//         (Collection<FEdge>) new ArrayList<FEdge>());
+		     //c.setPreferredSize(new java.awt.Dimension(600,400));
+		//c.getView().redrawGraph();
 		}
 		catch(Throwable t){
 			t.printStackTrace();
