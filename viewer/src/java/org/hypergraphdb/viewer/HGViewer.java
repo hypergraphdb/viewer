@@ -62,7 +62,10 @@ public class HGViewer extends JPanel
     
     protected int depth = 2;
     private HGALGenerator generator = null;
+    private HGHandle foc_handle;
+    
     protected HyperGraph graph;
+    
     
     public HGViewer(HyperGraph db, HGHandle h, int depth, HGALGenerator generator)
     {
@@ -70,6 +73,7 @@ public class HGViewer extends JPanel
          this.graph = db;
          this.depth = depth;
          this.generator = generator;
+         foc_handle = handle;
          focused(this);
          HGWNReader reader = new HGWNReader(db);
          reader.read(h, depth, getGenerator()); 
@@ -165,6 +169,11 @@ public class HGViewer extends JPanel
         view.getNodeView(node).setSelected(true);
         view.getCanvas().getCamera().animateViewToCenterBounds( 
         view.getNodeView(node).getFullBounds(), false, 1550l );
+    }
+    
+    public void refresh()
+    {
+        focus(foc_handle);
     }
     
      void clearView()
