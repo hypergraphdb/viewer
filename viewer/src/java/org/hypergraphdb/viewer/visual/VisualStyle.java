@@ -24,7 +24,7 @@ public class VisualStyle implements Cloneable
 {
 
     String name = "default";
-    private Color backgroundColor = Color.white;
+    private Color backgroundColor = new Color(255, 255, 204) ;
     protected int dupCount = 0;
     protected Map<HGHandle, NodePainter> nodePaintersMap = new HashMap<HGHandle, NodePainter>();
     protected Map<HGHandle, NodePainter> npNodePaintersMap = new HashMap<HGHandle, NodePainter>();

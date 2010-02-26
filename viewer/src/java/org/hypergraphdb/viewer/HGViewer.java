@@ -73,7 +73,6 @@ public class HGViewer extends JPanel
          focused(this);
          HGWNReader reader = new HGWNReader(db);
          reader.read(h, depth, getGenerator()); 
-         HGVKit.embeded = true;
          init(reader.getNodes(), reader.getEdges());
     } 
 
@@ -236,9 +235,7 @@ public class HGViewer extends JPanel
         toolbar.add(createDropDown(toolbar, m.getSelectMenu(), "hand", "Edit"));
         toolbar.add(createDropDown(toolbar, m.getLayoutMenu(), "layout",
                 "Layout"));
-        JMenu menu = m.getVizMenu();
-        menu.add(new EnhancedMenu("Set Current Style", new VisStylesProvider()), 0);
-        toolbar.add(createDropDown(toolbar, menu, "visual",
+        toolbar.add(createDropDown(toolbar, m.getVizMenu(), "visual",
                 "Visual Properties"));
         toolbar
                 .add(createDropDown(toolbar, m.getZoomMenu(), "zoom", "Zooming"));

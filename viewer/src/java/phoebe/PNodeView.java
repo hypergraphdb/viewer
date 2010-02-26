@@ -363,9 +363,6 @@ public class PNodeView extends PPath
     }
 
     /**
-     * If the nodes sandbox is being used, then this method will return the
-     * sandboxed postion.
-     * 
      * @return the current x position of this node, or sandboxed position
      * @see setXPosition
      */
@@ -375,45 +372,21 @@ public class PNodeView extends PPath
     }
 
     /**
-     * This immediatly moves the node to a new Y coordinate.
+     * This immediately moves the node to a new Y coordinate.
      * 
      * @see{setOffset
      * @param the
      *            new_y_position for this node
      */
-    public void setYPosition(double new_y_position)
-    {
-        setYPosition(new_y_position, true);
-    }
-
-    /**
-     * Passing "false" to this method will use the built-in sandbox for storing
-     * node positions. If using the sandbox, getYPosition will return the
-     * sandbox value. After calling setNodePosition the sandboxed values will be
-     * applied to the PNodeView.<BR>
-     * <BR>
-     * Sandbox usage:<BR>
-     * 1) setNodeX/YPosition( value, <b>false</b> );<BR>
-     * 2) getNodeX/YPosition();<BR>
-     * repeat... 3) setNodePosition( boolean animate ); // true will animate the
-     * node to the sandboxed position.<BR>
-     * 
-     * @param new_y_position
-     *            for this node
-     * @param no_sandbox
-     *            if this is true, the node will move immediatly.
-     */
-    public void setYPosition(double new_y_position, boolean no_sandbox)
+     public void setYPosition(double new_y_position)
     {
         new_y_position -= getHeight() / 2;
         offset(0, new_y_position);
     }
 
     /**
-     * If the nodes sandbox is being used, then this method will return the
-     * sandboxed postion.
      * 
-     * @return the current y position of this node, or sandboxed position
+     * @return the current y position of this node
      * @see setYPosition
      */
     public double getYPosition()

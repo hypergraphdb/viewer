@@ -74,7 +74,7 @@ public class Radial implements Layout
 		{
 			//if no center is specified, take the first view from the list
 			if(center_view == null)	center_view = n;
-			locations.put(n.getNode(), new Coordinates(n.getX(), n.getY()));
+			locations.put(n.getNode(), new Coordinates(n.getXPosition(), n.getYPosition()));
 		}
 		center = center_view.getNode();
 		advancePositions();
@@ -131,7 +131,7 @@ public class Radial implements Layout
 		layerDistance = 10;
 		for (PNodeView n : view.getNodeViews())
 		    layerDistance = Math.max(layerDistance, 
-					           (n.getWidth()+ n.getHeight()) * 2);
+					           (n.getWidth()+ n.getHeight()) * 4);
 		double baseX = 0.0;
 		// System.out.println("\tsetting width prop...");
 		defineWidthProperty(center, null);
@@ -224,7 +224,7 @@ public class Radial implements Layout
 	 */
 	private int defineWidthProperty(FNode center, FNode enteringFrom)
 	{
-		System.out.println("defineWidthProperty: " + center + ":" +  enteringFrom);
+		//System.out.println("defineWidthProperty: " + center + ":" +  enteringFrom);
 		if (radialWidth.containsKey(center))
 		{
 			System.out.println(center + " " + radialWidth.get(center));
@@ -240,7 +240,7 @@ public class Radial implements Layout
 			FEdge edge = edges.next();
 			if (!validEdges.contains(edge))	continue;
 			FNode goingTo = getOpposite(center, edge);
-			if (enteringFrom == null || enteringFrom.equals(goingTo))
+			if (enteringFrom != null && enteringFrom.equals(goingTo))
 				continue;
 			validNeighbors++;
 			width += defineWidthProperty(goingTo, center);

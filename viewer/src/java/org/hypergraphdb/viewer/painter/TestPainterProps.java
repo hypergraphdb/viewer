@@ -2,20 +2,23 @@ package org.hypergraphdb.viewer.painter;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JFrame;
 import org.hypergraphdb.HGHandle;
+import org.hypergraphdb.HGQuery;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.HGQuery.hg;
 import org.hypergraphdb.atom.HGStats;
 import org.hypergraphdb.viewer.*;
-import org.hypergraphdb.viewer.HGViewer;
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
 import com.l2fprod.common.beans.editor.DirectoryPropertyEditor;
 import com.l2fprod.common.demo.BeanBinder;
@@ -35,22 +38,42 @@ public class TestPainterProps extends PropertySheetPanel
 		//p.init(new DefaultNodePainter());
 		//p.init(new DefaultEdgePainter());
 		f.getContentPane().add(p);
-		HyperGraph hg = new HyperGraph("F:/temp/xxx2");
+		final HyperGraph hg = new HyperGraph("F:/temp/xxx2");
 		p.setHyperGraph(hg);
-		f.getContentPane().add(getView(hg));
+		f.getContentPane().add(getViewer(hg));
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.addWindowListener(new WindowAdapter(){
+           public void windowClosing(WindowEvent e)
+            {
+               System.out.println("Exit");
+                hg.close();
+            }
+		    
+		});
 		f.setMinimumSize(new Dimension(600, 400));
 		f.setVisible(true);
 	}
 	
-	public static Component getView(HyperGraph hg){
-		HGHandle h = hg.getTypeSystem().getTypeHandle(HGStats.class);
+	public static Component getViewer(HyperGraph graph){
+		HGHandle h = graph.getTypeSystem().getTypeHandle(HGStats.class);
 		HGViewer c = null;
 		try{
 		//HGVNetworkView view = HGVKit.getStandaloneView(hg, h, 3, null);
 		//view.redrawGraph();
 		//c = view.getComponent();
-		c = new HGViewer(hg, h, 3, null);
+		List<Object> o = hg.findAll(graph, hg.type(HGViewer.class));
+		c = hg.getOne(graph, hg.type(HGViewer.class));
+		if(c == null)
+		{
+		  c = new HGViewer(graph, h, 3, null);
+		  HGViewerType type = new HGViewerType();
+	      type.setHyperGraph(graph);
+	      graph.getTypeSystem().addPredefinedType(
+	      HGViewerType.HGHANDLE, type,  HGViewer.class);
+	      graph.add(c, HGViewerType.HGHANDLE);
+		}
+		else
+		    System.out.println("Viewer retrieved from HG");
 		
 		//c.setPreferredSize(new java.awt.Dimension(600,400));
 		
@@ -58,6 +81,7 @@ public class TestPainterProps extends PropertySheetPanel
 		//         (Collection<FEdge>) new ArrayList<FEdge>());
 		     //c.setPreferredSize(new java.awt.Dimension(600,400));
 		//c.getView().redrawGraph();
+		
 		}
 		catch(Throwable t){
 			t.printStackTrace();

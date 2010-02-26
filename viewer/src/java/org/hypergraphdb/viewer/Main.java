@@ -64,7 +64,8 @@ public class Main implements WindowListener {
    */
   public Main ( String [] args ) throws Exception {
     this.args = args;
-     HGVKit.getDesktop();
+    HGVKit.embeded = false;
+    HGVKit.getDesktop();
   } 
 
 

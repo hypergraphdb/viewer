@@ -59,6 +59,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
 
     private void showMenu(PInputEvent event)
     {
+        if(!(event.getPickedNode() instanceof PNodeView)) return;
         PNodeView node = (PNodeView) event.getPickedNode();
         createPopup(node);
         Point pt = new Point((int) event.getCanvasPosition().getX(),

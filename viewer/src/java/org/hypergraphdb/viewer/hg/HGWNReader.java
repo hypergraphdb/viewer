@@ -31,8 +31,7 @@ public class HGWNReader
     protected File db;
     Set<FNode> nodes = new HashSet<FNode>();
     Set<FEdge> edges = new HashSet<FEdge>();
-    private boolean showLinksAsNodes = true;
-
+   
     public HGWNReader(File db)
     {
         this.db = db;
@@ -61,6 +60,13 @@ public class HGWNReader
     {
         nodes.clear();
         edges.clear();
+        if(true)
+        {
+           addNode(handle, depth, null);
+           return;
+        }
+        
+        //TODO: fix this
         LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
         depth--;
         FNode node = new FNode(handle);
@@ -88,13 +94,13 @@ public class HGWNReader
                     currLink = generator.getCurrentLink();
                     linkNode = new FNode(currLink);
                     nodes.add(linkNode);
-                    FEdge edge = getFEdge(node, linkNode);
+                    FEdge edge = getFEdge(linkNode, node);
                     if(edge != null)
                        edges.add(edge);
                 }
                 FNode an = new FNode(a);
                 nodes.add(an);
-                FEdge edge = getFEdge(linkNode, an);
+                FEdge edge = getFEdge(an, linkNode);
                 if(edge != null)
                    edges.add(edge);
                 if (depth > 0) remaining.add(a);
@@ -116,14 +122,14 @@ public class HGWNReader
     {
         Object o = hypergraph.get(source.getHandle());
         if(!(o instanceof HGLink)) return null;
-        HGLink link = (HGLink) o;
-        for(int i = 0; i < link.getArity(); i++)
-           if(link.getTargetAt(i).equals(target.getHandle()))
-               new FEdge(source, target);
-        //if(!hypergraph.getIncidenceSet(target.getHandle()).contains(
-        //        source.getHandle()))
+//        HGLink link = (HGLink) o;
+//        for(int i = 0; i < link.getArity(); i++)
+//           if(link.getTargetAt(i).equals(target.getHandle()))
+//              return new FEdge(source, target);
+        if(!hypergraph.getIncidenceSet(target.getHandle()).contains(
+                source.getHandle()))
             return null;
-        //return new FEdge(source, target);
+        return new FEdge(source, target);
     }
 
     // The node should be presented in HG, this method adds it and related edges

@@ -54,7 +54,8 @@ public class VisStylesProvider implements DynamicMenuProvider
 
     public static Collection<JMenuItem> getStyles(final HGVNetworkView view)
     {
-        if (langMenuItems == null) initLangMenuItems(view);
+       // if (langMenuItems == null) 
+       //     initLangMenuItems(view);
 
         for (final JMenuItem m : langMenuItems)
         {

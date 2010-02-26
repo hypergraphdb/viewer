@@ -732,17 +732,25 @@ public class HGVNetworkView
         public Canvas()
         {
             super();
-            setKeyBindings();
+            addKeyBindings();
         }
 
-        protected void setKeyBindings()
+        private void addKeyBindings()
         {
-            InputMap inputMap = getInputMap();
             for (Action a : ActionManager.getInstance().getActions())
-                if (a.getValue(Action.ACCELERATOR_KEY) != null)
-                    inputMap.put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), a);
+            {
+                KeyStroke key = (KeyStroke) a.getValue(Action.ACCELERATOR_KEY);
+                if (key != null)
+                {
+                    String name = (String) a.getValue(Action.NAME);
+                    getInputMap().put(key, name);
+                    getActionMap().put(name, a);
+                    // System.out.println("Action: " + name + ":" + key);
+                }// else
+                // System.out.println("Action: " + name + ":" + key);
+            }
         }
-
+        
         public HGVNetworkView getView()
         {
             return HGVNetworkView.this;

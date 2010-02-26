@@ -138,7 +138,7 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 	}
 
 	public void decorateSelectedNode(PNode node) {
-		PSmallBoundsHandle.addBoundsHandlesTo(node);
+		//PSmallBoundsHandle.addBoundsHandlesTo(node);
 	}
 
 	public void unselect(Collection items) {
@@ -150,9 +150,7 @@ public class PSelectionHandler extends PDragSequenceEventHandler {
 	}
 
 	public void unselect(PNode node) {
-		if (!isSelected(node)) {
-			return;
-		}
+		if (!isSelected(node)) 	return;
 		if (node instanceof PNodeView)
 			((PNodeView) node).unselect();
 		undecorateSelectedNode(node);

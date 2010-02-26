@@ -333,7 +333,7 @@ public class HierarchicalLayout implements Layout
             int shiftY = cleanBandY + bandGap - highestY;
             for (x=numLayoutNodes; x<numNodes; x++)
             {
-                nodeView[x].setYPosition(nodeView[x].getYPosition() + shiftY,true);
+                nodeView[x].setYPosition(nodeView[x].getYPosition() + shiftY);
             }
         }
     }

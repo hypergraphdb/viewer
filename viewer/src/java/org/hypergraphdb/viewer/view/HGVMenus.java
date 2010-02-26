@@ -61,6 +61,8 @@ import org.hypergraphdb.viewer.actions.SelectionModeAction;
 import org.hypergraphdb.viewer.actions.SquiggleAction;
 import org.hypergraphdb.viewer.actions.ZoomAction;
 import org.hypergraphdb.viewer.actions.ZoomSelectedAction;
+import org.hypergraphdb.viewer.dialogs.EnhancedMenu;
+import org.hypergraphdb.viewer.dialogs.VisStylesProvider;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
 import org.hypergraphdb.viewer.util.RecentFilesProvider;
@@ -242,6 +244,7 @@ public class HGVMenus implements HGVNetworkChangeListener
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		fileMenu.addMenuListener(new MenuListener() {
+		    
 			public void menuCanceled(MenuEvent e)
 			{
 			}
@@ -320,40 +323,6 @@ public class HGVMenus implements HGVNetworkChangeListener
 				}
 			}
 		});
-//		menuBar.add(dataMenu = new JMenu("Data"));
-//		dataMenu.addMenuListener(new MenuListener() {
-//			public void menuCanceled(MenuEvent e)
-//			{
-//			}
-//
-//			public void menuDeselected(MenuEvent e)
-//			{
-//			}
-//
-//			public void menuSelected(MenuEvent e)
-//			{
-//				HGVNetwork graph = HGVKit.getCurrentNetwork();
-//				boolean inactive = false;
-//				if (graph == null || graph.getNodeCount() == 0)
-//					inactive = true;
-//				MenuElement[] popup = dataMenu.getSubElements();
-//				if (popup[0] instanceof JPopupMenu)
-//				{
-//					MenuElement[] submenus = ((JPopupMenu) popup[0])
-//							.getSubElements();
-//					for (int i = 0; i < submenus.length; i++)
-//					{
-//						if (submenus[i] instanceof JMenuItem)
-//						{
-//							if (inactive)
-//								((JMenuItem) submenus[i]).setEnabled(false);
-//							else
-//								((JMenuItem) submenus[i]).setEnabled(true);
-//						}
-//					}
-//				}
-//			}
-//		});
 		menuBar.add(selectMenu = new JMenu("Select"));
 		selectMenu.addMenuListener(new MenuListener() {
 			public void menuCanceled(MenuEvent e)
@@ -526,6 +495,8 @@ public class HGVMenus implements HGVNetworkChangeListener
 		// TODO: move to a plugin, and/or fix
 		if (!HGVKit.isEmbeded()) 
 			vizMenu.add(mi(ActionManager.TOGGLE_BIRDS_EYE_VIEW_ACTION));
+		if(HGVKit.isEmbeded())
+		   vizMenu.add(new EnhancedMenu("Set Current Style", new VisStylesProvider()), 0);
 		vizMenu.add(mi(ActionManager.BACKGROUND_COLOR_ACTION));
 		vizMenu.add(mi(ActionManager.VISUAL_PROPERTIES_ACTION));
 	}

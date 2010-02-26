@@ -7,6 +7,7 @@ import phoebe.event.BirdsEyeView;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGVNetworkView;
 import org.hypergraphdb.viewer.view.HGVDesktop;
 import java.beans.*;
 
@@ -25,11 +26,11 @@ public class BirdsEyeViewAction extends HGVAction implements
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUSED)
 		{
+		    HGVNetworkView view = (HGVNetworkView) e.getNewValue();
 			bev.disconnect();
 			try {
-				bev.connect(HGVKit
-						.getCurrentView().getCanvas(),
-						new PLayer[] { HGVKit.getCurrentView().getCanvas()
+				bev.connect(view.getCanvas(),
+						new PLayer[] { view.getCanvas()
 								.getLayer() });
 				bev.updateFromViewed();
 			} catch (Exception ex) {
@@ -37,19 +38,19 @@ public class BirdsEyeViewAction extends HGVAction implements
 			}
 		}
 
-		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED) {
-			bev.disconnect();
-			try {
-				bev.connect(HGVKit
-						.getCurrentView().getCanvas(),
-						new PLayer[] { HGVKit
-								.getCurrentView().getCanvas()
-								.getLayer() });
-				bev.updateFromViewed();
-			} catch (Exception ex) {
-				// no newly focused network
-			}
-		}
+//		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED) {
+//			bev.disconnect();
+//			try {
+//				bev.connect(HGVKit
+//						.getCurrentView().getCanvas(),
+//						new PLayer[] { HGVKit
+//								.getCurrentView().getCanvas()
+//								.getLayer() });
+//				bev.updateFromViewed();
+//			} catch (Exception ex) {
+//				// no newly focused network
+//			}
+//		}
 
 	}
 

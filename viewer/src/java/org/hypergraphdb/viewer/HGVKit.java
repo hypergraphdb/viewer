@@ -65,7 +65,7 @@ public abstract class HGVKit
 		setPreferedLayout(l);
 	}
 
-	static boolean embeded = false;
+	static boolean embeded = true;
 
 	public static boolean isEmbeded()
 	{

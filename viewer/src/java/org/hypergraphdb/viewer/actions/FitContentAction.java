@@ -15,7 +15,7 @@ public class FitContentAction extends HGVAction {
       
     public FitContentAction () {
         super("Zoom To Fit");
-        setAcceleratorCombo(KeyEvent.VK_F, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK);
+        setAcceleratorCombo(KeyEvent.VK_F, ActionEvent.CTRL_MASK);
     }
     
     public void actionPerformed(ActionEvent e) {
