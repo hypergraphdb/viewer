@@ -135,6 +135,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
                  putInClipboard(o.getClass().getName());
              }
          });
+         global_menu.add(menuItem);
          menuItem = new JMenuItem("Copy Handle");
          menuItem.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e)
@@ -143,7 +144,8 @@ public class ContextMenuHelper extends PBasicInputEventHandler
                  HGHandle h = node.getNode().getHandle();
                  putInClipboard("" + hg.getPersistentHandle(h));
              }
-         });   
+         });  
+         global_menu.add(menuItem);
                  
      }
       
