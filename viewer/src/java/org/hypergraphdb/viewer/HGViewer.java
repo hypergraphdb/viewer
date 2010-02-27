@@ -73,7 +73,7 @@ public class HGViewer extends JPanel
          this.graph = db;
          this.depth = depth;
          this.generator = generator;
-         foc_handle = handle;
+         foc_handle = h;
          focused(this);
          HGWNReader reader = new HGWNReader(db);
          reader.read(h, depth, getGenerator()); 
