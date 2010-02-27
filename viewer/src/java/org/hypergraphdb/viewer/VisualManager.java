@@ -77,8 +77,13 @@ public class VisualManager
 	public void save()
 	{
 	    System.out.println("VisualManager saving styles: " + this);
-	    HyperGraph graph = AppConfig.getInstance().getGraph();
-        graph.update(this);
+	    try{
+	       HyperGraph graph = AppConfig.getInstance().getGraph();
+           graph.update(this);
+        }catch(Throwable t)
+        {
+            t.printStackTrace();
+        }
 	}
 	
 	public VisualStyle getDefaultVisualStyle() {

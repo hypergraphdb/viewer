@@ -21,10 +21,10 @@ import phoebe.PNodeView;
  * 
  * @author Hacked by Eytan Adar for Guess
  */
-public class Radial implements Layout
+public class Radial implements Layout  
 {
-	protected double layerDistance = 10;
-	FNode center = null;
+    FNode center = null;
+	double layerDistance = 10;
 	HashMap<FNode, Coordinates> locations = new HashMap<FNode, Coordinates>();
 	HashMap<FNode, Point2D> coords = new HashMap<FNode, Point2D>();
 	HashMap<FNode, Integer> radialWidth = new HashMap<FNode, Integer>();

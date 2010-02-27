@@ -21,7 +21,9 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
+import org.hypergraphdb.HGException;
 import org.hypergraphdb.HGHandle;
+import org.hypergraphdb.HGHandleFactory;
 import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.IncidenceSet;
@@ -632,11 +634,30 @@ public class HGVNetworkView
         for (PNodeView nodeView : getNodeViews())
         {
             FNode node = nodeView.getNode();
-            HGHandle h = graph.getTypeSystem().getTypeHandle(node.getHandle());
-            NodePainter p = self_style.getNodePainter(h);
-            if (p == null) p = getVisualStyle().getNodePainter(h);
-            if (p == null) p = def_node_painter;
+            HGHandle h = node.getHandle();
+            NodePainter p = getPainter(h, false);
             p.paintNode(nodeView, this);
+        }
+    }
+    
+    private NodePainter getPainter(HGHandle h, boolean return_default)
+    {
+        NodePainter p = self_style.getNodePainter(h);
+        if (p == null) p = getVisualStyle().getNodePainter(h);
+        if (p == null && return_default) 
+            p = def_node_painter;
+        if(p != null) return p;
+        try
+        {
+           HGHandle typeH = graph.getTypeSystem().getTypeHandle(h);
+           return getPainter(typeH, true);
+        }catch(HGException ex)
+        {
+            //do nothing 
+            //the node handle pointed to some statically
+            //defined HGHandleFactory.makeHandle()
+            //with no value
+            return def_node_painter;
         }
     }
 
