@@ -7,18 +7,16 @@
 package org.hypergraphdb.viewer.actions;
 
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 
+import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.dialogs.AppConfigPanel;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
+import org.hypergraphdb.viewer.util.GUIUtilities;
+import org.hypergraphdb.viewer.util.HGVAction;
 
-import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.util.*;
-
-public class PreferenceAction extends HGVAction  {
+public class PreferenceAction extends HGVAction 
+{
 
     public PreferenceAction () {
         super (ActionManager.PREFERENCES_ACTION);

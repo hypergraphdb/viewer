@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.util.HGVAction;
 
 import phoebe.PNodeView;
@@ -23,7 +23,7 @@ public class InvertSelectedNodesAction extends HGVAction {
     }
 
     public void actionPerformed (ActionEvent e) {
-        HGVNetworkView view = HGVKit.getCurrentView();
+        GraphView view = HGVKit.getCurrentView();
         List<PNodeView> selNodes = view.getSelectedNodes();
         for(PNodeView ev: view.getNodeViews())
             ev.select();

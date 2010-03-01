@@ -7,7 +7,7 @@ import java.awt.geom.*;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
@@ -31,7 +31,7 @@ public class Radial implements Layout
 	HashSet<FNode> seen = new HashSet<FNode>();
 	HashSet<FEdge> validEdges = new HashSet<FEdge>();
 
-	HGVNetworkView view;
+	GraphView view;
 	/**
 	 * ConstructorLink
 	 */
@@ -63,7 +63,7 @@ public class Radial implements Layout
 		validEdges.clear();
 	}
 
-	 public void applyLayout (HGVNetworkView view)
+	 public void applyLayout (GraphView view)
 	 {
 	    this.view = view;
 	    if (view == null) return;

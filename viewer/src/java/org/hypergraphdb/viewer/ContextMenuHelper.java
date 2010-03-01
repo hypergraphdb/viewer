@@ -1,6 +1,7 @@
-package org.hypergraphdb.viewer.view;
+package org.hypergraphdb.viewer;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -16,11 +17,6 @@ import javax.swing.border.TitledBorder;
 
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.viewer.ActionManager;
-import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
@@ -41,9 +37,9 @@ import edu.umd.cs.piccolo.event.PInputEvent;
 public class ContextMenuHelper extends PBasicInputEventHandler
 {
     protected JPopupMenu global_menu;
-    HGVNetworkView view;
+    GraphView view;
 
-    public ContextMenuHelper(HGVNetworkView view)
+    public ContextMenuHelper(GraphView view)
     {
         this.view = view;
     }
@@ -60,13 +56,19 @@ public class ContextMenuHelper extends PBasicInputEventHandler
     private void showMenu(PInputEvent event)
     {
         if(!(event.getPickedNode() instanceof PNodeView)) return;
+        PCanvas canvas = (PCanvas) event.getComponent();
         PNodeView node = (PNodeView) event.getPickedNode();
+        Frame f = GUIUtilities.getFrame(canvas);
         createPopup(node);
         Point pt = new Point((int) event.getCanvasPosition().getX(),
                 (int) event.getCanvasPosition().getY());
-        pt = GUIUtilities.adjustPointInPicollo((PCanvas) event.getComponent(), pt);
-        global_menu.show(GUIUtilities.getFrame((PCanvas) event.getComponent()),
-                pt.x + 10, pt.y);
+        if(HGVKit.isEmbeded()) 
+           pt = GUIUtilities.adjustPointInPicollo(canvas, pt);
+        else
+            SwingUtilities.convertPoint(canvas, pt, f);
+        //move a little from the right position to avoid an infinite
+        //zoom clash that happen sometimes
+        global_menu.show(f, pt.x + 10, pt.y);
      }
     
      private void createPopup(final PNodeView node)
@@ -157,7 +159,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
     }
 
-     static JMenuItem expandNodeAction(final HGVNetworkView v,
+     static JMenuItem expandNodeAction(final GraphView v,
             final PNodeView node)
     {
 
@@ -171,7 +173,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         });
     }
 
-    static JMenuItem collapseNodeAction(final HGVNetworkView v, final PNodeView node)
+    static JMenuItem collapseNodeAction(final GraphView v, final PNodeView node)
     {
 
         return new JMenuItem(new AbstractAction("Collapse") {
@@ -184,7 +186,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         });
     }
 
-    static JMenuItem focusNodeAction(final HGVNetworkView v, final PNodeView node)
+    static JMenuItem focusNodeAction(final GraphView v, final PNodeView node)
     {
         return new JMenuItem(new AbstractAction("Focus") {
             public void actionPerformed(ActionEvent e)
@@ -196,7 +198,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
 
     private static void adjust(PNode node)
     {
-        HGVNetworkView view = HGVKit.getCurrentView();
+        GraphView view = HGVKit.getCurrentView();
         HGVKit.getPreferedLayout().applyLayout(view);
         view.getCanvas().getCamera().animateViewToCenterBounds(
                 node.getFullBounds(), false, 1550l);

@@ -4,21 +4,21 @@ import java.awt.Dimension;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 import phoebe.PNodeView;
 
 abstract public class AbstractLayout  {
 
   protected Set<PNodeView> staticNodes;
-  protected HGVNetworkView graphView;
+  protected GraphView graphView;
   protected Dimension currentSize;
 
   public AbstractLayout (){
 	  this.staticNodes = new HashSet<PNodeView>();
   }
   
-  public AbstractLayout ( HGVNetworkView view  ) {
+  public AbstractLayout ( GraphView view  ) {
     this.graphView = view;
     this.staticNodes = new HashSet<PNodeView>();
   }

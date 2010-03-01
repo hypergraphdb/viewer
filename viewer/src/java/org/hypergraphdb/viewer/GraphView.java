@@ -38,7 +38,6 @@ import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.painter.SimpleLabelTooltipNodePainter;
 import org.hypergraphdb.viewer.util.PrimeFinder;
-import org.hypergraphdb.viewer.view.ContextMenuHelper;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
 import phoebe.PEdgeView;
@@ -59,7 +58,7 @@ import edu.umd.cs.piccolo.event.PZoomEventHandler;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
- * HGVNetworkView is responsible for actually getting a graph to show up on the
+ * GraphView is responsible for actually getting a graph to show up on the
  * screen.<BR>
  * <BR>
  * HGVKit does not currently define specific classes for NodeViews and
@@ -72,17 +71,15 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * <BR>
  * Fortunately, if you just want basic shapes and colors, it's all built into
  * the UI already, and you really need never even use this class. Just learn how
- * to use the VisualManager to accomplish your data to view mappings. The manual
- * is a good place to start.
+ * to use the VisualManager to accomplish your data to view mappings. 
  */
 
-public class HGVNetworkView
+public class GraphView
 {
     static EdgePainter def_edge_painter = new DefaultEdgePainter();
     static NodePainter def_node_painter = new SimpleLabelTooltipNodePainter();
 
     protected VisualStyle style;
-    VisualStyle self_style = new VisualStyle("self");
     protected PBasicInputEventHandler keyEventHandler;
     // The Piccolo PCanvas that we will draw on
     protected PCanvas canvas;
@@ -113,7 +110,6 @@ public class HGVNetworkView
     protected PLayer squiggleLayer;
     protected Color DEFAULT_BACKGROUND_COLOR = new java.awt.Color(60, 98, 176);
 
-    protected HashMap<String, Object[]> contextMenuStore;
     protected Set<FNode> nodeSelectionList = new HashSet<FNode>();
     protected Set<FEdge> edgeSelectionList = new HashSet<FEdge>();
     protected static boolean firePiccoloEvents = true;
@@ -125,13 +121,11 @@ public class HGVNetworkView
 
     protected HyperGraph graph;
 
-    public HGVNetworkView(HGViewer comp, HyperGraph db,
+    public GraphView(HGViewer comp, HyperGraph db,
             Collection<FNode> nodes, Collection<FEdge> edges)
     {
         this.graph = db;
         this.setIdentifier(db.getLocation());
-        // initialize all of the Viewable objects based on all of
-        // the Edges and Nodes currently in the GraphPerspective
         nodeViewMap = new HashMap<FNode, PNodeView>(PrimeFinder.nextPrime(nodes
                 .size()));
         edgeViewMap = new HashMap<FEdge, PEdgeView>(PrimeFinder.nextPrime(edges
@@ -187,7 +181,6 @@ public class HGVNetworkView
         // Set up the the Piccolo Event Handlers
         initializeEventHandlers();
 
-        contextMenuStore = new HashMap(5);
         // only create the node/edge view if requested
         createViewableObjects(nodes, edges);
         enableNodeSelection();
@@ -642,8 +635,7 @@ public class HGVNetworkView
     
     private NodePainter getPainter(HGHandle h, boolean return_default)
     {
-        NodePainter p = self_style.getNodePainter(h);
-        if (p == null) p = getVisualStyle().getNodePainter(h);
+        NodePainter p = getVisualStyle(true).getNodePainter(h);
         if (p == null && return_default) 
             p = def_node_painter;
         if(p != null) return p;
@@ -672,13 +664,18 @@ public class HGVNetworkView
         {
             FNode node = edgeView.getEdge().getSource();
             HGHandle h = graph.getTypeSystem().getTypeHandle(node.getHandle());
-            EdgePainter p = self_style.getEdgePainter(h);
-            if (p == null) getVisualStyle().getEdgePainter(h);
+            EdgePainter p = getVisualStyle(true).getEdgePainter(h);
             if (p == null) p = def_edge_painter;
             p.paintEdge(edgeView, this);
         }
     }
 
+    public VisualStyle getVisualStyle(boolean return_default)
+    {
+        return getVisualStyle() != null ? getVisualStyle() : 
+            VisualManager.getInstance().getDefaultVisualStyle();
+    }
+    
     public VisualStyle getVisualStyle()
     {
         return style;
@@ -687,7 +684,7 @@ public class HGVNetworkView
     public void setVisualStyle(VisualStyle style)
     {
         this.style = style;
-        // redrawGraph();
+        redrawGraph();
     }
 
     /**
@@ -772,9 +769,9 @@ public class HGVNetworkView
             }
         }
         
-        public HGVNetworkView getView()
+        public GraphView getView()
         {
-            return HGVNetworkView.this;
+            return GraphView.this;
         }
 
         public void repaint(long a, int x, int y, int w, int h)

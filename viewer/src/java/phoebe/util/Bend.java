@@ -4,7 +4,7 @@ import phoebe.*;
 import java.awt.geom.*;
 import java.util.*;
 
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 import edu.umd.cs.piccolo.event.*;
 import edu.umd.cs.piccolo.util.*;
@@ -48,7 +48,7 @@ public class Bend
 	/**
 	 * The GraphView this Bend is associated with.
 	 */
-	protected HGVNetworkView view;
+	protected GraphView view;
 
 	/**
 	 * Creates a generic Bend with no curve or handles.

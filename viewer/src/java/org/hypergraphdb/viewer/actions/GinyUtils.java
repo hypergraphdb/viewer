@@ -10,7 +10,7 @@ package org.hypergraphdb.viewer.actions;
 import java.util.*;
 
 import org.hypergraphdb.viewer.FEdge;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
 
@@ -22,7 +22,7 @@ import phoebe.PNodeView;
 public class GinyUtils
 {
 
-    public static void hideSelectedNodes(HGVNetworkView view)
+    public static void hideSelectedNodes(GraphView view)
     {
         // hides nodes and edges between them
         if (view == null) return;
@@ -42,7 +42,7 @@ public class GinyUtils
     }
 
   
-    public static void hideSelectedEdges(HGVNetworkView view)
+    public static void hideSelectedEdges(GraphView view)
     {
         if (view == null) { return; }
 
@@ -51,7 +51,7 @@ public class GinyUtils
     }
 
    
-    public static void invertSelectedNodes(HGVNetworkView view)
+    public static void invertSelectedNodes(GraphView view)
     {
         if (view == null) { return; }
 
@@ -59,7 +59,7 @@ public class GinyUtils
             nview.setSelected(!nview.isSelected());
     }
 
-    public static void invertSelectedEdges(HGVNetworkView view)
+    public static void invertSelectedEdges(GraphView view)
     {
         if (view == null) { return; }
         for (PEdgeView eview : view.getEdgeViews())
@@ -67,7 +67,7 @@ public class GinyUtils
         
     }
 
-    public static void selectAllNodes(HGVNetworkView view)
+    public static void selectAllNodes(GraphView view)
     {
         if (view == null) { return; }
 
@@ -75,7 +75,7 @@ public class GinyUtils
             nview.setSelected(true);
     }
 
-    public static void deselectAllNodes(HGVNetworkView view)
+    public static void deselectAllNodes(GraphView view)
     {
         if (view == null) return;
 
@@ -83,7 +83,7 @@ public class GinyUtils
             nview.setSelected(false);
     }
 
-    public static void selectAllEdges(HGVNetworkView view)
+    public static void selectAllEdges(GraphView view)
     {
         if (view == null) { return; }
 
@@ -91,7 +91,7 @@ public class GinyUtils
             eview.setSelected(true);
     }
 
-    public static void deselectAllEdges(HGVNetworkView view)
+    public static void deselectAllEdges(GraphView view)
     {
         if (view == null) { return; }
 
@@ -99,7 +99,7 @@ public class GinyUtils
             eview.setSelected(false);
     }
 
-    public static void hideAllEdges(HGVNetworkView view)
+    public static void hideAllEdges(GraphView view)
     {
         if (view == null) { return; }
 

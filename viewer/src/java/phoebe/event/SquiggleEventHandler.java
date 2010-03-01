@@ -7,7 +7,7 @@ import java.awt.Stroke;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
 
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PLayer;
@@ -21,7 +21,7 @@ import edu.umd.cs.piccolo.nodes.PPath;
  */
 public class SquiggleEventHandler extends PDragSequenceEventHandler {
 
-  private HGVNetworkView view;
+  private GraphView view;
   private PLayer squiggle_layer;
   private PCanvas canvas;
   private PPath squiggle;
@@ -31,7 +31,7 @@ public class SquiggleEventHandler extends PDragSequenceEventHandler {
   /**
    * Must pass the layer to Squiggle on, as well the canvas.
    */
-  public SquiggleEventHandler ( PLayer layer, PCanvas canvas, HGVNetworkView view  ) {
+  public SquiggleEventHandler ( PLayer layer, PCanvas canvas, GraphView view  ) {
     this.squiggle_layer = layer;
     this.canvas = canvas;
     this.view = view;

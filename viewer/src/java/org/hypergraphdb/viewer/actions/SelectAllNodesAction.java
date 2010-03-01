@@ -19,8 +19,7 @@ public class SelectAllNodesAction extends HGVAction  {
 
     public void actionPerformed (ActionEvent e) {		
       if(HGVKit.getCurrentView() != null)
-    	GinyUtils.selectAllNodes(HGVKit.getCurrentView());
-        // HGVKit.getCurrentNetwork().getFlagger().flagAllNodes();
+          HGVKit.getCurrentView().selectAllNodes();
     }//action performed
 }
 

@@ -24,7 +24,7 @@ public class DeleteSelectedAction extends AbstractAction {
     
     public void actionPerformed(ActionEvent e) { 
                        
-    	HGVNetworkView view = HGVKit.getCurrentView();
+    	GraphView view = HGVKit.getCurrentView();
     	for(PNodeView v: view.getSelectedNodes())
     	    view.removeNodeView(v.getNode());    
     	for (PEdgeView eview : view.getSelectedEdges())

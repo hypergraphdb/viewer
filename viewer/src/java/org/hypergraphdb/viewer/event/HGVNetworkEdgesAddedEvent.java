@@ -1,7 +1,7 @@
 package org.hypergraphdb.viewer.event;
 
 import org.hypergraphdb.viewer.FEdge;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 
 
@@ -14,7 +14,7 @@ public final class HGVNetworkEdgesAddedEvent
   // Note that no copy of the array restoredEdgeInx is made - the exact
   // array reference is kept.  However, copies are made in the return values
   // of methods of this class.
-  public HGVNetworkEdgesAddedEvent(HGVNetworkView persp,
+  public HGVNetworkEdgesAddedEvent(GraphView persp,
 		  FEdge[] restoredEdgeInx)
   {
     super(persp);

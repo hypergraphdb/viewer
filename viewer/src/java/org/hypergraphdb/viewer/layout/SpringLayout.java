@@ -1,6 +1,6 @@
 package org.hypergraphdb.viewer.layout;
 
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 public class SpringLayout implements Layout
 {
@@ -9,7 +9,7 @@ public class SpringLayout implements Layout
         return "Spring";
     }
 
-    public void applyLayout(HGVNetworkView view)
+    public void applyLayout(GraphView view)
     {
         if (view == null) return;
         JUNGSpringLayout l = new JUNGSpringLayout(view);

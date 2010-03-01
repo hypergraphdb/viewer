@@ -16,7 +16,7 @@ import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.util.FileUtil;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
@@ -121,7 +121,7 @@ public class LoadHyperGraphFileAction extends HGVAction
         /**
          * Inform User of Network Stats.
          */
-        private void informUserOfGraphStats(HGVNetworkView newNetwork)
+        private void informUserOfGraphStats(GraphView newNetwork)
         {
             NumberFormat formatter = new DecimalFormat("#,###,###");
             StringBuffer sb = new StringBuffer();

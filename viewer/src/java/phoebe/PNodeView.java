@@ -9,7 +9,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 import phoebe.util.PLabel;
 import edu.umd.cs.piccolo.PNode;
@@ -47,7 +47,7 @@ public class PNodeView extends PPath
     /**
      * The View to which we belong.
      */
-    protected HGVNetworkView view;
+    protected GraphView view;
     /**
      * Our label
      */
@@ -69,7 +69,7 @@ public class PNodeView extends PPath
     // ----------------------------------------//
     // Constructors and Initialization
     // ----------------------------------------//
-    public PNodeView(FNode node, HGVNetworkView view)
+    public PNodeView(FNode node, GraphView view)
     {
         this.node = node;
         this.view = view;
@@ -109,7 +109,7 @@ public class PNodeView extends PPath
     /**
      * @return the view we are in
      */
-    public HGVNetworkView getGraphView()
+    public GraphView getGraphView()
     {
         return view;
     }

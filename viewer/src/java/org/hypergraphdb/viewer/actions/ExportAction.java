@@ -14,7 +14,7 @@ import phoebe.util.*;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.freehep.util.export.ExportDialog;
 
 //-------------------------------------------------------------------------
@@ -29,7 +29,7 @@ public class ExportAction extends HGVAction
 
 	public void actionPerformed(ActionEvent e)
 	{
-		HGVNetworkView view = HGVKit.getCurrentView();
+		GraphView view = HGVKit.getCurrentView();
 		if (view == null) return;
 		view.getCanvas().getCamera().addClientProperty(
 				PrintingFixTextNode.PRINTING_CLIENT_PROPERTY_KEY, "true");

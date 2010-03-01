@@ -13,7 +13,7 @@ import javax.swing.event.*;
 import javax.swing.colorchooser.*;
 
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 /**
  * An Adobe style node organizer.
@@ -22,7 +22,7 @@ import org.hypergraphdb.viewer.HGVNetworkView;
 public class PhoebeNodeControl  {
 
   
-  HGVNetworkView view;
+  GraphView view;
   double Xmin, Ymin;
   double Xmax, Ymax;
   boolean setToCircle;
@@ -30,7 +30,7 @@ public class PhoebeNodeControl  {
 
   JSlider radius, rotation, twist;
 
-  public PhoebeNodeControl ( HGVNetworkView view ) {
+  public PhoebeNodeControl ( GraphView view ) {
 
     JFrame frame = new JFrame( "FNode Control" );
     JTabbedPane tabbed = new JTabbedPane();

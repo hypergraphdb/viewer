@@ -2,9 +2,10 @@ package org.hypergraphdb.viewer.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.*;
-import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.*;
+import org.hypergraphdb.viewer.view.*;
 
-public class SelectionModeAction extends JMenu
+public class SelectionModeAction extends HGVMenus.GlobMenu
 {
 	public SelectionModeAction()
 	{

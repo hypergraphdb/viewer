@@ -1,6 +1,6 @@
 package org.hypergraphdb.viewer.layout;
 
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 /**
  * A Layout can be applied to a HGVNetworkView
@@ -8,6 +8,6 @@ import org.hypergraphdb.viewer.HGVNetworkView;
 public interface Layout {
 
   public String getName();
-  public void applyLayout (HGVNetworkView view);
+  public void applyLayout (GraphView view);
 
 }

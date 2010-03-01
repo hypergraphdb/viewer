@@ -10,7 +10,7 @@ import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 import org.hypergraphdb.viewer.util.HGVAction;
 
@@ -40,7 +40,7 @@ public class NewWindowSelectedNodesEdgesAction extends HGVAction
 	{
 	    // save the vizmapper catalog
 		if (HGVKit.isEmbeded()) return;
-		HGVNetworkView view =  HGVKit.getCurrentView();
+		GraphView view =  HGVKit.getCurrentView();
 		Collection<FNode> nodes = new ArrayList<FNode>();
 		for(PNodeView v :  view.getSelectedNodes())
 		    nodes.add(v.getNode());

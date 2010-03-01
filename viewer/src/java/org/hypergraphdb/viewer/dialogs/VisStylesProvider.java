@@ -21,7 +21,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
@@ -42,7 +42,7 @@ public class VisStylesProvider implements DynamicMenuProvider
 
     public void update(final JMenu menu)
     {
-        HGVNetworkView view = HGVKit.getCurrentView(); 
+        GraphView view = HGVKit.getCurrentView(); 
         if (view == null) return;
         Collection<JMenuItem> items = getStyles(view);
         for (JMenuItem item : items)
@@ -52,10 +52,10 @@ public class VisStylesProvider implements DynamicMenuProvider
     static final Collection<JMenuItem> EMPTY = new LinkedList<JMenuItem>();
     static Collection<JMenuItem> langMenuItems;
 
-    public static Collection<JMenuItem> getStyles(final HGVNetworkView view)
+    public static Collection<JMenuItem> getStyles(final GraphView view)
     {
-       // if (langMenuItems == null) 
-       //     initLangMenuItems(view);
+       if (langMenuItems == null) 
+            initLangMenuItems(view);
 
         for (final JMenuItem m : langMenuItems)
         {
@@ -78,7 +78,7 @@ public class VisStylesProvider implements DynamicMenuProvider
         return langMenuItems;
     }
 
-    private static void initLangMenuItems(final HGVNetworkView view)
+    private static void initLangMenuItems(final GraphView view)
     {   
         ButtonGroup group = new ButtonGroup();
         langMenuItems = new HashSet<JMenuItem>();

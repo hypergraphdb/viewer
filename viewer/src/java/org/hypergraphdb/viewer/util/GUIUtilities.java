@@ -37,7 +37,6 @@ import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.*;
 import org.hypergraphdb.viewer.dialogs.VariableGridLayout;
-import org.hypergraphdb.viewer.view.HGVDesktop;
 
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PNode;

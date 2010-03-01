@@ -6,7 +6,7 @@ import java.awt.Paint;
 import java.awt.Stroke;
 
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.visual.Arrow;
 import org.hypergraphdb.viewer.visual.LineType;
 
@@ -171,7 +171,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 		this.tooltip = tooltip;
 	}
 
-	public void paintEdge(PEdgeView edgeView, HGVNetworkView network_view)
+	public void paintEdge(PEdgeView edgeView, GraphView network_view)
 	{
 		Paint existingUnselectedPaint = edgeView.getUnselectedPaint();
 		Paint newUnselectedPaint = this.getColor();

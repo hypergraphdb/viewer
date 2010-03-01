@@ -6,7 +6,7 @@ import java.util.*;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
@@ -101,7 +101,7 @@ public class GEM implements Layout
 	private float o_rotation = OROTATIONDEF;
 	private float o_shake = OSHAKEDEF;
 
-	HGVNetworkView view;
+	GraphView view;
 	/**
 	 * ConstructorLink
 	 */
@@ -586,7 +586,7 @@ public class GEM implements Layout
 		}
 	}
 
-	public void applyLayout(HGVNetworkView view)
+	public void applyLayout(GraphView view)
 	{
 	    GEM g = new GEM();
 	    g.view = view;
@@ -645,7 +645,7 @@ public class GEM implements Layout
 	 * 
 	 * @param nodes the nodes to rescale.
 	 */
-	public static void rescalePositions(HGVNetworkView view, double percent, int pad, 
+	public static void rescalePositions(GraphView view, double percent, int pad, 
 			Map<FNode, Coordinates> locations)
 	{
 		int nNodes = view.getNodeViewCount();

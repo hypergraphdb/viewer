@@ -26,7 +26,7 @@ import org.hypergraphdb.type.RecordType;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.util.GUIUtilities;
@@ -117,7 +117,7 @@ public class HGVUtils
 
 	public static void expandNodes()
 	{
-		HGVNetworkView view = HGVKit.getCurrentView();
+		GraphView view = HGVKit.getCurrentView();
 		// select the view, because the popup doesn't do this automaticaly
 		//view.unflagAllNodes();
 		for(PNodeView v : view.getSelectedNodes())
@@ -143,7 +143,7 @@ public class HGVUtils
         expandLinks(node.getGraphView(), node.getNode(), inA, true);
 	}
 	
-	private static void expandLinks(HGVNetworkView view, FNode node, HGHandle[] links, boolean incoming){
+	private static void expandLinks(GraphView view, FNode node, HGHandle[] links, boolean incoming){
 		if(!confirmExpanding(links.length)) return;
 		for(int i = 0; i < links.length; i++){
 			FNode n = new FNode(links[i]);
@@ -205,7 +205,7 @@ public class HGVUtils
 	public static void removeNode(HyperGraph hg, FNode node, boolean remove_center_too)
 	{
 		if(node == null) return;
-	    HGVNetworkView view = HGVKit.getCurrentView();
+	    GraphView view = HGVKit.getCurrentView();
 				
 		Set<FNode> nodesToRemove = new HashSet<FNode>();
 		Set<FEdge> edgesToRemove = new HashSet<FEdge>();

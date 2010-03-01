@@ -15,7 +15,7 @@ import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.util.HGVAction;
 
 import phoebe.PNodeView;
@@ -31,7 +31,7 @@ public class SelectFirstNeighborsAction extends HGVAction {
         setAcceleratorCombo( java.awt.event.KeyEvent.VK_F6,0 );
     }
     public void actionPerformed (ActionEvent e) {
-      HGVNetworkView net = HGVKit.getCurrentView();
+      GraphView net = HGVKit.getCurrentView();
       if(net == null) return;
       Set<FNode> set = new HashSet<FNode>();
       for(PNodeView v :  net.getSelectedNodes())

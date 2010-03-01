@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.layout.util.NodeDistances;
 
 import phoebe.PNodeView;
@@ -65,7 +65,7 @@ public class SpringEmbeddedLayout implements Layout
     protected double anticollisionSpringStrength =
             DEFAULT_ANTICOLLISION_SPRING_STRENGTH;
 
-    protected HGVNetworkView view;
+    protected GraphView view;
     protected int nodeCount;
     protected int edgeCount;
     protected int layoutPass;
@@ -84,7 +84,7 @@ public class SpringEmbeddedLayout implements Layout
 		return "Spring Embedded";
 	}
 	
-	public void applyLayout(HGVNetworkView view)
+	public void applyLayout(GraphView view)
 	{
 		this.view = view;
 		if(view == null) return;
@@ -93,11 +93,11 @@ public class SpringEmbeddedLayout implements Layout
 		doLayout();
 	}
 
-    public void setGraphView(HGVNetworkView new_graph_view) {
+    public void setGraphView(GraphView new_graph_view) {
         view = new_graph_view;
     } // setGraphView( GraphView )
 
-    public HGVNetworkView getGraphView() {
+    public GraphView getGraphView() {
         return view;
     } // getGraphView()
 

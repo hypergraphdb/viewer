@@ -17,16 +17,16 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
+import org.hypergraphdb.viewer.HGVDesktop;
 import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.view.HGVDesktop;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
 import cytoscape.task.Task;
@@ -67,7 +67,7 @@ public class LoadWordNetAction extends HGVAction
     public static void loadHyperGraph(File file)
     {
     	if(file == null) throw new NullPointerException("HG file is null");
-    	HGVNetworkView network = null;//HGVKit.getNetworkByFile(file);
+    	GraphView network = null;//HGVKit.getNetworkByFile(file);
     	if (network == null)
        {
             //  Create LoadNetwork Task
@@ -128,7 +128,7 @@ public class LoadWordNetAction extends HGVAction
         /**
          * Inform User of Network Stats.
          */
-        private void informUserOfGraphStats(HGVNetworkView newNetwork)
+        private void informUserOfGraphStats(GraphView newNetwork)
         {
             NumberFormat formatter = new DecimalFormat("#,###,###");
             StringBuffer sb = new StringBuffer();
@@ -197,7 +197,7 @@ public class LoadWordNetAction extends HGVAction
         }
         private static final String WN_STYLE = "wordnet_style";
         
-        private void setVisualStyle(HGVNetworkView view){
+        private void setVisualStyle(GraphView view){
         	VisualStyle vs = VisualManager.getInstance().getVisualStyle(WN_STYLE);
         	if(vs != null) {
         		System.out.println("WordNet Style already in HG");
@@ -242,7 +242,7 @@ public class LoadWordNetAction extends HGVAction
     	{
     		NotifyDescriptor d = new NotifyDescriptor.InputLine(
     				GUIUtilities.getFrame(), "",
-    				"Specify the word", NotifyDescriptor.PLAIN_MESSAGE,
+    				"Enter a word: ", NotifyDescriptor.PLAIN_MESSAGE,
     				NotifyDescriptor.OK_CANCEL_OPTION);
     		if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION)
     		{
@@ -263,42 +263,6 @@ public class LoadWordNetAction extends HGVAction
     		}
     		return word_handle;
     	}
-        
-        /**
-         * Creates the HGVNetworkView.
-         * Most of this code is copied directly from HGVKit.createHGVNetworkView.
-         * However, it requires a bit of a hack to actually hide the network
-         * view from the user, and I didn't want to use this hack in the core
-         * HGVKit.java class.
-         */
-        private HGVNetworkView createNetworkView(HGVNetworkView view)
-        {
-            //  Start of Hack:  Hide the View
-            PCanvas pCanvas = view.getCanvas();
-            pCanvas.setVisible(false);
-            //  End of Hack
-            
-          //  HGVKit.getNetworkMap().put(network, view);
-            
-            // if Squiggle function enabled, enable squiggling on the created view
-            if (HGVKit.isSquiggleEnabled())
-            {
-                view.getSquiggleHandler().beginSquiggling();
-            }
-            
-            // set the selection mode on the view
-            HGVKit.setSelectionMode(HGVKit.getSelectionMode(), view);
-            
-            HGVKit.firePropertyChange
-            (HGVDesktop.NETWORK_VIEW_CREATED, null, view);
-            
-            HGVKit.getPreferedLayout().applyLayout(view);
-			
-            //  Instead of calling fitContent(), access PGraphView directly.
-            view.getCanvas().getCamera().animateViewToCenterBounds
-            (view.getCanvas().getLayer().getFullBounds(), true, 0);
-            return view;
-        }
     }
      
 }

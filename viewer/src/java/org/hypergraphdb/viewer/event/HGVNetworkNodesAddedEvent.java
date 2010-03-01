@@ -1,7 +1,7 @@
 package org.hypergraphdb.viewer.event;
 
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 
 
@@ -14,7 +14,7 @@ public final class HGVNetworkNodesAddedEvent
   // Note that no copy of the array restoredNodeInx is made - the exact
   // array reference is kept.  However, copies are made in the return values
   // of methods of this class.
-  public HGVNetworkNodesAddedEvent(HGVNetworkView persp,
+  public HGVNetworkNodesAddedEvent(GraphView persp,
 		  FNode[] nodes)
   {
     super(persp);

@@ -13,7 +13,7 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.atom.HGStats;
 import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.painter.DefaultNodePainterBeanInfo;
 import com.l2fprod.common.demo.BeanBinder;
 import com.l2fprod.common.model.DefaultBeanInfoResolver;

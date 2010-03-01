@@ -13,7 +13,7 @@ import java.util.*;
 
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 /**
  * This class extends a PNode and does most of what PPath would do but lets the
@@ -52,7 +52,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
     /**
      * The GraphView on which we are displayed
      */
-    protected HGVNetworkView view;
+    protected GraphView view;
     /**
      * The Point2D of where we are relative to our SourceNode
      */
@@ -136,7 +136,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
      * @param view
      *            the HGVNetworkView that we belong to
      */
-    public PEdgeView(FEdge edge, HGVNetworkView view)
+    public PEdgeView(FEdge edge, GraphView view)
     {
         this.view = view;
         this.edge = edge;
@@ -251,7 +251,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
     /**
      * @return the GraphView we are in
      */
-    public HGVNetworkView getGraphView()
+    public GraphView getGraphView()
     {
         return view;
     }

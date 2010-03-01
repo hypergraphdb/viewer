@@ -17,7 +17,7 @@ import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 
@@ -32,7 +32,7 @@ public class NewWindowSelectedNodesOnlyAction extends HGVAction {
 
 	public void actionPerformed(ActionEvent e) {
 		
-	    HGVNetworkView view = HGVKit.getCurrentView();
+	    GraphView view = HGVKit.getCurrentView();
 		if(view == null || HGVKit.isEmbeded()) return;
 		Collection<FNode> nodes = new ArrayList<FNode>();
         for(PNodeView v :  view.getSelectedNodes())

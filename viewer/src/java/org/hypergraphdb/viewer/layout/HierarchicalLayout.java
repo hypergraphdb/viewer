@@ -40,7 +40,7 @@
 package org.hypergraphdb.viewer.layout;
 
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import java.util.*;
 import org.hypergraphdb.viewer.layout.util.Graph;
 import phoebe.PEdgeView;
@@ -72,7 +72,7 @@ import phoebe.PNodeView;
  */
 public class HierarchicalLayout implements Layout
 {
-    HGVNetworkView view;
+    GraphView view;
     
 	public String getName()
 	{
@@ -97,7 +97,7 @@ public class HierarchicalLayout implements Layout
      * the center of the component.
      * @param event Menu Selection Event.
      */
-	 public void applyLayout (HGVNetworkView view)
+	 public void applyLayout (GraphView view)
     {
         this.view = view;
         if (view == null) return;

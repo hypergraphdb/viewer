@@ -35,7 +35,7 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.handle.UUIDPersistentHandle;
 import org.hypergraphdb.type.HGAtomType;
 import org.hypergraphdb.type.JavaBeanBinding;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
@@ -52,7 +52,7 @@ public class PaintersPanel extends JPanel
 	private JComboBox stylesCombo;
 	private PainterPropsPanel propsPanel;
 	private HyperGraph hg;
-	private HGVNetworkView view;
+	private GraphView view;
 
 	/**
 	 * Create the propsPanel
@@ -393,7 +393,7 @@ public class PaintersPanel extends JPanel
 		this.hg = hg;
 	}
 	
-	public void setView(HGVNetworkView v){
+	public void setView(GraphView v){
 		view = v;
 		hg = v.getHyperGraph();
 		stylesCombo.setSelectedItem(view.getVisualStyle());

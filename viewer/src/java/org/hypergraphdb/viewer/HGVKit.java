@@ -22,7 +22,6 @@ import org.hypergraphdb.viewer.layout.HierarchicalLayout;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.Radial;
 import org.hypergraphdb.viewer.layout.SpringLayout;
-import org.hypergraphdb.viewer.view.HGVDesktop;
 
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
@@ -50,7 +49,7 @@ public abstract class HGVKit
 	protected static Object pcsO = new Object();
 	protected static SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(
 			pcsO);
-	protected static List<HGVNetworkView> networkViewList;
+	protected static List<GraphView> networkViewList;
 	protected static Layout prefered_layout;
 	protected static Set<Layout> layouts = new HashSet<Layout>();
 	static
@@ -107,7 +106,7 @@ public abstract class HGVKit
 	 /**
 	 * Return the HGVNetworkView that currently has the focus. 
 	 */
-	public static HGVNetworkView getCurrentView()
+	public static GraphView getCurrentView()
 	{
 	    HGViewer comp = HGViewer.getFocusedComponent();
 		return comp != null ? comp.getView() : null;
@@ -125,10 +124,10 @@ public abstract class HGVKit
 	 * This Map has keys that are Strings ( network_ids ) and values that are
 	 * networks.
 	 */
-	public static List<HGVNetworkView> getViewersList() 
+	public static List<GraphView> getViewersList() 
 	{
 		if (networkViewList == null)
-			networkViewList = new ArrayList<HGVNetworkView>();
+			networkViewList = new ArrayList<GraphView>();
 		return networkViewList;
 	}
 
@@ -136,7 +135,7 @@ public abstract class HGVKit
 	/**
 	 * destroys the network view, including any layout information
 	 */
-	public static void destroyNetworkView(HGVNetworkView view)
+	public static void destroyNetworkView(GraphView view)
 	{
 		// System.out.println( "destroying: "+view.getIdentifier()+" :
 		// "+getNetworkViewMap().get( view.getIdentifier() ) );
@@ -151,7 +150,7 @@ public abstract class HGVKit
 		System.gc();
 	}
 
-	public static HGViewer createHGVComponent(HGVNetworkView view)
+	public static HGViewer createHGVComponent(GraphView view)
 	{
 	    Collection<FNode> nodes = new ArrayList<FNode>();
 	    for(PNodeView nv : view.getNodeViews())
@@ -190,7 +189,7 @@ public abstract class HGVKit
 	private static void setSquiggleState(boolean isEnabled)
 	{
 		// enable Squiggle on all network views
-		for (HGVNetworkView view : getViewersList())
+		for (GraphView view : getViewersList())
 		{
 			if (view == null) continue;
 			if (isEnabled)
@@ -246,7 +245,7 @@ public abstract class HGVKit
 	public static void setSelectionMode(int selectionMode)
 	{
 		// set the selection mode on all the views
-		for (HGVNetworkView view : getViewersList())
+		for (GraphView view : getViewersList())
 			setSelectionMode(selectionMode, view);
 		
 		// update the global indicating the selection mode
@@ -260,7 +259,7 @@ public abstract class HGVKit
 	 * SELECT_NODES_AND_EDGES.
 	 * @param view the GraphView to set the selection mode on.
 	 */
-	public static void setSelectionMode(int selectionMode, HGVNetworkView view)
+	public static void setSelectionMode(int selectionMode, GraphView view)
 	{
 		// first, disable node and edge selection on the view
 		view.disableNodeSelection();
@@ -301,7 +300,7 @@ public abstract class HGVKit
 		prefered_layout = pref_layout;
 	}
 
-	public static HGVNetworkView getStandaloneView(HyperGraph graph, HGWNReader reader)
+	public static GraphView getStandaloneView(HyperGraph graph, HGWNReader reader)
 	{
 		embeded = true;
 		try
@@ -318,7 +317,7 @@ public abstract class HGVKit
 		return null;
 	}
 
-	public static HGVNetworkView getStandaloneView(HyperGraph hg, 
+	public static GraphView getStandaloneView(HyperGraph hg, 
 												   HGHandle h,
 												   int depth, 
 												   HGAtomPredicate cond)

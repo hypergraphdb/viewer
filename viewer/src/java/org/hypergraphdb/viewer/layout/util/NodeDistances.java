@@ -2,7 +2,7 @@ package org.hypergraphdb.viewer.layout.util;
 
 import java.util.*;
 
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 /**
  * Calculates the all-pairs-shortest-paths (APSP) of a set of <code>giny.model.FNode</code>
@@ -16,7 +16,7 @@ public class NodeDistances //implements MonitorableTask
     public static final int INFINITY = Integer.MAX_VALUE;
 
     protected List nodesList;
-    protected HGVNetworkView perspective;
+    protected GraphView perspective;
     protected int[][] distances;
     protected boolean directed;
 
@@ -39,7 +39,7 @@ public class NodeDistances //implements MonitorableTask
      * @param perspective the <code>giny.model.GraphPerspective</code> in which the nodes
      *                    reside
      */
-    public NodeDistances(List nodes_list, int[][] distances, HGVNetworkView perspective) {
+    public NodeDistances(List nodes_list, int[][] distances, GraphView perspective) {
         this(nodes_list, distances, perspective, false);
     }//NodeDistances
 
@@ -58,7 +58,7 @@ public class NodeDistances //implements MonitorableTask
      */
     public NodeDistances(List nodes_list,
                          int[][] distances,
-                         HGVNetworkView perspective,
+                         GraphView perspective,
                          boolean directed) {
         this.perspective = perspective;
         nodesList = nodes_list;
@@ -76,7 +76,7 @@ public class NodeDistances //implements MonitorableTask
      * @param perspective The <code>giny.model.GraphPerspective</code> in which the nodes reside
      * @param nodeIndexToMatrixIndexMap An index map that maps your root graph indices to the returned matrix indices
      */
-    public NodeDistances(List nodesList, HGVNetworkView perspective, HashMap nodeIndexToMatrixIndexMap) {
+    public NodeDistances(List nodesList, GraphView perspective, HashMap nodeIndexToMatrixIndexMap) {
         this.nodesList = nodesList;
         this.nodeIndexToMatrixIndexMap = nodeIndexToMatrixIndexMap;
         this.perspective = perspective;

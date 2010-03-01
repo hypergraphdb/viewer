@@ -1,4 +1,4 @@
-package org.hypergraphdb.viewer.view;
+package org.hypergraphdb.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -25,11 +25,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.SwingPropertyChangeSupport;
 
-import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGViewer;
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.props.PropertySetPanel;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
@@ -39,7 +34,7 @@ import phoebe.PNodeView;
 /**
  * The HGVDesktop is the central Window for working with HGVKit
  */
-public class HGVDesktop extends JFrame implements PropertyChangeListener
+public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphView.SelectionListener
 {
     private static HGVDesktop instance;
     // Static variables
@@ -133,7 +128,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
                 HGViewer comp = (HGViewer) tabbedPane.getComponentAt(
                         tabbedPane.getSelectedIndex());
                 HGViewer.setFocusedComponent(comp);
-                firePropertyChange(HGVDesktop.NETWORK_VIEW_FOCUSED, null, comp.getView());
+                HGVKit.firePropertyChange(HGVDesktop.NETWORK_VIEW_FOCUSED, null, comp.getView());
             }
         });
         JScrollPane scroll_tab = new JScrollPane(tabbedPane);
@@ -211,7 +206,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
                         .getVisualStyles())
                     model.addElement(vs);
                 styleBox.setModel(model);
-                HGVNetworkView view = HGVKit.getCurrentView();
+                GraphView view = HGVKit.getCurrentView();
                 // System.out.println("StyleChange: " + view.getVisualStyle());
                 if (view != null)
                     styleBox.setSelectedItem(view.getVisualStyle());
@@ -222,10 +217,10 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
         styleBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e)
             {
-                HGVNetworkView view = HGVKit.getCurrentView();
+                GraphView view = HGVKit.getCurrentView();
                 if (view == null) return;
                 VisualStyle vs = ((VisualStyle) styleBox.getSelectedItem());
-                if (!vs.equals(view.getVisualStyle()))
+                if (vs != null && !vs.equals(view.getVisualStyle()))
                 {
                     view.setVisualStyle(vs);
                     view.redrawGraph();
@@ -241,25 +236,17 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
         toolBar.addSeparator();
     }
 
-    protected void updateFocus(HGVNetworkView view)
+    protected void updateFocus(GraphView view)
     {
-//        // deal with the new Network
-//        VisualStyle new_style = view.getVisualStyle();
-//        if (new_style == null)
-//        {
-//            new_style = VisualManager.getInstance().getDefaultVisualStyle();
-//            if (new_style != null) view.setVisualStyle(new_style);
-//        }
-//        System.out.println("HGVDesktop - updateFocus network: "
-//                + view.getIdentifier() + ":" + view.getVisualStyle() + ":"
-//                + new_style);
-//
-//        styleBox.setSelectedItem(new_style);
-//        cyMenus.setNodesRequiredItemsEnabled();
+        // deal with the new Network
+        VisualStyle new_style = view.getVisualStyle();
+        styleBox.setSelectedItem(new_style);
+        cyMenus.setNodesRequiredItemsEnabled();
 //        view.redrawGraph();
+        updatePropsPanel();
     }
 
-    public void setFocus(HGVNetworkView view)
+    public void setFocus(GraphView view)
     {
         pcs.firePropertyChange(new PropertyChangeEvent(this,
                 NETWORK_VIEW_FOCUSED, null, view));
@@ -277,23 +264,26 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
                 + e.getPropertyName() + ":" + e.getNewValue());
         if (e.getPropertyName() == NETWORK_VIEW_CREATED)
         {
-            HGVNetworkView view = ((HGVNetworkView) e.getNewValue());
-            HGVKit.getDesktop().getTabbedPane().addTab(
+            GraphView view = ((GraphView) e.getNewValue());
+            getTabbedPane().addTab(
                     view.getIdentifier(), view.getComponent());
+            getTabbedPane().setSelectedIndex(
+                    getTabbedPane().getTabCount() -1);
             // pass on the event
             pcs.firePropertyChange(e);
             networkPanel.focusNetworkNode(view);
+            view.addSelectionListener(this);
         }
         else if (e.getPropertyName() == NETWORK_VIEW_FOCUSED)
         {
             // get focus event from NetworkViewManager
-            updateFocus(((HGVNetworkView) e.getNewValue()));
+            updateFocus(((GraphView) e.getNewValue()));
             pcs.firePropertyChange(e);
-            // attachPopupMenu(HGVKit.getCurrentNetworkView().getComponent());
         }
         else if (e.getPropertyName() == NETWORK_VIEW_DESTROYED)
         {
-            HGVNetworkView view = ((HGVNetworkView) e.getNewValue());
+            GraphView view = ((GraphView) e.getNewValue());
+            view.removeSelectionListener(this);
             JTabbedPane tp = HGVKit.getDesktop().getTabbedPane();
             for(int i = 0; i < tp.getTabCount(); i++)
             {
@@ -305,13 +295,18 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener
             }
             // pass on the event
             pcs.firePropertyChange(e);
+            
         }
-      
+    }
+    
+    public void selectionChanged()
+    {
+        updatePropsPanel();
     }
 
     public void updatePropsPanel()
     {
-        HGVNetworkView view = HGVKit.getCurrentView();
+        GraphView view = HGVKit.getCurrentView();
         PNodeView nv = view.getSelectedNodeView();
         if (nv != null)
         {

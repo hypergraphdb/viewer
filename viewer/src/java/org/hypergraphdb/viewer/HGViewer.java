@@ -38,7 +38,6 @@ import org.hypergraphdb.util.CloseMe;
 import org.hypergraphdb.viewer.dialogs.EnhancedMenu;
 import org.hypergraphdb.viewer.dialogs.VisStylesProvider;
 import org.hypergraphdb.viewer.hg.HGWNReader;
-import org.hypergraphdb.viewer.view.HGVMenus;
 import org.hypergraphdb.viewer.visual.ui.DropDownButton;
 
 import phoebe.PEdgeView;
@@ -56,31 +55,32 @@ public class HGViewer extends JPanel
      * and how many are selected/hidden
      */
     protected JLabel statusLabel;
-    protected HGVNetworkView view;
+    protected GraphView view;
 
     private/* static */JToolBar toolbar;
-    
+
     protected int depth = 2;
     private HGALGenerator generator = null;
     private HGHandle foc_handle;
-    
-    protected HyperGraph graph;
-    
-    
-    public HGViewer(HyperGraph db, HGHandle h, int depth, HGALGenerator generator)
-    {
-         super(new BorderLayout());
-         this.graph = db;
-         this.depth = depth;
-         this.generator = generator;
-         foc_handle = h;
-         focused(this);
-         HGWNReader reader = new HGWNReader(db);
-         reader.read(h, depth, getGenerator()); 
-         init(reader.getNodes(), reader.getEdges());
-    } 
 
-    public HGViewer(HyperGraph db, Collection<FNode> nodes,  Collection<FEdge> edges)
+    protected HyperGraph graph;
+
+    public HGViewer(HyperGraph db, HGHandle h, int depth,
+            HGALGenerator generator)
+    {
+        super(new BorderLayout());
+        this.graph = db;
+        this.depth = depth;
+        this.generator = generator;
+        foc_handle = h;
+        focused(this);
+        HGWNReader reader = new HGWNReader(db);
+        reader.read(h, depth, getGenerator());
+        init(reader.getNodes(), reader.getEdges());
+    }
+
+    public HGViewer(HyperGraph db, Collection<FNode> nodes,
+            Collection<FEdge> edges)
     {
         super(new BorderLayout());
         addFocusListener(new HGVFocusListener());
@@ -88,10 +88,10 @@ public class HGViewer extends JPanel
         graph = db;
         init(nodes, edges);
     }
-    
+
     protected void init(Collection<FNode> nodes, Collection<FEdge> edges)
     {
-        view = new HGVNetworkView(this, graph, nodes, edges);
+        view = new GraphView(this, graph, nodes, edges);
         HGVKit.getViewersList().add(view);
         view.getCanvas().addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e)
@@ -99,7 +99,7 @@ public class HGViewer extends JPanel
                 focused(HGViewer.this);
             }
         });
-        view.addSelectionListener(new HGVNetworkView.SelectionListener() {
+        view.addSelectionListener(new GraphView.SelectionListener() {
             public void selectionChanged()
             {
                 updateStatusLabel();
@@ -110,7 +110,7 @@ public class HGViewer extends JPanel
         addStatusBar();
         initKeyBindings();
     }
-    
+
     protected void addStatusBar()
     {
         // setup the StatusLabel
@@ -140,7 +140,7 @@ public class HGViewer extends JPanel
         else
             add(statusLabel, BorderLayout.SOUTH);
     }
-    
+
     protected void initKeyBindings()
     {
         InputMap inputMap = getInputMap();
@@ -148,64 +148,64 @@ public class HGViewer extends JPanel
             if (a.getValue(Action.ACCELERATOR_KEY) != null)
                 inputMap.put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), a);
     }
-    
+
     public HyperGraph getHyperGraph()
     {
         return graph;
     }
-    
+
     public void focus(HGHandle handle)
     {
         HGWNReader reader = new HGWNReader(graph);
-        reader.read(handle, depth, getGenerator()); 
+        reader.read(handle, depth, getGenerator());
         clearView();
-        for(FNode n: reader.getNodes())
+        for (FNode n : reader.getNodes())
             view.addNodeView(n);
-        for(FEdge e: reader.getEdges())
+        for (FEdge e : reader.getEdges())
             view.addEdgeView(e);
         HGVKit.getPreferedLayout().applyLayout(HGVKit.getCurrentView());
         view.redrawGraph();
-        FNode node = new FNode(handle); 
+        FNode node = new FNode(handle);
         view.getNodeView(node).setSelected(true);
-        view.getCanvas().getCamera().animateViewToCenterBounds( 
-        view.getNodeView(node).getFullBounds(), false, 1550l );
+        view.getCanvas().getCamera().animateViewToCenterBounds(
+                view.getNodeView(node).getFullBounds(), false, 1550l);
     }
-    
+
     public void refresh()
     {
         focus(foc_handle);
     }
-    
-     void clearView()
+
+    void clearView()
     {
-        for(PEdgeView e :  view.getEdgeViews())
+        for (PEdgeView e : view.getEdgeViews())
             view.removeEdgeView(e);
-        for(PNodeView nv :  view.getNodeViews())
+        for (PNodeView nv : view.getNodeViews())
             view.removeNodeView(nv.getNode());
     }
 
-    public HGVNetworkView getView()
+    public GraphView getView()
     {
         return view;
     }
-    
+
     public void setDepth(int depth)
     {
         this.depth = depth;
     }
-    
+
     public HGALGenerator getGenerator()
     {
         if (generator == null)
             generator = new DefaultALGenerator(graph, null, null);
         return generator;
     }
-    
+
     public void setGenerator(HGALGenerator generator)
     {
         if (this.generator != null && this.generator instanceof CloseMe)
-            ((CloseMe)this.generator).close();
-        this.generator = generator;     
+            ((CloseMe) this.generator).close();
+        this.generator = generator;
     }
 
     @Override
@@ -228,7 +228,7 @@ public class HGViewer extends JPanel
             }
         });
     }
-    
+
     @Override
     public void removeNotify()
     {
@@ -241,13 +241,54 @@ public class HGViewer extends JPanel
         toolbar = new JToolBar();
         toolbar.putClientProperty("JToolBar.isRollover", Boolean.TRUE); // NOI18N
         final HGVMenus m = HGVMenus.getInstance();
-        toolbar.add(createDropDown(toolbar, m.getSelectMenu(), "hand", "Edit"));
-        toolbar.add(createDropDown(toolbar, m.getLayoutMenu(), "layout",
-                "Layout"));
-        toolbar.add(createDropDown(toolbar, m.getVizMenu(), "visual",
+        DropDownButton dropdown = new DropDownButton() {
+            protected JPopupMenu getPopupMenu()
+            {
+                JPopupMenu popup = new JPopupMenu();
+                m.populateSelectMenu(popup);
+                return popup;
+            }
+        };
+        toolbar.add(createDropDown(toolbar, dropdown, "hand", "Edit"));
+        dropdown = new DropDownButton() {
+            protected JPopupMenu getPopupMenu()
+            {
+                JPopupMenu popup = new JPopupMenu();
+                m.populateLayoutMenu(popup);
+                return popup;
+            }
+        };
+        toolbar.add(createDropDown(toolbar, dropdown, "layout", "Layout"));
+        dropdown = new DropDownButton() {
+            protected JPopupMenu getPopupMenu()
+            {
+                JPopupMenu popup = new JPopupMenu();
+                m.populateVizMenu(popup);
+                return popup;
+            }
+        };
+        toolbar.add(createDropDown(toolbar, dropdown, "visual",
                 "Visual Properties"));
-        toolbar
-                .add(createDropDown(toolbar, m.getZoomMenu(), "zoom", "Zooming"));
+        dropdown = new DropDownButton() {
+            protected JPopupMenu getPopupMenu()
+            {
+                JPopupMenu popup = new JPopupMenu();
+                m.populateZoomMenu(popup);
+                return popup;
+            }
+        };
+        toolbar.add(createDropDown(toolbar, dropdown, "zoom", "Zooming"));
+
+        dropdown = new DropDownButton() {
+            protected JPopupMenu getPopupMenu()
+            {
+                JPopupMenu popup = new JPopupMenu();
+                m.populateFileMenu(popup);
+                return popup;
+            }
+        };
+        toolbar.add(createDropDown(toolbar, dropdown, "print", "Print/Export"));
+        
         return toolbar;
     }
 
@@ -267,31 +308,8 @@ public class HGViewer extends JPanel
     }
 
     private static DropDownButton createDropDown(JToolBar toolbar,
-            final JMenu m, final String name, String tooltip)
+            final DropDownButton dropdown, final String name, String tooltip)
     {
-        DropDownButton dropdown = new DropDownButton() {
-            protected JPopupMenu getPopupMenu()
-            {
-                JPopupMenu popup = new JPopupMenu();
-                for (final Component c : m.getMenuComponents())
-                {
-                    if (c instanceof JMenuItem
-                            && ((JMenuItem) c).getAction() != null) popup
-                            .add(new JMenuItem(((JMenuItem) c).getAction()));
-                    else if (c instanceof JMenu)
-                    {
-                        JMenu menu = new JMenu(((JMenu) c).getText());
-                        for (Component cc : ((JMenu) c).getMenuComponents())
-                            if (cc instanceof JMenuItem
-                                    && ((JMenuItem) cc).getAction() != null)
-                                menu.add(new JMenuItem(((JMenuItem) cc)
-                                        .getAction()));
-                        popup.add(menu);
-                    }
-                }
-                return popup;
-            }
-        };
         dropdown.addToToolBar(toolbar);
         dropdown.putClientProperty("hideActionText", Boolean.TRUE);
         dropdown.setAction(createDummyAction(name));
@@ -311,7 +329,7 @@ public class HGViewer extends JPanel
 
             public void actionPerformed(ActionEvent e)
             {
-                ((DropDownButton)e.getSource()).showDropDown(e);
+                ((DropDownButton) e.getSource()).showDropDown(e);
             }
         };
     }

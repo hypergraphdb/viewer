@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.util.*;
 import org.hypergraphdb.viewer.*;
 import org.hypergraphdb.viewer.hg.LoadHyperGraphFileAction;
-import org.hypergraphdb.viewer.view.HGVDesktop;
 
 
 public class RecentFilesProvider implements PropertyChangeListener
@@ -40,7 +39,7 @@ public class RecentFilesProvider implements PropertyChangeListener
         
         if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED)
         {
-            String f = ((HGVNetworkView) e.getNewValue()).getHyperGraph().getLocation();
+            String f = ((GraphView) e.getNewValue()).getHyperGraph().getLocation();
             if(!(AppConfig.getInstance().getMRUF().contains(f)))
             {
             	AppConfig.getInstance().getMRUF().add(f);
@@ -48,7 +47,7 @@ public class RecentFilesProvider implements PropertyChangeListener
             }
         }else if (e.getPropertyName() == HGVKit.EXIT)
         {
-        	for(HGVNetworkView net: HGVKit.getViewersList())
+        	for(GraphView net: HGVKit.getViewersList())
         		AppConfig.getInstance().getMRUF().add(
         				net.getHyperGraph().getLocation());
         	AppConfig.getInstance().getGraph().update(AppConfig.getInstance());

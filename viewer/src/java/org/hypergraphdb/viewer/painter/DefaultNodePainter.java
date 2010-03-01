@@ -6,7 +6,7 @@ import java.awt.Paint;
 import java.awt.Stroke;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.visual.LineType;
 import phoebe.PNodeView;
 import phoebe.util.PLabel;
@@ -26,7 +26,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 	private double width = 30.0;
 	
 	protected PNodeView nodeView;
-	protected HGVNetworkView network_view;
+	protected GraphView network_view;
 
 	
 	/* (non-Javadoc)
@@ -142,7 +142,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 		this.width = width;
 	}
 	
-	public void paintNode(PNodeView nodeView, HGVNetworkView network_view){
+	public void paintNode(PNodeView nodeView, GraphView network_view){
 		this.network_view = network_view;
 		this.nodeView = nodeView;
 		network_view.updateEdges = false;

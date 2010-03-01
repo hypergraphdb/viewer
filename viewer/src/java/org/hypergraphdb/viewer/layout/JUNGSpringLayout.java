@@ -8,7 +8,7 @@ import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
@@ -36,7 +36,7 @@ public class JUNGSpringLayout extends AbstractLayout
      * dimension--the input knows how big the graph is. Defaults to the unit
      * length function.
      */
-    public JUNGSpringLayout(HGVNetworkView g)
+    public JUNGSpringLayout(GraphView g)
     {
         this(g, UNITLENGTHFUNCTION);
     }
@@ -49,7 +49,7 @@ public class JUNGSpringLayout extends AbstractLayout
      * @param f
      *            the length function
      */
-    public JUNGSpringLayout(HGVNetworkView g, LengthFunction f)
+    public JUNGSpringLayout(GraphView g, LengthFunction f)
     {
         super(g);
         this.lengthFunction = f;

@@ -6,9 +6,9 @@ import java.awt.Dimension;
 import phoebe.event.BirdsEyeView;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.ActionManager;
+import org.hypergraphdb.viewer.HGVDesktop;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
-import org.hypergraphdb.viewer.view.HGVDesktop;
+import org.hypergraphdb.viewer.GraphView;
 import java.beans.*;
 
 import edu.umd.cs.piccolo.PLayer;
@@ -26,7 +26,7 @@ public class BirdsEyeViewAction extends HGVAction implements
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUSED)
 		{
-		    HGVNetworkView view = (HGVNetworkView) e.getNewValue();
+		    GraphView view = (GraphView) e.getNewValue();
 			bev.disconnect();
 			try {
 				bev.connect(view.getCanvas(),

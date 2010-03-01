@@ -182,7 +182,7 @@ public class AppConfigPanel extends JPanel
 		}
 
 		@Override
-		public Class getType()
+		public Class<?> getType()
 		{
 			return (key != null) ? key.getClass() : Object.class;
 		}

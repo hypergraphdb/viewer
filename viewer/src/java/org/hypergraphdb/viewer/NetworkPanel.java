@@ -1,7 +1,8 @@
-package org.hypergraphdb.viewer.view;
+package org.hypergraphdb.viewer;
 
+import org.hypergraphdb.viewer.HGVDesktop;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 
 import org.hypergraphdb.viewer.actions.CreateNetworkViewAction;
 
@@ -17,14 +18,14 @@ import javax.swing.event.*;
 import java.beans.*;
 
 public class NetworkPanel extends JPanel implements PropertyChangeListener,
-		TreeSelectionListener//, FlagEventListener 
+		TreeSelectionListener
 {
 
 	protected SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(
 			this);
 
 	JTreeTable treeTable;
-	NetworkTreeNode root;
+	ViewTreeNode root;
 	JPanel navigatorPanel;
 	JPopupMenu popup;
 	PopupActionListener popupActionListener;
@@ -40,7 +41,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 	protected void initialize() {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(181, 400));
-		root = new NetworkTreeNode("root", null); //"Network Root", "root");
+		root = new ViewTreeNode("root", null); //"Network Root", "root");
 		treeTable = new JTreeTable(new NetworkTreeTableModel(root));
 		treeTable.getTree().addTreeSelectionListener(this);
 		treeTable.getTree().setRootVisible(false);
@@ -100,18 +101,18 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		return pcs;
 	}
 
-	public void removeNetwork(HGVNetworkView view) {
+	public void removeNetwork(GraphView view) {
 
-		NetworkTreeNode node = getNetworkNode(view);
+		ViewTreeNode node = getNetworkNode(view);
 		Enumeration children = node.children();
-		NetworkTreeNode child = null;
+		ViewTreeNode child = null;
 		ArrayList removed_children = new ArrayList();
 		while (children.hasMoreElements()) {
 			removed_children.add(children.nextElement());
 		}
 
 		for (Iterator i = removed_children.iterator(); i.hasNext();) {
-			child = (NetworkTreeNode) i.next();
+			child = (ViewTreeNode) i.next();
 			child.removeFromParent();
 			root.add(child);
 		}
@@ -130,13 +131,13 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 //			HGVKit.getDesktop().updatePropsPanel();
 //	}
 
-	public void addNetwork(HGVNetworkView net, HGVNetworkView par) {
+	public void addNetwork(GraphView net, GraphView par) {
 		// first see if it exists
 		if (getNetworkNode(net) == null) {
-			NetworkTreeNode dmtn = new NetworkTreeNode(net.getIdentifier(), net);
+			ViewTreeNode dmtn = new ViewTreeNode(net.getIdentifier(), net);
 			//net.getFlagger().addFlagEventListener(this);
 			if (par != null) {
-				NetworkTreeNode parent = getNetworkNode(par);
+				ViewTreeNode parent = getNetworkNode(par);
 				parent.add(dmtn);
 			} else {
 				root.add(dmtn);
@@ -152,7 +153,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		}
 	}
 
-	public void focusNetworkNode(HGVNetworkView view) {
+	public void focusNetworkNode(GraphView view) {
 		DefaultMutableTreeNode node = getNetworkNode(view);
 		if (node != null) {
 			treeTable.getTree().getSelectionModel().setSelectionPath(
@@ -162,11 +163,11 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		}
 	}
 
-	public NetworkTreeNode getNetworkNode(HGVNetworkView view) {
+	public ViewTreeNode getNetworkNode(GraphView view) {
 
 		Enumeration tree_node_enum = root.breadthFirstEnumeration();
 		while (tree_node_enum.hasMoreElements()) {
-			NetworkTreeNode node = (NetworkTreeNode) tree_node_enum
+			ViewTreeNode node = (ViewTreeNode) tree_node_enum
 					.nextElement();
 			if (node.getNetworkID() == view) {
 				return node;
@@ -182,15 +183,15 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 	public void propertyChange(PropertyChangeEvent e) {
 
 		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_CREATED) {
-			addNetwork((HGVNetworkView) e.getNewValue(), (HGVNetworkView) e.getOldValue());
+			addNetwork((GraphView) e.getNewValue(), (GraphView) e.getOldValue());
 		}
 
 		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED) {
-			removeNetwork((HGVNetworkView) e.getNewValue());
+			removeNetwork((GraphView) e.getNewValue());
 		}
 
 		else if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUSED) {
-			focusNetworkNode((HGVNetworkView) e.getNewValue());
+			focusNetworkNode((GraphView) e.getNewValue());
 		}
 
 	}
@@ -251,7 +252,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		public Object getValueAt(Object node, int column) {
 			if (column == 0)
 				return ((DefaultMutableTreeNode) node).getUserObject();
-			HGVNetworkView net = (((NetworkTreeNode) node).getNetworkID());
+			GraphView net = (((ViewTreeNode) node).getNetworkID());
 			
 			String s = "";
 			if (column == 1) {
@@ -267,20 +268,20 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 
 	} // NetworkTreeTableModel
 
-	protected class NetworkTreeNode extends DefaultMutableTreeNode {
+	protected class ViewTreeNode extends DefaultMutableTreeNode {
 
-		protected HGVNetworkView view;
+		protected GraphView view;
 
-		public NetworkTreeNode(Object userobj, HGVNetworkView id) {
+		public ViewTreeNode(Object userobj, GraphView id) {
 			super(userobj);
 			view = id;
 		}
 
-		protected void setNetworkID(HGVNetworkView id) {
+		protected void setNetworkID(GraphView id) {
 			view = id;
 		}
 
-		protected HGVNetworkView getNetworkID() {
+		protected GraphView getNetworkID() {
 			return view;
 		}
 	}
@@ -314,7 +315,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 
 		private boolean hasView(Object value) {
 
-			NetworkTreeNode node = (NetworkTreeNode) value;
+			ViewTreeNode node = (ViewTreeNode) value;
 			if(node.getNetworkID() == null) return false;
 					
 			setToolTipText(node.getNetworkID().getIdentifier());
@@ -358,7 +359,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 				if (row != -1) {
 					JTree tree = treeTable.getTree();
 					TreePath treePath = tree.getPathForRow(row);
-					HGVNetworkView net = ((NetworkTreeNode) treePath
+					GraphView net = ((ViewTreeNode) treePath
 							.getLastPathComponent()).getNetworkID();
 
 						
@@ -406,7 +407,7 @@ class PopupActionListener implements ActionListener {
 	 * appropriately, the network associated with the ID associated with the row
 	 * associated with the JTable that originated the popup event
 	 */
-	protected HGVNetworkView cyNetwork;
+	protected GraphView cyNetwork;
 
 	/**
 	 * Based on the action event, destroy or create a view, or destroy a network
@@ -431,7 +432,7 @@ class PopupActionListener implements ActionListener {
 	 * Right before the popup menu is displayed, this function is called so we
 	 * know which network the user is clicking on to call for the popup menu
 	 */
-	public void setActiveNetwork(HGVNetworkView cyNetwork) {
+	public void setActiveNetwork(GraphView cyNetwork) {
 		this.cyNetwork = cyNetwork;
 	}
 }

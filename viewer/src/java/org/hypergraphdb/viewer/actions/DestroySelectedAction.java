@@ -10,7 +10,7 @@ import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.HGVNetworkView;
+import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.util.HGVAction;
 //-------------------------------------------------------------------------
 public class DestroySelectedAction extends HGVAction  {
@@ -24,7 +24,7 @@ public class DestroySelectedAction extends HGVAction  {
     }
     
     public void actionPerformed (ActionEvent e) {
-	   HGVNetworkView view = HGVKit.getCurrentView();
+	   GraphView view = HGVKit.getCurrentView();
 	   view.getSelectionHandler().deleteSelection();
 	}//action performed
 

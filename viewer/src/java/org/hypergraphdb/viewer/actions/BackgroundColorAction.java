@@ -20,46 +20,56 @@ import java.awt.event.ActionEvent;
 /**
  * Prompts User for New Background Color.
  */
-public class BackgroundColorAction extends HGVAction {
+public class BackgroundColorAction extends HGVAction
+{
 
-   
     /**
      * ConstructorLink.
      */
-    public BackgroundColorAction () {
+    public BackgroundColorAction()
+    {
         super(ActionManager.BACKGROUND_COLOR_ACTION);
-        setAcceleratorCombo( java.awt.event.KeyEvent.VK_B, ActionEvent.ALT_MASK) ;
+        setAcceleratorCombo(java.awt.event.KeyEvent.VK_B, ActionEvent.ALT_MASK);
     }
 
     /**
      * Captures User Menu Selection.
-     * @param ev Action Event.
+     * 
+     * @param ev
+     *            Action Event.
      */
-    public void actionPerformed(ActionEvent ev) {
+    public void actionPerformed(ActionEvent ev)
+    {
         // Do this in the GUI Event Dispatch thread...
         SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JColorChooser color = new JColorChooser();
-                Color newPaint = color.showDialog( 
-                		HGVKit.getCurrentView().getComponent(),
-                                                  "Choose a Background Color",
-                                                  (java.awt.Color)HGVKit.getCurrentView().
-                                                  getBackgroundPaint() );
+            public void run()
+            {
+                JColorChooser chooser = new JColorChooser();
+                Color newPaint = chooser.showDialog(HGVKit.getCurrentView()
+                        .getComponent(), "Choose a Background Color",
+                        (java.awt.Color) HGVKit.getCurrentView()
+                                .getBackgroundPaint());
 
-            //  Update the Current Background Color
-            //  and Synchronize with current Visual Style
-                HGVKit.getCurrentView().setBackgroundPaint(newPaint);
-            synchronizeVisualStyle(newPaint);
+                // Update the Current Background Color
+                // and Synchronize with current Visual Style
+                if (newPaint != null)
+                {
+                    HGVKit.getCurrentView().setBackgroundPaint(newPaint);
+                    synchronizeVisualStyle(newPaint);
+                }
             }
         });
-    }//action performed
+    }// action performed
 
     /**
      * Synchronizes the New Background Color with the Current Visual Style.
-     * @param newColor New Color
+     * 
+     * @param newColor
+     *            New Color
      */
-    private void synchronizeVisualStyle(Color newColor) {
-       VisualStyle style = HGVKit.getCurrentView().getVisualStyle();
-       style.setBackgroundColor(newColor);
+    private void synchronizeVisualStyle(Color newColor)
+    {
+        VisualStyle style = HGVKit.getCurrentView().getVisualStyle();
+        style.setBackgroundColor(newColor);
     }
 }
