@@ -453,20 +453,14 @@ public class GraphView
         return objectLayer;
     }
 
-    /**
-     * @param node
-     *            Access to adding a FNode to the Graph
-     */
-    public void addToNodeLayer(PNode node)
+    private void addToNodeLayer(PNodeView node)
     {
         nodeLayer.addChild(node);
+        //NodePainter p = getPainter(node.getNode().getHandle(), false);
+       // p.paintNode(node, this);
     }
 
-    /**
-     * @param edge
-     *            Access to adding an FEdge to the Graph
-     */
-    public void addToEdgeLayer(PNode edge)
+    private void addToEdgeLayer(PEdgeView edge)
     {
         edgeLayer.addChild(edge);
     }
@@ -914,9 +908,17 @@ public class GraphView
     public PEdgeView addEdgeView(FEdge edge)
     {
         if (edgeViewMap.containsKey(edge)) return edgeViewMap.get(edge);
-        if(!(graph.get(edge.getSource().getHandle()) instanceof HGLink))
+        Object s = graph.get(edge.getSource().getHandle());
+        if(!(s instanceof HGLink))
             System.err.println("Impossible PEdgeView - source is not HGLink: " + edge);
-        if(!graph.getIncidenceSet(edge.getTarget().getHandle()).contains(
+//        //if(!((HGLink) s).get(edge.getTarget().getHandle()).contains(
+//        //        edge.getSource().getHandle()))
+//        HGLink link = (HGLink) s;
+//        for(int i = 0; i < link.getArity(); i++)
+//           if(link.getTargetAt(i).equals(edge.getTarget().getHandle()))
+//              break;
+//            System.err.println("Impossible PEdgeView - target is not in the targetSet of the source: " + edge);
+       if(!graph.getIncidenceSet(edge.getTarget().getHandle()).contains(
                 edge.getSource().getHandle()))
             System.err.println("Impossible PEdgeView - target is not pointed by source: " + edge);
         

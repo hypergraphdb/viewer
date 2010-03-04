@@ -1,15 +1,7 @@
 package org.hypergraphdb.viewer.painter;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import javax.swing.JFrame;
-import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.atom.HGStats;
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.GraphView;
+
 import com.l2fprod.common.demo.BeanBinder;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 

@@ -421,7 +421,8 @@ public class PaintersPanel extends JPanel
 
 			setIcon(null);
 			if(hg != null){
-				HGAtomType cls = hg.getTypeSystem().getType((HGHandle)value);
+			    HGHandle h = (HGHandle) list.getModel().getElementAt(index); //(HGHandle)value
+				HGAtomType cls = hg.getTypeSystem().getType(h);
 				if(cls != null){
 					if(cls instanceof JavaBeanBinding)
 						setText(cls.toString());

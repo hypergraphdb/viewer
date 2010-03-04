@@ -255,8 +255,8 @@ public class HGVMenus implements HGVNetworkChangeListener
     {
         if (!HGVKit.isEmbeded())
             vizMenu.add(mi(ActionManager.TOGGLE_BIRDS_EYE_VIEW_ACTION));
-        // if (HGVKit.isEmbeded())
-        vizMenu.add(new EnhancedMenu("Set Current Style",
+        if (HGVKit.isEmbeded())
+          vizMenu.add(new EnhancedMenu("Set Current Style",
                 new VisStylesProvider()), 0);
         vizMenu.add(mi(ActionManager.BACKGROUND_COLOR_ACTION));
         vizMenu.add(mi(ActionManager.VISUAL_PROPERTIES_ACTION));

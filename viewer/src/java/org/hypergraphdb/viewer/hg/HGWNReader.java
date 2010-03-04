@@ -60,11 +60,8 @@ public class HGWNReader
     {
         nodes.clear();
         edges.clear();
-        if(true)
-        {
-           addNode(handle, depth, null);
-           return;
-        }
+        //read0(handle, depth, generator);
+        //if(true) return;
         
         //TODO: fix this
         LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
@@ -87,22 +84,17 @@ public class HGWNReader
             FNode linkNode = node;
             while (i.hasNext())
             {
-                HGHandle a = i.next();
-
                 if (!HGUtils.eq(generator.getCurrentLink(), currLink))
                 {
                     currLink = generator.getCurrentLink();
                     linkNode = new FNode(currLink);
                     nodes.add(linkNode);
-                    FEdge edge = getFEdge(linkNode, node);
-                    if(edge != null)
-                       edges.add(edge);
+                    add_edge(linkNode, node);
                 }
+                HGHandle a = i.next();
                 FNode an = new FNode(a);
                 nodes.add(an);
-                FEdge edge = getFEdge(an, linkNode);
-                if(edge != null)
-                   edges.add(edge);
+                add_edge(linkNode, an);
                 if (depth > 0) remaining.add(a);
             }
             i.close();
@@ -113,6 +105,52 @@ public class HGWNReader
         }
 
         System.out.println("focus0: " + nodes.size() + ":" + edges.size());
+    }
+    
+    private void add_edge(FNode source, FNode target)
+    {
+        FEdge edge = getFEdge(source, target);
+        if(edge != null)
+           edges.add(edge);
+        else
+        {
+            edge = getFEdge(target, source);
+            if(edge != null)
+                edges.add(edge);
+            else
+                System.err.println("No such edge: " + source.getHandle() +
+                        ":" + target.getHandle() + ":" + hypergraph.get(source.getHandle()) +
+                        ":" +  hypergraph.get(target.getHandle()));
+        }
+    }
+    
+    public void read0(HGHandle handle, int depth, HGALGenerator generator)
+    {
+        if(depth < 0)  return;
+        FNode node = new FNode(handle);
+        nodes.add(node);
+        Set<HGHandle> next_layer = new HashSet<HGHandle>();
+        HGHandle currentLink = null;
+        FNode link_node = null;
+        HGSearchResult<HGHandle> i = generator.generate(handle);
+        while (i.hasNext())
+        {
+            if(!generator.getCurrentLink().equals(currentLink))
+            {
+                currentLink = generator.getCurrentLink();
+                link_node = new FNode(currentLink);
+                nodes.add(link_node);
+                add_edge(link_node, node);
+            } 
+           HGHandle a = i.next();
+           next_layer.add(a);
+           FNode an = new FNode(a);
+           nodes.add(an);
+           add_edge(link_node, an);
+        }
+        i.close();
+        for(HGHandle h: next_layer)
+            read0(h, depth -1, generator);
     }
     
     //check if such edge is possible and creates one if true
@@ -127,8 +165,8 @@ public class HGWNReader
 //           if(link.getTargetAt(i).equals(target.getHandle()))
 //              return new FEdge(source, target);
         if(!hypergraph.getIncidenceSet(target.getHandle()).contains(
-                source.getHandle()))
-            return null;
+               source.getHandle()))
+           return null;
         return new FEdge(source, target);
     }
 

@@ -32,55 +32,46 @@ import org.hypergraphdb.viewer.visual.VisualStyle;
 import cytoscape.task.Task;
 import cytoscape.task.TaskMonitor;
 import cytoscape.task.util.TaskManager;
-import edu.umd.cs.piccolo.PCanvas;
+
 
 /**
   */
 public class LoadWordNetAction extends HGVAction
 {
-	private static final String WORDNET_PATH_PROP = "WORDNET_PATH_PROP";
-	private static String PATH = "F:\\kosta\\hg\\wordnet";
-    
+    private static final String WORDNET_PATH_PROP = "WORDNET_PATH_PROP";
+    private static String PATH = "F:\\kosta\\hg\\wordnet";
+
     /**
      * ConstructorLink.
      */
     public LoadWordNetAction()
     {
         super(ActionManager.LOAD_WORD_NET_ACTION);
-        setAcceleratorCombo(java.awt.event.KeyEvent.VK_W,
-        ActionEvent.CTRL_MASK);
+        setAcceleratorCombo(java.awt.event.KeyEvent.VK_W, ActionEvent.CTRL_MASK);
     }
-    
-      
+
     /**
      * User Initiated Request.
-     *
-     * @param e Action Event.
+     * 
+     * @param e
+     *            Action Event.
      */
     public void actionPerformed(ActionEvent e)
     {
-       String p = (String)AppConfig.getInstance().getProperty(
-    		   WORDNET_PATH_PROP, PATH);
-    	loadHyperGraph(new File(p));
+        String p = (String) AppConfig.getInstance().getProperty(
+                WORDNET_PATH_PROP, PATH);
+        loadHyperGraph(new File(p));
     }
-    
+
     public static void loadHyperGraph(File file)
     {
-    	if(file == null) throw new NullPointerException("HG file is null");
-    	GraphView network = null;//HGVKit.getNetworkByFile(file);
-    	if (network == null)
-       {
-            //  Create LoadNetwork Task
-            LoadTask task = new LoadTask(file);
-            //  Execute Task in New Thread;  pops open JTask Dialog Box.
-            TaskManager.executeTask(task, null); 
-        }
-    	//else
-    	//	HGVKit.getDesktop().setFocus(network);
+        if (file == null) throw new NullPointerException("HG file is null");
+        // Create LoadNetwork Task
+        LoadTask task = new LoadTask(file);
+        // Execute Task in New Thread; pops open JTask Dialog Box.
+        TaskManager.executeTask(task, null);
     }
-    
-       
-    
+
     /**
      * Task to Load New Network Data.
      */
@@ -88,43 +79,46 @@ public class LoadWordNetAction extends HGVAction
     {
         private File db;
         private TaskMonitor taskMonitor;
-        
-        
+
         public LoadTask(File db)
         {
             this.db = db;
         }
-        
+
         /**
          * Executes Task.
          */
         public void run()
         {
             taskMonitor.setStatus("Reading in Network Data...");
-            Thread.currentThread().setContextClassLoader(AppConfig.getInstance().getClassLoader());
+            Thread.currentThread().setContextClassLoader(
+                    AppConfig.getInstance().getClassLoader());
             try
             {
-            	if(!db.isDirectory())
-            		throw new IOException("No such DB: " + db.getAbsolutePath());
-            	HGViewer cyNetwork = createNetwork();
+                if (!db.isDirectory())
+                    throw new IOException("No such DB: " + db.getAbsolutePath());
+                HGViewer cyNetwork = createNetwork();
                 if (cyNetwork != null)
                 {
                     informUserOfGraphStats(cyNetwork.getView());
-                } else
+                }
+                else
                 {
                     StringBuffer sb = new StringBuffer();
-                    sb.append("Could not read network from DB: " + db.getAbsolutePath());
+                    sb.append("Could not read network from DB: "
+                            + db.getAbsolutePath());
                     sb.append("\nThis directory may not be a valid DB.");
-                    taskMonitor.setException(new IOException(sb.toString()),
-                    sb.toString());
+                    taskMonitor.setException(new IOException(sb.toString()), sb
+                            .toString());
                 }
                 taskMonitor.setPercentCompleted(100);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 taskMonitor.setException(e, "Unable to load network file.");
             }
         }
-        
+
         /**
          * Inform User of Network Stats.
          */
@@ -132,137 +126,152 @@ public class LoadWordNetAction extends HGVAction
         {
             NumberFormat formatter = new DecimalFormat("#,###,###");
             StringBuffer sb = new StringBuffer();
-            
-            //  Give the user some confirmation
-            sb.append("Succesfully loaded network from DB:  " + db.getAbsolutePath());
-            sb.append("\n\nNetwork contains " + formatter.format
-            (newNetwork.getNodeCount()));
-            sb.append(" nodes and " + formatter.format(newNetwork.getEdgeCount()));
+
+            // Give the user some confirmation
+            sb.append("Succesfully loaded network from DB:  "
+                    + db.getAbsolutePath());
+            sb.append("\n\nNetwork contains "
+                    + formatter.format(newNetwork.getNodeCount()));
+            sb.append(" nodes and "
+                    + formatter.format(newNetwork.getEdgeCount()));
             sb.append(" edges.\n\n");
-            
-            if (newNetwork.getNodeCount() < AppConfig.getInstance().getViewThreshold())
+
+            if (newNetwork.getNodeCount() < AppConfig.getInstance()
+                    .getViewThreshold())
             {
                 sb.append("Network is under "
-                + AppConfig.getInstance().getViewThreshold()
-                + " nodes.  A view will be automatically created.");
-            } else
+                        + AppConfig.getInstance().getViewThreshold()
+                        + " nodes.  A view will be automatically created.");
+            }
+            else
             {
                 sb.append("Network is over "
-                + AppConfig.getInstance().getViewThreshold()
-                + " nodes.  A view will not been created."
-                + "  If you wish to view this network, use "
-                + "\"Create View\" from the \"Edit\" menu.");
+                        + AppConfig.getInstance().getViewThreshold()
+                        + " nodes.  A view will not been created."
+                        + "  If you wish to view this network, use "
+                        + "\"Create View\" from the \"Edit\" menu.");
             }
             taskMonitor.setStatus(sb.toString());
         }
-        
+
         /**
-         * Halts the Task:  Not Currently Implemented.
+         * Halts the Task: Not Currently Implemented.
          */
         public void halt()
         {
-            //   Task can not currently be halted.
+            // Task can not currently be halted.
         }
-        
+
         /**
          * Sets the Task Monitor.
-         *
-         * @param taskMonitor TaskMonitor Object.
+         * 
+         * @param taskMonitor
+         *            TaskMonitor Object.
          */
         public void setTaskMonitor(TaskMonitor taskMonitor)
-        throws IllegalThreadStateException
+                throws IllegalThreadStateException
         {
             this.taskMonitor = taskMonitor;
         }
-        
+
         /**
          * Gets the Task Title.
-         *
+         * 
          * @return Task Title.
          */
         public String getTitle()
         {
             return new String("Loading Network");
         }
-        
+
         private HGViewer createNetwork() throws IOException
         {
-        	
+
             final HGWNReader reader = new HGWNReader(db);
             open(reader);
-            HGViewer comp = HGVKit.createHGVComponent(reader.getHyperGraph(), 
+            HGViewer comp = HGVKit.createHGViewer(reader.getHyperGraph(),
                     reader.getNodes(), reader.getEdges());
             setVisualStyle(comp.getView());
             return comp;
         }
+
         private static final String WN_STYLE = "wordnet_style";
-        
-        private void setVisualStyle(GraphView view){
-        	VisualStyle vs = VisualManager.getInstance().getVisualStyle(WN_STYLE);
-        	if(vs != null) {
-        		System.out.println("WordNet Style already in HG");
-        		view.setVisualStyle(vs);
-        		view.redrawGraph();
-        		return;
-        	}
-        	vs = new VisualStyle(WN_STYLE);
-        	HyperGraph hg = view.getHyperGraph();
-        	ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        	addNodePainter(hg, vs, cl,
-        			"org.hypergraphdb.app.wordnet.data.NounSynsetLink",
-        			"org.hypergraphdb.app.wordnet.viewer.SynsetNodePainter");
-        	addNodePainter(hg, vs, cl,
-        			"org.hypergraphdb.app.wordnet.data.VerbSynsetLink",
-        			"org.hypergraphdb.app.wordnet.viewer.SynsetNodePainter");
-        	addNodePainter(hg, vs, cl,
-        			"org.hypergraphdb.app.wordnet.data.VerbFrame",
-        			"org.hypergraphdb.app.wordnet.viewer.VerbFrameNodePainter");
-        	addNodePainter(hg, vs, cl,
-        			"org.hypergraphdb.app.wordnet.data.Word",
-        			"org.hypergraphdb.app.wordnet.viewer.WordNodePainter");
-        	VisualManager.getInstance().addVisualStyle(vs);
-        	view.setVisualStyle(vs);
-        	
-       }
-        
-        private void addNodePainter(HyperGraph hg, VisualStyle vs,
-        		ClassLoader cl, String t_cls, String p_cls){
-        	try{
-        		Class clazz = cl
-				.loadClass(t_cls);
-        		 HGHandle h = hg.getTypeSystem().getTypeHandle(clazz);
-        		 NodePainter p = (NodePainter) cl.loadClass(p_cls).newInstance();
-        	     vs.addNodePainter(h, p);
-        	}catch(Exception ex){
-        		ex.printStackTrace();
-        	}
+
+        private void setVisualStyle(GraphView view)
+        {
+            VisualStyle vs = VisualManager.getInstance().getVisualStyle(
+                    WN_STYLE);
+            if (vs != null)
+            {
+                System.out.println("WordNet Style already in HG");
+                view.setVisualStyle(vs);
+                view.redrawGraph();
+                return;
+            }
+            vs = new VisualStyle(WN_STYLE);
+            HyperGraph hg = view.getHyperGraph();
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            addNodePainter(hg, vs, cl,
+                    "org.hypergraphdb.app.wordnet.data.NounSynsetLink",
+                    "org.hypergraphdb.app.wordnet.viewer.SynsetNodePainter");
+            addNodePainter(hg, vs, cl,
+                    "org.hypergraphdb.app.wordnet.data.VerbSynsetLink",
+                    "org.hypergraphdb.app.wordnet.viewer.SynsetNodePainter");
+            addNodePainter(hg, vs, cl,
+                    "org.hypergraphdb.app.wordnet.data.VerbFrame",
+                    "org.hypergraphdb.app.wordnet.viewer.VerbFrameNodePainter");
+            addNodePainter(hg, vs, cl,
+                    "org.hypergraphdb.app.wordnet.data.Word",
+                    "org.hypergraphdb.app.wordnet.viewer.WordNodePainter");
+            VisualManager.getInstance().addVisualStyle(vs);
+            view.setVisualStyle(vs);
+
         }
-        
+
+        private void addNodePainter(HyperGraph hg, VisualStyle vs,
+                ClassLoader cl, String t_cls, String p_cls)
+        {
+            try
+            {
+                Class clazz = cl.loadClass(t_cls);
+                HGHandle h = hg.getTypeSystem().getTypeHandle(clazz);
+                NodePainter p = (NodePainter) cl.loadClass(p_cls).newInstance();
+                vs.addNodePainter(h, p);
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+
         public void open(HGWNReader reader) throws IOException
-    	{
-    		NotifyDescriptor d = new NotifyDescriptor.InputLine(
-    				GUIUtilities.getFrame(), "",
-    				"Enter a word: ", NotifyDescriptor.PLAIN_MESSAGE,
-    				NotifyDescriptor.OK_CANCEL_OPTION);
-    		if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION)
-    		{
-    			String lemma = ((NotifyDescriptor.InputLine) d).getInputText();
-    			if (lemma == null || lemma.equals("")) return;
-    			HyperGraph hg = reader.getHyperGraph();
-        		reader.read(getWordHandle(hg, lemma), 2, (HGAtomPredicate)null);
-    		}
-    	}
-        
-        private HGHandle getWordHandle(HyperGraph hg, String lemma) throws IOException
-    	{
-        	HGHandle word_handle = 
-    			HGVUtils.lookup(hg, "word", "lemma",	lemma);
-    		if (word_handle == null){
-    			hg.close();
-    			throw new IOException("No such word: " + lemma + " in the DB.");
-    		}
-    		return word_handle;
-    	}
+        {
+            NotifyDescriptor d = new NotifyDescriptor.InputLine(GUIUtilities
+                    .getFrame(), "", "Enter a word: ",
+                    NotifyDescriptor.PLAIN_MESSAGE,
+                    NotifyDescriptor.OK_CANCEL_OPTION);
+            if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION)
+            {
+                String lemma = ((NotifyDescriptor.InputLine) d).getInputText();
+                if (lemma == null || lemma.equals("")) return;
+                HyperGraph hg = reader.getHyperGraph();
+                reader
+                        .read(getWordHandle(hg, lemma), 2,
+                                (HGAtomPredicate) null);
+            }
+        }
+
+        private HGHandle getWordHandle(HyperGraph hg, String lemma)
+                throws IOException
+        {
+            HGHandle word_handle = HGVUtils.lookup(hg, "word", "lemma", lemma);
+            if (word_handle == null)
+            {
+                hg.close();
+                throw new IOException("No such word: " + lemma + " in the DB.");
+            }
+            return word_handle;
+        }
     }
-     
+
 }

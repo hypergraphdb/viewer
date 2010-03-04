@@ -58,14 +58,12 @@ public class TestPainterProps extends PropertySheetPanel
 		HGHandle h = graph.getTypeSystem().getTypeHandle(HGStats.class);
 		HGViewer c = null;
 		try{
-		//HGVNetworkView view = HGVKit.getStandaloneView(hg, h, 3, null);
-		//view.redrawGraph();
-		//c = view.getComponent();
+		
 		List<Object> o = hg.findAll(graph, hg.type(HGViewer.class));
 		c = hg.getOne(graph, hg.type(HGViewer.class));
 		if(c == null)
 		{
-		  c = new HGViewer(graph, h, 3, null);
+		  c = new HGViewer(graph, h, 1, null);
 		  HGViewerType type = new HGViewerType();
 	      type.setHyperGraph(graph);
 	      graph.getTypeSystem().addPredefinedType(

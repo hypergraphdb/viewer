@@ -48,7 +48,7 @@ public class NewWindowSelectedNodesEdgesAction extends HGVAction
 		for(PEdgeView v : view.getSelectedEdges())
 		    edges.add(v.getEdge());
        	
-		HGViewer new_view = HGVKit.createHGVComponent(view.getHyperGraph(), nodes, edges);
+		HGViewer new_view = HGVKit.createHGViewer(view.getHyperGraph(), nodes, edges);
 		new_view.getView().setIdentifier(HGVNetworkNaming.getSuggestedSubnetworkTitle(view));
 	}
 }

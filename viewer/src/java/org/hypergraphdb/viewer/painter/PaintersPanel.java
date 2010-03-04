@@ -221,7 +221,8 @@ public class PaintersPanel extends JPanel
      	}
      }
 	
-	private static class TypeHandleListModel extends DefaultListModel{
+	private static class TypeHandleListModel extends DefaultListModel
+	{
 
 		public TypeHandleListModel()
 		{

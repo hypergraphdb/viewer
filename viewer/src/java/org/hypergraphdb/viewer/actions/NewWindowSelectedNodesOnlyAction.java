@@ -39,7 +39,7 @@ public class NewWindowSelectedNodesOnlyAction extends HGVAction {
             nodes.add(v.getNode());
 		Set<FEdge> edges = Collections.emptySet();//current_network.getConnectingEdges(n_idx);
 		HGViewer new_view = 
-		    HGVKit.createHGVComponent( view.getHyperGraph(), nodes, edges);
+		    HGVKit.createHGViewer( view.getHyperGraph(), nodes, edges);
 		new_view.getView().setIdentifier(HGVNetworkNaming
 				.getSuggestedSubnetworkTitle(view));
 	}

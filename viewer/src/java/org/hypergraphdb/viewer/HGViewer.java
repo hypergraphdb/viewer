@@ -2,6 +2,7 @@ package org.hypergraphdb.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -64,6 +65,11 @@ public class HGViewer extends JPanel
     private HGHandle foc_handle;
 
     protected HyperGraph graph;
+    
+    public HGViewer(HyperGraph db, HGHandle h)
+    {
+        this(db, h, 2, null);
+    }
 
     public HGViewer(HyperGraph db, HGHandle h, int depth,
             HGALGenerator generator)
@@ -108,6 +114,7 @@ public class HGViewer extends JPanel
         PScrollPane scroll = new PScrollPane(view.canvas);
         add(scroll, BorderLayout.CENTER);
         addStatusBar();
+        setPreferredSize(new Dimension(600,400));
         initKeyBindings();
     }
 

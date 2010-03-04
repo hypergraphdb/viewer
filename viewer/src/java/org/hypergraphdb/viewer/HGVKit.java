@@ -29,11 +29,6 @@ import phoebe.PNodeView;
 /**
  * This class, HGVKit is <i>the</i> primary class in the API.
  * 
- * All Nodes and Edges must be created using the methods getHGVNode and
- * getHGVEdge, available only in this class. Once a node or edge is created
- * using these methods it can then be added to a HGVNetworkView, where it can be
- * used algorithmically.<BR>
- * <BR>
  */
 public abstract class HGVKit
 {
@@ -158,13 +153,13 @@ public abstract class HGVKit
 	    Collection<FEdge> edges  = new ArrayList<FEdge>();
         for(PEdgeView ev : view.getEdgeViews())
             edges.add(ev.getEdge()); 
-        return createHGVComponent(view.getHyperGraph(), nodes, edges);
+        return createHGViewer(view.getHyperGraph(), nodes, edges);
 	}
 		
 	/**
 	 * Creates a new Network, that inherits from the given ParentNetwork
 	 */
-	public static HGViewer createHGVComponent(HyperGraph db, 
+	public static HGViewer createHGViewer(HyperGraph db, 
 	        Collection<FNode> nodes, Collection<FEdge> edges)
 	{
 	    HGViewer comp = new HGViewer(db, nodes, edges);
@@ -179,11 +174,8 @@ public abstract class HGVKit
 	{
 		PropertyChangeEvent e = new PropertyChangeEvent(pcsO, property_type,
 				old_value, new_value);
-		System.out.println("HGVKit FIRING : " + property_type);
-		// for(PropertyChangeListener l:
-		// getSwingPropertyChangeSupport().getPropertyChangeListeners())
-		// System.out.println("" + l);
-		getSwingPropertyChangeSupport().firePropertyChange(e);
+		//System.out.println("HGVKit FIRING : " + property_type);
+	    getSwingPropertyChangeSupport().firePropertyChange(e);
 	}
 
 	private static void setSquiggleState(boolean isEnabled)
@@ -298,33 +290,6 @@ public abstract class HGVKit
 	public static void setPreferedLayout(Layout pref_layout)
 	{
 		prefered_layout = pref_layout;
-	}
-
-	public static GraphView getStandaloneView(HyperGraph graph, HGWNReader reader)
-	{
-		embeded = true;
-		try
-		{
-		    HGViewer comp = 
-			    createHGVComponent(graph, reader.getNodes(), reader.getEdges());
-			comp.getView().setIdentifier(graph.getStore().getDatabaseLocation());
-			return comp.getView();
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		return null;
-	}
-
-	public static GraphView getStandaloneView(HyperGraph hg, 
-												   HGHandle h,
-												   int depth, 
-												   HGAtomPredicate cond)
-	{
-		final HGWNReader reader = new HGWNReader(hg);
-		reader.read(h, depth, cond); 
-		return getStandaloneView(hg, reader);
 	}
 	
 }
