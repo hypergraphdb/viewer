@@ -68,6 +68,7 @@ public class ActionManager
 	public static final String ZOOM_IN_ACTION = "Zoom In";
 	public static final String ZOOM_OUT_ACTION = "Zoom Out";
 	public static final String ZOOM_SELECTED_ACTION = "Zoom Selected";
+	public static final String LAYOUT_ACTION = "Layout"; 
 
 	
 	private static ActionManager instance;
@@ -114,7 +115,7 @@ public class ActionManager
 		actions.put(ZOOM_OUT_ACTION, new ZoomAction(0.9));
 		actions.put(ZOOM_SELECTED_ACTION, new ZoomSelectedAction());
 		
-		
+		actions.put(LAYOUT_ACTION, new LayoutAction());
 	}
 
 	public Action getAction(String name){
@@ -231,6 +232,22 @@ public class ActionManager
 	}
 
 	
+	public static class LayoutAction extends HGVAction
+    {
+
+      public LayoutAction()
+      {
+         super(ActionManager.LAYOUT_ACTION);
+         setAcceleratorCombo(KeyEvent.VK_L, ActionEvent.CTRL_MASK);
+      }
+
+      public void actionPerformed(ActionEvent e)
+      {
+          GraphView view = HGVKit.getCurrentView();
+          if(view == null) return;
+          HGVKit.prefered_layout.applyLayout(view);
+      }
+    }
 	
 	public static class SelectPrefLayoutAction extends AbstractAction
 	  {

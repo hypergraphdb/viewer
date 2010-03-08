@@ -181,6 +181,7 @@ public class HGViewer extends JPanel
     public void refresh()
     {
         focus(foc_handle);
+        //adjust_view();
     }
 
     void clearView()
@@ -219,13 +220,16 @@ public class HGViewer extends JPanel
     public void addNotify()
     {
         super.addNotify();
-        PCanvas pCanvas = view.getCanvas();
+        adjust_view();
+    }
+    
+    private void adjust_view()
+    {
+        final  PCanvas pCanvas = view.getCanvas();
         pCanvas.setVisible(false);
-
         SwingUtilities.invokeLater(new Runnable() {
             public void run()
             {
-                PCanvas pCanvas = view.getCanvas();
                 pCanvas.setVisible(true);
                 HGVKit.getPreferedLayout().applyLayout(view);
                 view.getCanvas().getCamera().animateViewToCenterBounds(
@@ -245,10 +249,11 @@ public class HGViewer extends JPanel
 
     protected/* static */JToolBar getBottomToolbar()
     {
-        // if (toolbar != null) return toolbar;
+        if (toolbar != null) return toolbar;
         toolbar = new JToolBar();
         toolbar.putClientProperty("JToolBar.isRollover", Boolean.TRUE); // NOI18N
         final HGVMenus m = HGVMenus.getInstance();
+        ActionManager man = ActionManager.getInstance();
         DropDownButton dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
             {
@@ -257,7 +262,9 @@ public class HGViewer extends JPanel
                 return popup;
             }
         };
-        toolbar.add(createDropDown(toolbar, dropdown, "hand", "Edit"));
+        
+        toolbar.add(createDropDown(toolbar, dropdown, "hand", "Edit", 
+                man.getAction(ActionManager.SELECTED_FIRST_NEIGHBORS_ACTION)));
         dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
             {
@@ -266,7 +273,9 @@ public class HGViewer extends JPanel
                 return popup;
             }
         };
-        toolbar.add(createDropDown(toolbar, dropdown, "layout", "Layout"));
+        
+        toolbar.add(createDropDown(toolbar, dropdown, "layout", "Layout", 
+                man.getAction(ActionManager.LAYOUT_ACTION)));
         dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
             {
@@ -276,7 +285,8 @@ public class HGViewer extends JPanel
             }
         };
         toolbar.add(createDropDown(toolbar, dropdown, "visual",
-                "Visual Properties"));
+                "Visual Properties", 
+                man.getAction(ActionManager.VISUAL_PROPERTIES_ACTION)));
         dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
             {
@@ -285,7 +295,8 @@ public class HGViewer extends JPanel
                 return popup;
             }
         };
-        toolbar.add(createDropDown(toolbar, dropdown, "zoom", "Zooming"));
+        toolbar.add(createDropDown(toolbar, dropdown, "zoom", "Zooming",
+                man.getAction(ActionManager.FIT_ACTION)));
 
         dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
@@ -295,7 +306,8 @@ public class HGViewer extends JPanel
                 return popup;
             }
         };
-        toolbar.add(createDropDown(toolbar, dropdown, "print", "Print/Export"));
+        toolbar.add(createDropDown(toolbar, dropdown, "print", "Print/Export",
+                man.getAction(ActionManager.EXPORT_ACTION)));
         
         return toolbar;
     }
@@ -316,32 +328,20 @@ public class HGViewer extends JPanel
     }
 
     private static DropDownButton createDropDown(JToolBar toolbar,
-            final DropDownButton dropdown, final String name, String tooltip)
+            final DropDownButton dropdown, final String name, String tooltip, Action defaultAction)
     {
         dropdown.addToToolBar(toolbar);
         dropdown.putClientProperty("hideActionText", Boolean.TRUE);
-        dropdown.setAction(createDummyAction(name));
+        defaultAction.putValue(Action.SMALL_ICON, new ImageIcon(
+                HGViewer.class.getResource("/org/hypergraphdb/viewer/images/" + name
+                                + ".gif")));
+        
+        dropdown.setAction(defaultAction);
         dropdown.setToolTipText(tooltip);
         return dropdown;
     }
 
-    private static Action createDummyAction(final String name)
-    {
-        return new AbstractAction(name) {
-            {
-                putValue(Action.SMALL_ICON, new ImageIcon(getClass()
-                        .getResource(
-                                "/org/hypergraphdb/viewer/images/" + name
-                                        + ".gif")));
-            }
-
-            public void actionPerformed(ActionEvent e)
-            {
-                ((DropDownButton) e.getSource()).showDropDown(e);
-            }
-        };
-    }
-
+   
     public static final Object FOCUSED_COMPONENT = new StringBuilder(
             "HGVComponent");
 

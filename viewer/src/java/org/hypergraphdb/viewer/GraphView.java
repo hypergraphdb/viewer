@@ -902,6 +902,9 @@ public class GraphView
         addToNodeLayer(node_view);
         fireNetworkChanged(new HGVNetworkNodesAddedEvent(this,
                 new FNode[] { node }));
+//        HGHandle h = node.getHandle();
+//        NodePainter p = getPainter(h, false);
+//        p.paintNode(node_view, this);
         return node_view;
     }
 

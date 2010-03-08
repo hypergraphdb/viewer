@@ -23,7 +23,7 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 public class PNodeView extends PPath
 {
     // Default FNode Paint
-    public static Paint DEFAULT_NODE_PAINT = java.awt.Color.lightGray;
+    public static Paint DEFAULT_NODE_PAINT = java.awt.Color.white;
     // Default FNode Selection Paint
     public static Paint DEFAULT_NODE_SELECTION_PAINT = java.awt.Color.yellow;
     // Deafult Border Paint

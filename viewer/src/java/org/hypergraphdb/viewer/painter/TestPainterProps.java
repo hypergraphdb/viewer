@@ -4,27 +4,22 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+
 import javax.swing.JFrame;
+
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGQuery;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.HGQuery.hg;
 import org.hypergraphdb.atom.HGStats;
-import org.hypergraphdb.viewer.*;
+import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.HGViewerType;
 import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
-import com.l2fprod.common.beans.editor.DirectoryPropertyEditor;
+
 import com.l2fprod.common.demo.BeanBinder;
-import com.l2fprod.common.propertysheet.DefaultProperty;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
-import com.l2fprod.common.propertysheet.PropertySheetTable;
 
 public class TestPainterProps extends PropertySheetPanel
 {

@@ -211,7 +211,7 @@ public class HGVMenus implements HGVNetworkChangeListener
         edges.add(mi(ActionManager.HIDE_EDGE_SELECTION_ACTION));
         edges.add(mi(ActionManager.SELECT_ALL_EDGES_ACTION));
 
-        menu.add(mi(ActionManager.SELECT_ALL_ACTION));
+        //menu.add(mi(ActionManager.SELECT_ALL_ACTION));
     }
 
     /**

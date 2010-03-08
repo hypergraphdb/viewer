@@ -119,7 +119,6 @@ public class HGVUtils
 	{
 		GraphView view = HGVKit.getCurrentView();
 		// select the view, because the popup doesn't do this automaticaly
-		//view.unflagAllNodes();
 		for(PNodeView v : view.getSelectedNodes())
 		    expandNode(v);
 		
@@ -138,13 +137,14 @@ public class HGVUtils
                     out_links[i] = ((HGLink) obj).getTargetAt(i);
             }
         if(!confirmExpanding(in_links.size() + out_links.length)) return;
-        expandLinks(node.getGraphView(), node.getNode(), out_links, false);
+        expandLinks(node.getGraphView(), node.getNode(), out_links, false, true);
         HGHandle[] inA = in_links.toArray(new HGHandle[0]);
-        expandLinks(node.getGraphView(), node.getNode(), inA, true);
+        expandLinks(node.getGraphView(), node.getNode(), inA, true, false);
 	}
 	
-	private static void expandLinks(GraphView view, FNode node, HGHandle[] links, boolean incoming){
-		if(!confirmExpanding(links.length)) return;
+	private static void expandLinks(GraphView view, FNode node, HGHandle[] links, 
+	        boolean incoming, boolean confirm_expanding){
+		if(confirm_expanding && !confirmExpanding(links.length)) return;
 		for(int i = 0; i < links.length; i++){
 			FNode n = new FNode(links[i]);
 			view.addNodeView(n);
@@ -156,7 +156,7 @@ public class HGVUtils
 	
 	private static boolean confirmExpanding(int edges_count)
 	{
-		if(edges_count > 50)
+		if(edges_count > 100)
 		{
 			NotifyDescriptor d = new NotifyDescriptor.Confirmation(
 					GUIUtilities.getFrame(), "The node contains " + edges_count + " edges. Are you sure that you want to expand them?", 
