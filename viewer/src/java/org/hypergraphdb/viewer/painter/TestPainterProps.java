@@ -28,13 +28,14 @@ public class TestPainterProps extends PropertySheetPanel
 	 */
 	public static void main(String[] args)
 	{
-		JFrame f = new JFrame();
-		PaintersPanel p = new PaintersPanel();
+		
+		//PaintersPanel p = new PaintersPanel();
 		//p.init(new DefaultNodePainter());
 		//p.init(new DefaultEdgePainter());
-		f.getContentPane().add(p);
+		//p.setHyperGraph(hg);
+		//f.getContentPane().add(p);
+	    JFrame f = new JFrame();
 		final HyperGraph hg = new HyperGraph("F:/temp/xxx2");
-		p.setHyperGraph(hg);
 		f.getContentPane().add(getViewer(hg));
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.addWindowListener(new WindowAdapter(){

@@ -46,6 +46,10 @@ public class AppConfig
 			APP_CONFIG_HG_NAME).getAbsolutePath();
 			System.out.println("Trying to get or create new AppConfig in: " + path);
 			graph = new HyperGraph(path);
+			//System.out.println("l: " + Thread.currentThread().getContextClassLoader());
+			// System.out.println("2: " + AppConfig.class.getClassLoader());
+			//graph.getTypeSystem().setClassLoader(AppConfig.class.getClassLoader());
+           
 			instance = (AppConfig) hg.getOne(graph, hg.type(AppConfig.class));
 			if (instance == null)
 			{

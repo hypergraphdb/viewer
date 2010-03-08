@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.SwingUtilities;
+
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGHandleFactory;
 import org.hypergraphdb.HGIndex;
@@ -27,6 +29,7 @@ import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.GraphView;
+import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.util.GUIUtilities;
@@ -254,47 +257,22 @@ public class HGVUtils
 		return total;
 	}
 
-	public static Set<String> getEdgeTypes(HyperGraph h)
-	{
-		//if(edgeTypesCache.containsKey(h))
-		// return edgeTypesCache.get(h);
-//		Set set = h.getTypeSystem().getJavaTypeMappings().keySet();
-		Set<String> filter_set = new TreeSet<String>();
-/*		for (Iterator it = set.iterator(); it.hasNext();)
-		{
-			Class cl = (Class) it.next();
-			if (HGLink.class.isAssignableFrom(cl))
-				filter_set.add(cl.getName());
-		} */
-		// edgeTypesCache.put(h, filter_set);
-		return filter_set;
-	}
+	public static void invokeLater(final Runnable r)
+	{ 
+	    final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+	    SwingUtilities.invokeLater(
+	            new Runnable()
+	            { 
+	                public void run(){
+	                   Thread.currentThread().setContextClassLoader(
+	                           HGViewer.class.getClassLoader()); 
+	                    r.run();
+	                    // restore class laoder
+	                    Thread.currentThread().setContextClassLoader(cl); 
+	                }
+	               });
+	  }
 
-	public static Set<String> getNodeTypes(HyperGraph h)
-	{
-		//if(nodeTypesCache.containsKey(h))
-		// return nodeTypesCache.get(h);
-		Set<HGAtomType> set = getAllAtomTypes(h);
-		Set<String> filter_set = new TreeSet<String>();
-		
-		for (HGAtomType t : set)
-			filter_set.add(t.getClass().getName());
-		return filter_set;
-		
-//		HGHandle[] handles = getAllRecordTypes(h);
-//		System.out.println("NodeTypes: " + handles.length);
-//		Set<String> filter_set = new TreeSet<String>();
-//		for (HGHandle hh : handles)
-//		   filter_set.add(deduceAliasName(h, hh)); //h.get(hh).getClass().getName());
-//		
-//		// nodeTypesCache.put(h, filter_set);
-//		return filter_set;
-	}
-
-	// private static HashMap<HyperGraph, Set<String>> nodeTypesCache = new
-	// HashMap<HyperGraph, Set<String>>();
-	//private static HashMap<HyperGraph, Set<String>> edgeTypesCache = new
-	// HashMap<HyperGraph, Set<String>>();
 	private HGVUtils()
 	{ 
 	}

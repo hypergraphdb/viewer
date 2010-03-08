@@ -38,6 +38,7 @@ import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.util.CloseMe;
 import org.hypergraphdb.viewer.dialogs.EnhancedMenu;
 import org.hypergraphdb.viewer.dialogs.VisStylesProvider;
+import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.hg.HGWNReader;
 import org.hypergraphdb.viewer.visual.ui.DropDownButton;
 
@@ -227,7 +228,7 @@ public class HGViewer extends JPanel
     {
         final  PCanvas pCanvas = view.getCanvas();
         pCanvas.setVisible(false);
-        SwingUtilities.invokeLater(new Runnable() {
+        HGVUtils.invokeLater(new Runnable() {
             public void run()
             {
                 pCanvas.setVisible(true);
