@@ -239,7 +239,8 @@ public class HGViewer extends JPanel
     @Override
     public void removeNotify()
     {
-        VisualManager.getInstance().save();
+        super.removeNotify();
+        //VisualManager.getInstance().save();
     }
 
     protected/* static */JToolBar getBottomToolbar()

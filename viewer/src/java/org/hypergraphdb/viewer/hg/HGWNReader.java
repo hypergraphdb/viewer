@@ -63,7 +63,6 @@ public class HGWNReader
         //read0(handle, depth, generator);
         //if(true) return;
         
-        //TODO: fix this
         LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
         depth--;
         FNode node = new FNode(handle);
