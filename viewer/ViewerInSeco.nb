@@ -1,13 +1,13 @@
-<notebook title="F:\kosta\ticl\new_hg\viewer\ViewerInSeco.nb">
-    <cell-style bgColor="255,204,102"/>
+<notebook title="ViewerInSeco.nb">
     <output-cell-style borderColor="255,255,255" fgColor="0,128,0"/>
+    <cell-style bgColor="255,204,102"/>
     <cell-group name="CG7">
         <cell html-preview="true">
-            <data><![CDATA[<h2 style="text-align:center;">Working with HyperGraph and HGViewer in Seco
+            <data><![CDATA[
+<h2 style="text-align:center;">Working with HyperGraph and HGViewer in Seco
 </h2>
 <p style="text-align:left;">This is a short step-by-step tutorial describing some uses of HGViewer in Seco. First let's write few import statements that we'll need later on and open an empty HyperGraph.
-</p>
-]]>            </data>
+</p>]]>            </data>
         </cell>
 
     </cell-group>
@@ -25,29 +25,26 @@ import org.hypergraphdb.viewer.visual.*;
 import org.hypergraphdb.viewer.actions.*;
 
 type = new HGViewerType();
- type.setHyperGraph(ThisNiche.graph);
- ThisNiche.graph.getTypeSystem().addPredefinedType(
-HGViewerType.HGHANDLE, type,  HGViewer.class);
+type.setHyperGraph(niche);
+niche.getTypeSystem().addPredefinedType(HGViewerType.HGHANDLE, type,  HGViewer.class);
 
-graph = ThisNiche.graph; //HGEnvironment.get("/tmp/hgviewer");
+graph = HGEnvironment.get("f:/temp/hgviewer");
 ]]>            </data>
         </cell>
 
     </cell-group>
     <cell-group name="CG9">
         <cell html-preview="true">
-            <data><![CDATA[<p>Next we'll create the HGViewer component, the depth of displayed HyperGraph elements and the handle to focus around. In this case this will be the Top handle.
-</p>
-]]>            </data>
+            <data><![CDATA[
+<p>Next we'll create the HGViewer component, the depth of displayed HyperGraph elements and the handle to focus around. In this case this will be the Top handle.
+</p>]]>            </data>
         </cell>
 
     </cell-group>
     <cell-group name="CG10">
         <cell>
-            <data><![CDATA[//h = graph.getTypeSystem().getTypeHandle(Top.class);
-h = graph.getTypeSystem().getTypeHandle(JButton.class);
-int depth = 2;
-comp = new HGViewer(graph, h, depth, null);
+            <data><![CDATA[h = graph.getTypeSystem().getTypeHandle(Top.class);
+comp = new HGViewer(graph, h, 2, null);
 ]]>            </data>
         </cell>
 
@@ -55,38 +52,45 @@ comp = new HGViewer(graph, h, depth, null);
     <cell html-preview="true">
         <data><![CDATA[
 <p>
-  <span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
+  <span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
 </p>
 <ul>
-  <li><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">Right Mouse Button Down + Drag Up = Zoom In</span>  
+  <li><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">Right Mouse Button Down + Drag Up </span><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000; font-weight:bold;">OR</span><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;"> Alt + Up = Zoom In</span>  
   </li>
-  <li><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">Right Mouse Button Down + Drag Down = Zoom Out</span>  
+  <li><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">Right Mouse Button Down + Drag Down </span><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000; font-weight:bold;">OR</span><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;"> Alt + Down = Zoom Out</span>  
   </li>
-  <li><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">Ctrl + F = View is scaled to display all presented nodes</span>  
+  <li><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">Ctrl + F = View is scaled to display all presented nodes</span>  
   </li>
-  <li><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">Ctrl + 1...4 Different layouts&#160;</span>  
+  <li>Ctrl + L  = Layout  
+  </li>
+  <li>Ctrl + H = Hide selected nodes&#160;  
   </li>
 </ul>
-<p><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.</span>
+<p><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.</span>
 </p>]]>        </data>
     </cell>
     <cell>
-        <data><![CDATA[nv = comp.getView().getSelectedNodeView(); 
-hh = nv.getNode().getHandle();
-o = graph.get(hh);
+        <data><![CDATA[node = comp.getView().getSelectedNodeView();
+hh = node.getNode().getHandle();
+o = graph.get(hh)
 ]]>        </data>
     </cell>
     <cell html-preview="true">
-        <data><![CDATA[At this point the nodes in the viewer should look pretty ugly. So let's make them look better (For more information on painters and styles you could look at &quot;Painters And Styles.nb&quot;). We define few generic painters which are responsible for drawing the nodes of a given type.
-]]>        </data>
+        <data><![CDATA[
+<p>At this point the nodes in the viewer should look pretty ugly. So let's make them look better. The easiest way is by invoking the &quot;Add Painter&quot; command from the popup menu on a selected node. This will automaticaly create a painter for all the nodes of this type and will show a dialog with all the painter's properties.
+</p>
+<p>Of course it's possible to define a painter programmatically.
+</p>
+<p>(For more information on painters and styles you could look at &quot;Painters And Styles.nb&quot;). Next we'll define few generic painters which are responsible for drawing the nodes of a given type.
+</p>]]>        </data>
     </cell>
     <cell>
         <data><![CDATA[//helper function for adding generic painters  
 public NodePainter makePainter(HyperGraph graph, Class cls, HGViewer view)
 {
     painter = new DefaultNodePainter();
-    typeH = graph.getPersistentHandle(graph.getTypeSystem().getTypeHandle(cls));
-    comp.setPainter(typeH, painter);
+    typeH = graph.getTypeSystem().getTypeHandle(cls);
+    comp.getView().getVisualStyle().addNodePainter(typeH, painter);
     return painter;
 }
 //adding generic and persistent painters 
@@ -98,44 +102,19 @@ painter1 = new SimpleLabelTooltipNodePainter();
 typeH = graph.getPersistentHandle(graph.getTypeSystem().getTypeHandle(Top.class));
 painter1.setColor(Color.RED);
 painter1.setShape(Shape.DIAMOND);
-comp.setPainter(typeH, painter1);
+comp.getView().getVisualStyle().addNodePainter(typeH, painter1);
+comp.getView().redrawGraph();
 ]]>        </data>
     </cell>
-    <cell-group name="CG11">
-        <cell html-preview="true">
-            <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
-]]>            </data>
-        </cell>
-        <cell>
-            <data><![CDATA[comp.setDepth(1);
+    <cell html-preview="true">
+        <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.]]>        </data>
+    </cell>
+    <cell>
+        <data><![CDATA[comp.setDepth(1); 
 comp.refresh();
-]]>            </data>
-        </cell>
-
-    </cell-group>
-    <cell-group name="CG12">
-        <cell>
-            <data><![CDATA[mypainter =new org.hypergraphdb.viewer.painter.NodePainter()
-{
-    public void paintNode(phoebe.PNodeView nodeView, org.hypergraphdb.viewer.HGVNetworkView network_view)
-    {
-        nodeView.setLabelText("Bizi is here");
-    } 
-}
-]]>            </data>
-        </cell>
-
-    </cell-group>
+]]>        </data>
+    </cell>
     <cell-group name="CG13">
-        <cell>
-            <data><![CDATA[typeH = graph.getPersistentHandle(graph.getTypeSystem().getTypeHandle(Top.class));
-comp.setPainter(typeH, mypainter);
-]]>            </data>
-        </cell>
-        <cell>
-            <data><![CDATA[comp.setDefaultNodePainter(mypainter)
-]]>            </data>
-        </cell>
         <cell>
             <data><![CDATA[import org.hypergraphdb.app.wordnet.data.Word;
 ]]>            </data>
