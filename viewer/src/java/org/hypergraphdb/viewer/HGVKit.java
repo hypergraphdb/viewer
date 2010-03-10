@@ -44,7 +44,8 @@ public abstract class HGVKit
 	protected static Object pcsO = new Object();
 	protected static SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(
 			pcsO);
-	protected static List<GraphView> networkViewList;
+	protected static List<GraphView> graphViewList;
+	static boolean embeded = true;
 	protected static Layout prefered_layout;
 	protected static Set<Layout> layouts = new HashSet<Layout>();
 	static
@@ -59,15 +60,13 @@ public abstract class HGVKit
 		setPreferedLayout(l);
 	}
 
-	static boolean embeded = true;
-
 	public static boolean isEmbeded()
 	{
 		return embeded;
 	}
 
 	/**
-	 * Shuts down HGVKit, after giving plugins time to react.
+	 * Shuts down HGVKit.
 	 */
 	public static void exit()
 	{
@@ -82,9 +81,7 @@ public abstract class HGVKit
 		System.exit(0);
 	}
 
-	// --------------------//
-	// Root Graph Methods
-	// --------------------//
+	
 	/**
 	 * Bound events are:
 	 * <ol>
@@ -99,7 +96,7 @@ public abstract class HGVKit
 
 
 	 /**
-	 * Return the HGVNetworkView that currently has the focus. 
+	 * Return the GraphView that currently has the focus. 
 	 */
 	public static GraphView getCurrentView()
 	{
@@ -108,7 +105,7 @@ public abstract class HGVKit
 	}
 
 	/**
-	 * @return the reference to the One CytoscapeDesktop
+	 * @return the reference to the One HGVDesktop
 	 */
 	public static HGVDesktop getDesktop()
 	{
@@ -116,14 +113,12 @@ public abstract class HGVKit
 	}
 
 	/**
-	 * This Map has keys that are Strings ( network_ids ) and values that are
-	 * networks.
 	 */
 	public static List<GraphView> getViewersList() 
 	{
-		if (networkViewList == null)
-			networkViewList = new ArrayList<GraphView>();
-		return networkViewList;
+		if (graphViewList == null)
+			graphViewList = new ArrayList<GraphView>();
+		return graphViewList;
 	}
 
 	
@@ -132,11 +127,7 @@ public abstract class HGVKit
 	 */
 	public static void destroyNetworkView(GraphView view)
 	{
-		// System.out.println( "destroying: "+view.getIdentifier()+" :
-		// "+getNetworkViewMap().get( view.getIdentifier() ) );
-	    getViewersList().remove(view);
-		// System.out.println( "gone from hash: "+view.getIdentifier()+" :
-		// "+getNetworkViewMap().get( view.getIdentifier() ) );
+		getViewersList().remove(view);
 		firePropertyChange(HGVDesktop.NETWORK_VIEW_DESTROYED, null, view);
 		// theoretically this should not be set to null till after the events
 		// firing is done
@@ -145,7 +136,7 @@ public abstract class HGVKit
 		System.gc();
 	}
 
-	public static HGViewer createHGVComponent(GraphView view)
+	public static HGViewer createHGViewer(GraphView view)
 	{
 	    Collection<FNode> nodes = new ArrayList<FNode>();
 	    for(PNodeView nv : view.getNodeViews())

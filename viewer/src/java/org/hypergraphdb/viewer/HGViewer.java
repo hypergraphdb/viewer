@@ -171,7 +171,7 @@ public class HGViewer extends JPanel
             view.addNodeView(n);
         for (FEdge e : reader.getEdges())
             view.addEdgeView(e);
-        HGVKit.getPreferedLayout().applyLayout(HGVKit.getCurrentView());
+        HGVKit.getPreferedLayout().applyLayout(view);
         view.redrawGraph();
         FNode node = new FNode(handle);
         view.getNodeView(node).setSelected(true);

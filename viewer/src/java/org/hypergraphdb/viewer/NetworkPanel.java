@@ -1,21 +1,38 @@
 package org.hypergraphdb.viewer;
 
-import org.hypergraphdb.viewer.HGVDesktop;
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.GraphView;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
 
-import org.hypergraphdb.viewer.actions.CreateNetworkViewAction;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTree;
+import javax.swing.ToolTipManager;
+import javax.swing.event.SwingPropertyChangeSupport;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
-import org.hypergraphdb.viewer.util.swing.*;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.event.*;
-import java.beans.*;
+import org.hypergraphdb.viewer.util.swing.AbstractTreeTableModel;
+import org.hypergraphdb.viewer.util.swing.JTreeTable;
+import org.hypergraphdb.viewer.util.swing.TreeTableModel;
 
 public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		TreeSelectionListener
@@ -403,25 +420,20 @@ class PopupActionListener implements ActionListener {
 	public static String CREATE_VIEW = "Create View";
 
 	/**
-	 * This is the network which originated the mouse-click event (more
-	 * appropriately, the network associated with the ID associated with the row
-	 * associated with the JTable that originated the popup event
+	 * This is GraphView which originated the mouse-click event
 	 */
-	protected GraphView cyNetwork;
+	protected GraphView graphView;
 
 	/**
-	 * Based on the action event, destroy or create a view, or destroy a network
+	 * Based on the action event, destroy or create a view
 	 */
 	public void actionPerformed(ActionEvent ae) {
 		String label = ((JMenuItem) ae.getSource()).getText();
 		// Figure out the appropriate action
-		if (label == DESTROY_VIEW) {
-			HGVKit.destroyNetworkView(cyNetwork);
-		} // end of if ()
-		else if (label == CREATE_VIEW) {
-			CreateNetworkViewAction.createViewFromCurrentNetwork(cyNetwork);
-		} // end of if ()
-		
+		if (label == DESTROY_VIEW) 
+			HGVKit.destroyNetworkView(graphView);
+		else if (label == CREATE_VIEW)
+		    HGVKit.createHGViewer(graphView);
 		else {
 			// throw an exception here?
 			System.err.println("Unexpected network panel popup option");
@@ -433,6 +445,6 @@ class PopupActionListener implements ActionListener {
 	 * know which network the user is clicking on to call for the popup menu
 	 */
 	public void setActiveNetwork(GraphView cyNetwork) {
-		this.cyNetwork = cyNetwork;
+		this.graphView = cyNetwork;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.GraphView;
+import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.util.HGVAction;
 
 import phoebe.PNodeView;
@@ -21,9 +22,9 @@ public class LayoutAction extends HGVAction
 		setAcceleratorCombo(zero + i, ActionEvent.CTRL_MASK);
 	}
 	
-	public void actionPerformed(ActionEvent event)
+	public void action(HGViewer viewer) throws Exception
     {
-		GraphView view = HGVKit.getCurrentView();
+		GraphView view = viewer.getView();
 		layout.applyLayout(view);
 		List<PNodeView> sel = view.getSelectedNodes();
 		PBounds b = (sel.size() > 0) ? sel.get(0).getFullBounds() :

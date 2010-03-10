@@ -47,9 +47,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-import org.hypergraphdb.viewer.actions.HideSelectedAction;
-import org.hypergraphdb.viewer.actions.SelectionModeAction;
-import org.hypergraphdb.viewer.actions.SquiggleAction;
+import org.hypergraphdb.viewer.dialogs.SelectionMenu;
+import org.hypergraphdb.viewer.dialogs.SquiggleMenu;
 import org.hypergraphdb.viewer.dialogs.EnhancedMenu;
 import org.hypergraphdb.viewer.dialogs.VisStylesProvider;
 import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
@@ -162,10 +161,10 @@ public class HGVMenus implements HGVNetworkChangeListener
 
     void populateEditMenu(JComponent editMenu)
     {
-        editMenu.add(new SquiggleAction());
+        editMenu.add(new SquiggleMenu());
         editMenu.add(mi(ActionManager.CREATE_VIEW_ACTION));
         editMenu.add(mi(ActionManager.DESTROY_VIEW_ACTION));
-        editMenu.add(mi(ActionManager.DESTROY_SELECTED_NODES_EDGES_ACTION));
+        editMenu.add(mi(ActionManager.HIDE_NODE_SELECTION_ACTION));
         // add Preferences...
         editMenu.add(new JSeparator());
         editMenu.add(new GlobMenuItem(ActionManager.getInstance().getAction(
@@ -186,7 +185,9 @@ public class HGVMenus implements HGVNetworkChangeListener
 
     void populateSelectMenu(JComponent menu)
     {
-        menu.add(new SelectionModeAction());
+        if (HGVKit.isEmbeded())
+            menu.add(new SquiggleMenu());
+        menu.add(new SelectionMenu());
         if (!HGVKit.isEmbeded())
         {
             displayNWSubMenu = new JMenu("To New Network");
@@ -200,14 +201,14 @@ public class HGVMenus implements HGVNetworkChangeListener
         }
         JMenu nodes = new JMenu("Nodes");
         menu.add(nodes);
-        nodes.add(mi(ActionManager.INVERT_NODE_SELECTION_ACTION));
+        //nodes.add(mi(ActionManager.INVERT_NODE_SELECTION_ACTION));
         nodes.add(mi(ActionManager.HIDE_NODE_SELECTION_ACTION));
         nodes.add(mi(ActionManager.SELECT_ALL_NODES_ACTION));
         nodes.add(mi(ActionManager.SELECTED_FIRST_NEIGHBORS_ACTION));
 
         JMenu edges = new JMenu("Edges");
         menu.add(edges);
-        edges.add(mi(ActionManager.INVERT_EDGE_SELECTION_ACTION));
+       // edges.add(mi(ActionManager.INVERT_EDGE_SELECTION_ACTION));
         edges.add(mi(ActionManager.HIDE_EDGE_SELECTION_ACTION));
         edges.add(mi(ActionManager.SELECT_ALL_EDGES_ACTION));
 
@@ -279,7 +280,8 @@ public class HGVMenus implements HGVNetworkChangeListener
         loadButton.setRolloverEnabled(true);
         loadButton.setText("");
 
-        JButton hideSelectedButton = toolBar.add(new HideSelectedAction(false));
+        JButton hideSelectedButton = toolBar.add(man
+                .getAction(ActionManager.HIDE_SELECTED_ACTION));
         hideSelectedButton.setIcon(new ImageIcon(
                 getImgResource("new/delete36.gif")));
         hideSelectedButton.setToolTipText("Hide Selected Region");

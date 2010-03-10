@@ -7,10 +7,15 @@
 package org.hypergraphdb.viewer.hg;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.KeyStroke;
 
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
@@ -36,7 +41,7 @@ import cytoscape.task.util.TaskManager;
 
 /**
   */
-public class LoadWordNetAction extends HGVAction
+public class LoadWordNetAction extends AbstractAction
 {
     private static final String WORDNET_PATH_PROP = "WORDNET_PATH_PROP";
     private static String PATH = "F:\\kosta\\hg\\wordnet";
@@ -47,7 +52,8 @@ public class LoadWordNetAction extends HGVAction
     public LoadWordNetAction()
     {
         super(ActionManager.LOAD_WORD_NET_ACTION);
-        setAcceleratorCombo(java.awt.event.KeyEvent.VK_W, ActionEvent.CTRL_MASK);
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                KeyEvent.VK_W, ActionEvent.CTRL_MASK));
     }
 
     /**

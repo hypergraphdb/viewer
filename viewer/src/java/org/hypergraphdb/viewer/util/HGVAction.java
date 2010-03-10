@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+
+import org.hypergraphdb.viewer.HGViewer;
 
 public abstract class HGVAction extends AbstractAction
 {
@@ -18,8 +21,6 @@ public abstract class HGVAction extends AbstractAction
     public HGVAction(String name)
     {
         super(name);
-        this.consoleName = name;
-        consoleName = consoleName.replaceAll(":. \'", "");
     }
 
     public HGVAction(String name, javax.swing.Icon icon)
@@ -29,18 +30,37 @@ public abstract class HGVAction extends AbstractAction
         consoleName = consoleName.replaceAll(" ", "");
     }
 
-    public void setName(String name)
+    abstract protected void action(HGViewer viewer) throws Exception;
+
+    public void actionPerformed(ActionEvent e)
     {
-        this.consoleName = name;
+        if (!(this.isEnabled())) return;
+        HGViewer pane = getHGViewer(e);
+        if (pane == null) return;
+        HGViewer viewer = (HGViewer) pane;
+        if (viewer == null) return;
+        try
+        {
+            action(viewer);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+            UIManager.getLookAndFeel().provideErrorFeedback(viewer);
+        }
     }
 
-    public String getName()
+    public boolean isEnabled()
     {
-        return consoleName;
+        HGViewer viewer = HGViewer.getFocusedComponent();
+        if (viewer == null) return false;
+        return isEnabled(viewer);
     }
 
-    // implements AbstractAction
-    public abstract void actionPerformed(ActionEvent e);
+    public boolean isEnabled(HGViewer viewer)
+    {
+        return true;
+    }
 
     public void setAcceleratorCombo(int key_code, int key_mods)
     {
@@ -48,4 +68,14 @@ public abstract class HGVAction extends AbstractAction
                 key_mods));
 
     }
-} 
+
+    protected final HGViewer getHGViewer(ActionEvent e)
+    {
+        if (e != null)
+        {
+            Object o = e.getSource();
+            if (o instanceof HGViewer) return (HGViewer) o;
+        }
+        return HGViewer.getFocusedComponent();
+    }
+}
