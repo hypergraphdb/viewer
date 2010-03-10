@@ -10,8 +10,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * PopupIconChooser borrows all of its functionality from IconPopupButton.
- * It displays a popup window for the user to select an icon.
+ * PopupIconChooser displays a popup window for the user to select an icon.
  */
 public class PopupIconChooser {
     private String title, objectName;

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
@@ -11,8 +12,6 @@ import org.hypergraphdb.viewer.HGViewer;
 
 public abstract class HGVAction extends AbstractAction
 {
-    protected String consoleName;
-
     public HGVAction()
     {
         super();
@@ -23,11 +22,9 @@ public abstract class HGVAction extends AbstractAction
         super(name);
     }
 
-    public HGVAction(String name, javax.swing.Icon icon)
+    public HGVAction(String name, Icon icon)
     {
         super(name, icon);
-        this.consoleName = name;
-        consoleName = consoleName.replaceAll(" ", "");
     }
 
     abstract protected void action(HGViewer viewer) throws Exception;
@@ -35,9 +32,7 @@ public abstract class HGVAction extends AbstractAction
     public void actionPerformed(ActionEvent e)
     {
         if (!(this.isEnabled())) return;
-        HGViewer pane = getHGViewer(e);
-        if (pane == null) return;
-        HGViewer viewer = (HGViewer) pane;
+        HGViewer viewer = getHGViewer(e);
         if (viewer == null) return;
         try
         {
@@ -50,17 +45,17 @@ public abstract class HGVAction extends AbstractAction
         }
     }
 
-    public boolean isEnabled()
-    {
-        HGViewer viewer = HGViewer.getFocusedComponent();
-        if (viewer == null) return false;
-        return isEnabled(viewer);
-    }
-
-    public boolean isEnabled(HGViewer viewer)
-    {
-        return true;
-    }
+//    public boolean isEnabled()
+//    {
+//        HGViewer viewer = HGViewer.getFocusedComponent();
+//        if (viewer == null) return false;
+//        return isEnabled(viewer);
+//    }
+//
+//    public boolean isEnabled(HGViewer viewer)
+//    {
+//        return true;
+//    }
 
     public void setAcceleratorCombo(int key_code, int key_mods)
     {

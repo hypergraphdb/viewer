@@ -23,20 +23,30 @@
 package org.hypergraphdb.viewer.util;
 
 
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
-import java.net.*;
-import java.util.*;
-import java.io.File;
 
-import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
-import org.hypergraphdb.viewer.*;
-import org.hypergraphdb.viewer.dialogs.VariableGridLayout;
 
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PNode;
@@ -220,38 +230,7 @@ public class GUIUtilities
         win.setLocation(x,y);
     }
     
-    /**
-     * Creates a component that displays a multiple line message. This
-     * is implemented by assembling a number of <code>JLabels</code> in
-     * a <code>JPanel</code>.
-     * @param str The string, with lines delimited by newline
-     * (<code>\n</code>) characters.
-     * @since jEdit 4.1pre3
-     */
-    
-    public static JComponent createMultilineLabel(String str)
-    {
-        JPanel panel = new JPanel(new VariableGridLayout(
-        VariableGridLayout.FIXED_NUM_COLUMNS,1,1,1));
-        int lastOffset = 0;
-        for(;;)
-        {
-            int index = str.indexOf('\n',lastOffset);
-            if(index == -1)
-                break;
-            else
-            {
-                panel.add(new JLabel(str.substring(lastOffset,index)));
-                lastOffset = index + 1;
-            }
-        }
-        
-        if(lastOffset != str.length())
-            panel.add(new JLabel(str.substring(lastOffset)));
-        
-        return panel;
-    }
-    
+   
     /**
      * Focuses on the specified component as soon as the window becomes
      * active.

@@ -5,17 +5,24 @@
  */
 package org.hypergraphdb.viewer.dialogs;
 
-import java.beans.PropertyEditor;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
+
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.handle.HGLiveHandle;
-import org.hypergraphdb.type.*;
+import org.hypergraphdb.type.HGCompositeType;
+import org.hypergraphdb.type.HGProjection;
+import org.hypergraphdb.type.Record;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.hg.HGVUtils;
-import org.hypergraphdb.viewer.props.*;
+import org.hypergraphdb.viewer.props.AbstractProperty;
+import org.hypergraphdb.viewer.props.AbstractPropertySupport;
+import org.hypergraphdb.viewer.props.PropertiesTableModel;
+import org.hypergraphdb.viewer.props.PropertyCellEditor;
 
 /**
  * 

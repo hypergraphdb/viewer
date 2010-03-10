@@ -161,7 +161,7 @@ public class HGVMenus implements HGVNetworkChangeListener
 
     void populateEditMenu(JComponent editMenu)
     {
-        editMenu.add(new SquiggleMenu());
+        editMenu.add(new EnhancedMenu("Squiggle", new SquiggleMenu()));
         editMenu.add(mi(ActionManager.CREATE_VIEW_ACTION));
         editMenu.add(mi(ActionManager.DESTROY_VIEW_ACTION));
         editMenu.add(mi(ActionManager.HIDE_NODE_SELECTION_ACTION));
@@ -186,8 +186,8 @@ public class HGVMenus implements HGVNetworkChangeListener
     void populateSelectMenu(JComponent menu)
     {
         if (HGVKit.isEmbeded())
-            menu.add(new SquiggleMenu());
-        menu.add(new SelectionMenu());
+            menu.add(new EnhancedMenu("Squiggle", new SquiggleMenu()));
+        menu.add(new EnhancedMenu("Mouse Drag Selects", new SelectionMenu()));
         if (!HGVKit.isEmbeded())
         {
             displayNWSubMenu = new JMenu("To New Network");
@@ -285,6 +285,7 @@ public class HGVMenus implements HGVNetworkChangeListener
         hideSelectedButton.setIcon(new ImageIcon(
                 getImgResource("new/delete36.gif")));
         hideSelectedButton.setToolTipText("Hide Selected Region");
+        hideSelectedButton.setText("");
         hideSelectedButton.setBorderPainted(false);
         toolBar.addSeparator();
 

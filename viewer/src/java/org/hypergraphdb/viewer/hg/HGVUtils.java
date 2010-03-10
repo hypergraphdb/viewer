@@ -67,17 +67,15 @@ public class HGVUtils
 
 	public static HGHandle[] getAllRecordTypes(HyperGraph graph)
 	{
-		HGSearchResult it = null;
+		HGSearchResult<HGHandle> it = null;
 		try
 		{
 			it = graph.find(hg.type(HGSubsumes.class));
 			Set<HGHandle> list = new HashSet<HGHandle>();
 			while (it.hasNext())
 			{
-				it.next();
-				HGSubsumes h = (HGSubsumes) graph.get((HGHandle)it.current());
-				list.add(graph.getPersistentHandle(
-						h.getSpecific()));
+				HGSubsumes h = (HGSubsumes) graph.get(it.next());
+				list.add(h.getSpecific());
 			}
 			return (HGHandle[]) list.toArray(new HGHandle[list
 					.size()]);
@@ -99,16 +97,13 @@ public class HGVUtils
 
 	public static HGHandle[] getAllForType(HyperGraph graph, HGHandle handle)
 	{
-		HGSearchResult ite = null;
+		HGSearchResult<HGHandle> ite = null;
 		try
 		{
 			ite = graph.find(hg.type(handle));
 			List<HGHandle> list = new ArrayList<HGHandle>();
 			while (ite.hasNext())
-			{
-				ite.next();
-				list.add((HGHandle) ite.current());
-			}
+				list.add(ite.next());
 			return (HGHandle[]) list.toArray(
 					new HGHandle[list.size()]);
 		}

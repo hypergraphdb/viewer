@@ -36,7 +36,8 @@ public class TestPainterProps extends PropertySheetPanel
 		//f.getContentPane().add(p);
 	    JFrame f = new JFrame();
 		final HyperGraph hg = new HyperGraph("F:/temp/xxx2");
-		f.getContentPane().add(getViewer(hg));
+		HGViewer viewer = getViewer(hg);
+		f.getContentPane().add(viewer);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.addWindowListener(new WindowAdapter(){
            public void windowClosing(WindowEvent e)
@@ -48,9 +49,10 @@ public class TestPainterProps extends PropertySheetPanel
 		});
 		f.setMinimumSize(new Dimension(600, 400));
 		f.setVisible(true);
+		//new org.hypergraphdb.viewer.dialogs.PhoebeNodeControl(viewer.getView());
 	}
 	
-	public static Component getViewer(HyperGraph graph){
+	public static HGViewer getViewer(HyperGraph graph){
 		HGHandle h = graph.getTypeSystem().getTypeHandle(HGStats.class);
 		HGViewer c = null;
 		try{

@@ -23,22 +23,19 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.freehep.util.export.ExportDialog;
-import org.hypergraphdb.viewer.actions.*;
 import org.hypergraphdb.viewer.dialogs.AppConfigPanel;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
-import org.hypergraphdb.viewer.hg.*;
+import org.hypergraphdb.viewer.hg.LoadHyperGraphFileAction;
+import org.hypergraphdb.viewer.hg.LoadWordNetAction;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
@@ -66,14 +63,16 @@ public class ActionManager
     // public static final String DESTROY_SELECTED_NODES_EDGES_ACTION =
     // "Destroy Selected Nodes/Edges";
     public final static String PREFERENCES_ACTION = "Preferences...";
-    //public static final String INVERT_NODE_SELECTION_ACTION = "Invert selection";
+    // public static final String INVERT_NODE_SELECTION_ACTION =
+    // "Invert selection";
     public static final String HIDE_NODE_SELECTION_ACTION = "Hide selection";
     public static final String SELECT_ALL_NODES_ACTION = "Select all nodes";
     // public static final String DESELECT_ALL_NODES_ACTION =
     // "Deselect all nodes";
     public static final String SELECTED_FIRST_NEIGHBORS_ACTION = "First neighbors of selected nodes";
 
-  //  public static final String INVERT_EDGE_SELECTION_ACTION = "Invert edge selection";
+    // public static final String INVERT_EDGE_SELECTION_ACTION =
+    // "Invert edge selection";
     public static final String HIDE_EDGE_SELECTION_ACTION = "Hide edge selection";
     public static final String SHOW_ALL_EDGES_ACTION = "Show All Edges";
     public static final String SELECT_ALL_EDGES_ACTION = "Select all edges";
@@ -96,7 +95,7 @@ public class ActionManager
     public static final String ZOOM_OUT_ACTION = "Zoom Out";
     public static final String ZOOM_SELECTED_ACTION = "Zoom Selected";
     public static final String LAYOUT_ACTION = "Layout";
-    
+
     private static ActionManager instance;
 
     public static ActionManager getInstance()
@@ -147,7 +146,7 @@ public class ActionManager
 
         actions.put(LAYOUT_ACTION, new LayoutAction());
         actions.put(HIDE_SELECTED_ACTION, new HideSelectedAction());
-        //actions.put(SQUIGGLE_ACTION, new SquiggleAction());
+        // actions.put(SQUIGGLE_ACTION, new SquiggleAction());
     }
 
     public Action getAction(String name)
@@ -280,7 +279,7 @@ public class ActionManager
 
         public LayoutAction()
         {
-            super(ActionManager.LAYOUT_ACTION);
+            super(LAYOUT_ACTION);
             setAcceleratorCombo(KeyEvent.VK_L, ActionEvent.CTRL_MASK);
         }
 
@@ -294,14 +293,13 @@ public class ActionManager
     {
         public SelectPrefLayoutAction()
         {
-            super(ActionManager.PREFERED_LAYOUT_ACTION);
+            super(PREFERED_LAYOUT_ACTION);
         }
 
         public void actionPerformed(ActionEvent e)
         {
             DialogDescriptor d = new DialogDescriptor(GUIUtilities.getFrame(),
-                    new SelectLayoutPanel(),
-                    ActionManager.PREFERED_LAYOUT_ACTION);
+                    new SelectLayoutPanel(), PREFERED_LAYOUT_ACTION);
             d.setModal(true);
             d.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);
             DialogDisplayer.getDefault().notify(d);
@@ -356,7 +354,7 @@ public class ActionManager
 
         public BackgroundColorAction()
         {
-            super(ActionManager.BACKGROUND_COLOR_ACTION);
+            super(BACKGROUND_COLOR_ACTION);
             setAcceleratorCombo(KeyEvent.VK_B, ActionEvent.ALT_MASK);
         }
 
@@ -400,7 +398,7 @@ public class ActionManager
 
         public BirdsEyeViewAction()
         {
-            super(ActionManager.TOGGLE_BIRDS_EYE_VIEW_ACTION);
+            super(TOGGLE_BIRDS_EYE_VIEW_ACTION);
         }
 
         public void propertyChange(PropertyChangeEvent e)
@@ -459,7 +457,7 @@ public class ActionManager
     {
         public CreateNetworkViewAction()
         {
-            super(ActionManager.CREATE_VIEW_ACTION);
+            super(CREATE_VIEW_ACTION);
             setAcceleratorCombo(KeyEvent.VK_V, ActionEvent.ALT_MASK);
         }
 
@@ -474,7 +472,7 @@ public class ActionManager
 
         public DestroyNetworkViewAction()
         {
-            super(ActionManager.DESTROY_VIEW_ACTION);
+            super(DESTROY_VIEW_ACTION);
             setAcceleratorCombo(KeyEvent.VK_W, ActionEvent.CTRL_MASK);
         }
 
@@ -489,7 +487,7 @@ public class ActionManager
 
         public ExitAction()
         {
-            super(ActionManager.EXIT_ACTION);
+            super(EXIT_ACTION);
         }
 
         public void actionPerformed(ActionEvent e)
@@ -502,7 +500,7 @@ public class ActionManager
     {
         public ExportAction()
         {
-            super(ActionManager.EXPORT_ACTION);
+            super(EXPORT_ACTION);
             setAcceleratorCombo(KeyEvent.VK_P, ActionEvent.CTRL_MASK
                     | ActionEvent.SHIFT_MASK);
         }
@@ -536,57 +534,63 @@ public class ActionManager
                     view.getCanvas().getLayer().getFullBounds(), true, 50l);
         }
     }
-    
-    public static class HideSelectedAction extends HGVAction  {
-        public HideSelectedAction () {
+
+    public static class HideSelectedAction extends HGVAction
+    {
+        public HideSelectedAction()
+        {
             super(HIDE_SELECTED_ACTION);
         }
 
-       public HideSelectedAction (boolean label)
-       {
-            super(  );
-       }
-        
-       public void action(HGViewer viewer) throws Exception
-       {
+        public HideSelectedAction(boolean label)
+        {
+            super();
+        }
+
+        public void action(HGViewer viewer) throws Exception
+        {
             GraphView view = viewer.getView();
             GraphViewU.hideSelectedNodes(view);
             GraphViewU.hideSelectedEdges(view);
         }
     }
-    
-    public static class HideSelectedEdgesAction extends HGVAction 
+
+    public static class HideSelectedEdgesAction extends HGVAction
     {
-        
-        public HideSelectedEdgesAction() {
-            super(ActionManager.HIDE_EDGE_SELECTION_ACTION);
-            setAcceleratorCombo(KeyEvent.VK_H, ActionEvent.ALT_MASK) ;
+
+        public HideSelectedEdgesAction()
+        {
+            super(HIDE_EDGE_SELECTION_ACTION);
+            setAcceleratorCombo(KeyEvent.VK_H, ActionEvent.ALT_MASK);
         }
 
         public void action(HGViewer viewer) throws Exception
         {
-              GraphViewU.hideSelectedEdges(viewer.getView());
+            GraphViewU.hideSelectedEdges(viewer.getView());
         }
     }
-    
-    public static class HideSelectedNodesAction extends HGVAction   {
-        
-        public HideSelectedNodesAction () {
-            super(ActionManager.HIDE_NODE_SELECTION_ACTION);
-            setAcceleratorCombo( java.awt.event.KeyEvent.VK_H, ActionEvent.CTRL_MASK );
+
+    public static class HideSelectedNodesAction extends HGVAction
+    {
+
+        public HideSelectedNodesAction()
+        {
+            super(HIDE_NODE_SELECTION_ACTION);
+            setAcceleratorCombo(java.awt.event.KeyEvent.VK_H,
+                    ActionEvent.CTRL_MASK);
         }
 
-      public void action(HGViewer viewer) throws Exception
-      {
-         GraphViewU.hideSelectedNodes(viewer.getView());
-      }
+        public void action(HGViewer viewer) throws Exception
+        {
+            GraphViewU.hideSelectedNodes(viewer.getView());
+        }
     }
-    
+
     public static class NewWindowSelectedNodesEdgesAction extends HGVAction
     {
         public NewWindowSelectedNodesEdgesAction()
         {
-            super(ActionManager.NEW_WINDOW_SELECTED_NODES_EDGES_ACTION);
+            super(NEW_WINDOW_SELECTED_NODES_EDGES_ACTION);
             setAcceleratorCombo(KeyEvent.VK_N, ActionEvent.CTRL_MASK
                     | ActionEvent.SHIFT_MASK);
         }
@@ -597,60 +601,66 @@ public class ActionManager
             if (HGVKit.isEmbeded()) return;
             GraphView view = viewer.getView();
             Collection<FNode> nodes = new ArrayList<FNode>();
-            for(PNodeView v :  view.getSelectedNodes())
+            for (PNodeView v : view.getSelectedNodes())
                 nodes.add(v.getNode());
             Collection<FEdge> edges = new ArrayList<FEdge>();
-            for(PEdgeView v : view.getSelectedEdges())
+            for (PEdgeView v : view.getSelectedEdges())
                 edges.add(v.getEdge());
-            
-            HGViewer new_view = HGVKit.createHGViewer(view.getHyperGraph(), nodes, edges);
-            new_view.getView().setIdentifier(HGVNetworkNaming.getSuggestedSubnetworkTitle(view));
+
+            HGViewer new_view = HGVKit.createHGViewer(view.getHyperGraph(),
+                    nodes, edges);
+            new_view.getView().setIdentifier(
+                    HGVNetworkNaming.getSuggestedSubnetworkTitle(view));
         }
     }
-    
-    public static class NewWindowSelectedNodesOnlyAction extends HGVAction {
 
-        public NewWindowSelectedNodesOnlyAction() {
-            super(ActionManager.NEW_WINDOW_SELECTED_NODES_ONLY_ACTION);
+    public static class NewWindowSelectedNodesOnlyAction extends HGVAction
+    {
+
+        public NewWindowSelectedNodesOnlyAction()
+        {
+            super(NEW_WINDOW_SELECTED_NODES_ONLY_ACTION);
             setAcceleratorCombo(KeyEvent.VK_N, ActionEvent.CTRL_MASK);
         }
 
         public void action(HGViewer viewer) throws Exception
         {
-            if(HGVKit.isEmbeded()) return;
-           GraphView view = viewer.getView();
+            if (HGVKit.isEmbeded()) return;
+            GraphView view = viewer.getView();
             Collection<FNode> nodes = new ArrayList<FNode>();
-            for(PNodeView v :  view.getSelectedNodes())
+            for (PNodeView v : view.getSelectedNodes())
                 nodes.add(v.getNode());
             Set<FEdge> edges = Collections.emptySet();
-            HGViewer new_view = 
-                HGVKit.createHGViewer( view.getHyperGraph(), nodes, edges);
-            new_view.getView().setIdentifier(HGVNetworkNaming
-                    .getSuggestedSubnetworkTitle(view));
+            HGViewer new_view = HGVKit.createHGViewer(view.getHyperGraph(),
+                    nodes, edges);
+            new_view.getView().setIdentifier(
+                    HGVNetworkNaming.getSuggestedSubnetworkTitle(view));
         }
     }
-    
-    public static class PreferenceAction extends AbstractAction 
-    {
-        public PreferenceAction () 
-        {
-            super (ActionManager.PREFERENCES_ACTION);
-         }
 
-        public void actionPerformed(ActionEvent e) {
-             AppConfigPanel p = new AppConfigPanel();
-             DialogDescriptor dd = new DialogDescriptor(GUIUtilities
-                        .getFrame(), p,
-                        "HGVKit Properties");
-             DialogDisplayer.getDefault().notify(dd);
-        } 
+    public static class PreferenceAction extends AbstractAction
+    {
+        public PreferenceAction()
+        {
+            super(PREFERENCES_ACTION);
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            AppConfigPanel p = new AppConfigPanel();
+            DialogDescriptor dd = new DialogDescriptor(GUIUtilities.getFrame(),
+                    p, "HGVKit Properties");
+            DialogDisplayer.getDefault().notify(dd);
+        }
     }
-    
-    public static class PrintAction extends HGVAction  {
-        
-        public PrintAction () {
-            super (ActionManager.PRINT_ACTION);
-            setAcceleratorCombo(KeyEvent.VK_P, ActionEvent.CTRL_MASK );
+
+    public static class PrintAction extends HGVAction
+    {
+
+        public PrintAction()
+        {
+            super(PRINT_ACTION);
+            setAcceleratorCombo(KeyEvent.VK_P, ActionEvent.CTRL_MASK);
         }
 
         public void action(HGViewer viewer) throws Exception
@@ -658,52 +668,59 @@ public class ActionManager
             viewer.getView().getCanvas().getLayer().print();
         }
     }
-    
-    public static class SelectAllAction extends HGVAction  {
 
-        public SelectAllAction () {
-            super (ActionManager.SELECT_ALL_ACTION);
-            setAcceleratorCombo(KeyEvent.VK_A, ActionEvent.CTRL_MASK|ActionEvent.ALT_MASK) ;
+    public static class SelectAllAction extends HGVAction
+    {
+
+        public SelectAllAction()
+        {
+            super(SELECT_ALL_ACTION);
+            setAcceleratorCombo(KeyEvent.VK_A, ActionEvent.CTRL_MASK
+                    | ActionEvent.ALT_MASK);
         }
 
         public void action(HGViewer viewer) throws Exception
-        {       
+        {
             viewer.getView().selectAllNodes();
             viewer.getView().selectAllEdges();
         }
     }
-    
-    public static class SelectAllEdgesAction extends HGVAction  {
 
-        public SelectAllEdgesAction () {
-              super (ActionManager.SELECT_ALL_EDGES_ACTION);
-              setAcceleratorCombo(KeyEvent.VK_A, ActionEvent.ALT_MASK) ;
-          }
+    public static class SelectAllEdgesAction extends HGVAction
+    {
 
-        public void action(HGViewer viewer) throws Exception
-        {       
-            viewer.getView().selectAllEdges();
-          }
-      }
-    
-    public static class SelectAllNodesAction extends HGVAction  {
-
-        public SelectAllNodesAction () {
-            super (ActionManager.SELECT_ALL_NODES_ACTION);
-            setAcceleratorCombo(KeyEvent.VK_A, ActionEvent.CTRL_MASK) ;
+        public SelectAllEdgesAction()
+        {
+            super(SELECT_ALL_EDGES_ACTION);
+            setAcceleratorCombo(KeyEvent.VK_A, ActionEvent.ALT_MASK);
         }
 
         public void action(HGViewer viewer) throws Exception
-        {       
-            viewer.getView().selectAllNodes();
-        }//action performed
+        {
+            viewer.getView().selectAllEdges();
+        }
     }
-    
+
+    public static class SelectAllNodesAction extends HGVAction
+    {
+
+        public SelectAllNodesAction()
+        {
+            super(SELECT_ALL_NODES_ACTION);
+            setAcceleratorCombo(KeyEvent.VK_A, ActionEvent.CTRL_MASK);
+        }
+
+        public void action(HGViewer viewer) throws Exception
+        {
+            viewer.getView().selectAllNodes();
+        }
+    }
+
     public static class SelectFirstNeighborsAction extends HGVAction
     {
         public SelectFirstNeighborsAction()
         {
-            super(ActionManager.SELECTED_FIRST_NEIGHBORS_ACTION);
+            super(SELECTED_FIRST_NEIGHBORS_ACTION);
             setAcceleratorCombo(KeyEvent.VK_F6, 0);
         }
 
@@ -725,29 +742,30 @@ public class ActionManager
                 }
             }
             view.selectNodes(new_set, true);
-        } 
-    } 
-    
-    public static class SetVisualPropertiesAction extends HGVAction   {
-
-        public SetVisualPropertiesAction () {
-          super(ActionManager.VISUAL_PROPERTIES_ACTION);
-          setAcceleratorCombo(KeyEvent.VK_V, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK) ;
         }
-        
+    }
+
+    public static class SetVisualPropertiesAction extends HGVAction
+    {
+
+        public SetVisualPropertiesAction()
+        {
+            super(VISUAL_PROPERTIES_ACTION);
+            setAcceleratorCombo(KeyEvent.VK_V, ActionEvent.CTRL_MASK
+                    | ActionEvent.ALT_MASK);
+        }
+
         public void action(HGViewer viewer) throws Exception
         {
             GraphView view = viewer.getView();
-           PaintersPanel p = new PaintersPanel();
-           p.setView(view);
-           DialogDescriptor dd = new DialogDescriptor(GUIUtilities.getFrame(), p,
-                      ActionManager.VISUAL_PROPERTIES_ACTION);
-           DialogDisplayer.getDefault().notify(dd);
-           VisualManager.getInstance().save();
-           view.redrawGraph();
+            PaintersPanel p = new PaintersPanel();
+            p.setView(view);
+            DialogDescriptor dd = new DialogDescriptor(GUIUtilities.getFrame(),
+                    p, VISUAL_PROPERTIES_ACTION);
+            DialogDisplayer.getDefault().notify(dd);
+            VisualManager.getInstance().save();
+            view.redrawGraph();
         }
-      }
-
-   
+    }
 
 }

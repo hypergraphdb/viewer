@@ -9,10 +9,8 @@ package org.hypergraphdb.viewer.dialogs;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseListener;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.ButtonGroup;
@@ -20,8 +18,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
-import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.GraphView;
+import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
@@ -29,8 +27,6 @@ public class VisStylesProvider implements DynamicMenuProvider
 {
     private static final long serialVersionUID = 5406878794567628416L;
     
-    transient MouseListener mouseListener;
-
     public VisStylesProvider()
     {
     }

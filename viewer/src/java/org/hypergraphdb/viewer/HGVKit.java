@@ -169,8 +169,9 @@ public abstract class HGVKit
 	    getSwingPropertyChangeSupport().firePropertyChange(e);
 	}
 
-	private static void setSquiggleState(boolean isEnabled)
+	public static void setSquiggleState(boolean isEnabled)
 	{
+	    squiggleEnabled = isEnabled;
 		// enable Squiggle on all network views
 		for (GraphView view : getViewersList())
 		{
@@ -180,26 +181,6 @@ public abstract class HGVKit
 			else
 				view.getSquiggleHandler().stopSquiggling();
 		}
-	}
-
-	/**
-	 * Utility method to enable Squiggle function.
-	 */
-	public static void enableSquiggle()
-	{
-		// set the global flag to indicate that Squiggle is enabled
-		squiggleEnabled = true;
-		setSquiggleState(true);
-	}
-
-	/**
-	 * Utility method to disable Squiggle function.
-	 */
-	public static void disableSquiggle()
-	{
-		// set the global flag to indicate that Squiggle is disabled
-		squiggleEnabled = false;
-		setSquiggleState(false);
 	}
 
 	/**
