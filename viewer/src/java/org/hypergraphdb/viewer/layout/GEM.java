@@ -510,13 +510,11 @@ public class GEM implements Layout
 		int iY = rand() % (2 * n + 1) - n;
 		iX += (centerX / nodeCount - pX) * p.mass * o_gravity;
 		iY += (centerY / nodeCount - pY) * p.mass * o_gravity;
-		Iterator<PEdgeView> edgeSet = view.getEdgeViewsIterator();
-		while (edgeSet.hasNext())
+		for (PEdgeView ev : view.getEdgeViews())
 		{
-			FEdge e = edgeSet.next().getEdge();
-			int u = ((Integer) nodeNumbers.get(e.getSource()))
-					.intValue();
-			int w = ((Integer) nodeNumbers.get(e.getTarget()));
+			FEdge e = ev.getEdge();
+			int u = nodeNumbers.get(e.getSource());
+			int w = nodeNumbers.get(e.getTarget());
 			if (u != v && w != v)
 			{
 				GemP up = gemProp[u];

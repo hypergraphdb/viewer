@@ -482,7 +482,7 @@ public class GUIUtilities
     	if(!HGVKit.isEmbeded()) return HGVKit.getDesktop();
     	if(HGVKit.getCurrentView() == null)
     		return null; 
-    	return getFrame(HGVKit.getCurrentView().getComponent());
+    	return getFrame(HGVKit.getCurrentView().getViewer());
     } 
  
 }

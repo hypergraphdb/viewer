@@ -266,7 +266,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
         {
             GraphView view = ((GraphView) e.getNewValue());
             getTabbedPane().addTab(
-                    view.getIdentifier(), view.getComponent());
+                    view.getIdentifier(), view.getViewer());
             getTabbedPane().setSelectedIndex(
                     getTabbedPane().getTabCount() -1);
             // pass on the event
@@ -287,7 +287,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
             JTabbedPane tp = HGVKit.getDesktop().getTabbedPane();
             for(int i = 0; i < tp.getTabCount(); i++)
             {
-                if(tp.getComponentAt(i).equals(view.getComponent()))
+                if(tp.getComponentAt(i).equals(view.getViewer()))
                 {
                    tp.removeTabAt(i);
                    break;

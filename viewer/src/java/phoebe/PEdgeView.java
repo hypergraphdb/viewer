@@ -1,19 +1,35 @@
 package phoebe;
 
-import edu.umd.cs.piccolo.*;
-import edu.umd.cs.piccolo.nodes.*;
-import edu.umd.cs.piccolo.util.*;
-import edu.umd.cs.piccolox.util.*;
-import phoebe.event.*;
-import phoebe.util.*;
-import java.awt.*;
-import java.awt.geom.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Paint;
+import java.awt.geom.Line2D;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Vector;
 
 import org.hypergraphdb.viewer.FEdge;
-import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.GraphView;
+
+import phoebe.event.PEdgeHandler;
+import phoebe.util.Bend;
+import phoebe.util.PArrowIcon;
+import phoebe.util.PCircleIcon;
+import phoebe.util.PDeltaIcon;
+import phoebe.util.PDiamondIcon;
+import phoebe.util.PEdgeEndIcon;
+import phoebe.util.PLabel;
+import phoebe.util.PNullIcon;
+import phoebe.util.PTIcon;
+import edu.umd.cs.piccolo.PNode;
+import edu.umd.cs.piccolo.nodes.PPath;
+import edu.umd.cs.piccolo.util.PAffineTransform;
+import edu.umd.cs.piccolo.util.PPaintContext;
+import edu.umd.cs.piccolox.util.PBoundsLocator;
+import edu.umd.cs.piccolox.util.PNodeLocator;
 
 /**
  * This class extends a PNode and does most of what PPath would do but lets the

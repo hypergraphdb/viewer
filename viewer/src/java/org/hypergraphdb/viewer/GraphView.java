@@ -1,7 +1,6 @@
 package org.hypergraphdb.viewer;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Paint;
 import java.awt.event.InputEvent;
 import java.awt.geom.Point2D;
@@ -16,23 +15,21 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.Action;
-import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.hypergraphdb.HGException;
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGHandleFactory;
 import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.IncidenceSet;
-import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
-import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
-import org.hypergraphdb.viewer.event.HGVNetworkEdgesAddedEvent;
-import org.hypergraphdb.viewer.event.HGVNetworkEdgesRemovedEvent;
-import org.hypergraphdb.viewer.event.HGVNetworkNodesAddedEvent;
-import org.hypergraphdb.viewer.event.HGVNetworkNodesRemovedEvent;
+import org.hypergraphdb.viewer.event.GraphViewChangeEvent;
+import org.hypergraphdb.viewer.event.GraphViewChangeListener;
+import org.hypergraphdb.viewer.event.GraphViewEdgesAddedEvent;
+import org.hypergraphdb.viewer.event.GraphViewEdgesRemovedEvent;
+import org.hypergraphdb.viewer.event.GraphViewNodesAddedEvent;
+import org.hypergraphdb.viewer.event.GraphViewNodesRemovedEvent;
 import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
 import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
@@ -85,14 +82,12 @@ public class GraphView
     protected PCanvas canvas;
 
     public boolean updateEdges = true;
-    // init
-    protected boolean isInitialized = false;
-
+   
     protected Map<FNode, PNodeView> nodeViewMap;
     protected Map<FEdge, PEdgeView> edgeViewMap;
     // PCS support
     protected PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    // A JPanel for the Canvas in the middle, and some other stuff around
+    // A JPanel which contains the Canvas in the middle, and some other stuff around
     protected HGViewer viewComponent;
     // Piccolo Stuff for this class
     protected PSelectionHandler selectionHandler;
@@ -114,9 +109,6 @@ public class GraphView
     protected Set<FEdge> edgeSelectionList = new HashSet<FEdge>();
     protected static boolean firePiccoloEvents = true;
 
-    /**
-     * A unique Identifier for the Model
-     */
     protected String identifier;
 
     protected HyperGraph graph;
@@ -136,14 +128,11 @@ public class GraphView
 
     protected void initialize(Collection<FNode> nodes, Collection<FEdge> edges)
     {
-        isInitialized = true;
         canvas = new Canvas();
         canvas
                 .setInteractingRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
         canvas.setAnimatingRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
-        canvas.setDefaultRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING);
         getCanvas().getCamera().setPaint(DEFAULT_BACKGROUND_COLOR);
-        // System.out.println("Phoebe just built a canvas: " + canvas);
         // Set up Layers
         nodeLayer = new PLayer() {
             public void addChild(int index, PNode child)
@@ -183,8 +172,8 @@ public class GraphView
 
         // only create the node/edge view if requested
         createViewableObjects(nodes, edges);
-        enableNodeSelection();
-        disableEdgeSelection();
+        setNodeSelection(true);
+        setEdgeSelection(false);
     }
 
     protected void initializeEventHandlers()
@@ -332,28 +321,23 @@ public class GraphView
     // ----------------------------------------//
     // Event Handlers
     // ----------------------------------------//
-    public boolean nodeSelectionEnabled()
+    public boolean isNodeSelectionEnabled()
     {
         return nodeSelection;
     }
 
-    public boolean edgeSelectionEnabled()
+    public boolean isEdgeSelectionEnabled()
     {
         return edgeSelection;
     }
 
-    public void enableNodeSelection()
+    public void setNodeSelection(boolean on)
     {
-        if (!nodeSelection)
+        if (!nodeSelection && on)
             getCanvas().addInputEventListener(getSelectionHandler());
-        nodeSelection = true;
-    }
-
-    public void disableNodeSelection()
-    {
-        if (nodeSelection)
+        if(nodeSelection && !on)
             getCanvas().removeInputEventListener(getSelectionHandler());
-        nodeSelection = false;
+        nodeSelection = on;
     }
 
     public PSelectionHandler getSelectionHandler()
@@ -361,18 +345,13 @@ public class GraphView
         return selectionHandler;
     }
 
-    public void enableEdgeSelection()
+    public void setEdgeSelection(boolean on)
     {
-        if (!edgeSelection)
+        if (!edgeSelection && on)
             getCanvas().addInputEventListener(getEdgeSelectionHandler());
-        edgeSelection = true;
-    }
-
-    public void disableEdgeSelection()
-    {
-        if (edgeSelection)
+        if (edgeSelection && !on)
             getCanvas().removeInputEventListener(getEdgeSelectionHandler());
-        edgeSelection = false;
+        edgeSelection = on;
     }
 
     public PEdgeSelectionHandler getEdgeSelectionHandler()
@@ -380,17 +359,7 @@ public class GraphView
         return edgeSelectionHandler;
     }
 
-    public void enablePanning()
-    {
-        getCanvas().addInputEventListener(getCanvas().getPanEventHandler());
-    }
-
-    public void disablePanning()
-    {
-        getCanvas().removeInputEventListener(getCanvas().getPanEventHandler());
-    }
-
-    /**
+     /**
      * @return the Squiggle Event Handler
      */
     public SquiggleEventHandler getSquiggleHandler()
@@ -413,9 +382,9 @@ public class GraphView
     }
 
     /**
-     * @return HGVComponent that can be added to most screen things
+     * @return HGViewer that contains this GraphView
      */
-    public HGViewer getComponent()
+    public HGViewer getViewer()
     {
         return viewComponent;
     }
@@ -456,8 +425,6 @@ public class GraphView
     private void addToNodeLayer(PNodeView node)
     {
         nodeLayer.addChild(node);
-        //NodePainter p = getPainter(node.getNode().getHandle(), false);
-       // p.paintNode(node, this);
     }
 
     private void addToEdgeLayer(PEdgeView edge)
@@ -588,15 +555,7 @@ public class GraphView
         return list;
     }
 
-    /**
-     * Return all of the EdgeViews in this GraphView
-     */
-    public Iterator<PEdgeView> getEdgeViewsIterator()
-    {
-        return getEdgeViews().iterator();
-    }
-
-    // implements GraphView
+     // implements GraphView
     public PEdgeView getEdgeView(FEdge edge)
     {
         return edgeViewMap.get(edge);
@@ -681,63 +640,6 @@ public class GraphView
         redrawGraph();
     }
 
-    /**
-     * Sets the Given nodes Selected
-     */
-    public boolean setSelected(FNode[] nodes)
-    {
-        return setSelected(convertToViews(nodes));
-    }
-
-    /**
-     * Sets the Given nodes Selected
-     */
-    public boolean setSelected(PNodeView[] node_views)
-    {
-        for (int i = 0; i < node_views.length; ++i)
-        {
-            node_views[i].select();
-        }
-        return true;
-    }
-
-    /**
-     * Sets the Given edges Selected
-     */
-    public boolean setSelected(FEdge[] edges)
-    {
-        return setSelected(convertToViews(edges));
-    }
-
-    /**
-     * Sets the Given edges Selected
-     */
-    public boolean setSelected(PEdgeView[] edge_views)
-    {
-        for (int i = 0; i < edge_views.length; ++i)
-        {
-            edge_views[i].select();
-        }
-        return true;
-    }
-
-    protected PNodeView[] convertToViews(FNode[] nodes)
-    {
-        PNodeView[] views = new PNodeView[nodes.length];
-        for (int i = 0; i < nodes.length; ++i)
-        {
-            views[i] = getNodeView(nodes[i]);
-        }
-        return views;
-    }
-
-    protected PEdgeView[] convertToViews(FEdge[] edges)
-    {
-        PEdgeView[] views = new PEdgeView[edges.length];
-        for (int i = 0; i < edges.length; ++i)
-            views[i] = getEdgeView(edges[i]);
-        return views;
-    }
 
     public class Canvas extends PCanvas
     {
@@ -774,22 +676,22 @@ public class GraphView
         }
     };
 
-    private Set<HGVNetworkChangeListener> view_listeners = new HashSet<HGVNetworkChangeListener>();
+    private Set<GraphViewChangeListener> view_listeners = new HashSet<GraphViewChangeListener>();
 
-    public void addHGVNetworkChangeListener(HGVNetworkChangeListener listener)
+    public void addHGVNetworkChangeListener(GraphViewChangeListener listener)
     {
         view_listeners.add(listener);
     }
 
-    public void removeHGVNetworkChangeListener(HGVNetworkChangeListener listener)
+    public void removeHGVNetworkChangeListener(GraphViewChangeListener listener)
     {
         view_listeners.remove(listener);
     }
 
-    void fireNetworkChanged(HGVNetworkChangeEvent event)
+    void fireGraphChanged(GraphViewChangeEvent event)
     {
-        for (HGVNetworkChangeListener l : view_listeners)
-            l.networkChanged(event);
+        for (GraphViewChangeListener l : view_listeners)
+            l.graphChanged(event);
     }
 
     public static interface SelectionListener
@@ -825,31 +727,7 @@ public class GraphView
         return edgeViewMap.size();
     }
 
-    public Iterator<FNode> nodesIterator()
-    {
-        return nodeViewMap.keySet().iterator();
-    }
-
-    public Iterator<FEdge> edgesIterator()
-    {
-        return edgeViewMap.keySet().iterator();
-    }
-
-    public void removeNodes(FNode[] nodes0)
-    {
-        for (FNode n : nodes0)
-            nodeViewMap.remove(n);
-        fireNetworkChanged(new HGVNetworkNodesRemovedEvent(this, nodes0));
-    }
-
-    public void removeEdges(FEdge[] res)
-    {
-        for (FEdge e : res)
-            edgeViewMap.remove(e);
-        fireNetworkChanged(new HGVNetworkEdgesRemovedEvent(this, res));
-    }
-
-    /**
+     /**
      * This will entirely remove a PNodeView/PEdgeView from the GraphView.
      */
     public PNodeView removeNodeView(FNode node)
@@ -860,13 +738,13 @@ public class GraphView
 
         nodeViewMap.remove(node);
         nodeSelectionList.remove(node);
-        fireNetworkChanged(new HGVNetworkNodesRemovedEvent(this,
+        fireGraphChanged(new GraphViewNodesRemovedEvent(this,
                 new FNode[] { node }));
         return node_view;
     }
 
     /**
-     * This will entirely remove a PNodeView/PEdgeView from the GraphView.
+     * This will entirely remove a PEdgeView from the GraphView.
      */
     public PEdgeView removeEdgeView(PEdgeView edge_view)
     {
@@ -874,7 +752,7 @@ public class GraphView
     }
 
     /**
-     * This will entirely remove a PNodeView/PEdgeView from the GraphView.
+     * This will entirely remove a PEdgeView from the GraphView.
      */
     public PEdgeView removeEdgeView(FEdge e)
     {
@@ -883,7 +761,7 @@ public class GraphView
         view.removeFromParent();
         edgeSelectionList.remove(e);
         edgeViewMap.remove(e);
-        fireNetworkChanged(new HGVNetworkEdgesRemovedEvent(this,
+        fireGraphChanged(new GraphViewEdgesRemovedEvent(this,
                 new FEdge[] { e }));
         return view;
     }
@@ -900,7 +778,7 @@ public class GraphView
         PNodeView node_view = new PNodeView(node, this);
         nodeViewMap.put(node, node_view);
         addToNodeLayer(node_view);
-        fireNetworkChanged(new HGVNetworkNodesAddedEvent(this,
+        fireGraphChanged(new GraphViewNodesAddedEvent(this,
                 new FNode[] { node }));
 //        HGHandle h = node.getHandle();
 //        NodePainter p = getPainter(h, false);
@@ -914,21 +792,14 @@ public class GraphView
         Object s = graph.get(edge.getSource().getHandle());
         if(!(s instanceof HGLink))
             System.err.println("Impossible PEdgeView - source is not HGLink: " + edge);
-//        //if(!((HGLink) s).get(edge.getTarget().getHandle()).contains(
-//        //        edge.getSource().getHandle()))
-//        HGLink link = (HGLink) s;
-//        for(int i = 0; i < link.getArity(); i++)
-//           if(link.getTargetAt(i).equals(edge.getTarget().getHandle()))
-//              break;
-//            System.err.println("Impossible PEdgeView - target is not in the targetSet of the source: " + edge);
-       if(!graph.getIncidenceSet(edge.getTarget().getHandle()).contains(
+        if(!graph.getIncidenceSet(edge.getTarget().getHandle()).contains(
                 edge.getSource().getHandle()))
             System.err.println("Impossible PEdgeView - target is not pointed by source: " + edge);
         
         PEdgeView edge_view = new PEdgeView(edge, this);
         addToEdgeLayer(edge_view);
         edgeViewMap.put(edge, edge_view);
-        fireNetworkChanged(new HGVNetworkEdgesAddedEvent(this,
+        fireGraphChanged(new GraphViewEdgesAddedEvent(this,
                 new FEdge[] { edge }));
         return edge_view;
     }

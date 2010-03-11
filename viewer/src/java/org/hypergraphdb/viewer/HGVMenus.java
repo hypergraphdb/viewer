@@ -51,8 +51,8 @@ import org.hypergraphdb.viewer.dialogs.SelectionMenu;
 import org.hypergraphdb.viewer.dialogs.SquiggleMenu;
 import org.hypergraphdb.viewer.dialogs.EnhancedMenu;
 import org.hypergraphdb.viewer.dialogs.VisStylesProvider;
-import org.hypergraphdb.viewer.event.HGVNetworkChangeEvent;
-import org.hypergraphdb.viewer.event.HGVNetworkChangeListener;
+import org.hypergraphdb.viewer.event.GraphViewChangeEvent;
+import org.hypergraphdb.viewer.event.GraphViewChangeListener;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.LayoutAction;
 import org.hypergraphdb.viewer.util.RecentFilesProvider;
@@ -62,7 +62,7 @@ import org.hypergraphdb.viewer.util.RecentFilesProvider;
  * This class creates the menu and tool bars for the HGVDesktop. It also
  * provides access to individual menus and items.
  */
-public class HGVMenus implements HGVNetworkChangeListener
+public class HGVMenus implements GraphViewChangeListener
 {
     private static final String IMG_BASE = "org/hypergraphdb/viewer/images/";
 
@@ -358,7 +358,7 @@ public class HGVMenus implements HGVNetworkChangeListener
      * 
      * @param e
      */
-    public void networkChanged(HGVNetworkChangeEvent e)
+    public void graphChanged(GraphViewChangeEvent e)
     {
         // Do this in the GUI Event Dispatch thread...
         SwingUtilities.invokeLater(new Runnable() {

@@ -19,34 +19,34 @@ package org.hypergraphdb.viewer.event;
 // }
 
 public class HGVNetworkChangeListenerChain
-  implements HGVNetworkChangeListener
+  implements GraphViewChangeListener
 {
 
-  private final HGVNetworkChangeListener a, b;
+  private final GraphViewChangeListener a, b;
 
-  private HGVNetworkChangeListenerChain(HGVNetworkChangeListener a,
-                                              HGVNetworkChangeListener b)
+  private HGVNetworkChangeListenerChain(GraphViewChangeListener a,
+                                              GraphViewChangeListener b)
   {
     this.a = a;
     this.b = b;
   }
 
-  public void networkChanged(HGVNetworkChangeEvent evt)
+  public void graphChanged(GraphViewChangeEvent evt)
   {
-    a.networkChanged(evt);
-    b.networkChanged(evt);
+    a.graphChanged(evt);
+    b.graphChanged(evt);
   }
 
-  public static HGVNetworkChangeListener add(HGVNetworkChangeListener a,
-                                            HGVNetworkChangeListener b)
+  public static GraphViewChangeListener add(GraphViewChangeListener a,
+                                            GraphViewChangeListener b)
   {
     if (a == null) return b;
     if (b == null) return a;
     return new HGVNetworkChangeListenerChain(a, b);
   }
 
-  public static HGVNetworkChangeListener remove(
-    HGVNetworkChangeListener l, HGVNetworkChangeListener oldl)
+  public static GraphViewChangeListener remove(
+    GraphViewChangeListener l, GraphViewChangeListener oldl)
   {
     if (l == oldl || l == null) return null;
     else if (l instanceof HGVNetworkChangeListenerChain)
@@ -54,13 +54,13 @@ public class HGVNetworkChangeListenerChain
     else return l;
   }
 
-  private HGVNetworkChangeListener remove(
-    HGVNetworkChangeListener oldl)
+  private GraphViewChangeListener remove(
+    GraphViewChangeListener oldl)
   {
     if (oldl == a) return b;
     if (oldl == b) return a;
-    HGVNetworkChangeListener a2 = remove(a, oldl);
-    HGVNetworkChangeListener b2 = remove(b, oldl);
+    GraphViewChangeListener a2 = remove(a, oldl);
+    GraphViewChangeListener b2 = remove(b, oldl);
     if (a2 == a && b2 == b) return this;
     return add(a2, b2);
   }

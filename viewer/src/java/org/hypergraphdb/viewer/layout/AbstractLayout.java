@@ -42,8 +42,8 @@ abstract public class AbstractLayout  {
     if ( currentSize != null ) {
       this.currentSize = size;
     } else {
-       currentSize = new Dimension(  graphView.getComponent().getWidth(),
-                                    graphView.getComponent().getHeight() );
+       currentSize = new Dimension(  graphView.getViewer().getWidth(),
+                                    graphView.getViewer().getHeight() );
       // currentSize = new Dimension( 1000, 1000 );
     }
 

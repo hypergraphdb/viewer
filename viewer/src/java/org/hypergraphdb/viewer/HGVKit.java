@@ -94,13 +94,18 @@ public abstract class HGVKit
 		return pcs;
 	}
 
+	public static HGViewer getCurrentViewer()
+    {
+        HGViewer comp = HGViewer.getFocusedComponent();
+        return comp;
+    }
 
 	 /**
 	 * Return the GraphView that currently has the focus. 
 	 */
 	public static GraphView getCurrentView()
 	{
-	    HGViewer comp = HGViewer.getFocusedComponent();
+	    HGViewer comp = getCurrentViewer();
 		return comp != null ? comp.getView() : null;
 	}
 
@@ -226,20 +231,20 @@ public abstract class HGVKit
 	public static void setSelectionMode(int selectionMode, GraphView view)
 	{
 		// first, disable node and edge selection on the view
-		view.disableNodeSelection();
-		view.disableEdgeSelection();
+		view.setNodeSelection(false);
+		view.setEdgeSelection(false);
 		// then, based on selection mode, enable node and/or edge selection
 		switch (selectionMode)
 		{
 		case SELECT_NODES_ONLY:
-			view.enableNodeSelection();
+			view.setNodeSelection(true);
 			break;
 		case SELECT_EDGES_ONLY:
-			view.enableEdgeSelection();
+			view.setEdgeSelection(true);
 			break;
 		case SELECT_NODES_AND_EDGES:
-			view.enableNodeSelection();
-			view.enableEdgeSelection();
+			view.setNodeSelection(true);
+			view.setEdgeSelection(true);
 			break;
 		}
 	}

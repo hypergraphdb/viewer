@@ -191,7 +191,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         return new JMenuItem(new AbstractAction("Focus") {
             public void actionPerformed(ActionEvent e)
             {
-                v.getComponent().focus(node.getNode().getHandle());
+                v.getViewer().focus(node.getNode().getHandle());
             }
         });
     }

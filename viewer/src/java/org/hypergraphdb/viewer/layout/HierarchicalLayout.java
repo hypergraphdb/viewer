@@ -135,10 +135,8 @@ public class HierarchicalLayout implements Layout
         }
         /* create edge list from edges between selected nodes */
         LinkedList<Graph.Edge> edges = new LinkedList<Graph.Edge>();
-        Iterator<PEdgeView> iter2 = view.getEdgeViewsIterator();
-        while (iter2.hasNext())
+        for (PEdgeView ev: view.getEdgeViews())
         {
-            PEdgeView ev = iter2.next();
             Integer edgeFrom = ginyIndex2Index.get(ev.source);
             Integer edgeTo = ginyIndex2Index.get(ev.target);
             if (edgeFrom == null || edgeTo == null)
