@@ -30,6 +30,8 @@ public class JUNGSpringLayout extends AbstractLayout
     double NUM_INCRMENTS = 100;
     long relaxTime = 0;
     public static int STRETCH = 70;
+    public static final LengthFunction UNITLENGTHFUNCTION = new UnitLengthFunction(
+            30);
 
     /**
      * Constructor for a SpringLayout for a raw graph with associated
@@ -280,9 +282,6 @@ public class JUNGSpringLayout extends AbstractLayout
             return length;
         }
     }
-
-    public static final LengthFunction UNITLENGTHFUNCTION = new UnitLengthFunction(
-            30);
 
     /* ---------------User Data------------------ */
     static class SpringVertexData

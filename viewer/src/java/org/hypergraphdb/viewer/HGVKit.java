@@ -21,6 +21,7 @@ import org.hypergraphdb.viewer.layout.GEM;
 import org.hypergraphdb.viewer.layout.HierarchicalLayout;
 import org.hypergraphdb.viewer.layout.Layout;
 import org.hypergraphdb.viewer.layout.Radial;
+import org.hypergraphdb.viewer.layout.SpringEmbeddedLayout;
 import org.hypergraphdb.viewer.layout.SpringLayout;
 
 import phoebe.PEdgeView;
@@ -47,14 +48,14 @@ public abstract class HGVKit
 	protected static List<GraphView> graphViewList;
 	static boolean embeded = true;
 	protected static Layout prefered_layout;
-	protected static Set<Layout> layouts = new HashSet<Layout>();
+	protected static ArrayList<Layout> layouts = new ArrayList<Layout>();
 	static
 	{
 		Layout l = new GEM(); 
 		layouts.add(new Radial());
 		layouts.add(new HierarchicalLayout());
 		layouts.add(new SpringLayout());
-		//layouts.add(new SpringEmbeddedLayout());
+		layouts.add(new SpringEmbeddedLayout());
 		//layouts.add(new Sugiyama());
 		layouts.add(l);
 		setPreferedLayout(l);
@@ -249,7 +250,7 @@ public abstract class HGVKit
 		}
 	}
 
-	public static Set<Layout> getLayouts()
+	public static ArrayList<Layout> getLayouts()
 	{
 		return layouts;
 	}

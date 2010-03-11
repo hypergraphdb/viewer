@@ -318,12 +318,10 @@ public class ActionManager
 
         private void initialize()
         {
-
-            Set<Layout> layouts = HGVKit.getLayouts();
             this.setLayout(new GridBagLayout());
             int i = 0;
             final Map<String, Layout> layoutMap = new HashMap<String, Layout>();
-            for (Layout l : layouts)
+            for (Layout l : HGVKit.getLayouts())
             {
                 GridBagConstraints gridBagConstraints = new GridBagConstraints();
                 gridBagConstraints.gridy = i++;
