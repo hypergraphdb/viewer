@@ -9,6 +9,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -217,11 +220,15 @@ public class HGViewer extends JPanel
         this.generator = generator;
     }
 
+    private boolean first_time = true;
     @Override
     public void addNotify()
     {
         super.addNotify();
-        adjust_view();
+        if(first_time){
+           adjust_view();
+           first_time = false;
+        }
     }
     
     private void adjust_view()
