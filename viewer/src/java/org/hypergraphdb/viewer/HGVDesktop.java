@@ -260,8 +260,8 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
 
     public void propertyChange(PropertyChangeEvent e)
     {
-        System.out.println("HGVDesktop - getPropertyName(): "
-                + e.getPropertyName() + ":" + e.getNewValue());
+       // System.out.println("HGVDesktop - getPropertyName(): "
+      //          + e.getPropertyName() + ":" + e.getNewValue());
         if (e.getPropertyName() == NETWORK_VIEW_CREATED)
         {
             GraphView view = ((GraphView) e.getNewValue());

@@ -2,20 +2,16 @@ package org.hypergraphdb.viewer.props;
 
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.beans.*;
-import java.lang.reflect.Method;
-import java.util.*;
-import javax.swing.event.*;
-import javax.swing.JPanel;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyEditorManager;
+import java.util.ArrayList;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
-import javax.swing.table.AbstractTableModel;
-import org.hypergraphdb.type.BonesOfBeans;
-import org.hypergraphdb.type.Record;
-import org.hypergraphdb.type.RecordType;
+import javax.swing.event.SwingPropertyChangeSupport;
+
 import org.hypergraphdb.type.Slot;
-import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.props.editors.ArrayListModel;
 
 /**
@@ -25,7 +21,6 @@ import org.hypergraphdb.viewer.props.editors.ArrayListModel;
 public class PropertySetPanel extends JScrollPane
 {
 	private JTable tabProperties_;
-	private PropertiesTableModel pModel_;
 	private Object model_obj;
 	private static PropertyCellEditor cell_editor; 
 	private static boolean editorsRegistered;
@@ -42,16 +37,9 @@ public class PropertySetPanel extends JScrollPane
 	/** Creates a new instance of PropsPanel */
 	public PropertySetPanel(Frame frame)
 	{
-		tabProperties_ = new javax.swing.JTable();
+		tabProperties_ = new JTable();
 		cell_editor = new PropertyCellEditor();
 		PropertyDialogManager.setFrame(frame);
-		// setMinimumSize(new java.awt.Dimension(70, 70));
-		// pModel_ = new PropertiesTableModel();
-		// tabProperties_.setModel(pModel_);
-		// tabProperties_.setRowHeight(tabProperties_.getRowHeight() + 4);
-		// tabProperties_.getColumn(COLUMNNAMES[0]).setPreferredWidth(90);
-		// tabProperties_.getColumn(COLUMNNAMES[1]).setPreferredWidth(100);
-		// tabProperties_.getColumn("value").setCellEditor(cell_editor);
 		setViewportView(tabProperties_);
 		setPreferredSize(new Dimension(181, 300));
 	}

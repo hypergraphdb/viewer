@@ -23,6 +23,7 @@ import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.painter.DefaultNodePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
+import org.hypergraphdb.viewer.props.PropertySetPanel;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import org.hypergraphdb.viewer.visual.ui.PainterPropsPanel;
@@ -148,7 +149,16 @@ public class ContextMenuHelper extends PBasicInputEventHandler
              }
          });  
          global_menu.add(menuItem);
-                 
+         
+         if(!HGVKit.isEmbeded()) return;
+         menuItem = new JMenuItem("Properties");
+         menuItem.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e)
+             {
+                 properties(view, node);
+             }
+         });  
+         global_menu.add(menuItem);
      }
       
     
@@ -224,5 +234,18 @@ public class ContextMenuHelper extends PBasicInputEventHandler
                     true);
             nodes.remove(key);
         }
+    }
+    
+    private static void properties(final GraphView view, final PNodeView node)
+    {
+        Object obj = view.getHyperGraph().get(node.getNode().getHandle());
+        Frame f = GUIUtilities.getFrame();
+        PropertySetPanel propsPanel = new PropertySetPanel(f);
+        propsPanel.setModelObject(obj);
+        propsPanel.setPreferredSize(new Dimension(400, 200));
+        DialogDescriptor dd = new DialogDescriptor(f, propsPanel,
+              "Properties");
+       DialogDisplayer.getDefault().notify(dd);
+        
     }
 }

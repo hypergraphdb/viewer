@@ -1,11 +1,15 @@
 package org.hypergraphdb.viewer.props;
 
-import java.beans.*;
-import java.lang.reflect.Method;
-import java.util.*;
-import javax.swing.table.AbstractTableModel;
-import org.hypergraphdb.type.Slot;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.table.AbstractTableModel;
 
 /**
  * 

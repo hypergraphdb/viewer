@@ -577,7 +577,7 @@ public class GraphView
      */
     public void applyNodeAppearances()
     {
-        for (PNodeView nodeView : getNodeViews())
+        for (PNodeView nodeView : nodeViewMap.values())
         {
             FNode node = nodeView.getNode();
             HGHandle h = node.getHandle();
@@ -613,7 +613,7 @@ public class GraphView
      */
     public void applyEdgeAppearances()
     {
-        for (PEdgeView edgeView : getEdgeViews())
+        for (PEdgeView edgeView : edgeViewMap.values())
         {
             FNode node = edgeView.getEdge().getSource();
             HGHandle h = graph.getTypeSystem().getTypeHandle(node.getHandle());
@@ -780,9 +780,7 @@ public class GraphView
         addToNodeLayer(node_view);
         fireGraphChanged(new GraphViewNodesAddedEvent(this,
                 new FNode[] { node }));
-//        HGHandle h = node.getHandle();
-//        NodePainter p = getPainter(h, false);
-//        p.paintNode(node_view, this);
+        def_node_painter.paintNode(node_view, this);
         return node_view;
     }
 
