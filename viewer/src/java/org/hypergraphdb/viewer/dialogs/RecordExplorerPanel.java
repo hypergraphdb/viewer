@@ -196,19 +196,15 @@ public class RecordExplorerPanel extends javax.swing.JPanel
 		{
 			return new AbstractPropertySupport() {
 				
-				public boolean canWrite()
-				{
-					return true;
-				}
 				public Object getValue()
 				{
 					return proj.project(rec);
 				}
 
-				public void setValue(Object value)
-				{
-					proj.inject(rec, value);
-				}
+//				public void setValue(Object value)
+//				{
+//					proj.inject(rec, value);
+//				}
 			};
 		}
 	}

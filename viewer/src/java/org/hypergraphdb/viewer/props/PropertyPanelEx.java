@@ -17,26 +17,24 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.SystemColor;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.WeakHashMap;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import javax.swing.text.Document;
 
 /**
@@ -47,7 +45,6 @@ import javax.swing.text.Document;
  */
 public class PropertyPanelEx extends JComponent
 {
-	public static String READSTATE = "XXXX";
 	/** Constant for showing properties as a string always. */
 	public static final int ALWAYS_AS_STRING = 1;
 	/** Constant for preferably showing properties as string. */
@@ -149,7 +146,7 @@ public class PropertyPanelEx extends JComponent
 	/**
 	 * Creates new PropertyPanel
 	 * 
-	 * @param bean The BeanProperty for displaying
+	 * @param bean The AbstractProperty for displaying
 	 */
 	public PropertyPanelEx(AbstractProperty bean, int preferences)
 	{
@@ -160,7 +157,7 @@ public class PropertyPanelEx extends JComponent
 		paintingStyle = PropertyPanelEx.PAINTING_PREFERRED;
 		plastic = true;
 		disabledColor = SystemColor.textInactiveText;
-		foregroundColor = new Color(0, 0, 128);
+		foregroundColor = Color.black;//new Color(0, 0, 128);
 		this.setBackground(Color.white);
 		bean.addPropertyChangeListener(getModelListener());
 		
@@ -169,18 +166,6 @@ public class PropertyPanelEx extends JComponent
 		reset();
 	}
 
-	/** Reference to PropertySheetSettings are separated here. */
-	/*
-	 * static class PropertySheetSettingsInvoker implements Runnable { public
-	 * void run() { PropertyPanelEx instance = (PropertyPanelEx)current.get();
-	 * current.set(null); if (instance == null) { throw new
-	 * IllegalStateException(); } PropertySheetSettings pss =
-	 * PropertySheetSettings.getDefault(); instance.paintingStyle =
-	 * pss.getPropertyPaintingStyle(); instance.plastic = pss.getPlastic();
-	 * instance.disabledColor = pss.getDisabledPropertyColor();
-	 * instance.foregroundColor = pss.getValueColor(); } }
-	 */
-	// public methods -------------------------------------------------------
 	/**
 	 * Getter for property preferences.
 	 * 
@@ -210,7 +195,7 @@ public class PropertyPanelEx extends JComponent
 	/**
 	 * Getter for BeanProperty.
 	 * 
-	 * @return Value of BeanProperty.
+	 * @return Value of AbstractProperty.
 	 */
 	public AbstractProperty getBeanProperty()
 	{
@@ -218,11 +203,11 @@ public class PropertyPanelEx extends JComponent
 	}
 
 	/**
-	 * Setter for BeanProperty.
+	 * Setter for AbstractProperty.
 	 * 
-	 * @param bean  New value of BeanProperty.
+	 * @param bean  New value of AbstractProperty.
 	 */
-	public void setModel(BeanProperty bean)
+	public void setModel(AbstractProperty bean)
 	{
 		AbstractProperty old_bean = this.bean;
 		this.bean = bean;
@@ -399,16 +384,14 @@ public class PropertyPanelEx extends JComponent
 		canWrite = bean.canWrite();
 		canRead = bean.canRead();
 		editor = bean.getPropertyEditor();
+		if(editor != null)
 		try {
-			editor.setValue(bean.getValue());
+		  editor.setValue(bean.getValue());
 		}catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
-		//HGVLogger.getInstance().debug(
-		//		"PropertyPanelEx -updateEditor(): " + editor + " canWrite: "
-		//				+ canWrite + " canRead: " + canRead + " bean: " + bean);
-		
+
 		// fire the change
 		firePropertyChange(PROP_PROPERTY_EDITOR, oldEditor, editor);
 	}
@@ -494,8 +477,6 @@ public class PropertyPanelEx extends JComponent
 		// requestFocus();
 		isReadState = true;
 		isWriteState = false;
-		// Util.log("setReadState(): " + " " + this.isShowing());
-		this.firePropertyChange(READSTATE, "", "" + isShowing());
 	}
 
 	/** Lazy init of the <code>readComponentListener</code>. */
@@ -544,9 +525,7 @@ public class PropertyPanelEx extends JComponent
 		SheetButtonEx c = null;
 		if (editor == null)
 		{
-			// return getTextView(getTypeString(model.getPropertyType()));
-			// display description in place of class name
-			return getTextView("XXXX"); // NOI18N
+			return getTextView("null"); // NOI18N
 		}
 		
 		try
@@ -602,7 +581,10 @@ public class PropertyPanelEx extends JComponent
 			textView.setActiveForeground(foregroundColor);
 		} else
 		{
-			textView.setActiveForeground(disabledColor);
+		    if(bean instanceof ReadOnlyProperty)
+		        textView.setActiveForeground(Color.BLUE);
+		    else
+			   textView.setActiveForeground(disabledColor);
 		}
 		return textView;
 	}
@@ -906,7 +888,7 @@ public class PropertyPanelEx extends JComponent
 			customizeButton.setActiveForeground(foregroundColor);
 		} else
 		{
-			customizeButton.setActiveForeground(disabledColor);
+		    customizeButton.setActiveForeground(disabledColor);
 		}
 		return customizeButton;
 	}
@@ -921,7 +903,7 @@ public class PropertyPanelEx extends JComponent
 		// is set
 		if (getPreferences() == 0 || getPreferences() == PREF_INPUT_STATE)
 		{
-			PropertyPanelEx.notifyUser(iae, bean.getDisplayName());
+			PropertyPanelEx.notifyUser(iae, bean.getName());
 		} else
 		{
 		    iae.printStackTrace();
@@ -1356,7 +1338,7 @@ public class PropertyPanelEx extends JComponent
 		 */
 		public void sheetButtonClicked(ActionEvent e)
 		{
-			String title = bean.getDisplayName();
+			String title = bean.getName();
 			customDialogShown = true;
 			// bugfix #18326 editor's value is taken from textField
 			if (textField != null)
@@ -1426,7 +1408,7 @@ public class PropertyPanelEx extends JComponent
 		/** Property was changed. */
 		public void propertyChange(PropertyChangeEvent evt)
 		{
-			if (BeanProperty.PROP_VALUE.equals(evt.getPropertyName()))
+			if (AbstractProperty.PROP_VALUE.equals(evt.getPropertyName()))
 			{
 				if (editor != null)
 				{

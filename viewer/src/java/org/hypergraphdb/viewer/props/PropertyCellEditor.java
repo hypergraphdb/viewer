@@ -1,18 +1,7 @@
 package org.hypergraphdb.viewer.props;
 
-import java.beans.FeatureDescriptor;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyEditor;
-import java.lang.reflect.InvocationTargetException;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -59,21 +48,7 @@ public class PropertyCellEditor extends DefaultCellEditor implements TableCellRe
 				.getModel();
 		final PropertyPanelEx panel = new PropertyPanelEx(model
 				.getBeanProperty(row, column), 0);
-		// panel.setBackground(Color.WHITE);
 		panel.setBounds(table.getCellRect(row, column, false));
-		panel.addFocusListener(new FocusListener() {
-			public void focusGained(final FocusEvent e)
-			{
-			}
-
-			public final void focusLost(final FocusEvent e)
-			{
-				// Explicitly set the value
-				// model.getBeanProperty(row, column).setValue(currentValue_,
-				// row, column);
-				// stopCellEditing();
-			}
-		});
 		return panel;
 	}
 }

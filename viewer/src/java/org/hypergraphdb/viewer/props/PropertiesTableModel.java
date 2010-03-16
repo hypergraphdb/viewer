@@ -1,13 +1,13 @@
 package org.hypergraphdb.viewer.props;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -15,9 +15,10 @@ import javax.swing.table.AbstractTableModel;
  * 
  * @author User
  */
-public abstract class PropertiesTableModel extends AbstractTableModel implements PropertyChangeListener
+public class PropertiesTableModel extends AbstractTableModel implements PropertyChangeListener
 {
-	
+    public static String[] COLUMNNAMES = { "Property", "Value" };
+    
 	/** Property change support. */
 	private PropertyChangeSupport sup = new PropertyChangeSupport(this);
 	
@@ -27,28 +28,57 @@ public abstract class PropertiesTableModel extends AbstractTableModel implements
 	
 	protected boolean attachListeners = false;
 
-	public abstract AbstractProperty[][] getData();
+    public AbstractProperty[][] getData()
+    {
+        this.attachListeners = true;
+        final AbstractProperty[] pd = introspect(bean);
+        AbstractProperty[][] data0 = new AbstractProperty[2][pd.length];
+        for (int i = 0; i < pd.length; i++)
+        {
+            data0[0][i] = new ReadOnlyProperty(pd[i].getName());
+            data0[1][i] = pd[i];
+        }
+        return data0;
+    }
+
+    public String getColumnName(int col)
+    {
+        return COLUMNNAMES[col];
+    }
 	
 	protected AbstractProperty[] introspect(Object obj)
 	{
-		try
-		{
-			final Class superC = 
-				(obj.getClass().getSuperclass().getSuperclass() == null) ?
-				 obj.getClass().getSuperclass() : obj.getClass().getSuperclass().getSuperclass();	
-			final BeanInfo bi = 
-				Introspector.getBeanInfo(obj.getClass(), superC);
-			PropertyDescriptor[] pds = bi.getPropertyDescriptors();
-			AbstractProperty[] bps = new AbstractProperty[pds.length];
-			for (int i = 0; i < pds.length; i++)
-				bps[i] = new BeanProperty(obj, pds[i]);
-			return bps;
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-		}
-		return new AbstractProperty[0];
+	    Set<Field> slots = RefUtils.getFieldsForType(obj.getClass());
+	    AbstractProperty[] props = new AbstractProperty[slots.size()];
+	    int i = 0;
+	    for(Field f : slots)
+	    {
+	        Object value = getFieldV(f, obj);
+	        props[i] = new GenericProperty(f.getName(), value);
+	        i++;
+	    } 
+	    
+	    Arrays.sort(props);
+	    AbstractProperty[] reverse = new AbstractProperty[props.length];
+	    for(int j = 0; j< props.length; j++)
+	        reverse[j] = props[props.length - 1 - j];
+		return reverse;
+	}
+	
+	private static Object getFieldV(Field f, Object obj)
+	{
+	    try
+        {
+           f.setAccessible(true);
+           return f.get(obj);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Unable to retrieve field: " + f.getName() + " for "
+                    + obj + "in " + obj.getClass() + " Reason: " + e);
+            //e.printStackTrace();
+            return null; 
+        }
 	}
 
 	/***/
@@ -102,11 +132,6 @@ public abstract class PropertiesTableModel extends AbstractTableModel implements
 		return data.length; 
 	}
 
-	public String getColumnName(int col)
-	{
-		return "";
-	}
-
 	public PropertyEditor getPropertyEditor(final int row, int col)
 	{
 		AbstractProperty prop = getBeanProperty(row, col);
@@ -148,20 +173,20 @@ public abstract class PropertiesTableModel extends AbstractTableModel implements
 	void fireValueChanged()
 	{
 		fireTableDataChanged();
-		sup.firePropertyChange(BeanProperty.PROP_VALUE, null, null);
+		sup.firePropertyChange(AbstractProperty.PROP_VALUE, null, null);
 	}
 
 	@Override
 	public void fireTableCellUpdated(int row, int column)
 	{
 		super.fireTableCellUpdated(row, column);
-		sup.firePropertyChange(BeanProperty.PROP_VALUE, null, null);
+		sup.firePropertyChange(AbstractProperty.PROP_VALUE, null, null);
 	}
 
 	@Override
 	public void fireTableDataChanged()
 	{
 		super.fireTableDataChanged();
-		sup.firePropertyChange(BeanProperty.PROP_VALUE, null, null);
+		sup.firePropertyChange(AbstractProperty.PROP_VALUE, null, null);
 	}
 }

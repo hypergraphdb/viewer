@@ -211,7 +211,7 @@ final class PropertyDialogManager
 					catch (java.lang.reflect.InvocationTargetException ite)
 					{
 						PropertyPanelEx.notifyUser(ite, bean == null ? ""
-								: bean.getDisplayName()); // NOI18N
+								: bean.getName()); // NOI18N
 					}
 					catch (IllegalStateException ise)
 					{
@@ -288,7 +288,7 @@ final class PropertyDialogManager
 			catch (java.lang.reflect.InvocationTargetException ite)
 			{
 				PropertyPanelEx.notifyUser(ite, bean == null ? "" : bean
-						.getDisplayName()); // NOI18N
+						.getName()); // NOI18N
 				return;
 			}
 			catch (IllegalStateException ise)

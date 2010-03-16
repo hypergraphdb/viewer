@@ -51,7 +51,7 @@ public class PropertySetPanel extends JScrollPane
 		
 		PropertiesTableModel model = PropertyModelFactory.getModel(obj.getClass());
 		if(model == null)
-			model = new GeneralPropertiesTableModel();
+			model = new PropertiesTableModel();
 		model.create(obj);
 		tabProperties_.setModel(model);
 		for(int i = 0; i < tabProperties_.getColumnCount(); i++)
@@ -76,7 +76,6 @@ public class PropertySetPanel extends JScrollPane
 
 	public void setModel(PropertiesTableModel model)
 	{
-		// pModel_ = model;
 		tabProperties_.setModel(model);
 	}
 	
@@ -86,7 +85,6 @@ public class PropertySetPanel extends JScrollPane
 
 	public static final void registerPropertyEditors()
 	{
-		// issue 31879
 		if (editorsRegistered) return;
 		String[] syspesp = PropertyEditorManager.getEditorSearchPath();
 		String[] nbpesp = new String[] { "org.hypergraphdb.viewer.props.editors", // NOI18N
@@ -114,7 +112,7 @@ public class PropertySetPanel extends JScrollPane
 		//PropertyModelFactory.registerModel(Slot.class, new SlotTableModel());
 	}
 
-	private static final Class getKlass(String cls)
+	private static final Class<?> getKlass(String cls)
 	{
 		try
 		{
@@ -129,21 +127,13 @@ public class PropertySetPanel extends JScrollPane
 
 	static class SlotTableModel extends PropertiesTableModel
 	{
-		private Slot slot;
-
-		public SlotTableModel()
+		public AbstractProperty[] introspect(Object obj)
 		{
-		}
-
-		public AbstractProperty[][] getData()
-		{
-			this.slot = (Slot) bean;
-			AbstractProperty[][] data0 = new AbstractProperty[2][2];
-			data0[0][0] = new ReadOnlyProperty("label");
-			data0[0][1] = new ReadOnlyProperty("valueType");
-			data0[1][0] = new ReadOnlyProperty(slot.getLabel());
-			data0[1][1] = new ReadOnlyProperty(slot.getValueType().getClass()
-					.getName());
+		    Slot slot = (Slot) bean;
+			AbstractProperty[] data0 = new AbstractProperty[2];
+			data0[0] = new GenericProperty("label", slot.getLabel());
+			data0[1] = new GenericProperty("valueType",
+			        slot.getValueType().getClass().getName());
 			return data0;
 		}
 	}

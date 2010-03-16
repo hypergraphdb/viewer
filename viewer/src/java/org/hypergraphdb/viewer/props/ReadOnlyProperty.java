@@ -17,31 +17,10 @@ public class ReadOnlyProperty implements AbstractProperty
 	{
 		return value;
 	}
-
+	
 	public void setValue(Object v) throws InvocationTargetException
 	{
 		// DO NOTHING;
-	}
-
-	static final PropertyEditor editor = new StringEditorEx();
-	public PropertyEditor getPropertyEditor()
-	{
-		return editor;
-	}
-
-	public void addPropertyChangeListener(PropertyChangeListener l)
-	{
-		// DO NOTHING;
-	}
-
-	public void removePropertyChangeListener(PropertyChangeListener l)
-	{
-		// // DO NOTHING;
-	}
-
-	public String getDisplayName()
-	{
-		return value;
 	}
 
 	public String getName()
@@ -49,12 +28,12 @@ public class ReadOnlyProperty implements AbstractProperty
 		return value;
 	}
 
-	public Class getPropertyEditorClass()
+	public Class<?> getPropertyEditorClass()
 	{
 		return null;
 	}
 
-	public Class getPropertyType()
+	public Class<?> getPropertyType()
 	{
 		return String.class;
 	}
@@ -73,4 +52,35 @@ public class ReadOnlyProperty implements AbstractProperty
 	{
 		return false;
 	}
+	
+	public int compareTo(Object o)
+    {
+        if(o instanceof AbstractProperty)
+        {
+            AbstractProperty p = (AbstractProperty) o;
+            if(p.getName() != null)
+                return p.getName().compareTo(getName());
+            else
+            {
+                return (getName() != null) ? 1 : 0;
+            }
+        }
+        return 0;
+    }
+	
+	static final PropertyEditor editor = new StringEditorEx();
+    public PropertyEditor getPropertyEditor()
+    {
+        return editor;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener l)
+    {
+        // DO NOTHING;
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener l)
+    {
+        // // DO NOTHING;
+    }
 }

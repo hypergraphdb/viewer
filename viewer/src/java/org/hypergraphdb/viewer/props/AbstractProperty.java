@@ -5,9 +5,12 @@ import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
 
 
-public interface AbstractProperty
+public interface AbstractProperty extends Comparable
 {
-	public Object getValue() throws InvocationTargetException;
+   /** Name of the 'value' property. */
+    public static final String PROP_VALUE = "value";
+
+    public Object getValue() throws InvocationTargetException;
 
 	public void setValue(Object v) throws InvocationTargetException;
 
@@ -17,22 +20,15 @@ public interface AbstractProperty
 
 	public void removePropertyChangeListener(PropertyChangeListener l);
 
-	//PropertyDescriptor methods 
-	public String getDisplayName();
-
 	public String getName();
 
-	public Class getPropertyEditorClass();
+	public Class<?> getPropertyEditorClass();
 
-	public Class getPropertyType();
-
-	//public Method getReadMethod();
-
-	//public String getShortDescription();
-
-	//public Method getWriteMethod();
+	public Class<?> getPropertyType();
 
 	public boolean canRead();
 
 	public boolean canWrite();
+	
+	 
 }

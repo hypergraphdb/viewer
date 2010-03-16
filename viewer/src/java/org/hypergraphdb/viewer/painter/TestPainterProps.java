@@ -2,12 +2,15 @@ package org.hypergraphdb.viewer.painter;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import org.hypergraphdb.HGHandle;
@@ -16,6 +19,10 @@ import org.hypergraphdb.HGQuery.hg;
 import org.hypergraphdb.atom.HGStats;
 import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGViewerType;
+import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
+import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
+import org.hypergraphdb.viewer.props.PropertySetPanel;
+import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
 
 import com.l2fprod.common.demo.BeanBinder;
@@ -28,13 +35,26 @@ public class TestPainterProps extends PropertySheetPanel
 	 */
 	public static void main(String[] args)
 	{
-		
+	  
 		//PaintersPanel p = new PaintersPanel();
 		//p.init(new DefaultNodePainter());
 		//p.init(new DefaultEdgePainter());
 		//p.setHyperGraph(hg);
 		//f.getContentPane().add(p);
 	    JFrame f = new JFrame();
+	    
+	    ArrayList l = new ArrayList();
+	    l.add("First");
+	    l.add( new JButton("Test"));
+	    Object obj = l;//new JButton("Test");
+        PropertySetPanel propsPanel = new PropertySetPanel(f);
+        propsPanel.setModelObject(obj);
+        propsPanel.setPreferredSize(new Dimension(400, 200));
+        DialogDescriptor dd = new DialogDescriptor(f, propsPanel,
+              "Properties");
+       DialogDisplayer.getDefault().notify(dd);
+       if(true) return;
+	    
 		final HyperGraph hg = new HyperGraph("F:/temp/xxx2");
 		HGViewer viewer = getViewer(hg);
 		f.getContentPane().add(viewer);

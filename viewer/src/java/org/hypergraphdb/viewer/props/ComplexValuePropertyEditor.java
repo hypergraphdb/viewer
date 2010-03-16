@@ -81,7 +81,7 @@ public class ComplexValuePropertyEditor extends PropertyEditorSupport
     public String getAsText()
     {
     	if(obj == null)
-    		return "complex value";
+    		return "null";//complex value";
         return obj.getClass().getName().toString();
     }
     
