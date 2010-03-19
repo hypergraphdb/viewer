@@ -3,6 +3,7 @@ package org.hypergraphdb.viewer;
 import java.awt.Color;
 import java.awt.Paint;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ import phoebe.event.PEdgeSelectionHandler;
 import phoebe.event.PSelectionHandler;
 import phoebe.event.PToolTipHandler;
 import phoebe.event.SquiggleEventHandler;
+import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PLayer;
 import edu.umd.cs.piccolo.PNode;
@@ -192,26 +194,12 @@ public class GraphView
         // Only allow panning via Middle Mouse button
         getCanvas().getPanEventHandler().setEventFilter(
                 new PInputEventFilter(InputEvent.BUTTON2_MASK));
-        PZoomEventHandler zoomer = new PZoomEventHandler() {
-            public void dragActivityFinalStep(PInputEvent e)
-            {
-                // System.out.println( "Scale: "+e.getCamera().getViewScale() );
-                if (e.getCamera().getViewScale() < .45)
-                {
-                    getCanvas().setDefaultRenderQuality(
-                            PPaintContext.LOW_QUALITY_RENDERING);
-                }
-                else
-                {
-                    getCanvas().setDefaultRenderQuality(
-                            PPaintContext.HIGH_QUALITY_RENDERING);
-                }
-            }
-        };
+       
+        PZoomEventHandler zoomer = new MyZoomEventHandler();
         zoomer.setMinScale(.15);
         zoomer.setMaxScale(7);
-        zoomer.setEventFilter(new PInputEventFilter(InputEvent.BUTTON3_MASK));
         getCanvas().setZoomEventHandler(zoomer);
+       
         edgeHandler = new PEdgeHandler(this);
         getCanvas().addInputEventListener(edgeHandler);
 
@@ -225,9 +213,6 @@ public class GraphView
         ctxMenuHandler.setEventFilter(new PInputEventFilter(
                 InputEvent.BUTTON3_MASK));
         getCanvas().addInputEventListener(ctxMenuHandler);
-
-        getCanvas().getZoomEventHandler().getEventFilter().setAndMask(
-                InputEvent.SHIFT_MASK);
     }
 
     public void redrawGraph()
@@ -979,6 +964,65 @@ public class GraphView
         if(returnSet.size() > 0)
             fireSelectionChanged();
         return returnSet;
+    }
+    
+    public static class MyZoomEventHandler extends PZoomEventHandler
+    {
+        PInputEvent original = null;
+
+        @Override
+        public void mousePressed(PInputEvent e)
+        {
+            if (accept((MouseEvent) e.getSourceSwingEvent()))
+                original = e;
+        }
+
+        @Override
+        public void mouseReleased(PInputEvent e)
+        {
+            e.getComponent().setInteracting(false);
+             original = null;
+        }
+        
+        private boolean accept(MouseEvent e)
+        {
+            return e.getButton() == MouseEvent.BUTTON3 
+                    && !e.isControlDown() &&
+                    !e.isShiftDown() && !e.isAltDown();
+        }
+        
+        @Override
+        public void mouseDragged(PInputEvent e)
+        {
+            //some node is under the mouse
+            if(e.getPath().getNodeStackReference().size() > 1)
+                return;
+            e.getComponent().setInteracting(true);
+            super.mouseDragged(e);
+            if (original != null) 
+                doZoom(original, e);
+        }
+        
+        protected void doZoom(PInputEvent ref, PInputEvent now)
+        {
+            PCamera camera = ((PCanvas)ref.getComponent()).getCamera();
+            Point2D zoomPt = ref.getCanvasPosition();
+            
+            double dx = ((MouseEvent)ref.getSourceSwingEvent()).getX() -
+               ((MouseEvent)now.getSourceSwingEvent()).getX(); 
+            double scaleDelta = (1.0 + (0.001 * dx));
+            double currentScale = camera.getViewScale();
+            double newScale = currentScale * scaleDelta;
+
+            if (newScale < getMinScale())
+                scaleDelta = getMinScale() / currentScale;
+            
+            if ((getMaxScale() > 0) && (newScale > getMaxScale()))
+                scaleDelta = getMaxScale() / currentScale;
+    
+            camera.scaleViewAboutPoint(scaleDelta, zoomPt.getX(), zoomPt.getY());
+            original = now;   
+        }
     }
 
 }

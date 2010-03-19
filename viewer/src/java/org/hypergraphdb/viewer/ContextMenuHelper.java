@@ -47,7 +47,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
 
     public void mousePressed(PInputEvent event)
     {
-        if (event.getPickedNode() instanceof PCamera != true)
+        if (!(event.getPickedNode() instanceof PCamera))
         {
             event.setHandled(true);
             showMenu(event);
@@ -85,9 +85,6 @@ public class ContextMenuHelper extends PBasicInputEventHandler
                  HyperGraph hg = view.getHyperGraph();
                  HGHandle h = node.getNode().getHandle();
                  Object o = hg.get(h);
-                 
-                 //putInClipboard(o.getClass().getName());
-                 
                  h = hg.getTypeSystem().getTypeHandle(o.getClass());
                  if(h == null) return;
                  VisualStyle vs = view.getVisualStyle();
@@ -111,34 +108,20 @@ public class ContextMenuHelper extends PBasicInputEventHandler
                      VisualManager.getInstance().save();
                      view.redrawGraph();
                  }
-//                 final PaintersPanel p = new PaintersPanel();
-//                 p.setView(view);
-//                 DialogDescriptor dd = new DialogDescriptor(GUIUtilities.getFrame(), p,
-//                            ActionManager.VISUAL_PROPERTIES_ACTION);
-//                 DialogDisplayer.getDefault().notify(dd);
-//                 SwingUtilities.invokeLater(new Runnable()
-//                 {
-//                     public void run()
-//                     { 
-//                         p.addPainter(class_name);
-//                     }
-//                 });
-//                
-//                 view.redrawGraph();
              }
          });
          global_menu.add(menuItem);
-         menuItem = new JMenuItem("Copy Class");
-         menuItem.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e)
-             {
-                 HyperGraph hg = view.getHyperGraph();
-                 HGHandle h = node.getNode().getHandle();
-                 Object o = hg.get(h);
-                 putInClipboard(o.getClass().getName());
-             }
-         });
-         global_menu.add(menuItem);
+//         menuItem = new JMenuItem("Copy Class");
+//         menuItem.addActionListener(new ActionListener() {
+//             public void actionPerformed(ActionEvent e)
+//             {
+//                 HyperGraph hg = view.getHyperGraph();
+//                 HGHandle h = node.getNode().getHandle();
+//                 Object o = hg.get(h);
+//                 putInClipboard(o.getClass().getName());
+//             }
+//         });
+//         global_menu.add(menuItem);
          menuItem = new JMenuItem("Copy Handle");
          menuItem.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e)
@@ -244,7 +227,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         propsPanel.setModelObject(obj);
         propsPanel.setPreferredSize(new Dimension(400, 200));
         DialogDescriptor dd = new DialogDescriptor(f, propsPanel,
-              "Properties");
+              "Properties: " + obj.getClass().getName());
        DialogDisplayer.getDefault().notify(dd);
         
     }

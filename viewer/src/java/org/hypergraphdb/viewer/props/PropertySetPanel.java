@@ -6,13 +6,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditorManager;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.hypergraphdb.type.Slot;
-import org.hypergraphdb.viewer.props.editors.ArrayListModel;
 
 /**
  * 
@@ -105,11 +107,6 @@ public class PropertySetPanel extends JScrollPane
 				getKlass("org.hypergraphdb.viewer.props.editors.BoolEditor"));
 		editorsRegistered = true;
 		
-		PropertyModelFactory.registerModel(ArrayList.class, new ArrayListModel());
-		
-		//TODO:??? MOVE AWAY
-		//PropertyModelFactory.registerModel(Record.class, new RecordTableModel());
-		//PropertyModelFactory.registerModel(Slot.class, new SlotTableModel());
 	}
 
 	private static final Class<?> getKlass(String cls)
@@ -125,16 +122,4 @@ public class PropertySetPanel extends JScrollPane
 		}
 	}
 
-	static class SlotTableModel extends PropertiesTableModel
-	{
-		public AbstractProperty[] introspect(Object obj)
-		{
-		    Slot slot = (Slot) bean;
-			AbstractProperty[] data0 = new AbstractProperty[2];
-			data0[0] = new GenericProperty("label", slot.getLabel());
-			data0[1] = new GenericProperty("valueType",
-			        slot.getValueType().getClass().getName());
-			return data0;
-		}
-	}
 }

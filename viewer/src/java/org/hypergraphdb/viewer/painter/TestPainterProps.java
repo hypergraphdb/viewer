@@ -8,7 +8,11 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,25 +39,19 @@ public class TestPainterProps extends PropertySheetPanel
 	 */
 	public static void main(String[] args)
 	{
-	  
-		//PaintersPanel p = new PaintersPanel();
-		//p.init(new DefaultNodePainter());
-		//p.init(new DefaultEdgePainter());
-		//p.setHyperGraph(hg);
-		//f.getContentPane().add(p);
-	    JFrame f = new JFrame();
-	    
-	    ArrayList l = new ArrayList();
-	    l.add("First");
-	    l.add( new JButton("Test"));
-	    Object obj = l;//new JButton("Test");
-        PropertySetPanel propsPanel = new PropertySetPanel(f);
-        propsPanel.setModelObject(obj);
-        propsPanel.setPreferredSize(new Dimension(400, 200));
-        DialogDescriptor dd = new DialogDescriptor(f, propsPanel,
-              "Properties");
-       DialogDisplayer.getDefault().notify(dd);
-       if(true) return;
+    JFrame f = new JFrame();
+//	    Map<String, Object> l = new HashMap<String, Object>();
+//	    l.put("First", "First");
+//	    l.put("Sec",  new JButton("Test"));
+//	   // Object[] l = new Object[]{ "First", new JButton("Test")};
+//	    Object obj = l;//new JButton("Test");
+//        PropertySetPanel propsPanel = new PropertySetPanel(f);
+//        propsPanel.setModelObject(obj);
+//        propsPanel.setPreferredSize(new Dimension(400, 200));
+//        DialogDescriptor dd = new DialogDescriptor(f, propsPanel,
+//              "Properties");
+//       DialogDisplayer.getDefault().notify(dd);
+//       if(true) return;
 	    
 		final HyperGraph hg = new HyperGraph("F:/temp/xxx2");
 		HGViewer viewer = getViewer(hg);

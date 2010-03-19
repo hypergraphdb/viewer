@@ -1338,7 +1338,7 @@ public class PropertyPanelEx extends JComponent
 		 */
 		public void sheetButtonClicked(ActionEvent e)
 		{
-			String title = bean.getName();
+			//String title = bean.getName();
 			customDialogShown = true;
 			// bugfix #18326 editor's value is taken from textField
 			if (textField != null)
@@ -1357,9 +1357,9 @@ public class PropertyPanelEx extends JComponent
 				}
 			}
 			PropertyDialogManager pdm = new PropertyDialogManager(
-					"PropertyEditor: " + ((title == null) ? "" : title + " ")
-							+ bean.getPropertyType(), true, editor, bean);
-			pdm.getDialog().setVisible(true); //.shj.show();
+					//"PropertyEditor: " + ((title == null) ? "" : title + " ")+ bean.getPropertyType()
+			        bean.getPropertyType().getName(), true, editor, bean);
+			pdm.getDialog().setVisible(true); 
 			// update editor from the model
 			if (canRead)
 			{

@@ -28,6 +28,11 @@ public class PropertiesTableModel extends AbstractTableModel implements Property
 	
 	protected boolean attachListeners = false;
 
+	public boolean canModelClass(Class<?> c)
+	{
+	   return false;   
+	} 
+	
     public AbstractProperty[][] getData()
     {
         this.attachListeners = true;
