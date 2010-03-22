@@ -1,20 +1,12 @@
 package org.hypergraphdb.viewer.painter;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import org.hypergraphdb.HGHandle;
@@ -23,11 +15,6 @@ import org.hypergraphdb.HGQuery.hg;
 import org.hypergraphdb.atom.HGStats;
 import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.HGViewerType;
-import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
-import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
-import org.hypergraphdb.viewer.props.PropertySetPanel;
-import org.hypergraphdb.viewer.util.GUIUtilities;
-import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
 
 import com.l2fprod.common.demo.BeanBinder;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
@@ -39,16 +26,16 @@ public class TestPainterProps extends PropertySheetPanel
 	 */
 	public static void main(String[] args)
 	{
-    JFrame f = new JFrame();
+        JFrame f = new JFrame();
 //	    Map<String, Object> l = new HashMap<String, Object>();
 //	    l.put("First", "First");
 //	    l.put("Sec",  new JButton("Test"));
 //	   // Object[] l = new Object[]{ "First", new JButton("Test")};
 //	    Object obj = l;//new JButton("Test");
-//        PropertySetPanel propsPanel = new PropertySetPanel(f);
-//        propsPanel.setModelObject(obj);
-//        propsPanel.setPreferredSize(new Dimension(400, 200));
-//        DialogDescriptor dd = new DialogDescriptor(f, propsPanel,
+//	    ObjectInspector outline = new ObjectInspector(l);
+//	    outline.setModelObject(obj);
+//        outline.setPreferredSize(new Dimension(400, 200));
+//        DialogDescriptor dd = new DialogDescriptor(f, outline,
 //              "Properties");
 //       DialogDisplayer.getDefault().notify(dd);
 //       if(true) return;

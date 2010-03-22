@@ -164,36 +164,6 @@ public class HGVUtils
 		return true;
 	}
 	
-	private static Set<HGAtomType> dir_links = null;
-   
-	private static Set<HGAtomType> getDirLinks(HyperGraph hg)
-	{
-		if (dir_links != null) return dir_links;
-		dir_links = new HashSet<HGAtomType>();
-/*		HGHandle sHandle = hg.getTypeSystem().getTypeHandle(HGTypeStructuralInfo.class);
-		AtomTypeCondition cond = new AtomTypeCondition(hg.getPersistentHandle(sHandle)); */
-		HGHandle sHandle = hg.getHandle(HGTypeStructuralInfo.class);
-		//TODO: ??? after last major HG changes this throws NPE
-		if(sHandle == null || sHandle.equals(HGHandleFactory.nullHandle()))
-			return dir_links;
-	    AtomTypeCondition cond = new AtomTypeCondition(hg.getPersistentHandle(sHandle));
-		HGQuery query = HGQuery.make(hg, cond);
-		HGSearchResult it = query.execute();
-		while (it.hasNext())
-		{
-			it.next();
-			HGTypeStructuralInfo info = 
-				(HGTypeStructuralInfo) hg.get((HGHandle)it.current());
-			if(info != null && info.isOrdered() && info.getArity() == 2)
-			{
-				dir_links.add(hg.getTypeSystem().getType(info.getTypeHandle()));
-			}
-		}
-		it.close();
-		return dir_links;
-	}
-	
-
 	public static void collapseNode(HyperGraph hg, FNode node)
 	{
 		removeNode(hg, node, false);

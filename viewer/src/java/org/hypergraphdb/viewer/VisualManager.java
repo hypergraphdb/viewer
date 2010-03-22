@@ -106,8 +106,8 @@ public class VisualManager
             if (instance == null)
             {
             	instance = new VisualManager();
+            	graph.add(instance, HGSystemFlags.MUTABLE);
             	instance.addVisualStyle(new VisualStyle(DEFAULT_STYLE_NAME));
-             	graph.add(instance, HGSystemFlags.MUTABLE);
             }
 		}
 		return instance;

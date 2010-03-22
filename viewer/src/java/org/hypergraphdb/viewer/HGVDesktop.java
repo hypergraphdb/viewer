@@ -25,7 +25,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.SwingPropertyChangeSupport;
 
-import org.hypergraphdb.viewer.props.PropertySetPanel;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
 import phoebe.PNodeView;
@@ -65,7 +64,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
             this);
     private/* final */TitledBorder propertiesTableBorder_ = new TitledBorder("");
    
-    protected PropertySetPanel propsPanel;
+    protected ObjectInspector propsPanel;
     private JPanel mainPropsPanel;
     private JComboBox styleBox;
 
@@ -132,22 +131,21 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
             }
         });
         JScrollPane scroll_tab = new JScrollPane(tabbedPane);
-        propsPanel = new PropertySetPanel(this);
-        propsPanel.getSwingPropertyChangeSupport().addPropertyChangeListener(
-                this);
+        propsPanel = new ObjectInspector(null);
+      
         mainPropsPanel = new JPanel();
         mainPropsPanel.setLayout(new GridBagLayout());
         mainPropsPanel.setBorder(propertiesTableBorder_);
-        GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHEAST;
         gridBagConstraints.weightx = 2;
         gridBagConstraints.weighty = 2;
-        mainPropsPanel.add(propsPanel, gridBagConstraints);
-        javax.swing.JSplitPane sp = new javax.swing.JSplitPane();
-        sp.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        mainPropsPanel.add(new JScrollPane(propsPanel), gridBagConstraints);
+        JSplitPane sp = new JSplitPane();
+        sp.setOrientation(JSplitPane.VERTICAL_SPLIT);
         sp.setDividerSize(5);
         sp.setTopComponent(networkPanel);
         sp.setBottomComponent(mainPropsPanel);

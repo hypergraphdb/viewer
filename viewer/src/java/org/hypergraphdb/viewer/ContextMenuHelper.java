@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
+import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
 import org.hypergraphdb.HGHandle;
@@ -21,9 +21,10 @@ import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.hg.HGVUtils;
+import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
 import org.hypergraphdb.viewer.painter.DefaultNodePainter;
+import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
-import org.hypergraphdb.viewer.props.PropertySetPanel;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import org.hypergraphdb.viewer.visual.ui.PainterPropsPanel;
@@ -65,11 +66,11 @@ public class ContextMenuHelper extends PBasicInputEventHandler
                 (int) event.getCanvasPosition().getY());
         if(HGVKit.isEmbeded()) 
            pt = GUIUtilities.adjustPointInPicollo(canvas, pt);
-        else
-            SwingUtilities.convertPoint(canvas, pt, f);
+        //else
+        //    SwingUtilities.convertPoint(canvas, pt, f);
         //move a little from the right position to avoid an infinite
         //zoom clash that happen sometimes
-        global_menu.show(f, pt.x + 10, pt.y);
+        global_menu.show(canvas, pt.x + 10, pt.y);
      }
     
      private void createPopup(final PNodeView node)
@@ -78,36 +79,19 @@ public class ContextMenuHelper extends PBasicInputEventHandler
          global_menu.add(expandNodeAction(view, node));
          //global_menu.add(collapseNodeAction(view, node));
          global_menu.add(focusNodeAction(view, node));
-         JMenuItem menuItem = new JMenuItem("Add Painter");
+         JMenuItem menuItem = new JMenuItem("Add Node Painter");
          menuItem.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e)
              {
-                 HyperGraph hg = view.getHyperGraph();
-                 HGHandle h = node.getNode().getHandle();
-                 Object o = hg.get(h);
-                 h = hg.getTypeSystem().getTypeHandle(o.getClass());
-                 if(h == null) return;
-                 VisualStyle vs = view.getVisualStyle();
-                 NodePainter p = vs.getNodePainter(h);
-                 if(p == null)
-                     p = new DefaultNodePainter();
-                 PainterPropsPanel propsPanel = new PainterPropsPanel();
-                 propsPanel.setBorder(new TitledBorder(null, "Properties",
-                         TitledBorder.DEFAULT_JUSTIFICATION,
-                         TitledBorder.DEFAULT_POSITION, null, null));
-                 propsPanel.setMinimumSize(new Dimension(300, 300));
-                 propsPanel.setPreferredSize(new Dimension(300, 300));
-                 propsPanel.setPainter(p);
-                 
-                 DialogDescriptor dd = new DialogDescriptor(
-                         GUIUtilities.getFrame(), propsPanel,
-                 ActionManager.VISUAL_PROPERTIES_ACTION);
-                 if(DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION)
-                 {
-                     vs.addNodePainter(h, p);
-                     VisualManager.getInstance().save();
-                     view.redrawGraph();
-                 }
+                 addNodePainter(view, node);
+             }
+         });
+         global_menu.add(menuItem);
+         menuItem = new JMenuItem("Add Edge Painter");
+         menuItem.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e)
+             {
+                 addEdgePainter(view, node);
              }
          });
          global_menu.add(menuItem);
@@ -223,12 +207,72 @@ public class ContextMenuHelper extends PBasicInputEventHandler
     {
         Object obj = view.getHyperGraph().get(node.getNode().getHandle());
         Frame f = GUIUtilities.getFrame();
-        PropertySetPanel propsPanel = new PropertySetPanel(f);
-        propsPanel.setModelObject(obj);
+        ObjectInspector propsPanel = new ObjectInspector(obj);
         propsPanel.setPreferredSize(new Dimension(400, 200));
-        DialogDescriptor dd = new DialogDescriptor(f, propsPanel,
+        DialogDescriptor dd = new DialogDescriptor(f, 
+                new JScrollPane(propsPanel),
               "Properties: " + obj.getClass().getName());
        DialogDisplayer.getDefault().notify(dd);
         
+    }
+    
+    private static void addNodePainter(final GraphView view, final PNodeView node)
+    {
+        HyperGraph hg = view.getHyperGraph();
+        HGHandle h = node.getNode().getHandle();
+        Object o = hg.get(h);
+        h = hg.getTypeSystem().getTypeHandle(o.getClass());
+        if(h == null) return;
+        VisualStyle vs = view.getVisualStyle();
+        NodePainter p = vs.getNodePainter(h);
+        if(p == null)
+            p = new DefaultNodePainter();
+        PainterPropsPanel propsPanel = new PainterPropsPanel();
+        propsPanel.setBorder(new TitledBorder(null, "Properties",
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION, null, null));
+        propsPanel.setMinimumSize(new Dimension(300, 300));
+        propsPanel.setPreferredSize(new Dimension(300, 300));
+        propsPanel.setPainter(p);
+        
+        DialogDescriptor dd = new DialogDescriptor(
+                GUIUtilities.getFrame(), propsPanel,
+        ActionManager.VISUAL_PROPERTIES_ACTION);
+        if(DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION)
+        {
+            vs.addNodePainter(h, p);
+            VisualManager.getInstance().save();
+            view.redrawGraph();
+        }
+    }
+    
+    private static void addEdgePainter(final GraphView view, final PNodeView node)
+    {
+        HyperGraph hg = view.getHyperGraph();
+        HGHandle h = node.getNode().getHandle();
+        Object o = hg.get(h);
+        h = hg.getTypeSystem().getTypeHandle(o.getClass());
+        if(h == null) return;
+        VisualStyle vs = view.getVisualStyle();
+        EdgePainter p = vs.getEdgePainter(h);
+        if(p == null)
+            p = new DefaultEdgePainter();
+        PainterPropsPanel propsPanel = new PainterPropsPanel();
+        propsPanel.setBorder(new TitledBorder(null, "Properties",
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION, null, null));
+        propsPanel.setMinimumSize(new Dimension(300, 300));
+        propsPanel.setPreferredSize(new Dimension(300, 300));
+        propsPanel.setPainter(p);
+        
+        DialogDescriptor dd = new DialogDescriptor(
+                GUIUtilities.getFrame(), propsPanel,
+        ActionManager.VISUAL_PROPERTIES_ACTION);
+        if(DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION)
+        {
+            vs.addEdgePainter(h, p);
+            VisualManager.getInstance().save();
+            view.redrawGraph();
+        }
     }
 }
