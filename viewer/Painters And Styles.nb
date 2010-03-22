@@ -3,7 +3,7 @@
     <cell index="57" html-preview="true" engine="html">
         <data><![CDATA[<h2 style="text-align:center;">Working with Painters and Styles in HGViewer
 </h2>
-<p style="text-align:left;">This document describes the different ways to alter the display of nodes and edges HGViewer. There are two key concepts: style and painter.
+<p style="text-align:left;">This document describes the different ways to alter the display of nodes and edges in HGViewer. There are two key concepts: style and painter.
 </p>
 <p style="text-align:left;">1) Style (org.hypergraphdb.viewer.visual.ViisualStyle) represents a set of painters keyed by the type of the Node/Edge. All availabale styles are kept in a sigleton class org.hypergraphdb.viewer.VisualManager which is responsible for their persisting.
 </p>
@@ -16,7 +16,7 @@
 </p>
 <p style="text-align:left;">PaintEdgeInfo, PaintNodeInfo hold the information about node/edge visual attributes like foreground and background color, font, label, tooltip, etc. The combination of those two interfaces yields to two more usable classes: DefaultNodePainter and DefaultEdgePainter which are far more suitable to work with.
 </p>
-<p style="text-align:left;">Below are show the methods of those classes:
+<p style="text-align:left;">Below are shown the methods of those classes:
 </p>
 ]]>        </data>
     </cell>
