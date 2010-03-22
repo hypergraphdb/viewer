@@ -26,7 +26,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
     private double width = 30.0;
 
     protected PNodeView nodeView;
-    protected GraphView network_view;
+    protected GraphView graphView;
 
     /*
      * (non-Javadoc)
@@ -180,7 +180,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 
     public void paintNode(PNodeView nodeView, GraphView network_view)
     {
-        this.network_view = network_view;
+        this.graphView = network_view;
         this.nodeView = nodeView;
         network_view.updateEdges = false;
         boolean change_made = false;
@@ -279,7 +279,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 
     protected final HyperGraph getHG()
     {
-        if (network_view == null) return null;
-        return network_view.getHyperGraph();
+        if (graphView == null) return null;
+        return graphView.getHyperGraph();
     }
 }

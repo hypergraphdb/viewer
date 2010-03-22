@@ -497,7 +497,12 @@ public class GraphView
      * nodeViewsList only returns the NodeViews that are explicitly associated
      * with this GraphView
      */
-    public List<PNodeView> getNodeViews()
+    public Collection<PNodeView> getNodeViews()
+    {
+        return nodeViewMap.values();
+    }
+    
+    public Collection<PNodeView> getNodeViewsCopy()
     {
         ArrayList<PNodeView> list = new ArrayList<PNodeView>(getNodeViewCount());
         for (FNode i : nodeViewMap.keySet())
@@ -532,7 +537,12 @@ public class GraphView
         return nodeViewMap.get(node);
     }
 
-    public List<PEdgeView> getEdgeViews()
+    public Collection<PEdgeView> getEdgeViews()
+    {
+       return edgeViewMap.values();
+    }
+    
+    public Collection<PEdgeView> getEdgeViewsCopy()
     {
         ArrayList<PEdgeView> list = new ArrayList<PEdgeView>(getEdgeViewCount());
         for (FEdge i : edgeViewMap.keySet())

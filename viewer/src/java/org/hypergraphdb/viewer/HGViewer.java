@@ -6,50 +6,32 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.HierarchyListener;
 import java.util.Collection;
-import java.util.Iterator;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.algorithms.DefaultALGenerator;
 import org.hypergraphdb.algorithms.HGALGenerator;
-import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.util.CloseMe;
-import org.hypergraphdb.viewer.dialogs.EnhancedMenu;
-import org.hypergraphdb.viewer.dialogs.VisStylesProvider;
 import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.hg.HGWNReader;
 import org.hypergraphdb.viewer.visual.ui.DropDownButton;
 
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
-
 import sun.awt.AppContext;
-
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolox.swing.PScrollPane;
 
@@ -190,9 +172,9 @@ public class HGViewer extends JPanel
 
     void clearView()
     {
-        for (PEdgeView e : view.getEdgeViews())
+        for (PEdgeView e : view.getEdgeViewsCopy())
             view.removeEdgeView(e);
-        for (PNodeView nv : view.getNodeViews())
+        for (PNodeView nv : view.getNodeViewsCopy())
             view.removeNodeView(nv.getNode());
     }
 
@@ -294,7 +276,7 @@ public class HGViewer extends JPanel
         };
         toolbar.add(createDropDown(toolbar, dropdown, "visual",
                 "Visual Properties", 
-                man.getAction(ActionManager.VISUAL_PROPERTIES_ACTION)));
+                man.getAction(ActionManager.NODE_VISUAL_PROPERTIES_ACTION)));
         dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
             {

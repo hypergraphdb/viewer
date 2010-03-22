@@ -1,25 +1,18 @@
 package org.hypergraphdb.viewer.visual.ui;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
-import javax.swing.JFrame;
+
 import javax.swing.UIManager;
-import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.atom.HGStats;
+
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.HGVKit;
-import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.painter.DefaultNodePainterBeanInfo;
-import com.l2fprod.common.demo.BeanBinder;
-import com.l2fprod.common.model.DefaultBeanInfoResolver;
+
 import com.l2fprod.common.propertysheet.Property;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
-import com.l2fprod.common.propertysheet.PropertySheetTable;
 import com.l2fprod.common.propertysheet.PropertySheetTableModel;
 
 public class PainterPropsPanel extends PropertySheetPanel
@@ -43,9 +36,6 @@ public class PainterPropsPanel extends PropertySheetPanel
 		removePropertySheetChangeListener(listener);
 		if (painter != null)
 		{
-			//Thread.currentThread().setContextClassLoader(
-			//	 AppConfig.getInstance().getClassLoader());
-			//DefaultBeanInfoResolver res = new DefaultBeanInfoResolver(); 
 			BeanInfo beanInfo = getBeanInfo(painter);
 			if(beanInfo != null) {
 			   setProperties(beanInfo.getPropertyDescriptors());

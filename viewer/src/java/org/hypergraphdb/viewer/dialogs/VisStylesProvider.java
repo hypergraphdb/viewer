@@ -50,10 +50,8 @@ public class VisStylesProvider implements DynamicMenuProvider
 
     public static Collection<JMenuItem> getStyles(final GraphView view)
     {
-       if (langMenuItems == null) 
-            initLangMenuItems(view);
-
-        for (final JMenuItem m : langMenuItems)
+       initStyleMenuItems(view);
+       for (final JMenuItem m : langMenuItems)
         {
             for (ItemListener l : m.getItemListeners())
                 m.removeItemListener(l);
@@ -74,7 +72,7 @@ public class VisStylesProvider implements DynamicMenuProvider
         return langMenuItems;
     }
 
-    private static void initLangMenuItems(final GraphView view)
+    private static void initStyleMenuItems(final GraphView view)
     {   
         ButtonGroup group = new ButtonGroup();
         langMenuItems = new HashSet<JMenuItem>();

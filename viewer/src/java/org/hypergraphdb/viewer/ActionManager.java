@@ -37,6 +37,7 @@ import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.hg.LoadHyperGraphFileAction;
 import org.hypergraphdb.viewer.hg.LoadWordNetAction;
 import org.hypergraphdb.viewer.layout.Layout;
+import org.hypergraphdb.viewer.painter.DefaultNodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.util.HGVNetworkNaming;
@@ -88,7 +89,8 @@ public class ActionManager
     public static final String PREFERED_LAYOUT_ACTION = "Select Preferred Layout";
     public static final String TOGGLE_BIRDS_EYE_VIEW_ACTION = "Toggle Overview";
     public static final String BACKGROUND_COLOR_ACTION = "Change Background Color";
-    public static final String VISUAL_PROPERTIES_ACTION = "Set Visual Properties";
+    public static final String NODE_VISUAL_PROPERTIES_ACTION = "Visual Properties Nodes";
+    public static final String EDGE_VISUAL_PROPERTIES_ACTION = "Visual Properties Edges";
     public static final String FIT_ACTION = "Zoom To Fit";
 
     public static final String ZOOM_IN_ACTION = "Zoom In";
@@ -138,7 +140,8 @@ public class ActionManager
         actions.put(PREFERED_LAYOUT_ACTION, new SelectPrefLayoutAction());
         actions.put(TOGGLE_BIRDS_EYE_VIEW_ACTION, new BirdsEyeViewAction());
         actions.put(BACKGROUND_COLOR_ACTION, new BackgroundColorAction());
-        actions.put(VISUAL_PROPERTIES_ACTION, new SetVisualPropertiesAction());
+        actions.put(NODE_VISUAL_PROPERTIES_ACTION, new SetVisualPropertiesAction(true));
+        actions.put(EDGE_VISUAL_PROPERTIES_ACTION, new SetVisualPropertiesAction(false));
         actions.put(FIT_ACTION, new FitContentAction());
         actions.put(ZOOM_IN_ACTION, new ZoomAction(1.1));
         actions.put(ZOOM_OUT_ACTION, new ZoomAction(0.9));
@@ -745,21 +748,27 @@ public class ActionManager
 
     public static class SetVisualPropertiesAction extends HGVAction
     {
-
-        public SetVisualPropertiesAction()
-        {
-            super(VISUAL_PROPERTIES_ACTION);
-            setAcceleratorCombo(KeyEvent.VK_V, ActionEvent.CTRL_MASK
+        boolean nodes_or_edges;
+        
+        public SetVisualPropertiesAction(boolean nodes_or_edges)
+         {
+            super(nodes_or_edges ? "Nodes" : "Edges");
+            this.nodes_or_edges = nodes_or_edges;
+            if(nodes_or_edges)
+               setAcceleratorCombo(KeyEvent.VK_N, ActionEvent.CTRL_MASK
                     | ActionEvent.ALT_MASK);
+            else
+               setAcceleratorCombo(KeyEvent.VK_E, ActionEvent.CTRL_MASK
+                        | ActionEvent.ALT_MASK);
         }
 
         public void action(HGViewer viewer) throws Exception
         {
             GraphView view = viewer.getView();
-            PaintersPanel p = new PaintersPanel();
+            PaintersPanel p = new PaintersPanel(nodes_or_edges);
             p.setView(view);
             DialogDescriptor dd = new DialogDescriptor(GUIUtilities.getFrame(),
-                    p, VISUAL_PROPERTIES_ACTION);
+                    p, nodes_or_edges ? "Node Painters" : "Edge Painters");
             DialogDisplayer.getDefault().notify(dd);
             VisualManager.getInstance().save();
             view.redrawGraph();

@@ -7,9 +7,11 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
 import java.util.TreeMap;
 
 import javax.swing.AbstractAction;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -76,25 +78,38 @@ public class ContextMenuHelper extends PBasicInputEventHandler
      private void createPopup(final PNodeView node)
      {
          global_menu = new JPopupMenu();
-         global_menu.add(expandNodeAction(view, node));
-         //global_menu.add(collapseNodeAction(view, node));
-         global_menu.add(focusNodeAction(view, node));
-         JMenuItem menuItem = new JMenuItem("Add Node Painter");
+         global_menu.add(new JMenuItem(new AbstractAction("Expand") {
+             public void actionPerformed(ActionEvent e)
+             {
+                 HGVUtils.expandNodes();
+                 //removeExtraNodes(node, 150);
+                 adjust(node);
+             }
+         }));
+         global_menu.add(new JMenuItem(new AbstractAction("Focus") {
+             public void actionPerformed(ActionEvent e)
+             {
+                 view.getViewer().focus(node.getNode().getHandle());
+             }
+         }));
+         JMenu menu = new JMenu("Add Painter");
+         JMenuItem menuItem = new JMenuItem("Node");
          menuItem.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e)
              {
                  addNodePainter(view, node);
              }
          });
-         global_menu.add(menuItem);
-         menuItem = new JMenuItem("Add Edge Painter");
+         menu.add(menuItem);
+         menuItem = new JMenuItem("Edge");
          menuItem.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e)
              {
                  addEdgePainter(view, node);
              }
          });
-         global_menu.add(menuItem);
+         menu.add(menuItem);
+         global_menu.add(menu);
 //         menuItem = new JMenuItem("Copy Class");
 //         menuItem.addActionListener(new ActionListener() {
 //             public void actionPerformed(ActionEvent e)
@@ -150,29 +165,6 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         });
     }
 
-    static JMenuItem collapseNodeAction(final GraphView v, final PNodeView node)
-    {
-
-        return new JMenuItem(new AbstractAction("Collapse") {
-            public void actionPerformed(ActionEvent e)
-            {
-                HGVUtils.collapseNode(v.getHyperGraph(),
-                        node.getNode());
-                adjust(node);
-            }
-        });
-    }
-
-    static JMenuItem focusNodeAction(final GraphView v, final PNodeView node)
-    {
-        return new JMenuItem(new AbstractAction("Focus") {
-            public void actionPerformed(ActionEvent e)
-            {
-                v.getViewer().focus(node.getNode().getHandle());
-            }
-        });
-    }
-
     private static void adjust(PNode node)
     {
         GraphView view = HGVKit.getCurrentView();
@@ -186,9 +178,9 @@ public class ContextMenuHelper extends PBasicInputEventHandler
     {
         if (HGVKit.getCurrentView().getNodeViewCount() < def) return;
         TreeMap<Double, PNodeView> nodes = new TreeMap<Double, PNodeView>();
-        java.awt.geom.Point2D n = node.getFullBounds().getCenter2D();
+        Point2D n = node.getFullBounds().getCenter2D();
 
-        for (PNodeView view : HGVKit.getCurrentView().getNodeViews())
+        for (PNodeView view : HGVKit.getCurrentView().getNodeViewsCopy())
             nodes.put(n.distance(view.getOffset()), view);
         
         // System.out.println("FNode count: " +
@@ -236,8 +228,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         propsPanel.setPainter(p);
         
         DialogDescriptor dd = new DialogDescriptor(
-                GUIUtilities.getFrame(), propsPanel,
-        ActionManager.VISUAL_PROPERTIES_ACTION);
+                GUIUtilities.getFrame(), propsPanel,"Node Painter Properties");
         if(DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION)
         {
             vs.addNodePainter(h, p);
@@ -267,7 +258,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         
         DialogDescriptor dd = new DialogDescriptor(
                 GUIUtilities.getFrame(), propsPanel,
-        ActionManager.VISUAL_PROPERTIES_ACTION);
+                "Edge Painter Properties");
         if(DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION)
         {
             vs.addEdgePainter(h, p);
