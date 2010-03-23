@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -70,11 +69,15 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * <BR>
  * Fortunately, if you just want basic shapes and colors, it's all built into
  * the UI already, and you really need never even use this class. Just learn how
- * to use the VisualManager to accomplish your data to view mappings. 
+ * to use the VisualManager to accomplish your data to view mappings.
  */
 
 public class GraphView
 {
+    //if set, checks the edge node for consistency e.g source node should be a link
+    //and should point to target node
+    private static boolean check_edge_consistency = false;
+
     static EdgePainter def_edge_painter = new DefaultEdgePainter();
     static NodePainter def_node_painter = new SimpleLabelTooltipNodePainter();
 
@@ -84,12 +87,13 @@ public class GraphView
     protected PCanvas canvas;
 
     public boolean updateEdges = true;
-   
+
     protected Map<FNode, PNodeView> nodeViewMap;
     protected Map<FEdge, PEdgeView> edgeViewMap;
     // PCS support
     protected PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    // A JPanel which contains the Canvas in the middle, and some other stuff around
+    // A JPanel which contains the Canvas in the middle, and some other stuff
+    // around
     protected HGViewer viewComponent;
     // Piccolo Stuff for this class
     protected PSelectionHandler selectionHandler;
@@ -115,8 +119,8 @@ public class GraphView
 
     protected HyperGraph graph;
 
-    public GraphView(HGViewer comp, HyperGraph db,
-            Collection<FNode> nodes, Collection<FEdge> edges)
+    public GraphView(HGViewer comp, HyperGraph db, Collection<FNode> nodes,
+            Collection<FEdge> edges)
     {
         this.graph = db;
         this.setIdentifier(db.getLocation());
@@ -194,12 +198,12 @@ public class GraphView
         // Only allow panning via Middle Mouse button
         getCanvas().getPanEventHandler().setEventFilter(
                 new PInputEventFilter(InputEvent.BUTTON2_MASK));
-       
+
         PZoomEventHandler zoomer = new MyZoomEventHandler();
         zoomer.setMinScale(.15);
         zoomer.setMaxScale(7);
         getCanvas().setZoomEventHandler(zoomer);
-       
+
         edgeHandler = new PEdgeHandler(this);
         getCanvas().addInputEventListener(edgeHandler);
 
@@ -320,7 +324,7 @@ public class GraphView
     {
         if (!nodeSelection && on)
             getCanvas().addInputEventListener(getSelectionHandler());
-        if(nodeSelection && !on)
+        if (nodeSelection && !on)
             getCanvas().removeInputEventListener(getSelectionHandler());
         nodeSelection = on;
     }
@@ -344,7 +348,7 @@ public class GraphView
         return edgeSelectionHandler;
     }
 
-     /**
+    /**
      * @return the Squiggle Event Handler
      */
     public SquiggleEventHandler getSquiggleHandler()
@@ -428,7 +432,8 @@ public class GraphView
         long time = System.currentTimeMillis();
         for (FNode node : nodes)
             addNodeView(node);
-        System.out.println("Create Nodes took: "  + (System.currentTimeMillis() - time));
+        System.out.println("Create Nodes took: "
+                + (System.currentTimeMillis() - time));
         for (FEdge edge : edges)
             addEdgeView(edge);
         firePiccoloEvents = true;
@@ -501,7 +506,7 @@ public class GraphView
     {
         return nodeViewMap.values();
     }
-    
+
     public Collection<PNodeView> getNodeViewsCopy()
     {
         ArrayList<PNodeView> list = new ArrayList<PNodeView>(getNodeViewCount());
@@ -539,9 +544,9 @@ public class GraphView
 
     public Collection<PEdgeView> getEdgeViews()
     {
-       return edgeViewMap.values();
+        return edgeViewMap.values();
     }
-    
+
     public Collection<PEdgeView> getEdgeViewsCopy()
     {
         ArrayList<PEdgeView> list = new ArrayList<PEdgeView>(getEdgeViewCount());
@@ -550,7 +555,7 @@ public class GraphView
         return list;
     }
 
-     // implements GraphView
+    // implements GraphView
     public PEdgeView getEdgeView(FEdge edge)
     {
         return edgeViewMap.get(edge);
@@ -577,26 +582,26 @@ public class GraphView
             FNode node = nodeView.getNode();
             HGHandle h = node.getHandle();
             NodePainter p = getPainter(h, false);
-            p.paintNode(nodeView, this);
+            p.paintNode(nodeView);
         }
     }
-    
+
     private NodePainter getPainter(HGHandle h, boolean return_default)
     {
         NodePainter p = getVisualStyle(true).getNodePainter(h);
-        if (p == null && return_default) 
-            p = def_node_painter;
-        if(p != null) return p;
+        if (p == null && return_default) p = def_node_painter;
+        if (p != null) return p;
         try
         {
-           HGHandle typeH = graph.getTypeSystem().getTypeHandle(h);
-           return getPainter(typeH, true);
-        }catch(HGException ex)
+            HGHandle typeH = graph.getTypeSystem().getTypeHandle(h);
+            return getPainter(typeH, true);
+        }
+        catch (HGException ex)
         {
-            //do nothing 
-            //the node handle pointed to some statically
-            //defined HGHandleFactory.makeHandle()
-            //with no value
+            // do nothing
+            // the node handle pointed to some statically
+            // defined HGHandleFactory.makeHandle()
+            // with no value
             return def_node_painter;
         }
     }
@@ -614,16 +619,16 @@ public class GraphView
             HGHandle h = graph.getTypeSystem().getTypeHandle(node.getHandle());
             EdgePainter p = getVisualStyle(true).getEdgePainter(h);
             if (p == null) p = def_edge_painter;
-            p.paintEdge(edgeView, this);
+            p.paintEdge(edgeView);
         }
     }
 
     public VisualStyle getVisualStyle(boolean return_default)
     {
-        return getVisualStyle() != null ? getVisualStyle() : 
-            VisualManager.getInstance().getDefaultVisualStyle();
+        return getVisualStyle() != null ? getVisualStyle() : VisualManager
+                .getInstance().getDefaultVisualStyle();
     }
-    
+
     public VisualStyle getVisualStyle()
     {
         return style;
@@ -634,7 +639,6 @@ public class GraphView
         this.style = style;
         redrawGraph();
     }
-
 
     public class Canvas extends PCanvas
     {
@@ -659,7 +663,7 @@ public class GraphView
                 // System.out.println("Action: " + name + ":" + key);
             }
         }
-        
+
         public GraphView getView()
         {
             return GraphView.this;
@@ -722,7 +726,7 @@ public class GraphView
         return edgeViewMap.size();
     }
 
-     /**
+    /**
      * This will entirely remove a PNodeView/PEdgeView from the GraphView.
      */
     public PNodeView removeNodeView(FNode node)
@@ -756,39 +760,44 @@ public class GraphView
         view.removeFromParent();
         edgeSelectionList.remove(e);
         edgeViewMap.remove(e);
-        fireGraphChanged(new GraphViewEdgesRemovedEvent(this,
-                new FEdge[] { e }));
+        fireGraphChanged(new GraphViewEdgesRemovedEvent(this, new FEdge[] { e }));
         return view;
     }
 
     /**
      * @param node
-     *            the index of a node to have a view created for it
-     * @return a new PNodeView based on the node with the given index
+     *            the node to have a view created for it
+     * @return a new PNodeView based on the given node
      */
     public PNodeView addNodeView(FNode node)
     {
         if (nodeViewMap.containsKey(node)) return nodeViewMap.get(node);
-        
+
         PNodeView node_view = new PNodeView(node, this);
         nodeViewMap.put(node, node_view);
         addToNodeLayer(node_view);
         fireGraphChanged(new GraphViewNodesAddedEvent(this,
                 new FNode[] { node }));
-        def_node_painter.paintNode(node_view, this);
+        def_node_painter.paintNode(node_view);
         return node_view;
     }
 
     public PEdgeView addEdgeView(FEdge edge)
     {
         if (edgeViewMap.containsKey(edge)) return edgeViewMap.get(edge);
-        Object s = graph.get(edge.getSource().getHandle());
-        if(!(s instanceof HGLink))
-            System.err.println("Impossible PEdgeView - source is not HGLink: " + edge);
-        if(!graph.getIncidenceSet(edge.getTarget().getHandle()).contains(
-                edge.getSource().getHandle()))
-            System.err.println("Impossible PEdgeView - target is not pointed by source: " + edge);
-        
+        if (check_edge_consistency)
+        {
+            Object s = graph.get(edge.getSource().getHandle());
+            if (!(s instanceof HGLink))
+                System.err
+                        .println("Impossible PEdgeView - source is not HGLink: "
+                                + edge);
+            if (!graph.getIncidenceSet(edge.getTarget().getHandle()).contains(
+                    edge.getSource().getHandle()))
+                System.err
+                        .println("Impossible PEdgeView - target is not pointed by source: "
+                                + edge);
+        }
         PEdgeView edge_view = new PEdgeView(edge, this);
         addToEdgeLayer(edge_view);
         edgeViewMap.put(edge, edge_view);
@@ -931,8 +940,7 @@ public class GraphView
                 }
             }
         }
-        if(returnSet.size() > 0)
-           fireSelectionChanged();
+        if (returnSet.size() > 0) fireSelectionChanged();
         return returnSet;
     }
 
@@ -951,7 +959,7 @@ public class GraphView
         if (edgesToSet == null) { return returnSet; }
         if (newState == true)
         {
-            for (FEdge edge: edgesToSet)
+            for (FEdge edge : edgesToSet)
             {
                 if (!edgeSelectionList.contains(edge))
                 {
@@ -962,7 +970,7 @@ public class GraphView
         }
         else
         {
-            for (FEdge edge: edgesToSet)
+            for (FEdge edge : edgesToSet)
             {
                 if (edgeSelectionList.contains(edge))
                 {
@@ -971,11 +979,10 @@ public class GraphView
                 }
             }
         }
-        if(returnSet.size() > 0)
-            fireSelectionChanged();
+        if (returnSet.size() > 0) fireSelectionChanged();
         return returnSet;
     }
-    
+
     public static class MyZoomEventHandler extends PZoomEventHandler
     {
         PInputEvent original = null;
@@ -983,55 +990,53 @@ public class GraphView
         @Override
         public void mousePressed(PInputEvent e)
         {
-            if (accept((MouseEvent) e.getSourceSwingEvent()))
-                original = e;
+            if (accept((MouseEvent) e.getSourceSwingEvent())) original = e;
         }
 
         @Override
         public void mouseReleased(PInputEvent e)
         {
             e.getComponent().setInteracting(false);
-             original = null;
+            original = null;
         }
-        
+
         private boolean accept(MouseEvent e)
         {
-            return e.getButton() == MouseEvent.BUTTON3 
-                    && !e.isControlDown() &&
-                    !e.isShiftDown() && !e.isAltDown();
+            return e.getButton() == MouseEvent.BUTTON3 && !e.isControlDown()
+                    && !e.isShiftDown() && !e.isAltDown();
         }
-        
+
         @Override
         public void mouseDragged(PInputEvent e)
         {
-            //some node is under the mouse
-            if(e.getPath().getNodeStackReference().size() > 1)
-                return;
+            // some node is under the mouse
+            if (e.getPath().getNodeStackReference().size() > 1) return;
             e.getComponent().setInteracting(true);
             super.mouseDragged(e);
-            if (original != null) 
-                doZoom(original, e);
+            if (original != null) doZoom(original, e);
         }
-        
+
         protected void doZoom(PInputEvent ref, PInputEvent now)
         {
-            PCamera camera = ((PCanvas)ref.getComponent()).getCamera();
+            PCamera camera = ((PCanvas) ref.getComponent()).getCamera();
             Point2D zoomPt = ref.getCanvasPosition();
-            
-            double dx = ((MouseEvent)ref.getSourceSwingEvent()).getX() -
-               ((MouseEvent)now.getSourceSwingEvent()).getX(); 
+
+            double dx = ((MouseEvent) ref.getSourceSwingEvent()).getX()
+                    - ((MouseEvent) now.getSourceSwingEvent()).getX();
             double scaleDelta = (1.0 + (0.001 * dx));
             double currentScale = camera.getViewScale();
             double newScale = currentScale * scaleDelta;
 
             if (newScale < getMinScale())
                 scaleDelta = getMinScale() / currentScale;
-            
+
             if ((getMaxScale() > 0) && (newScale > getMaxScale()))
                 scaleDelta = getMaxScale() / currentScale;
-    
-            camera.scaleViewAboutPoint(scaleDelta, zoomPt.getX(), zoomPt.getY());
-            original = now;   
+
+            camera
+                    .scaleViewAboutPoint(scaleDelta, zoomPt.getX(), zoomPt
+                            .getY());
+            original = now;
         }
     }
 

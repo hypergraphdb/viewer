@@ -1,5 +1,6 @@
 package org.hypergraphdb.viewer;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
@@ -145,7 +146,6 @@ public class ContextMenuHelper extends PBasicInputEventHandler
       
     
     // This method writes a string to the system clipboard.
-    // otherwise it returns null.
     private void putInClipboard(String s) {
         StringSelection ss = new StringSelection(s);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
@@ -159,7 +159,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
             public void actionPerformed(ActionEvent e)
             {
                 HGVUtils.expandNodes();
-                //removeExtraNodes(node, 150);
+                //removeExtraNodes(v, node, 150);
                 adjust(node);
             }
         });
@@ -174,23 +174,21 @@ public class ContextMenuHelper extends PBasicInputEventHandler
     }
 
     // static int def = 15;
-    private static void removeExtraNodes(PNode node, int def)
+    private static void removeExtraNodes(GraphView view, PNode node, int def)
     {
-        if (HGVKit.getCurrentView().getNodeViewCount() < def) return;
+        if (view.getNodeViewCount() < def) return;
         TreeMap<Double, PNodeView> nodes = new TreeMap<Double, PNodeView>();
         Point2D n = node.getFullBounds().getCenter2D();
 
-        for (PNodeView view : HGVKit.getCurrentView().getNodeViewsCopy())
-            nodes.put(n.distance(view.getOffset()), view);
+        for (PNodeView nview : view.getNodeViewsCopy())
+            nodes.put(n.distance(nview.getOffset()), nview);
         
-        // System.out.println("FNode count: " +
-        // HGVKit.getCurrentView().nodeCount());
+        // System.out.println("FNode count: " +  view.nodeCount());
         for (int i = 0; nodes.size() - def > 0; i++)
         {
             Double key = nodes.lastKey();
             FNode nn = nodes.get(key).getNode();
-            HGVUtils.removeNode(HGVKit.getCurrentView().getHyperGraph(), nn,
-                    true);
+            HGVUtils.removeNode(view.getHyperGraph(), nn, true);
             nodes.remove(key);
         }
     }
@@ -198,14 +196,12 @@ public class ContextMenuHelper extends PBasicInputEventHandler
     private static void properties(final GraphView view, final PNodeView node)
     {
         Object obj = view.getHyperGraph().get(node.getNode().getHandle());
-        Frame f = GUIUtilities.getFrame();
         ObjectInspector propsPanel = new ObjectInspector(obj);
-        propsPanel.setPreferredSize(new Dimension(400, 200));
-        DialogDescriptor dd = new DialogDescriptor(f, 
+        DialogDescriptor dd = new DialogDescriptor(
+                GUIUtilities.getFrame(), 
                 new JScrollPane(propsPanel),
               "Properties: " + obj.getClass().getName());
-       DialogDisplayer.getDefault().notify(dd);
-        
+        DialogDisplayer.getDefault().notify(dd);
     }
     
     private static void addNodePainter(final GraphView view, final PNodeView node)

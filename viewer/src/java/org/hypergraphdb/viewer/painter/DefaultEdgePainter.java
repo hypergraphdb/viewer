@@ -28,12 +28,9 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     private Font font = new Font("Default", Font.PLAIN, 12);
 
     protected PEdgeView edgeView;
-    protected GraphView graphView;
-
+    
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintEdgeInfo#getColor()
+     * Returns edge's color 
      */
     public Color getColor()
     {
@@ -41,10 +38,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.hypergraphdb.viewer.painter.PaintEdgeInfo#setColor(java.awt.Color)
+     * Sets edge's color 
      */
     public void setColor(Color color)
     {
@@ -52,9 +46,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintEdgeInfo#getFont()
+     * Returns edge's label font 
      */
     public Font getFont()
     {
@@ -62,9 +54,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintEdgeInfo#setFont(java.awt.Font)
+     * Sets edge's label font 
      */
     public void setFont(Font font)
     {
@@ -72,9 +62,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintEdgeInfo#getLabel()
+     * Returns edge's label  
      */
     public String getLabel()
     {
@@ -82,10 +70,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.hypergraphdb.viewer.painter.PaintEdgeInfo#setLabel(java.lang.String)
+     * Sets edge's label  
      */
     public void setLabel(String label)
     {
@@ -93,9 +78,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintEdgeInfo#getLabelColor()
+     * Returns edge's label color  
      */
     public Color getLabelColor()
     {
@@ -103,11 +86,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.hypergraphdb.viewer.painter.PaintEdgeInfo#setLabelColor(java.awt.
-     * Color)
+     * Sets edge's label color  
      */
     public void setLabelColor(Color labelColor)
     {
@@ -115,9 +94,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintEdgeInfo#getLineType()
+     * Returns edge's <code>LineType</code>  
      */
     public LineType getLineType()
     {
@@ -125,11 +102,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.hypergraphdb.viewer.painter.PaintEdgeInfo#setLineType(org.hypergraphdb
-     * .viewer.visual.LineType)
+     * Sets edge's <code>LineType</code>  
      */
     public void setLineType(LineType lineType)
     {
@@ -137,9 +110,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintEdgeInfo#getSrcArrow()
+     * Returns edge's source <code>Arrow</code>  
      */
     public Arrow getSrcArrow()
     {
@@ -147,11 +118,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.hypergraphdb.viewer.painter.PaintEdgeInfo#setSrcArrow(org.hypergraphdb
-     * .viewer.visual.Arrow)
+     * Sets edge's source <code>Arrow</code>  
      */
     public void setSrcArrow(Arrow srcArrow)
     {
@@ -159,9 +126,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintEdgeInfo#getTgtArrow()
+     * Returns edge's target <code>Arrow</code>  
      */
     public Arrow getTgtArrow()
     {
@@ -169,11 +134,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.hypergraphdb.viewer.painter.PaintEdgeInfo#setTgtArrow(org.hypergraphdb
-     * .viewer.visual.Arrow)
+     * Sets edge's target <code>Arrow</code>  
      */
     public void setTgtArrow(Arrow tgtArrow)
     {
@@ -181,9 +142,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintEdgeInfo#getTooltip()
+     * Returns edge's tooltip  
      */
     public String getTooltip()
     {
@@ -191,21 +150,16 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.hypergraphdb.viewer.painter.PaintEdgeInfo#setTooltip(java.lang.String
-     * )
+     * Sets edge's tooltip  
      */
     public void setTooltip(String tooltip)
     {
         this.tooltip = tooltip;
     }
 
-    public void paintEdge(PEdgeView edgeView, GraphView view)
+    public void paintEdge(PEdgeView edgeView)
     {
         this.edgeView = edgeView;
-        this.graphView = view;
         Paint existingUnselectedPaint = edgeView.getUnselectedPaint();
         Paint newUnselectedPaint = this.getColor();
         if (!newUnselectedPaint.equals(existingUnselectedPaint))
@@ -248,14 +202,12 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         edgeView.setToolTip(getTooltip());
     }
 
-    protected final PEdgeView getEdgeView()
-    {
-        return edgeView;
-    }
-
+    /*
+     * Shortcut method to get underlying HyperGraphDB
+     */
     protected final HyperGraph getHG()
     {
-        if (graphView == null) return null;
-        return graphView.getHyperGraph();
+        if (edgeView == null) return null;
+        return edgeView.getGraphView().getHyperGraph();
     }
 }

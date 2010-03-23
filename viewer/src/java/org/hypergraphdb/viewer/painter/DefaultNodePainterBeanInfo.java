@@ -1,14 +1,15 @@
 package org.hypergraphdb.viewer.painter;
 
-import java.awt.Color;
-import java.awt.Font;
 import org.hypergraphdb.viewer.painter.editor.FontEditor;
 import org.hypergraphdb.viewer.painter.editor.LineTypeEditor;
 import org.hypergraphdb.viewer.painter.editor.ShapeEditor;
-import org.hypergraphdb.viewer.visual.LineType;
+
 import com.l2fprod.common.beans.BaseBeanInfo;
 import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
 
+/*
+ * NodePainter's BeanInfo used in properties editor
+ */
 public class DefaultNodePainterBeanInfo extends BaseBeanInfo
 {
 	public DefaultNodePainterBeanInfo()

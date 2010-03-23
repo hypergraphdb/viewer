@@ -26,163 +26,177 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
     private double width = 30.0;
 
     protected PNodeView nodeView;
-    protected GraphView graphView;
-
+   
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getBorderColor()
+     * Returns the color used to paint node's border
      */
     public Color getBorderColor()
     {
         return borderColor;
     }
 
+    /*
+     * Sets the color used to paint node's border
+     */
     public void setBorderColor(Color borderColor)
     {
         this.borderColor = borderColor;
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getColor()
+     * Returns the color used to paint node
      */
     public Color getColor()
     {
         return color;
     }
 
+    /*
+     * Sets the color used to paint node
+     */
     public void setColor(Color color)
     {
         this.color = color;
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getFont()
+     * Returns the font used to paint node's label
      */
     public Font getFont()
     {
         return font;
     }
 
+    /*
+     * Sets the font used to paint node's label
+     */
     public void setFont(Font font)
     {
         this.font = font;
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getHeight()
+     * Returns the node's height
      */
     public double getHeight()
     {
         return height;
     }
 
+    /*
+     * Sets the node's height
+     */
     public void setHeight(double height)
     {
         this.height = height;
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getLabel()
+     * Returns the node's label
      */
     public String getLabel()
     {
         return label;
     }
 
+    /*
+     * Sets the node's label
+     */
     public void setLabel(String label)
     {
         this.label = label;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getLabelColor()
+ 
+     /*
+     * Returns the node's label color
      */
     public Color getLabelColor()
     {
         return labelColor;
     }
 
+    /*
+     * Sets the node's label color
+     */
     public void setLabelColor(Color labelColor)
     {
         this.labelColor = labelColor;
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getLineType()
+     * Returns the LineType used for painting the node's border
      */
     public LineType getLineType()
     {
         return lineType;
     }
 
+    /*
+     * Sets the LineType used for painting the node's border
+     */
     public void setLineType(LineType lineType)
     {
         this.lineType = lineType;
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getShape()
+     * Returns the node's shape type
      */
     public byte getShape()
     {
         return shape;
     }
 
+    /*
+     * Sets the node's shape type
+     * Supported values are: org.hypergraphdb.viewer.painter.Shape.
+     * RECT, ROUND_RECT, RECT_3D,TRAPEZOID, TRAPEZOID_2,
+     * TRIANGLE, PARALLELOGRAM, DIAMOND, ELLIPSE, HEXAGON, OCTAGON 
+     */
     public void setShape(byte shape)
     {
         this.shape = shape;
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getTooltip()
+     * Returns the node's tooltip text
      */
     public String getTooltip()
     {
         return tooltip;
     }
 
+
+    /*
+     * Sets the node's tooltip text
+     */
     public void setTooltip(String tooltip)
     {
         this.tooltip = tooltip;
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.hypergraphdb.viewer.painter.PaintNodeInfo#getWidth()
+     * Returns the node's width
      */
     public double getWidth()
     {
         return width;
     }
 
+    /*
+     * Sets the node's width
+     */
     public void setWidth(double width)
     {
         this.width = width;
     }
 
-    public void paintNode(PNodeView nodeView, GraphView network_view)
+    
+    public void paintNode(PNodeView nodeView)
     {
-        this.graphView = network_view;
+        GraphView graphView = nodeView.getGraphView();
         this.nodeView = nodeView;
-        network_view.updateEdges = false;
+        graphView.updateEdges = false;
         boolean change_made = false;
         Paint existingUnselectedColor = nodeView.getUnselectedPaint();
         Paint newUnselectedColor = getColor();
@@ -262,7 +276,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
                 getTooltip().length() != 0)
             nodeView.setToolTip(getTooltip());
 
-        network_view.updateEdges = true;
+        graphView.updateEdges = true;
         if (change_made)
         {
             nodeView.invalidatePaint(); 
@@ -271,15 +285,12 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 
     }
 
-    protected final FNode getNode()
-    {
-        if (nodeView == null) return null;
-        return nodeView.getNode();
-    }
-
+    /*
+     * Shortcut method to get underlying HyperGraphDB
+     */
     protected final HyperGraph getHG()
     {
-        if (graphView == null) return null;
-        return graphView.getHyperGraph();
+        return (nodeView == null) ? null :
+                nodeView.getGraphView().getHyperGraph();
     }
 }

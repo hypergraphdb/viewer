@@ -1,11 +1,10 @@
 package org.hypergraphdb.viewer.painter;
 
-import org.hypergraphdb.viewer.GraphView;
 import phoebe.PNodeView;
 
 /**
  * <p>
- * The interface 
+ * The interface responsible for applying visual stuff to node
  * </p>
  * 
  * @author Konstantin Vandev
@@ -13,5 +12,5 @@ import phoebe.PNodeView;
  */
 public interface NodePainter
 {
-	public void paintNode(PNodeView nodeView, GraphView network_view);
+	public void paintNode(PNodeView nodeView);
 }

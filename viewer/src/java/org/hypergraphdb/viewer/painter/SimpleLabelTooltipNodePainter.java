@@ -6,7 +6,7 @@ public class SimpleLabelTooltipNodePainter extends DefaultNodePainter
 
 	public String getLabel()
 	{
-		if(getNode() == null)
+		if(nodeView == null)
 			return NOT_EDITABLE;
 		
 		String val = getTooltip();
@@ -23,10 +23,10 @@ public class SimpleLabelTooltipNodePainter extends DefaultNodePainter
 	@Override
 	public String getTooltip()
 	{
-		if(getNode() == null)
+		if(nodeView == null)
 			return NOT_EDITABLE;
 		
-		Object o = getHG().get(getNode().getHandle());
+		Object o = getHG().get(nodeView.getNode().getHandle());
 		return o!= null ? o.toString() : "[null]";
 	}
 }

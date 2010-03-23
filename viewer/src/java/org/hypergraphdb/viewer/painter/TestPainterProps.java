@@ -39,16 +39,16 @@ public class TestPainterProps extends PropertySheetPanel
 //              "Properties");
 //       DialogDisplayer.getDefault().notify(dd);
 //       if(true) return;
-	    
-		final HyperGraph hg = new HyperGraph("F:/temp/xxx2");
-		HGViewer viewer = getViewer(hg);
+       
+		final HyperGraph graph = new HyperGraph("F:/temp/xxx2");
+		HGHandle h = graph.getTypeSystem().getTypeHandle(HGStats.class);
+		HGViewer viewer = new HGViewer(graph, h, 1, null);
 		f.getContentPane().add(viewer);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.addWindowListener(new WindowAdapter(){
            public void windowClosing(WindowEvent e)
             {
-               System.out.println("Exit");
-                hg.close();
+               graph.close();
             }
 		    
 		});
@@ -60,18 +60,12 @@ public class TestPainterProps extends PropertySheetPanel
 	public static HGViewer getViewer(HyperGraph graph){
 		HGHandle h = graph.getTypeSystem().getTypeHandle(HGStats.class);
 		HGViewer c = null;
-		try{
+			
 		
-		List<Object> o = hg.findAll(graph, hg.type(HGViewer.class));
-		c = hg.getOne(graph, hg.type(HGViewer.class));
 		if(c == null)
 		{
 		  c = new HGViewer(graph, h, 1, null);
-		  HGViewerType type = new HGViewerType();
-	      type.setHyperGraph(graph);
-	      graph.getTypeSystem().addPredefinedType(
-	      HGViewerType.HGHANDLE, type,  HGViewer.class);
-	      graph.add(c, HGViewerType.HGHANDLE);
+		
 		}
 		else
 		    System.out.println("Viewer retrieved from HG");
@@ -83,10 +77,7 @@ public class TestPainterProps extends PropertySheetPanel
 		     //c.setPreferredSize(new java.awt.Dimension(600,400));
 		//c.getView().redrawGraph();
 		
-		}
-		catch(Throwable t){
-			t.printStackTrace();
-		}
+		
 		return c;
 	}
 	public void init(Object p)
