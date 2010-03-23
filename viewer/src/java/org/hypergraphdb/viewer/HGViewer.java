@@ -25,7 +25,6 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.algorithms.DefaultALGenerator;
 import org.hypergraphdb.algorithms.HGALGenerator;
 import org.hypergraphdb.util.CloseMe;
-import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.hg.HGWNReader;
 import org.hypergraphdb.viewer.visual.ui.DropDownButton;
 

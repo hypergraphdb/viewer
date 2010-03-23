@@ -1,16 +1,18 @@
 // $Id: GEM.java,v 1.1 2006/02/27 19:59:19 bizi Exp $
 package org.hypergraphdb.viewer.layout;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.GraphViewU;
-import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.GraphView;
-import org.hypergraphdb.viewer.hg.HGVUtils;
-import org.hypergraphdb.viewer.layout.Layout;
+import org.hypergraphdb.viewer.GraphViewU;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
+
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
 
@@ -28,9 +30,7 @@ import phoebe.PNodeView;
 public class GEM implements Layout
 {
 	public final static String Name = "GEM Force-directed";
-	//private static Set<FEdge> edges;
 	private static int nodeCount;
-	// private static int edgeCount;
 	//
 	// GEM Constants
 	//

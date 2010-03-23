@@ -40,7 +40,7 @@ public class TestPainterProps extends PropertySheetPanel
 //       DialogDisplayer.getDefault().notify(dd);
 //       if(true) return;
        
-		final HyperGraph graph = new HyperGraph("F:/temp/xxx2");
+		final HyperGraph graph = new HyperGraph("F:/temp/xxx4");
 		HGHandle h = graph.getTypeSystem().getTypeHandle(HGStats.class);
 		HGViewer viewer = new HGViewer(graph, h, 1, null);
 		f.getContentPane().add(viewer);

@@ -858,15 +858,8 @@ public class GraphView
      */
     public void selectAllNodes()
     {
-        Set<FNode> changes = new HashSet<FNode>();
-        for (PNodeView nv : nodeViewMap.values())
-        {
-            if (!nv.isSelected())
-            {
-                changes.add(nv.getNode());
-                nv.select();
-            }
-        }
+       for (PNodeView nv : nodeViewMap.values())
+            nv.select();
     }
 
     /**
@@ -874,15 +867,8 @@ public class GraphView
      */
     public void selectAllEdges()
     {
-        Set<FEdge> changes = new HashSet<FEdge>();
         for (PEdgeView nv : edgeViewMap.values())
-        {
-            if (!nv.isSelected())
-            {
-                changes.add(nv.getEdge());
                 nv.select();
-            }
-        }
     }
 
     /**
