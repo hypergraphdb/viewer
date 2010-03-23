@@ -217,7 +217,7 @@ public class HGViewer extends JPanel
     {
         final  PCanvas pCanvas = view.getCanvas();
         pCanvas.setVisible(false);
-        HGVUtils.invokeLater(new Runnable() {
+        GraphViewU.invokeLater(new Runnable() {
             public void run()
             {
                 pCanvas.setVisible(true);

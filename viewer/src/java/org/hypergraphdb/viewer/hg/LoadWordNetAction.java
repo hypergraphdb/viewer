@@ -18,7 +18,9 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import org.hypergraphdb.HGHandle;
+import org.hypergraphdb.HGIndex;
 import org.hypergraphdb.HyperGraph;
+import org.hypergraphdb.indexing.ByPartIndexer;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
@@ -270,13 +272,22 @@ public class LoadWordNetAction extends AbstractAction
         private HGHandle getWordHandle(HyperGraph hg, String lemma)
                 throws IOException
         {
-            HGHandle word_handle = HGVUtils.lookup(hg, "word", "lemma", lemma);
+            HGHandle word_handle = lookup(hg, "word", "lemma", lemma);
             if (word_handle == null)
             {
                 hg.close();
                 throw new IOException("No such word: " + lemma + " in the DB.");
             }
             return word_handle;
+        }
+        
+        private static HGHandle lookup(HyperGraph hg, String typeAlias,
+                String keyProperty, Object keyValue)
+        {
+            HGHandle typeHandle = hg.getTypeSystem().getTypeHandle(typeAlias);
+            ByPartIndexer byProperty = new ByPartIndexer(typeHandle, new String[] { keyProperty });
+            HGIndex<String, HGHandle> index = hg.getIndexManager().register(byProperty);
+            return index.findFirst((String)keyValue);
         }
     }
 

@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
+import org.hypergraphdb.viewer.GraphViewU;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.hg.HGVUtils;
@@ -620,7 +621,7 @@ public class GEM implements Layout
 			adjacent[i] = new ArrayList<Integer>(neighbors.length);
 			for (int j = 0; j < neighbors.length; j++)
 			{
-				FNode n = HGVUtils.getOppositeNode(invmap[i], neighbors[j]);
+				FNode n = GraphViewU.getOppositeNode(invmap[i], neighbors[j]);
 				Integer nodeNr = nodeNumbers.get(n);
 				if(nodeNr != null)
 				   adjacent[i].add(nodeNr);

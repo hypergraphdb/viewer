@@ -1,6 +1,5 @@
 package org.hypergraphdb.viewer;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
@@ -23,7 +22,6 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.dialogs.DialogDescriptor;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
-import org.hypergraphdb.viewer.hg.HGVUtils;
 import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
 import org.hypergraphdb.viewer.painter.DefaultNodePainter;
 import org.hypergraphdb.viewer.painter.EdgePainter;
@@ -82,7 +80,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
          global_menu.add(new JMenuItem(new AbstractAction("Expand") {
              public void actionPerformed(ActionEvent e)
              {
-                 HGVUtils.expandNodes();
+                 GraphViewU.expandNodes();
                  //removeExtraNodes(node, 150);
                  adjust(node);
              }
@@ -158,7 +156,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         return new JMenuItem(new AbstractAction("Expand") {
             public void actionPerformed(ActionEvent e)
             {
-                HGVUtils.expandNodes();
+                GraphViewU.expandNodes();
                 //removeExtraNodes(v, node, 150);
                 adjust(node);
             }
@@ -188,7 +186,7 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         {
             Double key = nodes.lastKey();
             FNode nn = nodes.get(key).getNode();
-            HGVUtils.removeNode(view.getHyperGraph(), nn, true);
+            GraphViewU.removeNode(view.getHyperGraph(), nn, true);
             nodes.remove(key);
         }
     }
