@@ -7,29 +7,26 @@ import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGSearchResult;
+
 import org.hypergraphdb.HGSystemFlags;
 import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.query.AtomTypeCondition;
 import org.hypergraphdb.HGQuery.hg;
 
+/*
+ * Singleton class used for persisting various configuration options
+ */
 public class AppConfig
 {
 	private static final String APP_CONFIG_HG_NAME = "hgviewer_config";
 	public static final String VIEW_THRESHOLD = "viewThreshold"; 
-	public static final String SEC_VIEW_THRESHOLD = "secondaryViewThreshold"; 
-	
-	private static final String EXT_DIR = "jars";
+		
 	private static AppConfig instance;
 	private static HyperGraph graph;
 	// Most-Recently-Used-Dir
 	private String mrud = "";
 	// Most-Recently-Used-Files
 	private HashSet<String> mrufs = new HashSet<String>(10);
-	private HashSet<String> openedFiles = new HashSet<String>(10);
 	private Map<String, Object> properties = new HashMap<String, Object>();
-	private URLClassLoader classLoader;
 
 	public AppConfig()
 	{
@@ -56,67 +53,62 @@ public class AppConfig
 				instance = new AppConfig();
 				graph.add(instance, HGSystemFlags.MUTABLE);
 			}
-			instance.classLoader = new URLClassLoader(new URL[] {},
-					HGVKit.class.getClassLoader());
-			
-//			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-//				public void run()
-//				{
-//					try
-//					{
-//						//System.out.println("Saving AppConfig");
-//						//graph.close();
-//					}
-//					catch (Throwable t)
-//					{
-//						t.printStackTrace(System.err);
-//					}
-//				}
-//			}));
 		}
 		return instance;
 	}
 
+	/*
+	 * Returns most-recently-used-directory 
+	 */
 	public String getMRUD()
 	{
 		return mrud;
 	}
 
+	/*
+     * Sets most-recently-used-directory 
+     */
 	public void setMRUD(String f)
 	{
 		mrud = f;
 	}
 
+	/*
+     * Returns most-recently-used-files 
+     */
 	public HashSet<String> getMRUF()
 	{
 		return mrufs;
 	}
 
+	/*
+     * Returns most-recently-used-files 
+     */
 	public void setMRUF(HashSet<String> m)
 	{
 		mrufs = m;
 	}
 
-	public HashSet<String> getOpenedFiles()
-	{
-		return openedFiles;
-	}
-
-	public void setOpenedFiles(HashSet<String> openedFiles)
-	{
-		this.openedFiles = openedFiles;
-	}
-
+	/*
+	 * Returns a property given its name
+	 */
 	public Object getProperty(String key)
 	{
 		return properties.get(key);
 	}
 	
+	/*
+     * Removes a property given its name
+     */
 	public void removeProperty(String key)
 	{
 		properties.remove(key);
 	}
 
+	/*
+     * Returns a property given its name. If property is not found, returns the 
+     * passed in default value
+     */
 	public Object getProperty(String key, Object def)
 	{
 		if (properties.containsKey(key)) 
@@ -125,18 +117,16 @@ public class AppConfig
 		return def;
 	}
 
+	/*
+     * Sets a property
+     */
 	public void setProperty(String key, Object def)
 	{
 		properties.put(key, def);
 	}
 
-	public URLClassLoader getClassLoader()
-	{
-		return classLoader;
-	}
-
 	/**
-	 * @return the directory of the HGVKit.jar.
+	 * @return the directory of the HGViewer.jar.
 	 */
 	public static File getConfigDirectory()
 	{
@@ -173,36 +163,41 @@ public class AppConfig
 		return null;
 	}
 
+	/*
+	 * Returns the maximum number of nodes in a GraphView 
+	 */
 	public int getViewThreshold()
 	{
 		return ((Integer)getProperty(VIEW_THRESHOLD, 500)).intValue();
 	}
 
+	/*
+     * Sets the maximum number of nodes in a GraphView 
+     */
 	public void setViewThreshold(int viewThreshold)
 	{
 		setProperty(VIEW_THRESHOLD, viewThreshold);
 	}
 
-	public int getSecondaryViewThreshold()
-	{
-		return ((Integer)getProperty(SEC_VIEW_THRESHOLD, 2000)).intValue();
-	}
-
-	public void setSecondaryViewThreshold(int secondaryViewThreshold)
-	{
-		setProperty(VIEW_THRESHOLD, secondaryViewThreshold);
-	}
-
+	/*
+	 * Returns the map with all properties
+	 */
 	public Map<String, Object> getProperties()
 	{
 		return properties;
 	}
 
+	/*
+     * Sets the map with all properties
+     */
 	public void setProperties(Map<String, Object> properties)
 	{
 		this.properties = properties;
 	}
 
+	/*
+	 * Returns the HyperGraph instance in which this AppConfig is stored
+	 */
 	public HyperGraph getGraph()
 	{
 		return graph;

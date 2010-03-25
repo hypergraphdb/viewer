@@ -51,7 +51,7 @@ public class PainterPropsPanel extends PropertySheetPanel
 	
 	private BeanInfo getBeanInfo(Object o){
 		try{
-			ClassLoader cl = AppConfig.getInstance().getClassLoader();
+			ClassLoader cl = PainterPropsPanel.class.getClassLoader();
 			return (BeanInfo) cl.loadClass(o.getClass().getName() + "BeanInfo").newInstance();
 		}catch(Exception ex){
 			//ex.printStackTrace();

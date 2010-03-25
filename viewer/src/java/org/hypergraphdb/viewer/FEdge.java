@@ -1,6 +1,11 @@
 package org.hypergraphdb.viewer;
 
-
+/*
+ * Foundation class in the HGViewer model representing an "edge"
+ * e.g. relation between a source and a target FNode. 
+ * Source node's HGHandle always represents an instance of HGLink and target node's 
+ * HGHandle is contained in the target set of the source node. 
+ */
 public class FEdge {
 
 	// Variables specific to public get/set methods.
@@ -17,20 +22,32 @@ public class FEdge {
         this.target = target;
     }
 
+    /*
+     *  Sets source FNode
+     */
 	public void setSource(FNode source)
     {
         this.source = source;
     }
 
+	 /*
+     *  Sets target FNode
+     */
     public void setTarget(FNode target)
     {
         this.target = target;
     }
 
+    /*
+     *  Returns source FNode
+     */
     public FNode getSource() {
 		return source;
 	}
 
+    /*
+     *  Returns target FNode
+     */
 	public FNode getTarget() {
 		return target;
 	}

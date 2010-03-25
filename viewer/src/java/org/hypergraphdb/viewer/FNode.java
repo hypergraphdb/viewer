@@ -2,6 +2,10 @@ package org.hypergraphdb.viewer;
 
 import org.hypergraphdb.HGHandle;
 
+/*
+ * Foundation class in the HGViewer model representing a given node
+ * described by its HGHandle in the HyperGraphDB 
+ */
 public class FNode
 {
 	protected HGHandle handle = null;
@@ -15,11 +19,18 @@ public class FNode
 		this.handle = h;
 	}
 
+    /*
+     * Returns the node's handle
+     */
 	public HGHandle getHandle()
 	{
 	   return this.handle;
 	}
 	  
+
+    /*
+     * Sets the node's handle
+     */
 	public void setHandle(HGHandle h)
 	{
 	      handle = h;

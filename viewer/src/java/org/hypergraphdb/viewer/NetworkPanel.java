@@ -34,6 +34,10 @@ import org.hypergraphdb.viewer.util.swing.AbstractTreeTableModel;
 import org.hypergraphdb.viewer.util.swing.JTreeTable;
 import org.hypergraphdb.viewer.util.swing.TreeTableModel;
 
+/*
+ * Stand-alone Viewer Only.
+ * Panel containing the table with opened GraphViews + BirdsEyeView if toggled on
+ */
 public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		TreeSelectionListener
 {
@@ -58,12 +62,11 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 	protected void initialize() {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(181, 400));
-		root = new ViewTreeNode("root", null); //"Network Root", "root");
+		root = new ViewTreeNode("root", null);
 		treeTable = new JTreeTable(new NetworkTreeTableModel(root));
 		treeTable.getTree().addTreeSelectionListener(this);
 		treeTable.getTree().setRootVisible(false);
 
-		// ToolTipManager.sharedInstance().registerComponent(treeTable.getTree());
 		ToolTipManager.sharedInstance().registerComponent(treeTable);
 
 		treeTable.getTree().setCellRenderer(new MyRenderer());
@@ -118,9 +121,9 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		return pcs;
 	}
 
-	public void removeNetwork(GraphView view) {
+	void removeGraphView(GraphView view) {
 
-		ViewTreeNode node = getNetworkNode(view);
+		ViewTreeNode node = getGraphViewNode(view);
 		Enumeration children = node.children();
 		ViewTreeNode child = null;
 		ArrayList removed_children = new ArrayList();
@@ -133,7 +136,6 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 			child.removeFromParent();
 			root.add(child);
 		}
-		//view.getFlagger().removeFlagEventListener(this);
 		node.removeFromParent();
 		treeTable.getTree().collapsePath(new TreePath(new TreeNode[] { root }));
 		treeTable.getTree().updateUI();
@@ -141,20 +143,13 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 
 	}
 
-//	public void onFlagEvent(FlagEvent event) {
-//		// System.out.println("NetworkPanel - onFlagEvent: " + event);
-//		treeTable.getTree().updateUI();
-//		if (event.getEventType())
-//			HGVKit.getDesktop().updatePropsPanel();
-//	}
-
-	public void addNetwork(GraphView net, GraphView par) {
+	void addGraphView(GraphView net, GraphView par) {
 		// first see if it exists
-		if (getNetworkNode(net) == null) {
+		if (getGraphViewNode(net) == null) {
 			ViewTreeNode dmtn = new ViewTreeNode(net.getIdentifier(), net);
 			//net.getFlagger().addFlagEventListener(this);
 			if (par != null) {
-				ViewTreeNode parent = getNetworkNode(par);
+				ViewTreeNode parent = getGraphViewNode(par);
 				parent.add(dmtn);
 			} else {
 				root.add(dmtn);
@@ -170,8 +165,8 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		}
 	}
 
-	public void focusNetworkNode(GraphView view) {
-		DefaultMutableTreeNode node = getNetworkNode(view);
+	public void focusGraphViewNode(GraphView view) {
+		DefaultMutableTreeNode node = getGraphViewNode(view);
 		if (node != null) {
 			treeTable.getTree().getSelectionModel().setSelectionPath(
 					new TreePath(node.getPath()));
@@ -180,7 +175,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		}
 	}
 
-	public ViewTreeNode getNetworkNode(GraphView view) {
+	ViewTreeNode getGraphViewNode(GraphView view) {
 
 		Enumeration tree_node_enum = root.breadthFirstEnumeration();
 		while (tree_node_enum.hasMoreElements()) {
@@ -199,16 +194,16 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 
 	public void propertyChange(PropertyChangeEvent e) {
 
-		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_CREATED) {
-			addNetwork((GraphView) e.getNewValue(), (GraphView) e.getOldValue());
+		if (e.getPropertyName() == HGVDesktop.GRAPH_VIEW_CREATED) {
+			addGraphView((GraphView) e.getNewValue(), (GraphView) e.getOldValue());
 		}
 
-		if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED) {
-			removeNetwork((GraphView) e.getNewValue());
+		if (e.getPropertyName() == HGVDesktop.GRAPH_VIEW_DESTROYED) {
+			removeGraphView((GraphView) e.getNewValue());
 		}
 
-		else if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUSED) {
-			focusNetworkNode((GraphView) e.getNewValue());
+		else if (e.getPropertyName() == HGVDesktop.GRAPH_VIEW_FOCUSED) {
+			focusGraphViewNode((GraphView) e.getNewValue());
 		}
 
 	}

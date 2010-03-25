@@ -2,7 +2,6 @@ package org.hypergraphdb.viewer;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.hypergraphdb.HGEnvironment;
 import org.hypergraphdb.HGHandle;
@@ -17,6 +16,16 @@ import org.hypergraphdb.type.HGAtomTypeBase;
 import phoebe.PEdgeView;
 import phoebe.PNodeView;
 
+/*
+ * You could use this class to persist a HGViewer instance in a HyperGraphDB
+ * You should first register the type:
+ * <code>
+ * HGViewerType type = new HGViewerType();
+ * type.setHyperGraph(hg);
+ * hg.getTypeSystem().addPredefinedType(HGViewerType.HGHANDLE, type,  HGViewer.class);
+ * </code>
+ * Then simply add the corresponding HGViewer to the graph.
+ */
 public class HGViewerType extends HGAtomTypeBase 
 {
     public static final HGPersistentHandle HGHANDLE = 

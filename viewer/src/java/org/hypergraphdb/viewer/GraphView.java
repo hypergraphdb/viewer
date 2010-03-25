@@ -34,7 +34,6 @@ import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
 import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.painter.SimpleLabelTooltipNodePainter;
-import org.hypergraphdb.viewer.util.PrimeFinder;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
 import phoebe.PEdgeView;
@@ -124,10 +123,8 @@ public class GraphView
     {
         this.graph = db;
         this.setIdentifier(db.getLocation());
-        nodeViewMap = new HashMap<FNode, PNodeView>(PrimeFinder.nextPrime(nodes
-                .size()));
-        edgeViewMap = new HashMap<FEdge, PEdgeView>(PrimeFinder.nextPrime(edges
-                .size()));
+        nodeViewMap = new HashMap<FNode, PNodeView>(nodes.size());
+        edgeViewMap = new HashMap<FEdge, PEdgeView>(edges.size());
         viewComponent = comp;
         initialize(nodes, edges);
     }

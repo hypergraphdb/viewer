@@ -7,16 +7,11 @@ package org.hypergraphdb.viewer;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.event.SwingPropertyChangeSupport;
 
-import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.query.HGAtomPredicate;
-import org.hypergraphdb.viewer.hg.HGWNReader;
 import org.hypergraphdb.viewer.layout.GEM;
 import org.hypergraphdb.viewer.layout.HierarchicalLayout;
 import org.hypergraphdb.viewer.layout.Layout;
@@ -28,8 +23,8 @@ import phoebe.PEdgeView;
 import phoebe.PNodeView;
 
 /**
- * This class, HGVKit is <i>the</i> primary class in the API.
- * 
+ *  Abstract class containing common methods, constants and event handling for wiring 
+ *  the stand-alone version og HGViewer  
  */
 public abstract class HGVKit
 {
@@ -129,19 +124,18 @@ public abstract class HGVKit
 
 	
 	/**
-	 * destroys the network view, including any layout information
+	 * Destroys the GraphView, including any layout information
 	 */
 	public static void destroyNetworkView(GraphView view)
 	{
 		getViewersList().remove(view);
-		firePropertyChange(HGVDesktop.NETWORK_VIEW_DESTROYED, null, view);
-		// theoretically this should not be set to null till after the events
-		// firing is done
-		view = null;
-		// TODO: do we want here?
-		System.gc();
+		firePropertyChange(HGVDesktop.GRAPH_VIEW_DESTROYED, null, view);
 	}
 
+	/**
+     * Creates a new Viewer based on information of the given one
+     * Sort of a copy operation.
+     */
 	public static HGViewer createHGViewer(GraphView view)
 	{
 	    Collection<FNode> nodes = new ArrayList<FNode>();
@@ -154,14 +148,14 @@ public abstract class HGVKit
 	}
 		
 	/**
-	 * Creates a new Network, that inherits from the given ParentNetwork
+	 * Creates a new Viewer
 	 */
 	public static HGViewer createHGViewer(HyperGraph db, 
 	        Collection<FNode> nodes, Collection<FEdge> edges)
 	{
 	    HGViewer comp = new HGViewer(db, nodes, edges);
 	    getViewersList().add(comp.getView());
-	    firePropertyChange(HGVDesktop.NETWORK_VIEW_CREATED, null, comp.getView());
+	    firePropertyChange(HGVDesktop.GRAPH_VIEW_CREATED, null, comp.getView());
 		return comp;
 	}
 
@@ -175,6 +169,10 @@ public abstract class HGVKit
 	    getSwingPropertyChangeSupport().firePropertyChange(e);
 	}
 
+	/**
+     * Sets the value of the global flag to indicate whether the Squiggle
+     * function is enabled or disabled.
+     */
 	public static void setSquiggleState(boolean isEnabled)
 	{
 	    squiggleEnabled = isEnabled;
@@ -250,21 +248,36 @@ public abstract class HGVKit
 		}
 	}
 
+	/*
+	 * Returns list of available layouts
+	 */
 	public static ArrayList<Layout> getLayouts()
 	{
 		return layouts;
 	}
 
+	/*
+	 * Adds a Layout to the list of available layouts
+	 */
 	public static void addLayout(Layout layout)
 	{
 		layouts.add(layout);
 	}
 
+	/*
+     * Returns the preferred layout used during some graph changes
+     * like node expand and focus 
+     */
 	public static Layout getPreferedLayout()
 	{
 		return prefered_layout;
 	}
 
+	/*
+     * Sets the preferred layout used during some graph changes
+     * like node expand and focus 
+     * Note: The layout should be presented in the list of available layouts
+     */
 	public static void setPreferedLayout(Layout pref_layout)
 	{
 		prefered_layout = pref_layout;

@@ -31,15 +31,16 @@ import phoebe.PNodeView;
 
 
 /**
- * The HGVDesktop is the central Window for working with HGVKit
+ * Stand-alone Viewer Only.
+ * The HGVDesktop represents the main Viewer Frame
  */
 public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphView.SelectionListener
 {
     private static HGVDesktop instance;
     // Static variables
-    public static String NETWORK_VIEW_FOCUSED = "NETWORK_VIEW_FOCUSED";
-    public static String NETWORK_VIEW_CREATED = "NETWORK_VIEW_CREATED";
-    public static String NETWORK_VIEW_DESTROYED = "NETWORK_VIEW_DESTROYED";
+    public static String GRAPH_VIEW_FOCUSED = "GRAPH_VIEW_FOCUSED";
+    public static String GRAPH_VIEW_CREATED = "GRAPH_VIEW_CREATED";
+    public static String GRAPH_VIEW_DESTROYED = "GRAPH_VIEW_DESTROYED";
     // Member varaibles
     protected VisualStyle defaultVisualStyle;
     /**
@@ -68,21 +69,24 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
     private JPanel mainPropsPanel;
     private JComboBox styleBox;
 
-    // ----------------------------------------//
-    // Constructors
-    // ----------------------------------------//
+  
     /**
-     * Create a HGVDesktop that conforms the given view type.
-     * 
-     * @param view_type
-     *            one of the ViewTypes
+     * Private constructor
      */
     private HGVDesktop()
     {
         super("HGVKit Desktop");
         initialize();
     }
+    
+    public static void main(String args []) throws Exception {
+        HGVKit.embeded = false;
+        getInstance();
+    }
 
+    /*
+     * Returns the HGVDesktop singleton 
+     */
     public static HGVDesktop getInstance()
     {
         if (instance == null) instance = new HGVDesktop();
@@ -127,7 +131,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
                 HGViewer comp = (HGViewer) tabbedPane.getComponentAt(
                         tabbedPane.getSelectedIndex());
                 HGViewer.setFocusedComponent(comp);
-                HGVKit.firePropertyChange(HGVDesktop.NETWORK_VIEW_FOCUSED, null, comp.getView());
+                HGVKit.firePropertyChange(HGVDesktop.GRAPH_VIEW_FOCUSED, null, comp.getView());
             }
         });
         JScrollPane scroll_tab = new JScrollPane(tabbedPane);
@@ -181,17 +185,9 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
         return networkPanel;
     }
 
-    public HGVMenus getHGVMenus()
-    {
-        return cyMenus;
-    }
-
+ 
     protected void setupStyleSelector(JPanel panel)
     {
-        // Add the StyleSelector to the ToolBar
-        // TODO: maybe put this somewhere else to make it easier to make
-        // vertical ToolBars.
-
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         for (VisualStyle vs : VisualManager.getInstance().getVisualStyles())
             model.addElement(vs);
@@ -240,15 +236,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
         VisualStyle new_style = view.getVisualStyle();
         styleBox.setSelectedItem(new_style);
         cyMenus.setNodesRequiredItemsEnabled();
-//        view.redrawGraph();
         updatePropsPanel();
-    }
-
-    public void setFocus(GraphView view)
-    {
-        pcs.firePropertyChange(new PropertyChangeEvent(this,
-                NETWORK_VIEW_FOCUSED, null, view));
-        updateFocus(view);
     }
 
     public SwingPropertyChangeSupport getSwingPropertyChangeSupport()
@@ -260,7 +248,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
     {
        // System.out.println("HGVDesktop - getPropertyName(): "
       //          + e.getPropertyName() + ":" + e.getNewValue());
-        if (e.getPropertyName() == NETWORK_VIEW_CREATED)
+        if (e.getPropertyName() == GRAPH_VIEW_CREATED)
         {
             GraphView view = ((GraphView) e.getNewValue());
             getTabbedPane().addTab(
@@ -269,16 +257,16 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
                     getTabbedPane().getTabCount() -1);
             // pass on the event
             pcs.firePropertyChange(e);
-            networkPanel.focusNetworkNode(view);
+            networkPanel.focusGraphViewNode(view);
             view.addSelectionListener(this);
         }
-        else if (e.getPropertyName() == NETWORK_VIEW_FOCUSED)
+        else if (e.getPropertyName() == GRAPH_VIEW_FOCUSED)
         {
             // get focus event from NetworkViewManager
             updateFocus(((GraphView) e.getNewValue()));
             pcs.firePropertyChange(e);
         }
-        else if (e.getPropertyName() == NETWORK_VIEW_DESTROYED)
+        else if (e.getPropertyName() == GRAPH_VIEW_DESTROYED)
         {
             GraphView view = ((GraphView) e.getNewValue());
             view.removeSelectionListener(this);
@@ -302,7 +290,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
         updatePropsPanel();
     }
 
-    public void updatePropsPanel()
+    void updatePropsPanel()
     {
         GraphView view = HGVKit.getCurrentView();
         PNodeView nv = view.getSelectedNodeView();

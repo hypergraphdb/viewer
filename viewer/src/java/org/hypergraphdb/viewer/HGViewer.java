@@ -34,6 +34,11 @@ import sun.awt.AppContext;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolox.swing.PScrollPane;
 
+/*
+ * Swing Component for displaying HyperGraphDB atoms and links.
+ * Contains a <code>GraphView</code> that actually displays HG stuff
+ * in a Piccolo canvas and a combination of status bar and menu bar 
+ */
 public class HGViewer extends JPanel
 {
     /**
@@ -43,7 +48,7 @@ public class HGViewer extends JPanel
     protected JLabel statusLabel;
     protected GraphView view;
 
-    private/* static */JToolBar toolbar;
+    private JToolBar toolbar;
 
     protected int depth = 2;
     private HGALGenerator generator = null;

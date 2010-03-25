@@ -37,6 +37,9 @@ import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.event.PInputEvent;
 
+/*
+ * The Piccolo handler responsible for showing popup(context) menu
+ */
 public class ContextMenuHelper extends PBasicInputEventHandler
 {
     protected JPopupMenu global_menu;
@@ -67,8 +70,6 @@ public class ContextMenuHelper extends PBasicInputEventHandler
                 (int) event.getCanvasPosition().getY());
         if(HGVKit.isEmbeded()) 
            pt = GUIUtilities.adjustPointInPicollo(canvas, pt);
-        //else
-        //    SwingUtilities.convertPoint(canvas, pt, f);
         //move a little from the right position to avoid an infinite
         //zoom clash that happen sometimes
         global_menu.show(canvas, pt.x + 10, pt.y);

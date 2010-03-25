@@ -24,16 +24,14 @@ import org.hypergraphdb.indexing.ByPartIndexer;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.viewer.ActionManager;
 import org.hypergraphdb.viewer.AppConfig;
-import org.hypergraphdb.viewer.HGVDesktop;
-import org.hypergraphdb.viewer.HGViewer;
-import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.GraphView;
+import org.hypergraphdb.viewer.HGVKit;
+import org.hypergraphdb.viewer.HGViewer;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
-import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
 import cytoscape.task.Task;
@@ -98,17 +96,15 @@ public class LoadWordNetAction extends AbstractAction
          */
         public void run()
         {
-            taskMonitor.setStatus("Reading in Network Data...");
-            Thread.currentThread().setContextClassLoader(
-                    AppConfig.getInstance().getClassLoader());
+            taskMonitor.setStatus("Reading in HG Data...");
             try
             {
                 if (!db.isDirectory())
                     throw new IOException("No such DB: " + db.getAbsolutePath());
-                HGViewer cyNetwork = createNetwork();
-                if (cyNetwork != null)
+                HGViewer viewer = createViewer();
+                if (viewer != null)
                 {
-                    informUserOfGraphStats(cyNetwork.getView());
+                    informUserOfGraphStats(viewer.getView());
                 }
                 else
                 {
@@ -192,7 +188,7 @@ public class LoadWordNetAction extends AbstractAction
             return new String("Loading Network");
         }
 
-        private HGViewer createNetwork() throws IOException
+        private HGViewer createViewer() throws IOException
         {
 
             final HGWNReader reader = new HGWNReader(db);

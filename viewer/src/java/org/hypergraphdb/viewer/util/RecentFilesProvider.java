@@ -37,7 +37,7 @@ public class RecentFilesProvider implements PropertyChangeListener
     public void propertyChange( PropertyChangeEvent e )
     {
         
-        if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_DESTROYED)
+        if (e.getPropertyName() == HGVDesktop.GRAPH_VIEW_DESTROYED)
         {
             String f = ((GraphView) e.getNewValue()).getHyperGraph().getLocation();
             if(!(AppConfig.getInstance().getMRUF().contains(f)))

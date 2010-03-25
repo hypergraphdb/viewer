@@ -30,14 +30,13 @@
 
 package org.hypergraphdb.viewer.util;
 //---------------------------------------------------------------------------
-import java.lang.Runtime;
 import java.io.File;
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.Set;
 import java.io.FilenameFilter;
-import javax.swing.*;
-import javax.swing.filechooser.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Set;
+
+import javax.swing.filechooser.FileFilter;
 
 
 /**

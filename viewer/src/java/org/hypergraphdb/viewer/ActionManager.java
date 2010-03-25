@@ -37,10 +37,8 @@ import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.hg.LoadHyperGraphFileAction;
 import org.hypergraphdb.viewer.hg.LoadWordNetAction;
 import org.hypergraphdb.viewer.layout.Layout;
-import org.hypergraphdb.viewer.painter.DefaultNodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.util.HGVAction;
-import org.hypergraphdb.viewer.util.HGVNetworkNaming;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
 
@@ -52,6 +50,9 @@ import edu.umd.cs.piccolo.PLayer;
 import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.util.PBounds;
 
+/*
+ * Singleton class containing actions used in menuBar, toolbar and popup menus
+ */
 public class ActionManager
 {
     public static final String LOAD_HYPER_GRAPH_ACTION = "HyperGraph...";
@@ -152,22 +153,34 @@ public class ActionManager
         // actions.put(SQUIGGLE_ACTION, new SquiggleAction());
     }
 
+    /*
+     * Returns an action given its name
+    */
     public Action getAction(String name)
     {
         return actions.get(name);
     }
 
+    /*
+    * Returns all registered actions
+    */
     public Collection<Action> getActions()
     {
         return actions.values();
     }
 
+   /*
+    * Add a given action to the ActionManager
+    */
     public Action putAction(Action a)
     {
         actions.put((String) a.getValue(Action.NAME), a);
         return a;
     }
 
+    /*
+     * Add a given action to the ActionManager and assign it a KeyStroke
+     */
     public Action putAction(Action a, KeyStroke k)
     {
         a.putValue(Action.ACCELERATOR_KEY, k);
@@ -175,6 +188,9 @@ public class ActionManager
         return a;
     }
 
+    /*
+     * Add a given action to the ActionManager and assign it a KeyStroke and an Icon
+     */
     public Action putAction(Action a, KeyStroke k, Icon icon)
     {
         a.putValue(Action.SMALL_ICON, icon);
@@ -404,7 +420,7 @@ public class ActionManager
 
         public void propertyChange(PropertyChangeEvent e)
         {
-            if (e.getPropertyName() == HGVDesktop.NETWORK_VIEW_FOCUSED)
+            if (e.getPropertyName() == HGVDesktop.GRAPH_VIEW_FOCUSED)
             {
                 GraphView view = (GraphView) e.getNewValue();
                 bev.disconnect();
@@ -611,7 +627,7 @@ public class ActionManager
             HGViewer new_view = HGVKit.createHGViewer(view.getHyperGraph(),
                     nodes, edges);
             new_view.getView().setIdentifier(
-                    HGVNetworkNaming.getSuggestedSubnetworkTitle(view));
+                    makeSubGraphTitle(view));
         }
     }
 
@@ -635,7 +651,7 @@ public class ActionManager
             HGViewer new_view = HGVKit.createHGViewer(view.getHyperGraph(),
                     nodes, edges);
             new_view.getView().setIdentifier(
-                    HGVNetworkNaming.getSuggestedSubnetworkTitle(view));
+                   makeSubGraphTitle(view));
         }
     }
 
@@ -773,6 +789,23 @@ public class ActionManager
             VisualManager.getInstance().save();
             view.redrawGraph();
         }
+    }
+    
+    private static String makeSubGraphTitle(GraphView view)
+    {
+      for (int i = 0; true; i++) {
+        String nameCandidate =
+          view.getIdentifier() + "->child" + ((i == 0) ? "" : ("." + i));
+        if (!isTitleTaken(nameCandidate)) 
+            return nameCandidate; }
+    }
+
+    private static boolean isTitleTaken(String titleCandidate)
+    {
+      for (GraphView v: HGVKit.getViewersList()) 
+        if (titleCandidate.equals(v.getIdentifier()))
+            return true; 
+      return false;
     }
 
 }
