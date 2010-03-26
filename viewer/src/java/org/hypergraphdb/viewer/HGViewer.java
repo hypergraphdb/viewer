@@ -28,19 +28,24 @@ import org.hypergraphdb.util.CloseMe;
 import org.hypergraphdb.viewer.hg.HGWNReader;
 import org.hypergraphdb.viewer.visual.ui.DropDownButton;
 
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 import sun.awt.AppContext;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolox.swing.PScrollPane;
 
-/*
+/**
  * Swing Component for displaying HyperGraphDB atoms and links.
  * Contains a <code>GraphView</code> that actually displays HG stuff
  * in a Piccolo canvas and a combination of status bar and menu bar 
+ * 
+ * @author Konstantin Vandev
  */
 public class HGViewer extends JPanel
 {
+    private static final Object FOCUSED_COMPONENT = new StringBuilder(
+    "HGVComponent");
+    
     /**
      * This is the label that tells how many node/edges are in a HGVNetworkView
      * and how many are selected/hidden
@@ -56,11 +61,24 @@ public class HGViewer extends JPanel
 
     protected HyperGraph graph;
     
+    /**
+     * Constructor
+     * @param db The HyperGraph to be viewed
+     * @param h The HGHandle to be focused
+     */
     public HGViewer(HyperGraph db, HGHandle h)
     {
         this(db, h, 2, null);
     }
 
+    
+    /**
+     * Constructor
+     * @param db The HyperGraph to be viewed
+     * @param h The HGHandle to be focused
+     * @param depth The depth of displayed nodes : 1 = first neighbours  
+     * @param generator HGALGenerator to filter specific nodes, could be null 
+     */
     public HGViewer(HyperGraph db, HGHandle h, int depth,
             HGALGenerator generator)
     {
@@ -75,6 +93,12 @@ public class HGViewer extends JPanel
         init(reader.getNodes(), reader.getEdges());
     }
 
+    /**
+     * Constructor
+     * @param db The HyperGraph to be viewed
+     * @param nodes FNodes to be displayed
+     * @param edges FEdges to be displayed
+     */
     public HGViewer(HyperGraph db, Collection<FNode> nodes,
             Collection<FEdge> edges)
     {
@@ -146,11 +170,20 @@ public class HGViewer extends JPanel
                 inputMap.put((KeyStroke) a.getValue(Action.ACCELERATOR_KEY), a);
     }
 
+    /**
+     * Returns the viewed HyperGraph
+     * @return the viewed HyperGraph
+     */
     public HyperGraph getHyperGraph()
     {
         return graph;
     }
 
+    
+    /**
+     * Focus on specific handle
+     * @param handle The handle to focus on
+     */
     public void focus(HGHandle handle)
     {
         HGWNReader reader = new HGWNReader(graph);
@@ -168,6 +201,10 @@ public class HGViewer extends JPanel
                 view.getNodeView(node).getFullBounds(), false, 1550l);
     }
 
+    /**
+     * Refreshes viewer - e.g. clears the view and focuses again on the specified 
+     * focus handle
+     */
     public void refresh()
     {
         focus(foc_handle);
@@ -182,16 +219,29 @@ public class HGViewer extends JPanel
             view.removeNodeView(nv.getNode());
     }
 
+    /**
+     * Returns the underlying <code>GraphView</code>
+     * @return the underlying <code>GraphView</code>
+     */
     public GraphView getView()
     {
         return view;
     }
 
+    /**
+     * Sets the depth to focus on
+     * @param depth
+     */
     public void setDepth(int depth)
     {
         this.depth = depth;
     }
 
+    
+    /**
+     * Returns the generator 
+     * @return the generator
+     */
     public HGALGenerator getGenerator()
     {
         if (generator == null)
@@ -199,6 +249,11 @@ public class HGViewer extends JPanel
         return generator;
     }
 
+    
+    /**
+     * Sets the generator 
+     * @param generator 
+     */
     public void setGenerator(HGALGenerator generator)
     {
         if (this.generator != null && this.generator instanceof CloseMe)
@@ -207,6 +262,9 @@ public class HGViewer extends JPanel
     }
 
     private boolean first_time = true;
+    /* (non-Javadoc)
+     * @see javax.swing.JComponent#addNotify()
+     */
     @Override
     public void addNotify()
     {
@@ -234,6 +292,9 @@ public class HGViewer extends JPanel
         });
     }
 
+    /* (non-Javadoc)
+     * @see javax.swing.JComponent#removeNotify()
+     */
     @Override
     public void removeNotify()
     {
@@ -241,7 +302,7 @@ public class HGViewer extends JPanel
         //VisualManager.getInstance().save();
     }
 
-    protected/* static */JToolBar getBottomToolbar()
+    protected JToolBar getBottomToolbar()
     {
         if (toolbar != null) return toolbar;
         toolbar = new JToolBar();
@@ -310,7 +371,7 @@ public class HGViewer extends JPanel
      * Resets the info label status bar text with the current number of nodes,
      * edges, selected nodes, and selected edges.
      */
-    public void updateStatusLabel()
+    protected void updateStatusLabel()
     {
         int nodeCount = view.getNodeViewCount();
         int edgeCount = view.getEdgeViewCount();
@@ -336,14 +397,19 @@ public class HGViewer extends JPanel
     }
 
    
-    public static final Object FOCUSED_COMPONENT = new StringBuilder(
-            "HGVComponent");
-
+    /**
+     * Returns the last focused viewer.
+     * @return the last focused HGViewer
+     */
     public static final HGViewer getFocusedComponent()
     {
         return (HGViewer) AppContext.getAppContext().get(FOCUSED_COMPONENT);
     }
 
+    /**
+     * Sets the focused viewer
+     * @param ui the focused HGViewer
+     */
     public static final void setFocusedComponent(HGViewer ui)
     {
         AppContext.getAppContext().put(FOCUSED_COMPONENT, (HGViewer) ui);
@@ -359,10 +425,6 @@ public class HGViewer extends JPanel
         public void focusGained(FocusEvent e)
         {
             focused(e.getComponent());
-        }
-
-        public void focusLost(FocusEvent e)
-        {
         }
     }
 

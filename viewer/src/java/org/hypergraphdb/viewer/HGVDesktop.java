@@ -27,7 +27,7 @@ import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 
 /**

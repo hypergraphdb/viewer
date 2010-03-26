@@ -1,21 +1,21 @@
 package org.hypergraphdb.viewer;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.SwingUtilities;
 
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGIndex;
 import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.IncidenceSet;
-import org.hypergraphdb.indexing.ByPartIndexer;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
  * Utility operations for selection and hiding/unhiding nodes and edges in a

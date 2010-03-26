@@ -6,7 +6,7 @@
  * www.cs.umd.edu/hcil by Jesse Grosjean under the supervision of Ben Bederson. 
  * The Piccolo website is www.cs.umd.edu/hcil/piccolo 
  */ 
-package phoebe.util;
+package org.hypergraphdb.viewer.phoebe.util;
 
 import java.awt.Cursor;
 import java.awt.geom.Point2D;
@@ -15,8 +15,8 @@ import java.util.Iterator;
 
 import javax.swing.SwingConstants;
 
-import phoebe.PNodeView;
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PNode;

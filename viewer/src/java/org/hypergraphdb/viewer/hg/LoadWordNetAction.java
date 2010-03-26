@@ -34,9 +34,9 @@ import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
-import cytoscape.task.Task;
-import cytoscape.task.TaskMonitor;
-import cytoscape.task.util.TaskManager;
+import org.hypergraphdb.viewer.util.cytoscape.task.Task;
+import org.hypergraphdb.viewer.util.cytoscape.task.TaskMonitor;
+import org.hypergraphdb.viewer.util.cytoscape.task.util.TaskManager;
 
 
 /**

@@ -42,16 +42,16 @@ import org.hypergraphdb.viewer.util.HGVAction;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import org.hypergraphdb.viewer.visual.ui.PaintersPanel;
 
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
-import phoebe.event.BirdsEyeView;
-import phoebe.util.PrintingFixTextNode;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.event.BirdsEyeView;
+import org.hypergraphdb.viewer.phoebe.util.PrintingFixTextNode;
 import edu.umd.cs.piccolo.PLayer;
-import edu.umd.cs.piccolo.activities.PTransformActivity;
 import edu.umd.cs.piccolo.util.PBounds;
 
-/*
- * Singleton class containing actions used in menuBar, toolbar and popup menus
+/**
+ * Singleton class containing actions used in menuBar, toolBar and pop-up menus
+ * @author Konstantin Vandev
  */
 public class ActionManager
 {
@@ -62,31 +62,19 @@ public class ActionManager
     public static final String EXIT_ACTION = "Exit";
     public static final String CREATE_VIEW_ACTION = "Create View";
     public static final String DESTROY_VIEW_ACTION = "Destroy View";
-    // public static final String DESTROY_SELECTED_NODES_EDGES_ACTION =
-    // "Destroy Selected Nodes/Edges";
     public final static String PREFERENCES_ACTION = "Preferences...";
-    // public static final String INVERT_NODE_SELECTION_ACTION =
-    // "Invert selection";
     public static final String HIDE_NODE_SELECTION_ACTION = "Hide selection";
     public static final String SELECT_ALL_NODES_ACTION = "Select all nodes";
-    // public static final String DESELECT_ALL_NODES_ACTION =
-    // "Deselect all nodes";
     public static final String SELECTED_FIRST_NEIGHBORS_ACTION = "First neighbors of selected nodes";
 
-    // public static final String INVERT_EDGE_SELECTION_ACTION =
-    // "Invert edge selection";
     public static final String HIDE_EDGE_SELECTION_ACTION = "Hide edge selection";
     public static final String SHOW_ALL_EDGES_ACTION = "Show All Edges";
     public static final String SELECT_ALL_EDGES_ACTION = "Select all edges";
-    // public static final String DESELECT_ALL_EDGES_ACTION =
-    // "Deselect all edges";
     public static final String NEW_WINDOW_SELECTED_NODES_ONLY_ACTION = "Selected nodes only";
     public static final String NEW_WINDOW_SELECTED_NODES_EDGES_ACTION = "Selected nodes, Selected edges";
     public static final String NEW_WINDOW_CLONE_WHOLE_GRAPH_ACTION = "Whole network";
     public static final String SELECT_ALL_ACTION = "Select all nodes and edges";
     public static final String HIDE_SELECTED_ACTION = "Hide Selected";
-    // public static final String DESELECT_ALL_ACTION =
-    // "Deselect All Nodes and Edges";
     public static final String PREFERED_LAYOUT_ACTION = "Select Preferred Layout";
     public static final String TOGGLE_BIRDS_EYE_VIEW_ACTION = "Toggle Overview";
     public static final String BACKGROUND_COLOR_ACTION = "Change Background Color";
@@ -120,8 +108,8 @@ public class ActionManager
         actions.put(PRINT_ACTION, new PrintAction());
         actions.put(EXPORT_ACTION, new ExportAction());
         actions.put(EXIT_ACTION, new ExitAction());
-        actions.put(CREATE_VIEW_ACTION, new CreateNetworkViewAction());
-        actions.put(DESTROY_VIEW_ACTION, new DestroyNetworkViewAction());
+        actions.put(CREATE_VIEW_ACTION, new CreateHGViewerAction());
+        actions.put(DESTROY_VIEW_ACTION, new DestroyHGViewerAction());
         actions.put(PREFERENCES_ACTION, new PreferenceAction());
         actions.put(HIDE_NODE_SELECTION_ACTION, new HideSelectedNodesAction());
         actions.put(SELECT_ALL_NODES_ACTION, new SelectAllNodesAction());
@@ -153,7 +141,7 @@ public class ActionManager
         // actions.put(SQUIGGLE_ACTION, new SquiggleAction());
     }
 
-    /*
+    /**
      * Returns an action given its name
     */
     public Action getAction(String name)
@@ -161,7 +149,7 @@ public class ActionManager
         return actions.get(name);
     }
 
-    /*
+    /**
     * Returns all registered actions
     */
     public Collection<Action> getActions()
@@ -169,7 +157,7 @@ public class ActionManager
         return actions.values();
     }
 
-   /*
+   /**
     * Add a given action to the ActionManager
     */
     public Action putAction(Action a)
@@ -178,7 +166,7 @@ public class ActionManager
         return a;
     }
 
-    /*
+    /**
      * Add a given action to the ActionManager and assign it a KeyStroke
      */
     public Action putAction(Action a, KeyStroke k)
@@ -188,7 +176,7 @@ public class ActionManager
         return a;
     }
 
-    /*
+    /**
      * Add a given action to the ActionManager and assign it a KeyStroke and an Icon
      */
     public Action putAction(Action a, KeyStroke k, Icon icon)
@@ -201,6 +189,10 @@ public class ActionManager
     {
     }
 
+    
+    /**
+     * Zooms the current HGViewer
+     */
     public static class ZoomAction extends HGVAction
     {
         double factor;
@@ -219,6 +211,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Zooms and centers the selected nodes in the current HGViewer
+     */
     public static class ZoomSelectedAction extends HGVAction
     {
 
@@ -288,14 +283,16 @@ public class ActionManager
                 zoomToBounds = new PBounds(smallX, smallY,
                         (bigX - smallX + 100), (bigY - smallY + 100));
             }
-            PTransformActivity activity = view.getCanvas().getCamera()
+            view.getCanvas().getCamera()
                     .animateViewToCenterBounds(zoomToBounds, true, 500);
         }
     }
 
+    /**
+     * Applies the preferred layout to current HGViewer 
+     */
     public static class LayoutAction extends HGVAction
     {
-
         public LayoutAction()
         {
             super(LAYOUT_ACTION);
@@ -308,6 +305,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Sets the preferred layout 
+     */
     public static class SelectPrefLayoutAction extends AbstractAction
     {
         public SelectPrefLayoutAction()
@@ -325,7 +325,10 @@ public class ActionManager
         }
     }
 
-    public static class SelectLayoutPanel extends JPanel
+    /**
+     * Panel with the available layouts
+     */
+    private static class SelectLayoutPanel extends JPanel
     {
         ButtonGroup group = new ButtonGroup();
 
@@ -407,6 +410,10 @@ public class ActionManager
         }
     }
 
+    
+    /**
+     * Toggles BirdsEyeView in the stand-alone version of HGViewer
+     */
     public static class BirdsEyeViewAction extends HGVAction implements
             PropertyChangeListener
     {
@@ -470,9 +477,12 @@ public class ActionManager
         }
     }
 
-    public static class CreateNetworkViewAction extends HGVAction
+    /**
+     * Creates a new HGViewer and adds it in the TabbdePane in the stand-alone version of HGViewer
+     */
+    public static class CreateHGViewerAction extends HGVAction
     {
-        public CreateNetworkViewAction()
+        public CreateHGViewerAction()
         {
             super(CREATE_VIEW_ACTION);
             setAcceleratorCombo(KeyEvent.VK_V, ActionEvent.ALT_MASK);
@@ -484,10 +494,13 @@ public class ActionManager
         }
     }
 
-    public static class DestroyNetworkViewAction extends HGVAction
+    /**
+     * Destroys a HGViewer and removes it from the TabbdePane in the stand-alone version of HGViewer
+     */
+    public static class DestroyHGViewerAction extends HGVAction
     {
 
-        public DestroyNetworkViewAction()
+        public DestroyHGViewerAction()
         {
             super(DESTROY_VIEW_ACTION);
             setAcceleratorCombo(KeyEvent.VK_W, ActionEvent.CTRL_MASK);
@@ -499,6 +512,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Exit action.
+     */
     public static class ExitAction extends AbstractAction
     {
 
@@ -513,6 +529,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Exports current HGViewer to one of the predefined formats.
+     */
     public static class ExportAction extends HGVAction
     {
         public ExportAction()
@@ -535,6 +554,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Zooms the current view appropriately to fit in the viewable area.
+     */
     public static class FitContentAction extends HGVAction
     {
 
@@ -552,6 +574,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Hides selected nodes and edges.
+     */
     public static class HideSelectedAction extends HGVAction
     {
         public HideSelectedAction()
@@ -572,6 +597,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Hides selected edges.
+     */
     public static class HideSelectedEdgesAction extends HGVAction
     {
 
@@ -587,6 +615,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Hides selected nodes.
+     */
     public static class HideSelectedNodesAction extends HGVAction
     {
 
@@ -603,6 +634,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Creates a new HGViewer containing the selected nodes and edges from the current one 
+     */
     public static class NewWindowSelectedNodesEdgesAction extends HGVAction
     {
         public NewWindowSelectedNodesEdgesAction()
@@ -631,6 +665,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Creates a new HGViewer containing the selected nodes from the current one 
+     */
     public static class NewWindowSelectedNodesOnlyAction extends HGVAction
     {
 
@@ -655,6 +692,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Opens up the settings dialog 
+     */
     public static class PreferenceAction extends AbstractAction
     {
         public PreferenceAction()
@@ -671,6 +711,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Prints the current HGViewer
+     */
     public static class PrintAction extends HGVAction
     {
 
@@ -686,6 +729,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Selects all nodes and edges in the current HGViewer
+     */
     public static class SelectAllAction extends HGVAction
     {
 
@@ -703,6 +749,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Selects all edges in the current HGViewer
+     */
     public static class SelectAllEdgesAction extends HGVAction
     {
 
@@ -718,6 +767,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Selects all nodes in the current HGViewer
+     */
     public static class SelectAllNodesAction extends HGVAction
     {
 
@@ -733,6 +785,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Selects first neighbors of the currently selected node
+     */
     public static class SelectFirstNeighborsAction extends HGVAction
     {
         public SelectFirstNeighborsAction()
@@ -762,6 +817,9 @@ public class ActionManager
         }
     }
 
+    /**
+     * Displays the dialog for visual settings   
+     */
     public static class SetVisualPropertiesAction extends HGVAction
     {
         boolean nodes_or_edges;

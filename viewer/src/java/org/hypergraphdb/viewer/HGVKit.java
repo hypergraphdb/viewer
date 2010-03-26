@@ -19,12 +19,12 @@ import org.hypergraphdb.viewer.layout.Radial;
 import org.hypergraphdb.viewer.layout.SpringEmbeddedLayout;
 import org.hypergraphdb.viewer.layout.SpringLayout;
 
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
  *  Abstract class containing common methods, constants and event handling for wiring 
- *  the stand-alone version og HGViewer  
+ *  the stand-alone version of HGViewer  
  */
 public abstract class HGVKit
 {

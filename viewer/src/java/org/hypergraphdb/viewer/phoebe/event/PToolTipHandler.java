@@ -1,9 +1,8 @@
-package phoebe.event;
+package org.hypergraphdb.viewer.phoebe.event;
 
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.event.PInputEvent;
-import phoebe.util.PLabel; 
 
 public class PToolTipHandler extends PBasicInputEventHandler {
 

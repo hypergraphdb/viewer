@@ -1,4 +1,4 @@
-package phoebe;
+package org.hypergraphdb.viewer.phoebe;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.GraphView;
 
-import phoebe.util.PLabel;
+import org.hypergraphdb.viewer.phoebe.util.PLabel;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PBounds;

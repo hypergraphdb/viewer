@@ -1,4 +1,4 @@
-package phoebe.util;
+package org.hypergraphdb.viewer.phoebe.util;
 
 import edu.umd.cs.piccolox.handles.PHandle;
 import edu.umd.cs.piccolox.util.PNodeLocator;

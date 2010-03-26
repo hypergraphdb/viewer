@@ -1,4 +1,4 @@
-package phoebe.util;
+package org.hypergraphdb.viewer.phoebe.util;
 
 /**
  * This class represents a cubic polynomial data structure. The function is:  a

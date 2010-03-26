@@ -12,7 +12,7 @@ import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.layout.util.NodeDistances;
 
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
  * An implementation of Kamada and Kawai's spring embedded layout algorithm.

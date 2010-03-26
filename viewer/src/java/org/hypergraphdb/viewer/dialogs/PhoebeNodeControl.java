@@ -1,6 +1,6 @@
 package org.hypergraphdb.viewer.dialogs;
 
-import phoebe.*;
+import org.hypergraphdb.viewer.phoebe.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

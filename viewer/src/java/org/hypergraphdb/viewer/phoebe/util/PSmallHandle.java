@@ -6,7 +6,7 @@
  * www.cs.umd.edu/hcil by Jesse Grosjean under the supervision of Ben Bederson. 
  * The Piccolo website is www.cs.umd.edu/hcil/piccolo 
  */ 
-package phoebe.util;
+package org.hypergraphdb.viewer.phoebe.util;
 
 import java.awt.Color;
 import java.awt.Paint;

@@ -6,7 +6,7 @@
  * www.cs.umd.edu/hcil by Jesse Grosjean under the supervision of Ben Bederson. 
  * The Piccolo website is www.cs.umd.edu/hcil/piccolo 
  */
-package phoebe.event; 
+package org.hypergraphdb.viewer.phoebe.event; 
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,8 +18,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import phoebe.PNodeView;
-import phoebe.util.PSmallBoundsHandle;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.util.PSmallBoundsHandle;
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PLayer;
 import edu.umd.cs.piccolo.PNode;

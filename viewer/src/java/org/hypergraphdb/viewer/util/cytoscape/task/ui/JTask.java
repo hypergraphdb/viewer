@@ -33,10 +33,10 @@
  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
 */
 
-package cytoscape.task.ui;
+package org.hypergraphdb.viewer.util.cytoscape.task.ui;
 
-import cytoscape.task.Task;
-import cytoscape.task.TaskMonitor;
+import org.hypergraphdb.viewer.util.cytoscape.task.Task;
+import org.hypergraphdb.viewer.util.cytoscape.task.TaskMonitor;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

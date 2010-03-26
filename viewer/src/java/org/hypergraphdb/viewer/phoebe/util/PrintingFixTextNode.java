@@ -24,7 +24,7 @@
  * SOFTWARE.
  *********************************************************************/
 
-package phoebe.util;
+package org.hypergraphdb.viewer.phoebe.util;
 
 import java.awt.FontMetrics;
 import java.awt.font.LineMetrics;

@@ -6,7 +6,7 @@ import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.GraphView;
 
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
  * Calculates the all-pairs-shortest-paths (APSP) of a set of

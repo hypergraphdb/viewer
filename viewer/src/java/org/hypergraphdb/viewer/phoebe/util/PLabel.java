@@ -1,4 +1,4 @@
-package phoebe.util;
+package org.hypergraphdb.viewer.phoebe.util;
 import java.awt.Color;
 import java.awt.Paint;
 import java.awt.geom.Point2D;

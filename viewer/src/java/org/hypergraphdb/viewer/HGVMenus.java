@@ -415,7 +415,7 @@ public class HGVMenus implements GraphViewChangeListener
         return url;
     }
 
-    public static class HGVMenu extends JMenu implements MenuListener
+    static class HGVMenu extends JMenu implements MenuListener
     {
         public HGVMenu()
         {
@@ -454,7 +454,7 @@ public class HGVMenus implements GraphViewChangeListener
     }
 
     // JMenuItem that can't be disabled
-    public static class GlobMenuItem extends JMenuItem
+    static class GlobMenuItem extends JMenuItem
     {
         public GlobMenuItem()
         {
@@ -482,7 +482,7 @@ public class HGVMenus implements GraphViewChangeListener
         }
     }
 
-    public static class GlobMenu extends JMenu
+    static class GlobMenu extends JMenu
     {
         public GlobMenu(String text)
         {

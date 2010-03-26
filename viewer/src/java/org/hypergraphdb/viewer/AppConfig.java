@@ -12,7 +12,7 @@ import org.hypergraphdb.HGSystemFlags;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.HGQuery.hg;
 
-/*
+/**
  * Singleton class used for persisting various configuration options
  */
 public class AppConfig
@@ -57,7 +57,7 @@ public class AppConfig
 		return instance;
 	}
 
-	/*
+	/**
 	 * Returns most-recently-used-directory 
 	 */
 	public String getMRUD()
@@ -65,7 +65,7 @@ public class AppConfig
 		return mrud;
 	}
 
-	/*
+	/**
      * Sets most-recently-used-directory 
      */
 	public void setMRUD(String f)
@@ -73,7 +73,7 @@ public class AppConfig
 		mrud = f;
 	}
 
-	/*
+	/**
      * Returns most-recently-used-files 
      */
 	public HashSet<String> getMRUF()
@@ -81,7 +81,7 @@ public class AppConfig
 		return mrufs;
 	}
 
-	/*
+	/**
      * Returns most-recently-used-files 
      */
 	public void setMRUF(HashSet<String> m)
@@ -89,7 +89,7 @@ public class AppConfig
 		mrufs = m;
 	}
 
-	/*
+	/**
 	 * Returns a property given its name
 	 */
 	public Object getProperty(String key)
@@ -97,7 +97,7 @@ public class AppConfig
 		return properties.get(key);
 	}
 	
-	/*
+	/**
      * Removes a property given its name
      */
 	public void removeProperty(String key)
@@ -105,7 +105,7 @@ public class AppConfig
 		properties.remove(key);
 	}
 
-	/*
+	/**
      * Returns a property given its name. If property is not found, returns the 
      * passed in default value
      */
@@ -117,7 +117,7 @@ public class AppConfig
 		return def;
 	}
 
-	/*
+	/**
      * Sets a property
      */
 	public void setProperty(String key, Object def)
@@ -163,7 +163,7 @@ public class AppConfig
 		return null;
 	}
 
-	/*
+	/**
 	 * Returns the maximum number of nodes in a GraphView 
 	 */
 	public int getViewThreshold()
@@ -171,7 +171,7 @@ public class AppConfig
 		return ((Integer)getProperty(VIEW_THRESHOLD, 500)).intValue();
 	}
 
-	/*
+	/**
      * Sets the maximum number of nodes in a GraphView 
      */
 	public void setViewThreshold(int viewThreshold)
@@ -179,7 +179,7 @@ public class AppConfig
 		setProperty(VIEW_THRESHOLD, viewThreshold);
 	}
 
-	/*
+	/**
 	 * Returns the map with all properties
 	 */
 	public Map<String, Object> getProperties()
@@ -187,7 +187,7 @@ public class AppConfig
 		return properties;
 	}
 
-	/*
+	/**
      * Sets the map with all properties
      */
 	public void setProperties(Map<String, Object> properties)
@@ -195,7 +195,7 @@ public class AppConfig
 		this.properties = properties;
 	}
 
-	/*
+	/**
 	 * Returns the HyperGraph instance in which this AppConfig is stored
 	 */
 	public HyperGraph getGraph()

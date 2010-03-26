@@ -9,8 +9,8 @@ import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
  * The layout computePositions method follows the algorithm as given by Eades in

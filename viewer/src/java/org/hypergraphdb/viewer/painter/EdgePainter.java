@@ -1,6 +1,6 @@
 package org.hypergraphdb.viewer.painter;
 
-import phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
 
 public interface EdgePainter
 {

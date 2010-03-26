@@ -13,8 +13,8 @@ import org.hypergraphdb.LazyRef;
 import org.hypergraphdb.type.HGAtomType;
 import org.hypergraphdb.type.HGAtomTypeBase;
 
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /*
  * You could use this class to persist a HGViewer instance in a HyperGraphDB

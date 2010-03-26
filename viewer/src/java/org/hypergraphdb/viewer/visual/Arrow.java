@@ -32,7 +32,7 @@
 package org.hypergraphdb.viewer.visual;
 //----------------------------------------------------------------------------
 import java.io.Serializable;
-import phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
 //----------------------------------------------------------------------------
 /**
  * This class is a replacement for the yFiles Arrow class.

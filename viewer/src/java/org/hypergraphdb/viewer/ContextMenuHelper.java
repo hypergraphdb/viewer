@@ -30,14 +30,14 @@ import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 import org.hypergraphdb.viewer.visual.ui.PainterPropsPanel;
 
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler;
 import edu.umd.cs.piccolo.event.PInputEvent;
 
-/*
+/**
  * The Piccolo handler responsible for showing popup(context) menu
  */
 public class ContextMenuHelper extends PBasicInputEventHandler

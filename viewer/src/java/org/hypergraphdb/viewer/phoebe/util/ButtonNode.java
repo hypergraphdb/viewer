@@ -1,4 +1,4 @@
-package phoebe.util;
+package org.hypergraphdb.viewer.phoebe.util;
 
 import edu.umd.cs.piccolo.*;
 import edu.umd.cs.piccolo.activities.*;

@@ -29,9 +29,26 @@ import org.netbeans.swing.outline.Outline;
 import org.netbeans.swing.outline.RenderDataProvider;
 import org.netbeans.swing.outline.RowModel;
 
+
+/**
+ * Swing component for inspecting the fields of a given object in a tree table
+ * as in most common GUI debuggers.  
+ * @author Konstantin Vandev
+ */
 public class ObjectInspector extends Outline 
 {
-   
+    private static Set<PropNodeFactory> factories = new HashSet<PropNodeFactory>();
+    static
+    {
+       registerNodeFactory(new CollectionNodeFactory());
+       registerNodeFactory(new MapNodeFactory());
+       registerNodeFactory(new ArrayNodeFactory());
+    }
+    
+    /**
+     * The constructor.
+     * @param obj - The Object to be inspected
+     */
     public ObjectInspector(Object obj)
     {
         super();
@@ -41,6 +58,11 @@ public class ObjectInspector extends Outline
         setModelObject(obj);
     }
     
+    
+    /**
+     * Sets the object to be inspected
+     * @param obj The Object to be inspected
+     */
     public void setModelObject(Object obj)
     {
         if(obj == null) return;
@@ -53,7 +75,7 @@ public class ObjectInspector extends Outline
         setModel(mdl);
     }
 
-    static PropNode createPropNode(String name, Object o)
+    private static PropNode createPropNode(String name, Object o)
     {
         if(o != null)
         {
@@ -64,24 +86,70 @@ public class ObjectInspector extends Outline
         return new PropNode(name, o);
     }
     
+   
+    /**
+     * Registers given NodeFactory
+     * @param factory
+     */
+    public static void registerNodeFactory(PropNodeFactory factory)
+    {
+        factories.add(factory);
+    }
+    
+    
+    private static PropNodeFactory getNodeFactory(Class<?> clazz)
+    {
+        for(PropNodeFactory m : factories)
+            if(m.supportsClass(clazz))
+                return m;
+        return null;
+    }
+    
+    /**
+     * Factory providing a specific fields of a given class to be inspected 
+     */
+    public static interface PropNodeFactory {
+        public boolean supportsClass(Class<?> c);
+        public PropNode createNode(String name, Object o);
+    }
+    
+    /**
+     * A node in the tree table representing a given object field alongside its name, value
+     * and child nodes. 
+     */
     public static class PropNode implements Comparable
     {
         public String name;
         public Object value;
         protected PropNode[] children;
         
-        public PropNode(String name, Object object)
+        
+        /**
+         * Constructor
+         * @param name Node's name, could be null  
+         * @param value Node's value, could be null
+         */
+        public PropNode(String name, Object value)
         {
             super();
-            this.value = object;
+            this.value = value;
             this.name = name;
         }
 
+        /**
+         * Constructor
+         * @param value Node's value, could be null
+         */
         public PropNode(Object object)
         {
             this(null, object);
         }
         
+        
+        /**
+         * Returns node's children
+         * @return Node's children
+         */
         public PropNode[] children()
         {
             if(children != null) return children;
@@ -106,6 +174,9 @@ public class ObjectInspector extends Outline
         }
         
         
+        /* (non-Javadoc)
+         * @see java.lang.Comparable#compareTo(java.lang.Object)
+         */
         public int compareTo(Object o)
         {
             if(o instanceof PropNode)
@@ -122,36 +193,7 @@ public class ObjectInspector extends Outline
         }
     }
     
-  
-    public static interface PropNodeFactory
-    {
-        public boolean supportsClass(Class<?> c);
-        public PropNode createNode(String name, Object o);
-    }
-    
-    
-    private static Set<PropNodeFactory> factories = new HashSet<PropNodeFactory>();
-    static
-    {
-       registerNodeFactory(new CollectionNodeFactory());
-       registerNodeFactory(new MapNodeFactory());
-       registerNodeFactory(new ArrayNodeFactory());
-    }
-    
-    public static void registerNodeFactory(PropNodeFactory model)
-    {
-        factories.add(model);
-    }
-    
-    static PropNodeFactory getNodeFactory(Class<?> clazz)
-    {
-        for(PropNodeFactory m : factories)
-            if(m.supportsClass(clazz))
-                return m;
-        return null;
-    }
-    
-    public static class ArrayNodeFactory implements PropNodeFactory
+    private static class ArrayNodeFactory implements PropNodeFactory
     {
         public boolean supportsClass(Class<?> c)
         {
@@ -175,7 +217,7 @@ public class ObjectInspector extends Outline
     }      
        
     
-    public static class CollectionNodeFactory implements PropNodeFactory
+    private static class CollectionNodeFactory implements PropNodeFactory
     {
         public PropNode createNode(final String name, final Object o)
         {
@@ -201,7 +243,7 @@ public class ObjectInspector extends Outline
         } 
     }
     
-    public static class MapNodeFactory implements PropNodeFactory
+    private static class MapNodeFactory implements PropNodeFactory
     {
         public PropNode createNode(final String name, final Object o)
         {

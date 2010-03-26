@@ -33,7 +33,7 @@
  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
 */
 
-package cytoscape.task;
+package org.hypergraphdb.viewer.util.cytoscape.task;
 
 
 /**

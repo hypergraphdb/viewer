@@ -15,6 +15,10 @@ import org.hypergraphdb.HGQuery.hg;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
 
+/**
+ * Singleton responsible for management of visual styles. 
+ * @author Konstantin Vandev
+ */
 public class VisualManager
 {
 	public static final String DEFAULT_STYLE_NAME = "default";

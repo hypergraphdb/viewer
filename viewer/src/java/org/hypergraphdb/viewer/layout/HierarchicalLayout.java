@@ -43,8 +43,8 @@ import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.GraphView;
 import java.util.*;
 import org.hypergraphdb.viewer.layout.util.Graph;
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 
 /**

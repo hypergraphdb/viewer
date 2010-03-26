@@ -8,8 +8,8 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.visual.LineType;
-import phoebe.PNodeView;
-import phoebe.util.PLabel;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.util.PLabel;
 
 public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 {

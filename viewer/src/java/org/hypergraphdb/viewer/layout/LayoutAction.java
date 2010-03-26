@@ -3,12 +3,11 @@ package org.hypergraphdb.viewer.layout;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.HGViewer;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 import org.hypergraphdb.viewer.util.HGVAction;
 
-import phoebe.PNodeView;
 import edu.umd.cs.piccolo.util.PBounds;
 
 public class LayoutAction extends HGVAction

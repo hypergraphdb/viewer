@@ -10,8 +10,8 @@ import java.util.Map;
 
 import org.hypergraphdb.viewer.GraphView;
 
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
  * The SpringLayout package represents a visualization of a set of nodes. The

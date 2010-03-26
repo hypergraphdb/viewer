@@ -13,8 +13,8 @@ import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.GraphViewU;
 import org.hypergraphdb.viewer.layout.util.Coordinates;
 
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
  * Java implementation of the gem 2D layout. <br>

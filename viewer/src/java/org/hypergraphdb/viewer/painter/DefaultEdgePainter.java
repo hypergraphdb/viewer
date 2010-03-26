@@ -12,9 +12,9 @@ import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.visual.Arrow;
 import org.hypergraphdb.viewer.visual.LineType;
 
-import phoebe.PEdgeView;
-import phoebe.PNodeView;
-import phoebe.util.PLabel;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.util.PLabel;
 
 public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 {

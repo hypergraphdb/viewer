@@ -1,4 +1,4 @@
-package phoebe.event;
+package org.hypergraphdb.viewer.phoebe.event;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

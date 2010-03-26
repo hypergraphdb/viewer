@@ -1,4 +1,4 @@
-package phoebe.util;
+package org.hypergraphdb.viewer.phoebe.util;
 
 import java.awt.geom.*;
 import java.awt.*;

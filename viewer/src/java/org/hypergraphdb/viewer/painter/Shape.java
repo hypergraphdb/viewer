@@ -31,7 +31,7 @@
 //----------------------------------------------------------------------------
 package org.hypergraphdb.viewer.painter;
 //----------------------------------------------------------------------------
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 //----------------------------------------------------------------------------
 /**
  * This class is a replacement for the yFiles Shape class.

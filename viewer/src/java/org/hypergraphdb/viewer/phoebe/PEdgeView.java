@@ -1,4 +1,4 @@
-package phoebe;
+package org.hypergraphdb.viewer.phoebe;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -14,16 +14,8 @@ import java.util.Vector;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.GraphView;
 
-import phoebe.event.PEdgeHandler;
-import phoebe.util.Bend;
-import phoebe.util.PArrowIcon;
-import phoebe.util.PCircleIcon;
-import phoebe.util.PDeltaIcon;
-import phoebe.util.PDiamondIcon;
-import phoebe.util.PEdgeEndIcon;
-import phoebe.util.PLabel;
-import phoebe.util.PNullIcon;
-import phoebe.util.PTIcon;
+import org.hypergraphdb.viewer.phoebe.event.PEdgeHandler;
+import org.hypergraphdb.viewer.phoebe.util.*;
 import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PAffineTransform;

@@ -1,9 +1,9 @@
-package phoebe.util;
+package org.hypergraphdb.viewer.phoebe.util;
 
 import java.awt.geom.Point2D;
 import java.util.Vector;
 
-import phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
 
 
 /**

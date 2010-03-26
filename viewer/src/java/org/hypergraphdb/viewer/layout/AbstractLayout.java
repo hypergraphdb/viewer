@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.hypergraphdb.viewer.GraphView;
 
-import phoebe.PNodeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 abstract public class AbstractLayout  {
 
