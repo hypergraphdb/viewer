@@ -14,12 +14,9 @@ import org.hypergraphdb.viewer.phoebe.PEdgeView;
 import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
- * The SpringLayout package represents a visualization of a set of nodes. The
- * SpringLayout, which is initialized with a Graph, assigns X/Y locations to
- * each node. When called <code>relax()</code>, the SpringLayout moves the
- * visualization forward one step.
+ *  SpringLayout implementation.
  */
-public class JUNGSpringLayout extends AbstractLayout
+class JUNGSpringLayout extends AbstractLayout
 {
     private LengthFunction lengthFunction;
     public static int RANGE = 100;

@@ -16,9 +16,8 @@ import org.hypergraphdb.viewer.painter.NodePainter;
 //----------------------------------------------------------------------------
 /**
  * This class encapsulates a full set of visual mapping specifications for
- * org.hypergraphdb.viewer. Currently this is implemented by holding a reference
- * to three appearance calculators, one for nodes, one for edges, and one for
- * global visual attributes.
+ * HGViewer. Currently this is implemented by holding a reference
+ * to two type of painters: one for nodes, one for edges
  */
 public class VisualStyle implements Cloneable
 {
@@ -60,7 +59,6 @@ public class VisualStyle implements Cloneable
 
     public VisualStyle()
     {
-
     }
 
     /**
@@ -194,14 +192,14 @@ public class VisualStyle implements Cloneable
         return backgroundColor;
     }
 
+    public void setBackgroundColor(Color backgroundColor)
+    {
+        this.backgroundColor = backgroundColor;
+    }
+    
     @Override
     public int hashCode()
     {
         return name.hashCode();
-    }
-
-    public void setBackgroundColor(Color backgroundColor)
-    {
-        this.backgroundColor = backgroundColor;
     }
 }

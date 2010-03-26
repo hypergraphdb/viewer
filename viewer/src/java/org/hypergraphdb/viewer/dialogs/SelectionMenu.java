@@ -12,6 +12,9 @@ import javax.swing.SwingUtilities;
 
 import org.hypergraphdb.viewer.HGVKit;
 
+/**
+ * Menu with the HGViewer selection options: nodes only, edges only, both. 
+ */
 public class SelectionMenu implements DynamicMenuProvider 
 {
     private static final long serialVersionUID = -456032254718357127L;

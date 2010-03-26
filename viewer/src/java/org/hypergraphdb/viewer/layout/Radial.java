@@ -13,6 +13,9 @@ import org.hypergraphdb.viewer.phoebe.PEdgeView;
 import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
+ * <br>
+ * Radial Layout
+ * </br>
  * The layout computePositions method follows the algorithm as given by Eades in
  * his paper "Drawing Free Trees", Bulletin of the Institute for Combinatorics
  * and its Applications, vol. 5, 10-36, 1992.

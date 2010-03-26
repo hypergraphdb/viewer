@@ -5,12 +5,14 @@ import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Stroke;
 import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.viewer.FNode;
 import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.visual.LineType;
 import org.hypergraphdb.viewer.phoebe.PNodeView;
 import org.hypergraphdb.viewer.phoebe.util.PLabel;
 
+/**
+ * Default implementation of the NodePainter and PaintNodeInfo interfaces
+ */
 public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 {
     public static final String NOT_EDITABLE = "NOT EDITABLE";
@@ -27,7 +29,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 
     protected PNodeView nodeView;
    
-    /*
+    /**
      * Returns the color used to paint node's border
      */
     public Color getBorderColor()
@@ -35,7 +37,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         return borderColor;
     }
 
-    /*
+    /**
      * Sets the color used to paint node's border
      */
     public void setBorderColor(Color borderColor)
@@ -43,7 +45,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         this.borderColor = borderColor;
     }
 
-    /*
+    /**
      * Returns the color used to paint node
      */
     public Color getColor()
@@ -51,7 +53,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         return color;
     }
 
-    /*
+    /**
      * Sets the color used to paint node
      */
     public void setColor(Color color)
@@ -59,7 +61,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         this.color = color;
     }
 
-    /*
+    /**
      * Returns the font used to paint node's label
      */
     public Font getFont()
@@ -67,7 +69,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         return font;
     }
 
-    /*
+    /**
      * Sets the font used to paint node's label
      */
     public void setFont(Font font)
@@ -75,7 +77,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         this.font = font;
     }
 
-    /*
+    /**
      * Returns the node's height
      */
     public double getHeight()
@@ -83,7 +85,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         return height;
     }
 
-    /*
+    /**
      * Sets the node's height
      */
     public void setHeight(double height)
@@ -91,7 +93,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         this.height = height;
     }
 
-    /*
+    /**
      * Returns the node's label
      */
     public String getLabel()
@@ -99,7 +101,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         return label;
     }
 
-    /*
+    /**
      * Sets the node's label
      */
     public void setLabel(String label)
@@ -107,7 +109,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         this.label = label;
     }
  
-     /*
+     /**
      * Returns the node's label color
      */
     public Color getLabelColor()
@@ -115,7 +117,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         return labelColor;
     }
 
-    /*
+    /**
      * Sets the node's label color
      */
     public void setLabelColor(Color labelColor)
@@ -123,7 +125,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         this.labelColor = labelColor;
     }
 
-    /*
+    /**
      * Returns the LineType used for painting the node's border
      */
     public LineType getLineType()
@@ -131,7 +133,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         return lineType;
     }
 
-    /*
+    /**
      * Sets the LineType used for painting the node's border
      */
     public void setLineType(LineType lineType)
@@ -139,7 +141,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         this.lineType = lineType;
     }
 
-    /*
+    /**
      * Returns the node's shape type
      */
     public byte getShape()
@@ -147,7 +149,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         return shape;
     }
 
-    /*
+    /**
      * Sets the node's shape type
      * Supported values are: org.hypergraphdb.viewer.painter.Shape.
      * RECT, ROUND_RECT, RECT_3D,TRAPEZOID, TRAPEZOID_2,
@@ -158,7 +160,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         this.shape = shape;
     }
 
-    /*
+    /**
      * Returns the node's tooltip text
      */
     public String getTooltip()
@@ -167,7 +169,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
     }
 
 
-    /*
+    /**
      * Sets the node's tooltip text
      */
     public void setTooltip(String tooltip)
@@ -175,7 +177,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         this.tooltip = tooltip;
     }
 
-    /*
+    /**
      * Returns the node's width
      */
     public double getWidth()
@@ -183,7 +185,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
         return width;
     }
 
-    /*
+    /**
      * Sets the node's width
      */
     public void setWidth(double width)
@@ -192,6 +194,9 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
     }
 
     
+    /* (non-Javadoc)
+     * @see org.hypergraphdb.viewer.painter.NodePainter#paintNode(org.hypergraphdb.viewer.phoebe.PNodeView)
+     */
     public void paintNode(PNodeView nodeView)
     {
         GraphView graphView = nodeView.getGraphView();
@@ -285,7 +290,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
 
     }
 
-    /*
+    /**
      * Shortcut method to get underlying HyperGraphDB
      */
     protected final HyperGraph getHG()

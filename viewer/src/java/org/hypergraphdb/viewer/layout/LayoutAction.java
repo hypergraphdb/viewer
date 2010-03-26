@@ -1,8 +1,6 @@
 package org.hypergraphdb.viewer.layout;
 
 import java.awt.event.ActionEvent;
-import java.util.Collection;
-import java.util.List;
 
 import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.HGViewer;
@@ -11,6 +9,10 @@ import org.hypergraphdb.viewer.util.HGVAction;
 
 import edu.umd.cs.piccolo.util.PBounds;
 
+/**
+ * Action that calls specific layout on the current GraphView 
+ *
+ */
 public class LayoutAction extends HGVAction
 {
 	protected Layout layout;

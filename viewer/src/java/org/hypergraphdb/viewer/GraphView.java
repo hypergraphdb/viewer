@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,15 +33,16 @@ import org.hypergraphdb.viewer.painter.DefaultEdgePainter;
 import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.painter.SimpleLabelTooltipNodePainter;
-import org.hypergraphdb.viewer.visual.VisualStyle;
-
-import org.hypergraphdb.viewer.phoebe.*;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 import org.hypergraphdb.viewer.phoebe.event.BirdsEyeView;
 import org.hypergraphdb.viewer.phoebe.event.PEdgeHandler;
 import org.hypergraphdb.viewer.phoebe.event.PEdgeSelectionHandler;
 import org.hypergraphdb.viewer.phoebe.event.PNodeSelectionHandler;
 import org.hypergraphdb.viewer.phoebe.event.PToolTipHandler;
 import org.hypergraphdb.viewer.phoebe.event.SquiggleEventHandler;
+import org.hypergraphdb.viewer.visual.VisualStyle;
+
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolo.PLayer;
@@ -54,21 +54,15 @@ import edu.umd.cs.piccolo.event.PZoomEventHandler;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
- * GraphView is responsible for actually getting a graph to show up on the
- * screen.<BR>
- * <BR>
- * HGVKit does not currently define specific classes for NodeViews and
- * EdgeViews, the defaults from the GINY graph library ( namely
- * org.hypergraphdb.viewer.phoebe.PNodeView and
- * org.hypergraphdb.viewer.phoebe.PEdgeView ) are most commonly used. Making
- * custom nodes is easy and fun. One must inherit from edu.umd.cs.piccolo.PNode.
+ * GraphView is the main Piccolo component which displays the graph on the
+ * screen using org.hypergraphdb.viewer.phoebe.PNodeView and
+ * org.hypergraphdb.viewer.phoebe.PEdgeView for visually represent nodes and edges.
  * The Piccolo project is what all of the painting is based on, and is very
  * fast, flexible and powerful. Becoming acquainted with Piccolo is essential
  * for build custom nodes.<BR>
  * <BR>
  * Fortunately, if you just want basic shapes and colors, it's all built into
- * the UI already, and you really need never even use this class. Just learn how
- * to use the VisualManager to accomplish your data to view mappings.
+ * the UI already, and you really need never even use this class.
  */
 public class GraphView
 {
@@ -80,6 +74,8 @@ public class GraphView
     static NodePainter def_node_painter = new SimpleLabelTooltipNodePainter();
 
     protected Set<GraphViewChangeListener> view_listeners = new HashSet<GraphViewChangeListener>();
+    protected Set<SelectionListener> selection_listeners = new HashSet<SelectionListener>();
+    
     protected VisualStyle style;
     protected PBasicInputEventHandler keyEventHandler;
     // The Piccolo PCanvas that we will draw on
@@ -243,7 +239,7 @@ public class GraphView
     }
 
     /**
-     * Returns the PEdgeHandler
+     * Returns PEdgeHandler which deals with bended edges 
      */
     public PEdgeHandler getEdgeHandler()
     {
@@ -251,6 +247,7 @@ public class GraphView
     }
 
      /**
+     * Returns the selected nodes  
      * @return a list of the selected PNodeView
      */
     public Collection<PNodeView> getSelectedNodes()
@@ -258,6 +255,11 @@ public class GraphView
        return getNodeSelectionHandler().getSelection();
     }
 
+    
+    /**
+     * Shortcut method which returns the first selected PNodeView or null
+     * @return 
+     */
     public PNodeView getSelectedNodeView()
     {
         if(!isNodeSelectionEnabled()) return null;
@@ -266,6 +268,7 @@ public class GraphView
     }
 
     /**
+     * Returns the selected nodes  
      * @return a list of the selected PEdgeView
      */
     public Collection<PEdgeView> getSelectedEdges()
@@ -274,6 +277,7 @@ public class GraphView
     }
 
     /**
+     * Sets the background color of this GraphView
      * @param the
      *            new Paint for the background
      */
@@ -283,6 +287,7 @@ public class GraphView
     }
 
     /**
+     * Returns the background color of this GraphView
      * @return the backgroundPaint
      */
     public Paint getBackgroundPaint()
@@ -290,19 +295,28 @@ public class GraphView
         return getCanvas().getCamera().getPaint();
     }
 
-    // ----------------------------------------//
-    // Event Handlers
-    // ----------------------------------------//
+    /**
+     * Returns true if node selection is enabled
+     * @return
+     */
     public boolean isNodeSelectionEnabled()
     {
         return nodeSelection;
     }
 
+    /**
+     * Returns true if edge selection is enabled
+     * @return
+     */
     public boolean isEdgeSelectionEnabled()
     {
         return edgeSelection;
     }
 
+    /**
+     * Enable or disable node selection based on the passed in parameter
+     * @param on
+     */
     public void setNodeSelection(boolean on)
     {
         if (!nodeSelection && on)
@@ -312,11 +326,19 @@ public class GraphView
         nodeSelection = on;
     }
 
+    /**
+     * Returns the node selection handler
+     * @return the PNodeSelectionHandler
+     */
     public PNodeSelectionHandler getNodeSelectionHandler()
     {
         return nodeSelectionHandler;
     }
 
+    /**
+     * Enable or disable edge selection based on the passed in parameter
+     * @param on
+     */
     public void setEdgeSelection(boolean on)
     {
         if (!edgeSelection && on)
@@ -326,6 +348,10 @@ public class GraphView
         edgeSelection = on;
     }
 
+    /**
+     * Returns the edge selection handler
+     * @return the PEdgeSelectionHandler
+     */
     public PEdgeSelectionHandler getEdgeSelectionHandler()
     {
         return edgeSelectionHandler;
@@ -436,7 +462,6 @@ public class GraphView
      * 
      * @param new_identifier
      *            The New Identifier for this GraphView
-     * 
      */
     public void setIdentifier(String new_identifier)
     {
@@ -482,14 +507,16 @@ public class GraphView
     }
 
     /**
-     * nodeViewsList only returns the NodeViews that are explicitly associated
-     * with this GraphView
+     * Returns the NodeViews present in this GraphView
      */
     public Collection<PNodeView> getNodeViews()
     {
         return nodeViewMap.values();
     }
 
+    /**
+     * Returns a copy of all NodeViews present in this GraphView
+     */
     public Collection<PNodeView> getNodeViewsCopy()
     {
         ArrayList<PNodeView> list = new ArrayList<PNodeView>(getNodeViewCount());
@@ -499,7 +526,7 @@ public class GraphView
     }
 
     /**
-     * 
+     * Returns the number of NodeViews present in this GraphView
      */
     public int getNodeViewCount()
     {
@@ -507,7 +534,7 @@ public class GraphView
     }
 
     /**
-     * 
+     * Returns the number of EdgeViews present in this GraphView
      */
     public int getEdgeViewCount()
     {
@@ -525,11 +552,17 @@ public class GraphView
         return nodeViewMap.get(node);
     }
 
+    /**
+     * Returns the EdgeViews present in this GraphView
+     */
     public Collection<PEdgeView> getEdgeViews()
     {
         return edgeViewMap.values();
     }
 
+    /**
+     * Returns a copy of all EdgeViews present in this GraphView
+     */
     public Collection<PEdgeView> getEdgeViewsCopy()
     {
         ArrayList<PEdgeView> list = new ArrayList<PEdgeView>(getEdgeViewCount());
@@ -538,12 +571,20 @@ public class GraphView
         return list;
     }
 
-    // implements GraphView
+    /**
+     * @param edge
+     *            The FEdge whose view is requested
+     * @return The PEdgeView for the given FEdge
+     * 
+     */
     public PEdgeView getEdgeView(FEdge edge)
     {
         return edgeViewMap.get(edge);
     }
 
+    /**
+     * Recalculates and reapplies all the node and edge appearances. 
+     */
     public void applyAppearances()
     {
         if (getVisualStyle() == null)
@@ -606,86 +647,68 @@ public class GraphView
         }
     }
 
-    public VisualStyle getVisualStyle(boolean return_default)
+    private VisualStyle getVisualStyle(boolean return_default)
     {
         return getVisualStyle() != null ? getVisualStyle() : VisualManager
                 .getInstance().getDefaultVisualStyle();
     }
 
+    /**
+     * Returns the current visual style of this GraphView 
+     * @return the style 
+     */
     public VisualStyle getVisualStyle()
     {
         return style;
     }
 
+    /**
+     * Sets new visual style for this GraphView 
+     * @param style The style
+     */
     public void setVisualStyle(VisualStyle style)
     {
         this.style = style;
         redrawGraph();
     }
 
-    public class Canvas extends PCanvas
-    {
-        public Canvas()
-        {
-            super();
-            addKeyBindings();
-        }
-
-        private void addKeyBindings()
-        {
-            for (Action a : ActionManager.getInstance().getActions())
-            {
-                KeyStroke key = (KeyStroke) a.getValue(Action.ACCELERATOR_KEY);
-                if (key != null)
-                {
-                    String name = (String) a.getValue(Action.NAME);
-                    getInputMap().put(key, name);
-                    getActionMap().put(name, a);
-                    // System.out.println("Action: " + name + ":" + key);
-                }// else
-                // System.out.println("Action: " + name + ":" + key);
-            }
-        }
-
-        public GraphView getView()
-        {
-            return GraphView.this;
-        }
-
-        public void repaint(long a, int x, int y, int w, int h)
-        {
-            if (((x + w) > 1) || ((y + h) > 2)) super.repaint(a, x, y, w, h);
-        }
-    };
-
+    /**
+     * Adds a GraphViewChangeListener
+     * @param listener
+     */
     public void addGraphViewChangeListener(GraphViewChangeListener listener)
     {
         view_listeners.add(listener);
     }
 
+    /**
+     * Removes a GraphViewChangeListener
+     * @param listener
+     */
     public void removeGraphViewChangeListener(GraphViewChangeListener listener)
     {
         view_listeners.remove(listener);
     }
 
-    void fireGraphChanged(GraphViewChangeEvent event)
+    protected void fireGraphChanged(GraphViewChangeEvent event)
     {
         for (GraphViewChangeListener l : view_listeners)
             l.graphChanged(event);
     }
 
-    public static interface SelectionListener
-    {
-        void selectionChanged();
-    }
-
-    private Set<SelectionListener> selection_listeners = new HashSet<SelectionListener>();
-
+    /**
+     * Adds a SelectionListener
+     * @param listener
+     */
     public void addSelectionListener(SelectionListener listener)
     {
         selection_listeners.add(listener);
     }
 
+    /**
+     * Removes a SelectionListener
+     * @param listener
+     */
     public void removeSelectionListener(SelectionListener listener)
     {
         selection_listeners.remove(listener);
@@ -697,18 +720,28 @@ public class GraphView
             l.selectionChanged();
     }
 
+    /**
+     * Returns the number of nodes in this view
+     * @return
+     */
     public int getNodeCount()
     {
         return nodeViewMap.size();
     }
 
+    /**
+     * Returns the number of edges in this view
+     * @return
+     */
     public int getEdgeCount()
     {
         return edgeViewMap.size();
     }
 
     /**
-     * This will entirely remove a PNodeView/PEdgeView from the GraphView.
+     * Removes a PNodeView given its FNode from the GraphView.
+     * @param node the node
+     * @return the removed view or null if no such view
      */
     public PNodeView removeNodeView(FNode node)
     {
@@ -725,7 +758,9 @@ public class GraphView
     }
 
     /**
-     * This will entirely remove a PEdgeView from the GraphView.
+     * Removes a PEdgeView from the GraphView.
+     * @param edge_view the view
+     * @return the removed view or null if no such view
      */
     public PEdgeView removeEdgeView(PEdgeView edge_view)
     {
@@ -733,7 +768,9 @@ public class GraphView
     }
 
     /**
-     * This will entirely remove a PEdgeView from the GraphView.
+     * Removes a PEdgeView given its FEdge from the GraphView.
+     * @param edge the edge
+     * @return the removed view or null if no such view
      */
     public PEdgeView removeEdgeView(FEdge e)
     {
@@ -748,9 +785,9 @@ public class GraphView
     }
 
     /**
-     * @param node
-     *            the node to have a view created for it
-     * @return a new PNodeView based on the given node
+     * Adds a PNodeView given a FNode 
+     * @param node  the node 
+     * @return a new PNodeView or existing one
      */
     public PNodeView addNodeView(FNode node)
     {
@@ -765,6 +802,11 @@ public class GraphView
         return node_view;
     }
 
+    /**
+     * Adds a PEdgeView given a FEdge 
+     * @param edge  the edge 
+     * @return a new PEdgeView or existing one
+     */
     public PEdgeView addEdgeView(FEdge edge)
     {
         if (edgeViewMap.containsKey(edge)) return edgeViewMap.get(edge);
@@ -789,6 +831,13 @@ public class GraphView
         return edge_view;
     }
 
+    /**
+     * Returns an array with the adjacent edges of a given nodes 
+     * @param node The node
+     * @param incoming if true, includes all incoming edges
+     * @param outgoing if true, includes all  outgoing edges
+     * @return
+     */
     public FEdge[] getAdjacentEdges(FNode node, boolean incoming,
             boolean outgoing)
     {
@@ -847,7 +896,7 @@ public class GraphView
     }
 
     /**
-     * Selects all edges in the GraphView..
+     * Selects all edges in the GraphView.
      */
     public void selectAllEdges()
     {
@@ -855,6 +904,41 @@ public class GraphView
           for (PEdgeView nv : edgeViewMap.values())
              nv.setSelected(true);
     }
+
+    class Canvas extends PCanvas
+    {
+        public Canvas()
+        {
+            super();
+            addKeyBindings();
+        }
+
+        private void addKeyBindings()
+        {
+            for (Action a : ActionManager.getInstance().getActions())
+            {
+                KeyStroke key = (KeyStroke) a.getValue(Action.ACCELERATOR_KEY);
+                if (key != null)
+                {
+                    String name = (String) a.getValue(Action.NAME);
+                    getInputMap().put(key, name);
+                    getActionMap().put(name, a);
+                    // System.out.println("Action: " + name + ":" + key);
+                }// else
+                // System.out.println("Action: " + name + ":" + key);
+            }
+        }
+
+        public GraphView getView()
+        {
+            return GraphView.this;
+        }
+
+        public void repaint(long a, int x, int y, int w, int h)
+        {
+            if (((x + w) > 1) || ((y + h) > 2)) super.repaint(a, x, y, w, h);
+        }
+    };
 
  
     static class MyZoomEventHandler extends PZoomEventHandler
@@ -912,6 +996,17 @@ public class GraphView
                             .getY());
             original = now;
         }
+    }
+    
+    /**
+     * Listens to selection changes
+     */
+    public static interface SelectionListener
+    {
+        /**
+         * Called by GraphView when node/edge selection change
+         */
+        void selectionChanged();
     }
 
 }

@@ -7,7 +7,7 @@ import com.l2fprod.common.beans.BaseBeanInfo;
 import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
 
 
-/*
+/**
  * EdgePainter's BeanInfo used in properties editor
  */
 public class DefaultEdgePainterBeanInfo extends BaseBeanInfo

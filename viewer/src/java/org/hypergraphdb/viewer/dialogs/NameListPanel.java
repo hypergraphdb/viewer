@@ -3,7 +3,7 @@ package org.hypergraphdb.viewer.dialogs;
 import java.util.List;
 
 
-/*
+/**
  * Common panel representing labeled InputBox and labeled List 
  */
 public class NameListPanel extends javax.swing.JPanel

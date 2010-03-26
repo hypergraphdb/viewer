@@ -16,6 +16,9 @@ import com.l2fprod.common.propertysheet.PropertySheetPanel;
 import com.l2fprod.common.propertysheet.PropertySheetTable;
 import com.l2fprod.common.propertysheet.PropertySheetTableModel;
 
+/**
+ * Panel for configuring app parameters.
+ */
 public class AppConfigPanel extends JPanel
 {
 	AppPropsPanel propPanel;

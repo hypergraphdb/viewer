@@ -40,7 +40,8 @@ import org.hypergraphdb.viewer.util.cytoscape.task.util.TaskManager;
 
 
 /**
-  */
+ * Action that loads a Wordnet HG
+ */
 public class LoadWordNetAction extends AbstractAction
 {
     private static final String WORDNET_PATH_PROP = "WORDNET_PATH_PROP";

@@ -7,7 +7,7 @@ import org.hypergraphdb.viewer.painter.editor.ShapeEditor;
 import com.l2fprod.common.beans.BaseBeanInfo;
 import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
 
-/*
+/**
  * NodePainter's BeanInfo used in properties editor
  */
 public class DefaultNodePainterBeanInfo extends BaseBeanInfo

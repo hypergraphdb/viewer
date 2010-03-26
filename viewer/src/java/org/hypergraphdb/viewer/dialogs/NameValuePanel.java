@@ -1,10 +1,8 @@
 package org.hypergraphdb.viewer.dialogs;
 
-import java.util.List;
 
 /**
- *
- * @author  Administrator
+ * Common panel for get name/value user input 
  */
 public class NameValuePanel extends javax.swing.JPanel
 {

@@ -33,7 +33,9 @@ package org.hypergraphdb.viewer.dialogs;
 import javax.swing.event.*;
 import javax.swing.*;
 
-
+/**
+ * Menu class capable to display DynamicMenuProvider 
+ */
 public class EnhancedMenu extends JMenu implements MenuListener
 {
 	private static final long serialVersionUID = 6798827747654062221L;

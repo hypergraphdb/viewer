@@ -7,10 +7,12 @@ import org.hypergraphdb.viewer.phoebe.PNodeView;
  * The interface responsible for applying visual stuff to node
  * </p>
  * 
- * @author Konstantin Vandev
- *
  */
 public interface NodePainter
 {
+    /**
+     * Paints the given NodeView
+     * @param nodeView
+     */
 	public void paintNode(PNodeView nodeView);
 }

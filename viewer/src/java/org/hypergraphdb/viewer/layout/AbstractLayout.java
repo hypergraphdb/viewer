@@ -8,7 +8,11 @@ import org.hypergraphdb.viewer.GraphView;
 
 import org.hypergraphdb.viewer.phoebe.PNodeView;
 
-abstract public class AbstractLayout  {
+/**
+ * Abstract class 
+ */
+abstract class AbstractLayout 
+{
 
   protected Set<PNodeView> staticNodes;
   protected GraphView graphView;

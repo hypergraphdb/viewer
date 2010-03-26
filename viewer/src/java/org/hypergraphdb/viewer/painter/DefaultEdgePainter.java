@@ -5,17 +5,15 @@ import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Stroke;
 
-import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
-import org.hypergraphdb.viewer.FNode;
-import org.hypergraphdb.viewer.GraphView;
+import org.hypergraphdb.viewer.phoebe.PEdgeView;
+import org.hypergraphdb.viewer.phoebe.util.PLabel;
 import org.hypergraphdb.viewer.visual.Arrow;
 import org.hypergraphdb.viewer.visual.LineType;
 
-import org.hypergraphdb.viewer.phoebe.PEdgeView;
-import org.hypergraphdb.viewer.phoebe.PNodeView;
-import org.hypergraphdb.viewer.phoebe.util.PLabel;
-
+/**
+ * Default implementation of the EdgePainter and PaintEdgeInfo interfaces
+ */
 public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 {
     private Color color = Color.BLACK;
@@ -29,7 +27,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
 
     protected PEdgeView edgeView;
     
-    /*
+    /**
      * Returns edge's color 
      */
     public Color getColor()
@@ -37,7 +35,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         return color;
     }
 
-    /*
+    /**
      * Sets edge's color 
      */
     public void setColor(Color color)
@@ -45,7 +43,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         this.color = color;
     }
 
-    /*
+    /**
      * Returns edge's label font 
      */
     public Font getFont()
@@ -53,7 +51,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         return font;
     }
 
-    /*
+    /**
      * Sets edge's label font 
      */
     public void setFont(Font font)
@@ -61,7 +59,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         this.font = font;
     }
 
-    /*
+    /**
      * Returns edge's label  
      */
     public String getLabel()
@@ -69,7 +67,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         return label;
     }
 
-    /*
+    /**
      * Sets edge's label  
      */
     public void setLabel(String label)
@@ -77,7 +75,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         this.label = label;
     }
 
-    /*
+    /**
      * Returns edge's label color  
      */
     public Color getLabelColor()
@@ -85,7 +83,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         return labelColor;
     }
 
-    /*
+    /**
      * Sets edge's label color  
      */
     public void setLabelColor(Color labelColor)
@@ -93,7 +91,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         this.labelColor = labelColor;
     }
 
-    /*
+    /**
      * Returns edge's <code>LineType</code>  
      */
     public LineType getLineType()
@@ -101,7 +99,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         return lineType;
     }
 
-    /*
+    /**
      * Sets edge's <code>LineType</code>  
      */
     public void setLineType(LineType lineType)
@@ -109,7 +107,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         this.lineType = lineType;
     }
 
-    /*
+    /**
      * Returns edge's source <code>Arrow</code>  
      */
     public Arrow getSrcArrow()
@@ -117,7 +115,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         return srcArrow;
     }
 
-    /*
+    /**
      * Sets edge's source <code>Arrow</code>  
      */
     public void setSrcArrow(Arrow srcArrow)
@@ -125,7 +123,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         this.srcArrow = srcArrow;
     }
 
-    /*
+    /**
      * Returns edge's target <code>Arrow</code>  
      */
     public Arrow getTgtArrow()
@@ -133,7 +131,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         return tgtArrow;
     }
 
-    /*
+    /**
      * Sets edge's target <code>Arrow</code>  
      */
     public void setTgtArrow(Arrow tgtArrow)
@@ -141,7 +139,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         this.tgtArrow = tgtArrow;
     }
 
-    /*
+    /**
      * Returns edge's tooltip  
      */
     public String getTooltip()
@@ -149,7 +147,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         return tooltip;
     }
 
-    /*
+    /**
      * Sets edge's tooltip  
      */
     public void setTooltip(String tooltip)
@@ -157,6 +155,9 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         this.tooltip = tooltip;
     }
 
+    /* (non-Javadoc)
+     * @see org.hypergraphdb.viewer.painter.EdgePainter#paintEdge(org.hypergraphdb.viewer.phoebe.PEdgeView)
+     */
     public void paintEdge(PEdgeView edgeView)
     {
         this.edgeView = edgeView;
@@ -202,7 +203,7 @@ public class DefaultEdgePainter implements PaintEdgeInfo, EdgePainter
         edgeView.setToolTip(getTooltip());
     }
 
-    /*
+    /**
      * Shortcut method to get underlying HyperGraphDB
      */
     protected final HyperGraph getHG()

@@ -26,9 +26,9 @@ import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.util.FileUtil;
 import org.hypergraphdb.viewer.util.GUIUtilities;
-import org.hypergraphdb.viewer.util.HGVAction;
 
 /**
+ * Action to choose and load a HyperGraph 
  */
 public class LoadHyperGraphFileAction extends AbstractAction
 {

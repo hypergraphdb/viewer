@@ -1,9 +1,15 @@
 package org.hypergraphdb.viewer.painter;
 
-
+/**
+ * Simple node painter that displays the full String representation of the
+ * node's underlying object as tooltip and a shortened one as node's Label 
+ */
 public class SimpleLabelTooltipNodePainter extends DefaultNodePainter
 {
 
+	/* (non-Javadoc)
+	 * @see org.hypergraphdb.viewer.painter.DefaultNodePainter#getLabel()
+	 */
 	public String getLabel()
 	{
 		if(nodeView == null)
@@ -20,6 +26,9 @@ public class SimpleLabelTooltipNodePainter extends DefaultNodePainter
 		return val.substring(val.lastIndexOf('.') + 1);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.hypergraphdb.viewer.painter.DefaultNodePainter#getTooltip()
+	 */
 	@Override
 	public String getTooltip()
 	{

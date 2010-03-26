@@ -12,7 +12,10 @@ import javax.swing.SwingUtilities;
 import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.HGVKit;
 
-public class SquiggleMenu implements DynamicMenuProvider // extends JMenu
+/**
+ * Dynamic menu for Squiggle options: enable/disable, clear. 
+ */
+public class SquiggleMenu implements DynamicMenuProvider
 {
     public boolean updateEveryTime()
     {

@@ -1,6 +1,9 @@
 package org.hypergraphdb.viewer.layout.util;
 
 
+/**
+ * Simple class to represent a x,y coordinate 
+ */
 public class Coordinates extends java.awt.geom.Point2D.Float
 {
 

@@ -1,13 +1,10 @@
 package org.hypergraphdb.viewer.hg;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.Stack;
 
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGLink;
@@ -15,12 +12,14 @@ import org.hypergraphdb.HGSearchResult;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.IncidenceSet;
 import org.hypergraphdb.algorithms.HGALGenerator;
-import org.hypergraphdb.algorithms.HGBreadthFirstTraversal;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.util.HGUtils;
-import org.hypergraphdb.viewer.*;
+import org.hypergraphdb.viewer.FEdge;
+import org.hypergraphdb.viewer.FNode;
 
 /**
+ * Class that "reads" a given HG and performs necessary operations to transform
+ * requested data to the HGViewer suitable FNode/FEdge model
  */
 public class HGWNReader
 {

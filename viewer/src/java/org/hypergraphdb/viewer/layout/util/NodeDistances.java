@@ -10,8 +10,8 @@ import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
  * Calculates the all-pairs-shortest-paths (APSP) of a set of
- * <code>giny.model.FNode</code> objects that reside in a
- * <code>giny.model.GraphPerspective</code>.
+ * <code>org.hypergraphdb.viewer.FNode</code> objects that reside in a
+ * <code>org.hypergraphdb.viewer.GraphView</code>.
  * 
  * @see giny.util.IntNodeDistances
  */

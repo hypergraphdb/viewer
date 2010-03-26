@@ -3,11 +3,22 @@ package org.hypergraphdb.viewer.layout;
 import org.hypergraphdb.viewer.GraphView;
 
 /**
- * A Layout can be applied to a HGVNetworkView
+ * Interface for every layout algorithm that wish to be applied onto GraphView
  */
-public interface Layout {
+public interface Layout
+{
 
-  public String getName();
-  public void applyLayout (GraphView view);
+    /**
+     * Returns layout name
+     */
+    public String getName();
+
+    /**
+     * Applies the layout to given GraphView
+     * 
+     * @param view
+     *            The view
+     */
+    public void applyLayout(GraphView view);
 
 }

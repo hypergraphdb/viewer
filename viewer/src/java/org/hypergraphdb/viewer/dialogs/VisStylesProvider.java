@@ -23,6 +23,9 @@ import org.hypergraphdb.viewer.HGVKit;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
+/**
+ * Dynamic menu showing the list of available Visual Styles
+ */
 public class VisStylesProvider implements DynamicMenuProvider
 {
     private static final long serialVersionUID = 5406878794567628416L;

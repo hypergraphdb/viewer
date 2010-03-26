@@ -1,7 +1,5 @@
 package org.hypergraphdb.viewer.dialogs;
 
-import java.awt.event.ActionListener;
-
 import java.awt.Frame;
 import java.awt.event.ActionListener;
 
