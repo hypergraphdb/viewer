@@ -394,27 +394,7 @@ public class PNodeView extends PPath
         return getYOffset() + getHeight() / 2;
     }
 
-    /**
-     * This draws us as selected
-     */
-    public void select()
-    {
-        selected = true;
-        super.setPaint(getSelectedPaint());
-        view.nodeSelected(this);
-    }
-
-    /**
-     * This draws us as unselected
-     */
-    public void unselect()
-    {
-        selected = false;
-        super.setPaint(getUnselectedPaint());
-        view.nodeUnselected(this);
-    }
-
-    /**
+     /**
 	 * 
 	 */
     public boolean isSelected()
@@ -427,9 +407,12 @@ public class PNodeView extends PPath
 	 */
     public void setSelected(boolean selected)
     {
-        if (selected) view.getSelectionHandler().select(this);
+        this.selected = selected;
+        if (selected) 
+            view.getNodeSelectionHandler().select(this);
         else
-            view.getSelectionHandler().unselect(this);
+            view.getNodeSelectionHandler().unselect(this);
+       super.setPaint(selected ? getSelectedPaint(): getUnselectedPaint());
     }
 
     // ****************************************************************

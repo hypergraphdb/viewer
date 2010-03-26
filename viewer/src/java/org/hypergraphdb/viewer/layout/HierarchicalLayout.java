@@ -107,7 +107,7 @@ public class HierarchicalLayout implements Layout
           return;
         
         /* construct node list with selected nodes first */
-        List<PNodeView> selectedNodes = view.getSelectedNodes();
+        Collection<PNodeView> selectedNodes = view.getSelectedNodes();
         final int numSelectedNodes = selectedNodes.size();
         final int numNodes = view.getNodeViewCount();
         final int numLayoutNodes = (numSelectedNodes <= 1) ? numNodes : numSelectedNodes;

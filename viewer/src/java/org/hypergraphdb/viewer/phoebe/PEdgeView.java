@@ -472,38 +472,23 @@ public class PEdgeView extends PPath implements PropertyChangeListener
         updateEdgeView();
     }
 
-    public void select()
-    {
-        setSelected(true);
-    }
-
-    public void unselect()
-    {
-        setSelected(false);
-    }
-
-    /**
+     /**
      * When we are selected then we draw ourselves red, and draw any handles.
      */
     public boolean setSelected(boolean state)
     {
         if (state != selected)
         {
-            // only update selection if we are actaully changing our selection
+            // only update selection if we are actually changing our selection
             selected = state;
             if (selected)
             {
                 drawSelected();
-                // PNotificationCenter.defaultCenter().postNotification(
-                // "EDGE_SELECTION_ADDED_NOTIFICATION", this );
-                view.edgeSelected(this);
-            }
-            else
+                view.getEdgeSelectionHandler().select(this);
+            }else
             {
                 drawUnselected();
-                // PNotificationCenter.defaultCenter().postNotification(
-                // "EDGE_SELECTION_REMOVED_NOTIFICATION", this );
-                view.edgeUnselected(this);
+                view.getEdgeSelectionHandler().unselect(this);
             }
             updateEdgeView();
         }
@@ -511,7 +496,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
     }
 
     /**
-     * @return selcted state
+     * @return selected state
      */
     public boolean isSelected()
     {

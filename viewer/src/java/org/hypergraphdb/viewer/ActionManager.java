@@ -229,7 +229,7 @@ public class ActionManager
 
         public void zoomSelected(GraphView view)
         {
-            List<PNodeView> selected_nodes = view.getSelectedNodes();
+            Collection<PNodeView> selected_nodes = view.getSelectedNodes();
             if (selected_nodes.size() == 0) { return; }
 
             Iterator<PNodeView> selected_nodes_iterator = selected_nodes
@@ -802,18 +802,20 @@ public class ActionManager
             Set<FNode> set = new HashSet<FNode>();
             for (PNodeView v : view.getSelectedNodes())
                 set.add(v.getNode());
-            Set<FNode> new_set = new HashSet<FNode>();
+            Set<PNodeView> new_set = new HashSet<PNodeView>();
             for (FNode o : set)
             {
                 FEdge[] ids = view.getAdjacentEdges(o, true, true);
                 for (int i = 0; i < ids.length; i++)
                 {
                     FEdge edge = ids[i];
-                    new_set.add(edge.getTarget());
-                    new_set.add(edge.getSource());
+                    new_set.add(view.getNodeView(
+                            edge.getTarget()));
+                    new_set.add(view.getNodeView(
+                            edge.getSource()));
                 }
             }
-            view.selectNodes(new_set, true);
+            view.getNodeSelectionHandler().select(new_set);
         }
     }
 

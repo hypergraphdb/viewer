@@ -1,6 +1,5 @@
 package org.hypergraphdb.viewer.layout.util;
 
-import java.awt.geom.Point2D;   
 
 public class Coordinates extends java.awt.geom.Point2D.Float
 {

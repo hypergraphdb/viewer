@@ -1,5 +1,7 @@
 package org.hypergraphdb.viewer;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +30,7 @@ public class GraphViewU
     {
         // hides nodes and edges between them
         Set<FEdge> del_edges = new HashSet<FEdge>(); 
-        List<PNodeView> sel_nodes = view.getSelectedNodes();
+        Collection<PNodeView> sel_nodes = new ArrayList<PNodeView>(view.getSelectedNodes());
         for (PNodeView nview : sel_nodes)
         {
            FEdge[] edges = view.getAdjacentEdges(nview.getNode(),
@@ -45,14 +47,14 @@ public class GraphViewU
   
     public static void hideSelectedEdges(GraphView view)
     {
-        for (PEdgeView eview : view.getSelectedEdges())
+        for (PEdgeView eview : new ArrayList<PEdgeView>(view.getSelectedEdges()))
             view.removeEdgeView(eview);
     }
 
    
     public static void invertSelectedNodes(GraphView view)
     {
-        for (PNodeView nview : view.getSelectedNodes())
+        for (PNodeView nview : new ArrayList<PNodeView>(view.getSelectedNodes()))
             nview.setSelected(!nview.isSelected());
     }
 

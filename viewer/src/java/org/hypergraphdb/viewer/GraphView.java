@@ -40,7 +40,7 @@ import org.hypergraphdb.viewer.phoebe.*;
 import org.hypergraphdb.viewer.phoebe.event.BirdsEyeView;
 import org.hypergraphdb.viewer.phoebe.event.PEdgeHandler;
 import org.hypergraphdb.viewer.phoebe.event.PEdgeSelectionHandler;
-import org.hypergraphdb.viewer.phoebe.event.PSelectionHandler;
+import org.hypergraphdb.viewer.phoebe.event.PNodeSelectionHandler;
 import org.hypergraphdb.viewer.phoebe.event.PToolTipHandler;
 import org.hypergraphdb.viewer.phoebe.event.SquiggleEventHandler;
 import edu.umd.cs.piccolo.PCamera;
@@ -58,27 +58,28 @@ import edu.umd.cs.piccolo.util.PPaintContext;
  * screen.<BR>
  * <BR>
  * HGVKit does not currently define specific classes for NodeViews and
- * EdgeViews, the defaults from the GINY graph library ( namely phoebe.PNodeView
- * and phoebe.PEdgeView ) are most commonly used. Making custom nodes is easy
- * and fun. One must inherit from edu.umd.cs.piccolo.PNode. The Piccolo project
- * is what all of the painting is based on, and is very fast, flexible and
- * powerful. Becoming acquainted with Piccolo is essential for build custom
- * nodes.<BR>
+ * EdgeViews, the defaults from the GINY graph library ( namely
+ * org.hypergraphdb.viewer.phoebe.PNodeView and
+ * org.hypergraphdb.viewer.phoebe.PEdgeView ) are most commonly used. Making
+ * custom nodes is easy and fun. One must inherit from edu.umd.cs.piccolo.PNode.
+ * The Piccolo project is what all of the painting is based on, and is very
+ * fast, flexible and powerful. Becoming acquainted with Piccolo is essential
+ * for build custom nodes.<BR>
  * <BR>
  * Fortunately, if you just want basic shapes and colors, it's all built into
  * the UI already, and you really need never even use this class. Just learn how
  * to use the VisualManager to accomplish your data to view mappings.
  */
-
 public class GraphView
 {
-    //if set, checks the edge node for consistency e.g source node should be a link
-    //and should point to target node
+    // if set, checks the edge node for consistency e.g 
+    //source node should be a link and should point to target node
     private static boolean check_edge_consistency = false;
 
     static EdgePainter def_edge_painter = new DefaultEdgePainter();
     static NodePainter def_node_painter = new SimpleLabelTooltipNodePainter();
 
+    protected Set<GraphViewChangeListener> view_listeners = new HashSet<GraphViewChangeListener>();
     protected VisualStyle style;
     protected PBasicInputEventHandler keyEventHandler;
     // The Piccolo PCanvas that we will draw on
@@ -94,7 +95,7 @@ public class GraphView
     // around
     protected HGViewer viewComponent;
     // Piccolo Stuff for this class
-    protected PSelectionHandler selectionHandler;
+    protected PNodeSelectionHandler nodeSelectionHandler;
     protected PEdgeSelectionHandler edgeSelectionHandler;
     protected PEdgeHandler edgeHandler;
     protected PToolTipHandler toolTipHandler;
@@ -109,14 +110,22 @@ public class GraphView
     protected PLayer squiggleLayer;
     protected Color DEFAULT_BACKGROUND_COLOR = new java.awt.Color(60, 98, 176);
 
-    protected Set<FNode> nodeSelectionList = new HashSet<FNode>();
-    protected Set<FEdge> edgeSelectionList = new HashSet<FEdge>();
     protected static boolean firePiccoloEvents = true;
-
     protected String identifier;
-
     protected HyperGraph graph;
 
+    /**
+     * Constructor
+     * 
+     * @param comp
+     *            HGViewer in which this GraphView is dispalyed
+     * @param db
+     *            HyperGraph to be viewed
+     * @param nodes
+     *            Nodes to be shown
+     * @param edges
+     *            Edges to be shown
+     */
     public GraphView(HGViewer comp, HyperGraph db, Collection<FNode> nodes,
             Collection<FEdge> edges)
     {
@@ -181,12 +190,12 @@ public class GraphView
     protected void initializeEventHandlers()
     {
         // Add a FNode Selection Handler
-        selectionHandler = new PSelectionHandler(getCanvas().getLayer(),
-                getNodeLayer(), getCanvas().getCamera());
-        selectionHandler.setEventFilter(new PInputEventFilter(
+        nodeSelectionHandler = new PNodeSelectionHandler(this, getCanvas()
+                .getLayer(), getNodeLayer(), getCanvas().getCamera());
+        nodeSelectionHandler.setEventFilter(new PInputEventFilter(
                 InputEvent.BUTTON1_MASK));
         // Add an FEdge Selection Handler
-        edgeSelectionHandler = new PEdgeSelectionHandler(
+        edgeSelectionHandler = new PEdgeSelectionHandler(this, 
                 getCanvas().getLayer(), getEdgeLayer(), getCanvas().getCamera());
         edgeSelectionHandler.setEventFilter(new PInputEventFilter(
                 InputEvent.BUTTON1_MASK));
@@ -215,6 +224,9 @@ public class GraphView
         getCanvas().addInputEventListener(ctxMenuHandler);
     }
 
+    /**
+     * Redraws the graph by reapplying visual properties
+     */
     public void redrawGraph()
     {
         getCanvas().setInteracting(true);
@@ -222,68 +234,43 @@ public class GraphView
         getCanvas().setInteracting(false);
     }
 
+    /**
+     * Returns the viewed HyperGraph
+     */
     public HyperGraph getHyperGraph()
     {
         return graph;
     }
 
+    /**
+     * Returns the PEdgeHandler
+     */
     public PEdgeHandler getEdgeHandler()
     {
         return edgeHandler;
     }
 
-    public void nodeSelected(PNodeView node)
-    {
-        nodeSelectionList.add(node.getNode());
-        fireSelectionChanged();
-    }
-
-    public void nodeUnselected(PNodeView node)
-    {
-        nodeSelectionList.remove(node.getNode());
-        fireSelectionChanged();
-    }
-
-    public void edgeSelected(PEdgeView edge)
-    {
-        edgeSelectionList.add(edge.getEdge());
-        fireSelectionChanged();
-    }
-
-    public void edgeUnselected(PEdgeView edge)
-    {
-        edgeSelectionList.remove(edge.getEdge());
-        fireSelectionChanged();
-    }
-
-    /**
+     /**
      * @return a list of the selected PNodeView
      */
-    public List<PNodeView> getSelectedNodes()
+    public Collection<PNodeView> getSelectedNodes()
     {
-        ArrayList<PNodeView> selected = new ArrayList<PNodeView>(
-                nodeSelectionList.size());
-        for (FNode n : nodeSelectionList)
-            selected.add(getNodeView(n));
-        return selected;
+       return getNodeSelectionHandler().getSelection();
     }
 
     public PNodeView getSelectedNodeView()
     {
-        List<PNodeView> res = getSelectedNodes();
-        return (res.size() == 0) ? null : res.get(0);
+        if(!isNodeSelectionEnabled()) return null;
+        Collection<PNodeView> res = getSelectedNodes();
+        return (res.size() == 0) ? null : res.iterator().next();
     }
 
     /**
      * @return a list of the selected PEdgeView
      */
-    public List<PEdgeView> getSelectedEdges()
+    public Collection<PEdgeView> getSelectedEdges()
     {
-        ArrayList<PEdgeView> selected = new ArrayList<PEdgeView>(
-                edgeSelectionList.size());
-        for (FEdge idx : edgeSelectionList)
-            selected.add(getEdgeView(idx));
-        return selected;
+        return getEdgeSelectionHandler().getSelection();
     }
 
     /**
@@ -319,15 +306,15 @@ public class GraphView
     public void setNodeSelection(boolean on)
     {
         if (!nodeSelection && on)
-            getCanvas().addInputEventListener(getSelectionHandler());
+            getCanvas().addInputEventListener(getNodeSelectionHandler());
         if (nodeSelection && !on)
-            getCanvas().removeInputEventListener(getSelectionHandler());
+            getCanvas().removeInputEventListener(getNodeSelectionHandler());
         nodeSelection = on;
     }
 
-    public PSelectionHandler getSelectionHandler()
+    public PNodeSelectionHandler getNodeSelectionHandler()
     {
-        return selectionHandler;
+        return nodeSelectionHandler;
     }
 
     public void setEdgeSelection(boolean on)
@@ -671,14 +658,12 @@ public class GraphView
         }
     };
 
-    private Set<GraphViewChangeListener> view_listeners = new HashSet<GraphViewChangeListener>();
-
-    public void addHGVNetworkChangeListener(GraphViewChangeListener listener)
+    public void addGraphViewChangeListener(GraphViewChangeListener listener)
     {
         view_listeners.add(listener);
     }
 
-    public void removeHGVNetworkChangeListener(GraphViewChangeListener listener)
+    public void removeGraphViewChangeListener(GraphViewChangeListener listener)
     {
         view_listeners.remove(listener);
     }
@@ -706,7 +691,7 @@ public class GraphView
         selection_listeners.remove(listener);
     }
 
-    void fireSelectionChanged()
+    public void fireSelectionChanged()
     {
         for (SelectionListener l : selection_listeners)
             l.selectionChanged();
@@ -732,7 +717,8 @@ public class GraphView
         getNodeView(node).removeFromParent();
 
         nodeViewMap.remove(node);
-        nodeSelectionList.remove(node);
+        if(isNodeSelectionEnabled())
+           getNodeSelectionHandler().unselect(node_view);
         fireGraphChanged(new GraphViewNodesRemovedEvent(this,
                 new FNode[] { node }));
         return node_view;
@@ -754,7 +740,8 @@ public class GraphView
         if (!edgeViewMap.containsKey(e)) return null;
         PEdgeView view = getEdgeView(e);
         view.removeFromParent();
-        edgeSelectionList.remove(e);
+        if(isEdgeSelectionEnabled())
+           getEdgeSelectionHandler().unselect(view);
         edgeViewMap.remove(e);
         fireGraphChanged(new GraphViewEdgesRemovedEvent(this, new FEdge[] { e }));
         return view;
@@ -850,122 +837,27 @@ public class GraphView
     }
 
     /**
-     * Sets the flagged state to true for all Nodes in the GraphPerspective.
+     * Selects all nodes in the GraphView.
      */
     public void selectAllNodes()
     {
-       for (PNodeView nv : nodeViewMap.values())
-            nv.select();
+        if(isNodeSelectionEnabled())
+        for (PNodeView nv : nodeViewMap.values())
+            nv.setSelected(true);
     }
 
     /**
-     * Sets the flagged state to true for all Edges in the GraphPerspective.
+     * Selects all edges in the GraphView..
      */
     public void selectAllEdges()
     {
-        for (PEdgeView nv : edgeViewMap.values())
-                nv.select();
+        if(isEdgeSelectionEnabled())
+          for (PEdgeView nv : edgeViewMap.values())
+             nv.setSelected(true);
     }
 
-    /**
-     * Sets the flagged state to false for all Nodes in the GraphPerspective.
-     */
-    public void unselectAllNodes()
-    {
-        for (PNodeView v : getSelectedNodes())
-            v.unselect();
-    }
-
-    /**
-     * Sets the flagged state to false for all Edges in the GraphPerspective.
-     */
-    public void unselectAllEdges()
-    {
-        for (PEdgeView v : getSelectedEdges())
-            v.unselect();
-    }
-
-    /**
-     * Sets the flagged state defined by the second argument for all Nodes
-     * contained in the first argument, which should be a Collection of FNode
-     * objects contained in the referenced GraphPerspective. One event will be
-     * fired for the full set of changes. This method does nothing if the first
-     * argument is null.
-     * 
-     * @return a Set containing the objects for which the flagged state changed
-     */
-    public Set<FNode> selectNodes(Collection<FNode> nodesToSet, boolean newState)
-    {
-        Set<FNode> returnSet = new HashSet<FNode>();
-        if (nodesToSet == null) { return returnSet; }
-        if (newState == true)
-        {
-            for (FNode node : nodesToSet)
-            {
-                if (node == null) continue;
-                if (!nodeSelectionList.contains(node))
-                {
-                    returnSet.add(node);
-                    getSelectionHandler().select(getNodeView(node));
-                }
-            }
-        }
-        else
-        {
-            for (FNode node : nodesToSet)
-            {
-                if (node == null) continue;
-                if (nodeSelectionList.contains(node))
-                {
-                    returnSet.add(node);
-                    getSelectionHandler().unselect(getNodeView(node));
-                }
-            }
-        }
-        if (returnSet.size() > 0) fireSelectionChanged();
-        return returnSet;
-    }
-
-    /**
-     * Sets the flagged state defined by the second argument for all Edges
-     * contained in the first argument, which should be a Collection of FEdge
-     * objects contained in the referenced GraphPerspective. One event will be
-     * fired for the full set of changes. This method does nothing if the first
-     * argument is null.
-     * 
-     * @return a Set containing the objects for which the flagged state changed
-     */
-    public Set<FEdge> selectEdges(Collection<FEdge> edgesToSet, boolean newState)
-    {
-        Set<FEdge> returnSet = new HashSet<FEdge>();
-        if (edgesToSet == null) { return returnSet; }
-        if (newState == true)
-        {
-            for (FEdge edge : edgesToSet)
-            {
-                if (!edgeSelectionList.contains(edge))
-                {
-                    returnSet.add(edge);
-                    getSelectionHandler().select(getEdgeView(edge));
-                }
-            }
-        }
-        else
-        {
-            for (FEdge edge : edgesToSet)
-            {
-                if (edgeSelectionList.contains(edge))
-                {
-                    returnSet.add(edge);
-                    getSelectionHandler().unselect(getEdgeView(edge));
-                }
-            }
-        }
-        if (returnSet.size() > 0) fireSelectionChanged();
-        return returnSet;
-    }
-
-    public static class MyZoomEventHandler extends PZoomEventHandler
+ 
+    static class MyZoomEventHandler extends PZoomEventHandler
     {
         PInputEvent original = null;
 

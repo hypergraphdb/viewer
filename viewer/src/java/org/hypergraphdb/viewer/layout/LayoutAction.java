@@ -1,6 +1,7 @@
 package org.hypergraphdb.viewer.layout;
 
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 import java.util.List;
 
 import org.hypergraphdb.viewer.GraphView;
@@ -25,8 +26,8 @@ public class LayoutAction extends HGVAction
     {
 		GraphView view = viewer.getView();
 		layout.applyLayout(view);
-		List<PNodeView> sel = view.getSelectedNodes();
-		PBounds b = (sel.size() > 0) ? sel.get(0).getFullBounds() :
+		PNodeView sel = view.getSelectedNodeView();
+		PBounds b = (sel != null) ? sel.getFullBounds() :
         	view.getCanvas().getLayer().getFullBounds();
 	    view.getCanvas().getCamera().animateViewToCenterBounds(b, false, 0 );
     }

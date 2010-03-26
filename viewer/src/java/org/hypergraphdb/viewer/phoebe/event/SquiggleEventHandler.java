@@ -43,7 +43,7 @@ public class SquiggleEventHandler extends PDragSequenceEventHandler {
    */
   public void beginSquiggling () {
     canvas.getLayer().addChild(  squiggle_layer );
-    canvas.removeInputEventListener( view.getSelectionHandler() );
+    canvas.removeInputEventListener( view.getNodeSelectionHandler() );
     canvas.addInputEventListener( this );
   }
 
@@ -52,7 +52,7 @@ public class SquiggleEventHandler extends PDragSequenceEventHandler {
    */
   public void stopSquiggling () {
     canvas.getLayer().removeChild( squiggle_layer );
-    canvas.addInputEventListener( view.getSelectionHandler() );
+    canvas.addInputEventListener( view.getNodeSelectionHandler() );
     canvas.removeInputEventListener( this );
   }
 
