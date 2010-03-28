@@ -18,6 +18,8 @@ import edu.umd.cs.piccolo.util.PBounds;
 import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
+ * This class extends a PNode and does most of what PPath would do but lets the
+ * painting get done by NodePainter
  * @author Rowan Christmas
  */
 public class PNodeView extends PPath
@@ -40,8 +42,7 @@ public class PNodeView extends PPath
     public static final int RECTANGLE = 6;
     public static final int ROUNDED_RECTANGLE = 7;
     /**
-     * The index of this node in the RootGraph note that this is always a
-     * negative number.
+     * The underlying node.
      */
     protected FNode node;
     /**
@@ -98,7 +99,7 @@ public class PNodeView extends PPath
     }
 
     /**
-     * @return this currently returns the RootGraphIndex of the FNode we are
+     * @return this currently returns the FNode we are
      *         associated with
      */
     public String toString()

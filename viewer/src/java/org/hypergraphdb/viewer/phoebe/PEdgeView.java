@@ -25,7 +25,7 @@ import edu.umd.cs.piccolox.util.PNodeLocator;
 
 /**
  * This class extends a PNode and does most of what PPath would do but lets the
- * Painting get done by BasicPEdgeUI
+ * Painting get done by EdgePainter
  */
 public class PEdgeView extends PPath implements PropertyChangeListener
 {
