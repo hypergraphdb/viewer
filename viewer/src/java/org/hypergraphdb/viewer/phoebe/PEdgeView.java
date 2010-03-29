@@ -196,6 +196,10 @@ public class PEdgeView extends PPath implements PropertyChangeListener
         updateEdgeView();
     } // initializeEdgeView
 
+    /**
+     * Returns the PLabel node which displays the label text
+     * @return the label
+     */
     public PLabel getLabel()
     {
         if (label == null)
@@ -208,6 +212,9 @@ public class PEdgeView extends PPath implements PropertyChangeListener
         return label;
     }
 
+    /* (non-Javadoc)
+     * @see edu.umd.cs.piccolo.PNode#toString()
+     */
     public String toString()
     {
         if (source == null || target == null || source.getNode() == null
@@ -215,6 +222,10 @@ public class PEdgeView extends PPath implements PropertyChangeListener
         return (source.getNode() + "->" + target.getNode() + " (" + edge + ")");
     }
 
+    
+    /**
+     * Returns the handler responsible for non-straight mutable edges
+     */
     public PEdgeHandler getEdgeHandler()
     {
         return view.getEdgeHandler();
