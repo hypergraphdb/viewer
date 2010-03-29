@@ -1,13 +1,14 @@
 package org.hypergraphdb.viewer.visual.ui;
 
-//--------------------------------------------------------------------------------------
 import java.net.URL;
 import javax.swing.*;
 import org.hypergraphdb.viewer.painter.Shape;
 import org.hypergraphdb.viewer.visual.Arrow;
 import org.hypergraphdb.viewer.visual.LineType;
 
-//------------------------------------------------------------------------------
+/**
+ * Static class with few utility methods used in various editors
+ */
 public class EditorConstants
 {
 	private static ImageIcon[] arrowIcons = new ImageIcon[16];

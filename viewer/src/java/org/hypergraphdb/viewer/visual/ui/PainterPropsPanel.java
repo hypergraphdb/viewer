@@ -8,13 +8,17 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.UIManager;
 
-import org.hypergraphdb.viewer.AppConfig;
 import org.hypergraphdb.viewer.painter.DefaultNodePainterBeanInfo;
 
 import com.l2fprod.common.propertysheet.Property;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 import com.l2fprod.common.propertysheet.PropertySheetTableModel;
 
+/**
+ * Panel for setting properties of Node and Edge painters
+ * @author Konstantin Vandev
+ *
+ */
 public class PainterPropsPanel extends PropertySheetPanel
 {
 	private static final Property[] EMPTY = new Property[0];

@@ -13,11 +13,14 @@ import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.viewer.painter.EdgePainter;
 import org.hypergraphdb.viewer.painter.NodePainter;
 
-//----------------------------------------------------------------------------
 /**
- * This class encapsulates a full set of visual mapping specifications for
- * HGViewer. Currently this is implemented by holding a reference
- * to two type of painters: one for nodes, one for edges
+ * This class contains a collection of node and edge painters used in HGViewer. 
+ * Painters are automatically kept in two different maps, one of which is persistable. This allows
+ * the use of anonymous inline painters and such provided through scripting.
+ * */
+/**
+ * @author Konstantin Vandev
+ *
  */
 public class VisualStyle implements Cloneable
 {
@@ -62,8 +65,7 @@ public class VisualStyle implements Cloneable
     }
 
     /**
-     * Simple constructor, creates default node/edge/global appearance
-     * calculators.
+     * Simple constructor, creates named style.
      */
     public VisualStyle(String name)
     {
@@ -117,48 +119,87 @@ public class VisualStyle implements Cloneable
         name = n;
     }
 
+    /**
+     * Returns the EdgePainter's map
+     * @return the map
+     */
     public Map<HGHandle, EdgePainter> getEdgePaintersMap()
     {
         return edgePaintersMap;
     }
 
+    /**
+     * Sets the EdgePainter's map
+     * @param the new map
+     */
     public void setEdgePaintersMap(Map<HGHandle, EdgePainter> edgePaintersMap)
     {
         this.edgePaintersMap = edgePaintersMap;
     }
 
+    /**
+     * Returns the NodePainter's map
+     * @return the map
+     */
     public Map<HGHandle, NodePainter> getNodePaintersMap()
     {
         return nodePaintersMap;
     }
-
-    public Map<HGHandle, NodePainter> getNonPersistentNodePaintersMap()
-    {
-        return this.npNodePaintersMap;
-    }
-
-    public Map<HGHandle, EdgePainter> getNonPersistentEdgePaintersMap()
-    {
-        return npEdgePaintersMap;
-    }
-
+    
+    /**
+     * Sets the NodePainter's map
+     * @param the new map
+     */
     public void setNodePaintersMap(Map<HGHandle, NodePainter> nodePaintersMap)
     {
         this.nodePaintersMap = nodePaintersMap;
     }
 
+    /**
+     * Returns the map of non-persistent node painters
+     * @return the map
+     */
+    public Map<HGHandle, NodePainter> getNonPersistentNodePaintersMap()
+    {
+        return this.npNodePaintersMap;
+    }
+    
+    /**
+     * Returns the map of non-persistent edge painters
+     * @return the map
+     */
+    public Map<HGHandle, EdgePainter> getNonPersistentEdgePaintersMap()
+    {
+        return npEdgePaintersMap;
+    }
+    
+    /**
+     * Returns the node painter for given type handle
+     * @param h the type handle
+     * @return the node painter
+     */
     public NodePainter getNodePainter(HGHandle h)
     {
         NodePainter p = nodePaintersMap.get(h);
         return (p == null) ? npNodePaintersMap.get(h) : p;
     }
 
+    /**
+     * Returns the edge painter for given type handle
+     * @param h the type handle
+     * @return the edge painter
+     */
     public EdgePainter getEdgePainter(HGHandle h)
     {
         EdgePainter p = edgePaintersMap.get(h);
         return (p == null) ? npEdgePaintersMap.get(h) : p;
     }
 
+    /**
+     * Adds a node painter for given type handle
+     * @param h the type handle
+     * @param p the node painter
+     */
     public void addNodePainter(HGHandle h, NodePainter p)
     {
         if (p.getClass().getPackage() == null) 
@@ -167,6 +208,11 @@ public class VisualStyle implements Cloneable
             nodePaintersMap.put(h, p);
     }
 
+    /**
+     * Adds an edge painter for given type handle
+     * @param h the type handle
+     * @param p the edge painter
+     */
     public void addEdgePainter(HGHandle h, EdgePainter p)
     {
         if (p.getClass().getPackage() == null) 
@@ -175,28 +221,48 @@ public class VisualStyle implements Cloneable
             edgePaintersMap.put(h, p);
     }
 
+    /**
+     * Remove the node painter for given type handle
+     * @param h the type handle
+     */
     public void removeNodePainter(HGHandle h)
     {
         npEdgePaintersMap.remove(h);
         nodePaintersMap.remove(h);
     }
 
+    /**
+     * Remove the edge painter for given type handle
+     * @param h the type handle
+     */
     public void removeEdgePainter(HGHandle h)
     {
         npEdgePaintersMap.remove(h);
         edgePaintersMap.remove(h);
     }
 
+    
+    /**
+     * Returns the color used for background 
+     * @return the color
+     */
     public Color getBackgroundColor()
     {
         return backgroundColor;
     }
 
+    /**
+     * Sets the color used for background 
+     * @param the color
+     */
     public void setBackgroundColor(Color backgroundColor)
     {
         this.backgroundColor = backgroundColor;
     }
     
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode()
     {

@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -30,7 +29,11 @@ import javax.swing.event.PopupMenuListener;
 
 import org.hypergraphdb.viewer.util.GUIUtilities;
 
-//@author  santhosh kumar - santhosh@in.fiorano.com 
+/**
+ * A button with a drop-down menu and default action.
+ * @author santhosh kumar - santhosh@in.fiorano.com 
+ * @author Konstantin Vandev
+ */
 public abstract class DropDownButton extends JButton 
                      implements ChangeListener, PopupMenuListener, ActionListener, PropertyChangeListener{ 
     private final JButton mainButton = this; 

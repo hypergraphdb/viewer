@@ -35,7 +35,7 @@ import org.hypergraphdb.viewer.util.swing.JTreeTable;
 import org.hypergraphdb.viewer.util.swing.TreeTableModel;
 
 /**
- * Stand-alone Viewer Only.
+ * Desktop Viewer Only.
  * Panel containing the table with opened GraphViews + BirdsEyeView if toggled on
  */
 public class NetworkPanel extends JPanel implements PropertyChangeListener,

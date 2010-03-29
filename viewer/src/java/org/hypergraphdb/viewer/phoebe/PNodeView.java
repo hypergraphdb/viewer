@@ -28,7 +28,7 @@ public class PNodeView extends PPath
     public static Paint DEFAULT_NODE_PAINT = java.awt.Color.white;
     // Default FNode Selection Paint
     public static Paint DEFAULT_NODE_SELECTION_PAINT = java.awt.Color.yellow;
-    // Deafult Border Paint
+    // Default Border Paint
     public static Paint DEFAULT_BORDER_PAINT = java.awt.Color.black;
 
     public static Stroke DEFAULT_BORDER_STROKE = new BasicStroke(1);
@@ -123,10 +123,7 @@ public class PNodeView extends PPath
         return node;
     }
 
-    // ------------------------------------------------------//
-    // Get and Set Methods for all Common Viewable Elements
-    // ------------------------------------------------------//
-    /**
+     /**
      * Shape is currently defined via predefined variables in the PNodeView
      * interface. To get the actual java.awt.Shape use getPathReference()
      * 

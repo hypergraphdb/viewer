@@ -36,8 +36,12 @@ import edu.umd.cs.piccolox.swing.PScrollPane;
 
 /**
  * Swing Component for displaying HyperGraphDB atoms and links.
- * Contains a <code>GraphView</code> that actually displays HG stuff
- * in a Piccolo canvas and a combination of status bar and menu bar 
+ * Contains a <link>org.hypergraphdb.viewer.GraphView</link> that actually displays HG stuff
+ * in a Piccolo canvas and a combination of status bar and menu bar.
+ *   
+ * HGViewer has to visual representation: standalone and as part of the HGVDesktop.
+ * In the first case viewer contains its own toolbar alongside the status bar at the bottom.
+ * In the other case it contains only status bar, because it shares the common HGVDesktop toolbar.
  * 
  * @author Konstantin Vandev
  */
@@ -47,8 +51,8 @@ public class HGViewer extends JPanel
     "HGVComponent");
     
     /**
-     * This is the label that tells how many node/edges are in a HGVNetworkView
-     * and how many are selected/hidden
+     * This is the label that shows how many node/edges are 
+     * presented and selected in the GraphView
      */
     protected JLabel statusLabel;
     protected GraphView view;
@@ -302,7 +306,10 @@ public class HGViewer extends JPanel
         //VisualManager.getInstance().save();
     }
 
-    protected JToolBar getBottomToolbar()
+    /**
+     * Returns the toolbar displayed in the bottom. Stand alone version only. 
+     */
+    public JToolBar getBottomToolbar()
     {
         if (toolbar != null) return toolbar;
         toolbar = new JToolBar();
@@ -381,6 +388,16 @@ public class HGViewer extends JPanel
                 + " selected)" + " Edges: " + edgeCount + " (" + selectedEdges
                 + " selected)");
     }
+    
+    
+    /**
+     * Returns the label that shows how many node/edges are presented/selected in a GraphView
+     */
+    public JLabel getStatusLabel()
+    {
+        return statusLabel;
+    }
+
 
     private static DropDownButton createDropDown(JToolBar toolbar,
             final DropDownButton dropdown, final String name, String tooltip, Action defaultAction)

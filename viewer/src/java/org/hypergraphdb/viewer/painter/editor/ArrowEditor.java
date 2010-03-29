@@ -16,6 +16,9 @@ import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
 import com.l2fprod.common.swing.PercentLayout;
 import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
 
+/**
+ * PropertyEditor for specifying {@link org.hypergraphdb.viewer.visual.Arrow} type
+ */
 public class ArrowEditor extends AbstractPropertyEditor
 {
 	private CellRenderer label;

@@ -142,7 +142,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
      * @param edge
      *            The FEdge we are a view on
      * @param view
-     *            the HGVNetworkView that we belong to
+     *            the GraphView that we belong to
      */
     public PEdgeView(FEdge edge, GraphView view)
     {
@@ -211,7 +211,7 @@ public class PEdgeView extends PPath implements PropertyChangeListener
     public String toString()
     {
         if (source == null || target == null || source.getNode() == null
-                || target.getNode() == null) { return ("edge root index = " + edge); }
+                || target.getNode() == null) { return ("edge = " + edge); }
         return (source.getNode() + "->" + target.getNode() + " (" + edge + ")");
     }
 

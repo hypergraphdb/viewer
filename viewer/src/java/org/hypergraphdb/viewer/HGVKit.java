@@ -24,7 +24,7 @@ import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 /**
  *  Abstract class containing common methods, constants and event handling for wiring 
- *  the stand-alone version of HGViewer  
+ *  the desktop version of HGViewer  
  */
 public abstract class HGVKit
 {
@@ -179,7 +179,6 @@ public abstract class HGVKit
 		// enable Squiggle on all network views
 		for (GraphView view : getViewersList())
 		{
-			if (view == null) continue;
 			if (isEnabled)
 				view.getSquiggleHandler().beginSquiggling();
 			else

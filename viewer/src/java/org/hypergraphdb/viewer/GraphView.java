@@ -55,14 +55,33 @@ import edu.umd.cs.piccolo.util.PPaintContext;
 
 /**
  * GraphView is the main Piccolo component which displays the graph on the
- * screen using org.hypergraphdb.viewer.phoebe.PNodeView and
- * org.hypergraphdb.viewer.phoebe.PEdgeView for visually represent nodes and edges.
- * The Piccolo project is what all of the painting is based on, and is very
- * fast, flexible and powerful. Becoming acquainted with Piccolo is essential
- * for build custom nodes.<BR>
- * <BR>
- * Fortunately, if you just want basic shapes and colors, it's all built into
- * the UI already, and you really need never even use this class.
+ * screen using  {@link org.hypergraphdb.viewer.phoebe.PNodeView} and
+ * {@link org.hypergraphdb.viewer.phoebe.PEdgeView} instances to visually represent nodes and edges.
+ * For its internal model GraphView uses {@link FNode} and {@link FEdge} classes. FNode simply encapsulate a HGHandle
+ * form the viewed HG and FEdge represents a relation between two FNodes e.g. a HGLink(source node) and one of 
+ * its target set members(target node). Based on this model GraphView creates and displays above mentioned
+ * PNodeViews and PEdgeViews. 
+ * GraphView has some pre-built features as: zooming, few selection modes, hand-drawing mode
+ * (squiggle), visual styling support and customizable node/edge painting.
+ * <h3>Zooming</h3>
+ * <li>Right Mouse Button Down + Drag Left OR Alt + Up = Zoom In</li>
+ * <li>Right Mouse Button Down + Drag Right OR Alt + Down = Zoom Out</li> 
+ * <h3>Selection modes</h3>   
+ *  GraphView has 3 selection modes:
+ * <li>Node selection - only nodes are selectable either by left click or mouse drag</li>
+ * <li>Edge selection - only edges are selectable</li> 
+ * <li>Nodes & Edges selection - nodes and edges are selectable</li> 
+ * <h3>Squiggle</h3> 
+ *  You can draw by hand over the graph to add some comments or emphasize on some node, edge etc.
+ *  To switch to this mode you could use menu command, call <code>HGVKit.setSquiggleState(true)</code> - 
+ *  which works for all opened viewers or use the GraphView's own squiggleHandler. 
+ *  <h3>Visual Appearance</h3>
+ *  GraphView displays PNodeView and PEdgeView by using instances of  {@link org.hypergraphdb.viewer.painter.DefaultNodePainter} and
+ *  {@link org.hypergraphdb.viewer.painter.DefaultEdgePainter}. You can define your own painters according to the type of the node's handle - 
+ *  <code>graph.getTypeSystem().getTypeHandle(graph.get(node.getHandle()).getClass())</code>. Note that edge painters are defined according the edge's source node. 
+ *  Those painters are stored in a {@link org.hypergraphdb.viewer.visual.VisualStyle} and styles are stored in a {@link VisualManager}.
+ *  By default GraphView uses a style named "default", but you could simply define your own styles and switch between them.
+ *   
  */
 public class GraphView
 {

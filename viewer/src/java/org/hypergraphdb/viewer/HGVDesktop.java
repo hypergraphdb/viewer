@@ -31,7 +31,7 @@ import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 
 /**
- * Stand-alone Viewer Only.
+ * Desktop Viewer Only.
  * The HGVDesktop represents the main Viewer Frame
  */
 public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphView.SelectionListener

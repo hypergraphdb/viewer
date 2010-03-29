@@ -43,6 +43,9 @@ import org.hypergraphdb.viewer.painter.NodePainter;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
+/**
+ * GUI panel for styles and painters management.   
+ */
 public class PaintersPanel extends JPanel
 {
     private JList paintersList;

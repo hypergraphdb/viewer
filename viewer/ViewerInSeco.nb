@@ -12,15 +12,16 @@
 
     </cell-group>
     <cell-group name="CG8">
-        <cell>
+        <cell initialization="true">
             <data><![CDATA[import org.hypergraphdb.*;
 import org.hypergraphdb.query.*; 
 import org.hypergraphdb.viewer.*;
 import org.hypergraphdb.atom.*;
 import org.hypergraphdb.type.*;
 import org.hypergraphdb.viewer.painter.*;
-import org.hypergraphdb.viewer.view.*;
-import org.hypergraphdb.atom.*;  
+import org.hypergraphdb.viewer.phoebe.*;
+import org.hypergraphdb.atom.*;
+import seco.notebook.storage.*;  
 import org.hypergraphdb.viewer.visual.*;
 import org.hypergraphdb.viewer.actions.*;
 
@@ -28,7 +29,7 @@ type = new HGViewerType();
 type.setHyperGraph(niche);
 niche.getTypeSystem().addPredefinedType(HGViewerType.HGHANDLE, type,  HGViewer.class);
 
-graph = HGEnvironment.get("f:/temp/hgviewer");
+graph = HGEnvironment.get("C:\\Documents and Settings\\Administrator\\.secoRepository");
 ]]>            </data>
         </cell>
 
@@ -43,7 +44,8 @@ graph = HGEnvironment.get("f:/temp/hgviewer");
     </cell-group>
     <cell-group name="CG10">
         <cell>
-            <data><![CDATA[h = graph.getTypeSystem().getTypeHandle(Top.class);
+            <data><![CDATA[hg = HGQuery.hg;
+h = hg.findOne(graph, hg.type(Top.class));
 comp = new HGViewer(graph, h, 2, null);
 ]]>            </data>
         </cell>
@@ -52,27 +54,27 @@ comp = new HGViewer(graph, h, 2, null);
     <cell html-preview="true">
         <data><![CDATA[
 <p>
-  <span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
+  <span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
 </p>
 <ul>
-  <li><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">Right Mouse Button Down + Drag Up </span><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000; font-weight:bold;">OR</span><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;"> Alt + Up = Zoom In</span>  
+  <li><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">Right Mouse Button Down + Drag Left </span><span style="color:#000000; font-style:normal; font-weight:bold; font-size:14; font-family:Dialog;">OR</span><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;"> Alt + Up = Zoom In</span>  
   </li>
-  <li><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">Right Mouse Button Down + Drag Down </span><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000; font-weight:bold;">OR</span><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;"> Alt + Down = Zoom Out</span>  
+  <li><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">Right Mouse Button Down + Drag Right </span><span style="color:#000000; font-style:normal; font-weight:bold; font-size:14; font-family:Dialog;">OR</span><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;"> Alt + Down = Zoom Out</span>  
   </li>
-  <li><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">Ctrl + F = View is scaled to display all presented nodes</span>  
+  <li><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">Ctrl + F = View is scaled to display all presented nodes</span>  
   </li>
-  <li>Ctrl + L  = Layout  
+  <li>Ctrl + L = Layout  
   </li>
   <li>Ctrl + H = Hide selected nodes&#160;  
   </li>
 </ul>
-<p><span style="font-style:normal; font-size:14; font-family:Dialog; color:#000000;">To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.</span>
+<p><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.</span>
 </p>]]>        </data>
     </cell>
     <cell>
         <data><![CDATA[node = comp.getView().getSelectedNodeView();
 hh = node.getNode().getHandle();
-o = graph.get(hh)
+o = graph.get(hh);
 ]]>        </data>
     </cell>
     <cell html-preview="true">
@@ -106,28 +108,67 @@ comp.getView().getVisualStyle().addNodePainter(typeH, painter1);
 comp.getView().redrawGraph();
 ]]>        </data>
     </cell>
-    <cell html-preview="true">
-        <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.]]>        </data>
-    </cell>
-    <cell>
-        <data><![CDATA[comp.setDepth(1); 
-comp.refresh();
-]]>        </data>
-    </cell>
-    <cell-group name="CG13">
-        <cell>
-            <data><![CDATA[import org.hypergraphdb.app.wordnet.data.Word;
-]]>            </data>
+    <cell-group name="CG0">
+        <cell html-preview="true" engine="html">
+            <data><![CDATA[Here's an example of an edge painter which is defined inline and will not be persisted. Note the use the general paintEdge() method where we change the background color of the label, which is generally not supported by DefaultEdgePainter. If you wish you could add Image or some other fancy stuff there.]]>            </data>
         </cell>
         <cell>
-            <data><![CDATA[comp.focus(HGQuery.hg.findOne(graph, new And(HGQuery.hg.type(Word.class), HGQuery.hg.eq("lemma", "table"))))
+            <data><![CDATA[subsumesType = graph.getTypeSystem().getTypeHandle(HGSubsumes.class);
+comp.getView().getVisualStyle().addEdgePainter(subsumesType,
+        new DefaultEdgePainter()
+        {
+            public void paintEdge(PEdgeView v)
+            {
+                super.paintEdge(v);
+                v.getLabel().setPaint(Color.WHITE);
+            }
+            public String getLabel()
+            {
+                return "subsumes";
+            }
+        }
+ );
+comp.getView().redrawGraph();
 ]]>            </data>
         </cell>
 
     </cell-group>
-    <cell-group name="CG15">
+    <cell html-preview="true">
+        <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.]]>        </data>
+    </cell>
+    <cell-group name="CG0">
         <cell>
-            <data><![CDATA[comp.getView().setZoom(2)
+            <data><![CDATA[comp.setDepth(1); 
+comp.refresh();
+]]>            </data>
+        </cell>
+
+    </cell-group>
+    <cell-group name="CG1">
+        <cell html-preview="true" engine="html">
+            <data><![CDATA[Finally, if you need more space or wish to use HGViewer in a separate Frame, you could execute the following code:]]>            </data>
+        </cell>
+
+    </cell-group>
+    <cell-group name="CG0">
+        <cell>
+            <data><![CDATA[JFrame f = new JFrame();
+HGHandle h = graph.getTypeSystem().getTypeHandle(HGStats.class);
+viewer = new HGViewer(graph, h, 1, null);
+f.getContentPane().add(viewer);
+f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+f.addWindowListener(new WindowAdapter()
+{
+        public void windowClosing(WindowEvent e)
+        {
+                f.setVisible(false);
+                //uncomment if you'd use only one instance  
+                //graph.close();
+        }
+} );
+f.setMinimumSize(new Dimension(600, 400));
+f.setVisible(true);
+
 ]]>            </data>
         </cell>
 

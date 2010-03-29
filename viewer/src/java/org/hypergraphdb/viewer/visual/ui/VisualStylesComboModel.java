@@ -10,6 +10,9 @@ import javax.swing.MutableComboBoxModel;
 import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
+/**
+ * List model representing all defined VisualStyles  
+ */
 public class VisualStylesComboModel extends AbstractListModel 
    implements MutableComboBoxModel, Serializable {
 

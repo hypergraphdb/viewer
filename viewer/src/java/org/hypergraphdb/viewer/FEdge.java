@@ -84,4 +84,10 @@ public class FEdge {
 		return true;
 	}
 
+    @Override
+    public String toString()
+    {
+       return "" + source.getHandle() + "/" + target.getHandle();
+    }
+
 }

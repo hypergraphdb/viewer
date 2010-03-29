@@ -3,20 +3,25 @@ package org.hypergraphdb.viewer.painter.editor;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
+
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.LineType;
 import org.hypergraphdb.viewer.visual.ui.EditorConstants;
 import org.hypergraphdb.viewer.visual.ui.PopupIconChooser;
+
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
 import com.l2fprod.common.swing.PercentLayout;
 import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
 
+/**
+ * PropertyEditor for specifying {@link org.hypergraphdb.viewer.visual.LineType} type
+ */
 public class LineTypeEditor extends AbstractPropertyEditor
 {
 	private CellRenderer label;

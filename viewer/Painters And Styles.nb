@@ -1,6 +1,6 @@
-<notebook title="Painters And Styles.nb">
+<notebook title="F:\kosta\ticl\new_hg\viewer\Painters And Styles.nb">
     <output-cell-style borderColor="255,255,255" fgColor="0,128,0"/>
-    <cell html-preview="true" collapsed="true">
+    <cell html-preview="true">
         <data><![CDATA[
 <h2 style="text-align:center;">Working with Painters and Styles in HGViewer
 </h2>
@@ -13,31 +13,30 @@
 <p>
   <span style="text-align:left;">public void paintNode(NodeView edgeView) </span>
 <code>and 
-</code><span style="text-align:left;">public void paintEdge(EdgeView edgeView</span><span style="text-align:left;">)</span>
-<code> 
-</code>respectively
+</code><span style="text-align:left;">public void paintEdge(EdgeView edgeView</span><span style="text-align:left;">)</span> respectively 
 <code>. 
-</code>
-        </p>
-        <p style="text-align:left;">PaintEdgeInfo, PaintNodeInfo hold the information about node/edge visual attributes like foreground and background color, font, label, tooltip, etc. The combination of those two interfaces yields to two more usable classes: DefaultNodePainter and DefaultEdgePainter which are far more suitable to work with.        
-        </p>
-        <p style="text-align:left;">Below are shown the methods of those classes:        
-        </p>]]>        </data>
+</code>    
+    </p>
+    <p style="text-align:left;">PaintEdgeInfo, PaintNodeInfo hold the information about node/edge visual attributes like foreground and background color, font, label, tooltip, etc. The combination of those two interfaces yields to two more usable classes: DefaultNodePainter and DefaultEdgePainter which are far more suitable to work with.    
+    </p>
+    <p style="text-align:left;">Below are shown the methods of those classes:    
+    </p>]]>        </data>
     </cell>
     <cell html-preview="true" collapsed="true">
-        <data><![CDATA[<h2 style="text-align:left;">DefaultNodePainter
+        <data><![CDATA[
+<h2 style="text-align:left;">DefaultNodePainter
 </h2>
-<table align="left" border="0" style="text-align:left; border-style:solid; width:95%; border-width:0;">
+<table border="0" align="left" style="text-align:left; border-style:solid; width:95%; border-width:0;">
   <tr>
-    <td valign="top" style="border-style:solid; width:33%; background-color:#ffff99; border-width:1;">
+    <td valign="top" style="background-color:#ffff99; border-style:solid; width:33%; border-width:1;">
       <p style="margin:1;">Method Name      
       </p>    
     </td>
-    <td valign="top" style="border-style:solid; width:33%; background-color:#ffff99; border-width:1;">
+    <td valign="top" style="background-color:#ffff99; border-style:solid; width:33%; border-width:1;">
       <p style="margin:1;">Description      
       </p>    
     </td>
-    <td align="left" valign="top" style="width:33%; border-color:#000000; background-color:#ffff99; border-style:solid; text-align:left; border-width:1;">
+    <td align="left" valign="top" style="border-style:solid; width:33%; text-align:left; border-color:#000000; background-color:#ffff99; border-width:1;">
       <p style="margin:1;">Value      
       </p>    
     </td>  
@@ -198,12 +197,10 @@
       </p>    
     </td>  
   </tr>
-</table>
-]]>        </data>
+</table>]]>        </data>
     </cell>
     <cell html-preview="true" collapsed="true">
-        <data><![CDATA[
-<h2 style="text-align:left;">DefaultEdgePainter Methods
+        <data><![CDATA[<h2 style="text-align:left;">DefaultEdgePainter Methods
 </h2>
 <table align="left" border="0" style="width:90%; border-style:solid; text-align:left; border-width:0;">
   <tr>
@@ -342,13 +339,16 @@
       </p>    
     </td>  
   </tr>
-</table>]]>        </data>
+</table>
+]]>        </data>
     </cell>
-    <cell-group name="CG0" collapsed="true">
-        <cell html-preview="true" engine="html">
-            <data><![CDATA[Node Painter Sample]]>            </data>
+    <cell-group name="CG0">
+        <cell html-preview="true">
+            <data><![CDATA[
+<h3>Node Painter Sample
+</h3>]]>            </data>
         </cell>
-        <cell>
+        <cell collapsed="true">
             <data><![CDATA[import org.hypergraphdb.viewer.painter.*;
 import org.hypergraphdb.viewer.visual.*;
 
@@ -375,13 +375,13 @@ public class TestNodePainter extends DefaultNodePainter{
         </cell>
 
     </cell-group>
-    <cell-group name="CG1" collapsed="true">
+    <cell-group name="CG1">
         <cell html-preview="true">
-            <data><![CDATA[
-<h3>Edge Painter Sample
-</h3>]]>            </data>
+            <data><![CDATA[<h3>Edge Painter Sample
+</h3>
+]]>            </data>
         </cell>
-        <cell>
+        <cell collapsed="true">
             <data><![CDATA[public class TestEdgePainter extends DefaultEdgePainter
 {
     public Color getColor()
