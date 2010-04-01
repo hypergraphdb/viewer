@@ -15,17 +15,12 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.hypergraphdb.viewer.GraphView;
 import org.hypergraphdb.viewer.phoebe.PEdgeView;
-import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 import edu.umd.cs.piccolo.PCamera;
 import edu.umd.cs.piccolo.PLayer;
@@ -34,7 +29,6 @@ import edu.umd.cs.piccolo.event.PDragSequenceEventHandler;
 import edu.umd.cs.piccolo.event.PInputEvent;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.util.PBounds;
-import edu.umd.cs.piccolo.util.PDimension;
 import edu.umd.cs.piccolo.util.PNodeFilter;
 import edu.umd.cs.piccolox.handles.PBoundsHandle;
 import edu.umd.cs.piccolox.util.PFixedWidthStroke;

@@ -236,12 +236,12 @@ public class PEdgeView extends PPath implements PropertyChangeListener
      */
     public void setSourceNode(PNodeView node_view)
     {
-        ((PNode) source).removePropertyChangeListener(this);
-        source = (PNodeView) node_view;
-        sourceLocator = new PNodeLocator((PNode) source);
+        source.removePropertyChangeListener(this);
+        source = node_view;
+        sourceLocator = new PNodeLocator(source);
         sourcePoint = sourceLocator.locatePoint(sourcePoint);
-        sourcePoint = ((PNode) source).localToGlobal(sourcePoint);
-        ((PNode) source).addPropertyChangeListener(this);
+        sourcePoint = source.localToGlobal(sourcePoint);
+        source.addPropertyChangeListener(this);
         updateEdgeView();
     }
 
@@ -250,12 +250,12 @@ public class PEdgeView extends PPath implements PropertyChangeListener
      */
     public void setTargetNode(PNodeView node_view)
     {
-        ((PNode) target).removePropertyChangeListener(this);
-        target = (PNodeView) node_view;
-        targetLocator = new PNodeLocator((PNode) target);
+        target.removePropertyChangeListener(this);
+        target = node_view;
+        targetLocator = new PNodeLocator(target);
         targetPoint = targetLocator.locatePoint(targetPoint);
-        targetPoint = ((PNode) target).localToGlobal(targetPoint);
-        ((PNode) target).addPropertyChangeListener(this);
+        targetPoint = target.localToGlobal(targetPoint);
+        target.addPropertyChangeListener(this);
         updateEdgeView();
     }
 

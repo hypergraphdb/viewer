@@ -155,8 +155,9 @@ public class ObjectInspector extends Outline
             if(children != null) return children;
             if(value == null)
                 return children = new PropNode[0];
-                
-            populate_children();
+            populate_children();            
+            if(children == null) 
+                children = new PropNode[0];
             return children;
         }
         
@@ -252,12 +253,15 @@ public class ObjectInspector extends Outline
                 protected void populate_children()
                 {
                     Map<Object, Object> map = (Map<Object, Object>) value;
+                    if(map.entrySet() == null)
+                        return;
                     children  = new PropNode[map.size() + 1];
                     children[0] = new PropNode("size", map.size());
                     int i = 1;
-                    for (Object key: map.keySet())
+                    for (Map.Entry<Object, Object> e: map.entrySet())
                     {
-                        children[i] = new PropNode("" + key, map.get(key));
+                        if(e == null) continue;
+                        children[i] = new PropNode("" + e.getKey(), e.getValue());
                         i++;
                     }
                 }
@@ -286,7 +290,11 @@ public class ObjectInspector extends Outline
             if(index > n.children().length -1) 
                 System.err.println("Problem: " + n.value + ":" + index + ":" +
                         n.children().length);
-            return n.children()[index];
+            Object res = n.children()[index];
+            if(res == null)
+                System.out.println("NULL Object in: " + index + ":" + parent);
+            return res;
+            //return n.children()[index];
         }
 
         public int getIndexOfChild(Object parent, Object child)
@@ -308,7 +316,7 @@ public class ObjectInspector extends Outline
 
         public boolean isLeaf(Object node)
         {
-            if (node == null) return true;
+           if (node == null) return true;
            return getChildCount(node) == 0;
         }
 

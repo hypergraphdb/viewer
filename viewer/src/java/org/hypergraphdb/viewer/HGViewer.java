@@ -267,18 +267,19 @@ public class HGViewer extends JPanel
 
     private boolean first_time = true;
     /* (non-Javadoc)
-     * @see javax.swing.JComponent#addNotify()
+     * @see java.awt.Component#setBounds(int, int, int, int)
      */
     @Override
-    public void addNotify()
+    public void setBounds(int x, int y, int width, int height)
     {
-        super.addNotify();
-        if(first_time){
-           adjust_view();
-           first_time = false;
-        }
+        super.setBounds(x, y, width, height);
+        if(first_time && width > 0 && height > 0){
+            adjust_view();
+            first_time = false;
+         }
     }
-    
+
+
     private void adjust_view()
     {
         final  PCanvas pCanvas = view.getCanvas();
