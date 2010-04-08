@@ -106,7 +106,7 @@ public class ObjectInspector extends Outline
     }
     
     /**
-     * Factory providing a specific fields of a given class to be inspected 
+     * Factory interface for creating PropNode for given class 
      */
     public static interface PropNodeFactory {
         public boolean supportsClass(Class<?> c);

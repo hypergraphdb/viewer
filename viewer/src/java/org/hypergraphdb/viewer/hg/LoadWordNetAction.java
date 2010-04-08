@@ -31,6 +31,7 @@ import org.hypergraphdb.viewer.VisualManager;
 import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
 import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.painter.NodePainter;
+import org.hypergraphdb.viewer.util.FileUtil;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
@@ -45,7 +46,7 @@ import org.hypergraphdb.viewer.util.cytoscape.task.util.TaskManager;
 public class LoadWordNetAction extends AbstractAction
 {
     private static final String WORDNET_PATH_PROP = "WORDNET_PATH_PROP";
-    private static String PATH = "F:\\kosta\\hg\\wordnet";
+   // private static String PATH = "F:\\kosta\\hg\\wordnet";
 
     /**
      * ConstructorLink.
@@ -66,8 +67,13 @@ public class LoadWordNetAction extends AbstractAction
     public void actionPerformed(ActionEvent e)
     {
         String p = (String) AppConfig.getInstance().getProperty(
-                WORDNET_PATH_PROP, PATH);
-        loadHyperGraph(new File(p));
+               WORDNET_PATH_PROP);
+        File file = (p != null) ? new File(p) : FileUtil.getFile("Load Wordnet HyperGraph", FileUtil.LOAD, null,
+                null, null, true);
+        if (file != null)
+            loadHyperGraph(file);
+        AppConfig.getInstance().setProperty(
+                WORDNET_PATH_PROP, file.getAbsolutePath());
     }
 
     public static void loadHyperGraph(File file)
@@ -214,20 +220,20 @@ public class LoadWordNetAction extends AbstractAction
                 return;
             }
             vs = new VisualStyle(WN_STYLE);
-            HyperGraph hg = view.getHyperGraph();
-            ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            addNodePainter(hg, vs, cl,
-                    "org.hypergraphdb.app.wordnet.data.NounSynsetLink",
-                    "org.hypergraphdb.app.wordnet.viewer.SynsetNodePainter");
-            addNodePainter(hg, vs, cl,
-                    "org.hypergraphdb.app.wordnet.data.VerbSynsetLink",
-                    "org.hypergraphdb.app.wordnet.viewer.SynsetNodePainter");
-            addNodePainter(hg, vs, cl,
-                    "org.hypergraphdb.app.wordnet.data.VerbFrame",
-                    "org.hypergraphdb.app.wordnet.viewer.VerbFrameNodePainter");
-            addNodePainter(hg, vs, cl,
-                    "org.hypergraphdb.app.wordnet.data.Word",
-                    "org.hypergraphdb.app.wordnet.viewer.WordNodePainter");
+//            HyperGraph hg = view.getHyperGraph();
+//            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+//            addNodePainter(hg, vs, cl,
+//                    "org.hypergraphdb.app.wordnet.data.NounSynsetLink",
+//                    "org.hypergraphdb.app.wordnet.viewer.SynsetNodePainter");
+//            addNodePainter(hg, vs, cl,
+//                    "org.hypergraphdb.app.wordnet.data.VerbSynsetLink",
+//                    "org.hypergraphdb.app.wordnet.viewer.SynsetNodePainter");
+//            addNodePainter(hg, vs, cl,
+//                    "org.hypergraphdb.app.wordnet.data.VerbFrame",
+//                    "org.hypergraphdb.app.wordnet.viewer.VerbFrameNodePainter");
+//            addNodePainter(hg, vs, cl,
+//                    "org.hypergraphdb.app.wordnet.data.Word",
+//                    "org.hypergraphdb.app.wordnet.viewer.WordNodePainter");
             VisualManager.getInstance().addVisualStyle(vs);
             view.setVisualStyle(vs);
 

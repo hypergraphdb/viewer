@@ -127,7 +127,7 @@ public class PNodeView extends PPath
      * Shape is currently defined via predefined variables in the PNodeView
      * interface. To get the actual java.awt.Shape use getPathReference()
      * 
-     * @return the current int-tpye shape
+     * @return the current int-type shape
      */
     public int getShape()
     {

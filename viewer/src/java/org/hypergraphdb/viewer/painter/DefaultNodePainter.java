@@ -19,7 +19,7 @@ public class DefaultNodePainter implements PaintNodeInfo, NodePainter
     private Color color = Color.lightGray;
     private Color borderColor = Color.BLACK;
     private LineType lineType = LineType.LINE_1;
-    private byte shape = Shape.ROUND_RECT;// RECT;//ELLIPSE;
+    private byte shape = Shape.ROUND_RECT;
     private String label = null;
     private Color labelColor = Color.BLACK;
     private String tooltip = null;

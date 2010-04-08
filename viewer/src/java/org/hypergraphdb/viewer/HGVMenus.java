@@ -79,6 +79,10 @@ public class HGVMenus implements GraphViewChangeListener
     boolean nodesRequiredItemsEnabled;
     public static HGVMenus instance = null;
 
+    /**
+     * Returns the singleton instance of this class
+     * @return the singleton
+     */
     public static HGVMenus getInstance()
     {
         if (instance == null) instance = new HGVMenus();
@@ -99,6 +103,9 @@ public class HGVMenus implements GraphViewChangeListener
         return menuBar;
     }
 
+    /**
+     * Returns the menu with items related to zooming.
+     */
     public JMenu getZoomMenu()
     {
         if (zoomMenu != null) return zoomMenu;
@@ -290,7 +297,7 @@ public class HGVMenus implements GraphViewChangeListener
         hideSelectedButton.setToolTipText("Hide Selected Region");
         hideSelectedButton.setText("");
         hideSelectedButton.setBorderPainted(false);
-        toolBar.addSeparator();
+       // toolBar.addSeparator();
 
         JButton zoomInButton = new JButton(man
                 .getAction(ActionManager.ZOOM_IN_ACTION));

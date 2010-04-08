@@ -648,7 +648,6 @@ public class ActionManager
 
         public void action(HGViewer viewer) throws Exception
         {
-            // save the vizmapper catalog
             if (HGVKit.isEmbeded()) return;
             GraphView view = viewer.getView();
             Collection<FNode> nodes = new ArrayList<FNode>();

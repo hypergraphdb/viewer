@@ -31,8 +31,8 @@ import org.hypergraphdb.viewer.phoebe.PNodeView;
 
 
 /**
- * Desktop Viewer Only.
- * The HGVDesktop represents the main Viewer Frame
+ * Represents the main viewer Frame and contains the main[] method used to start
+ * the standalone version of the viewer. 
  */
 public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphView.SelectionListener
 {
@@ -233,7 +233,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
     protected void updateFocus(GraphView view)
     {
         // deal with the new Network
-        VisualStyle new_style = view.getVisualStyle();
+        VisualStyle new_style = view.getVisualStyle(true);
         styleBox.setSelectedItem(new_style);
         cyMenus.setNodesRequiredItemsEnabled();
         updatePropsPanel();
@@ -296,6 +296,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
         PNodeView nv = view.getSelectedNodeView();
         if (nv != null)
         {
+            propsPanel.setVisible(true);
             FNode node = nv.getNode();
             Object obj = view.getHyperGraph().get(node.getHandle());
             propsPanel.setModelObject(obj);
@@ -309,6 +310,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
                 mainPropsPanel.setBorder(propertiesTableBorder_);
                 // mainPropsPanel.revalidate();
             }
-        }
+        }else
+            propsPanel.setVisible(false);
     }
 }

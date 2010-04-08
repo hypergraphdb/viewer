@@ -666,7 +666,7 @@ public class GraphView
         }
     }
 
-    private VisualStyle getVisualStyle(boolean return_default)
+    VisualStyle getVisualStyle(boolean return_default)
     {
         return getVisualStyle() != null ? getVisualStyle() : VisualManager
                 .getInstance().getDefaultVisualStyle();
