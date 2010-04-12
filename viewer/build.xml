@@ -4,8 +4,7 @@
     
 	<!--Location of the HypergraphDB jar-->
 	<property name="hgdb_jar" value="hgdbfull.jar"/>
-	<property name="berkley_jar" value="../core/jars/db.jar"/>
-	
+		
 	<property name="build" value="build"/>
 	<!-- The directory containing distribution jar -->
 	<property name="dist" value="${build}/dist" />
@@ -52,7 +51,7 @@
 		</jar>
 	</target>
 	
-	<target name="doc" depends="init">
+	<target name="doc" depends="init" description="Generate the javadoc for HGViewer.">
 		 <javadoc sourcepath="src/java"
 	               classpathref="viewer-classpath"
 	               destdir="${build}/javadoc"/>
@@ -68,8 +67,6 @@
 					<include name="LicensingInformation" />
 				</fileset>
 			</copy>
-		    <copy todir="${build}/viewer/jars" file="${hgdb_jar}"/>
-		    <copy todir="${build}/viewer/jars" file="${berkley_jar}"/>
 		    <copy todir="${build}/viewer">
 	            <fileset dir=".">
 	                <include name="javadoc/**"/>
