@@ -181,7 +181,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		while (tree_node_enum.hasMoreElements()) {
 			ViewTreeNode node = (ViewTreeNode) tree_node_enum
 					.nextElement();
-			if (node.getNetworkID() == view) {
+			if (node.getView() == view) {
 				return node;
 			}
 		}
@@ -264,7 +264,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		public Object getValueAt(Object node, int column) {
 			if (column == 0)
 				return ((DefaultMutableTreeNode) node).getUserObject();
-			GraphView net = (((ViewTreeNode) node).getNetworkID());
+			GraphView net = (((ViewTreeNode) node).getView());
 			
 			String s = "";
 			if (column == 1) {
@@ -289,11 +289,11 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 			view = id;
 		}
 
-		protected void setNetworkID(GraphView id) {
+		protected void setView(GraphView id) {
 			view = id;
 		}
 
-		protected GraphView getNetworkID() {
+		protected GraphView getView() {
 			return view;
 		}
 	}
@@ -328,9 +328,10 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 		private boolean hasView(Object value) {
 
 			ViewTreeNode node = (ViewTreeNode) value;
-			if(node.getNetworkID() == null) return false;
+			if(node.getView() == null) return false;
 					
-			setToolTipText(node.getNetworkID().getIdentifier());
+			setToolTipText(node.getView().getIdentifier());
+			setText(node.getView().getIdentifier());
 			return true;
 		}
 
@@ -372,7 +373,7 @@ public class NetworkPanel extends JPanel implements PropertyChangeListener,
 					JTree tree = treeTable.getTree();
 					TreePath treePath = tree.getPathForRow(row);
 					GraphView net = ((ViewTreeNode) treePath
-							.getLastPathComponent()).getNetworkID();
+							.getLastPathComponent()).getView();
 
 						
 						// disable or enable specific options with respect to

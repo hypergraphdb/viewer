@@ -2,24 +2,37 @@ package org.hypergraphdb.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -27,7 +40,11 @@ import javax.swing.event.SwingPropertyChangeSupport;
 
 import org.hypergraphdb.viewer.visual.VisualStyle;
 
+import org.hypergraphdb.viewer.dialogs.DialogDisplayer;
+import org.hypergraphdb.viewer.dialogs.NotifyDescriptor;
 import org.hypergraphdb.viewer.phoebe.PNodeView;
+
+
 
 
 /**
@@ -134,6 +151,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
                 HGVKit.firePropertyChange(HGVDesktop.GRAPH_VIEW_FOCUSED, null, comp.getView());
             }
         });
+        tabbedPane.addMouseListener(new TabbedPaneMouseListener());
         JScrollPane scroll_tab = new JScrollPane(tabbedPane);
         propsPanel = new ObjectInspector(null);
       
@@ -312,5 +330,61 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
             }
         }else
             propsPanel.setVisible(false);
+    }
+    
+    static JPopupMenu tabPopupMenu;
+    private static final String TAB_INDEX = "tab_index";
+    private JPopupMenu getTabPopupMenu()
+    {
+        if (tabPopupMenu != null) return tabPopupMenu;
+        tabPopupMenu = new JPopupMenu();
+        Action act = new AbstractAction("Close") {
+            public void actionPerformed(ActionEvent e)
+            {
+               int i = ((Integer) tabPopupMenu.getClientProperty(TAB_INDEX));
+               GraphView view = ((HGViewer) tabbedPane.getComponentAt(i)).getView();
+               HGVKit.destroyNetworkView(view);
+            }
+        };
+
+        tabPopupMenu.add(new JMenuItem(act));
+        act = new AbstractAction("Rename") {
+            public void actionPerformed(ActionEvent e)
+            {
+                int i = ((Integer) tabPopupMenu.getClientProperty(TAB_INDEX));
+                GraphView view = ((HGViewer) tabbedPane.getComponentAt(i)).getView();
+                NotifyDescriptor.InputLine nd = new NotifyDescriptor.InputLine(
+                        HGVDesktop.this, "Name: ", "Rename");
+                nd.setInputText(tabbedPane.getTitleAt(i));
+                if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION)
+                {
+                    String t = nd.getInputText();
+                    view.identifier = t;
+                    tabbedPane.setTitleAt(i, t);
+                    networkPanel.invalidate();
+                }
+            }
+        };
+        tabPopupMenu.add(new JMenuItem(act));
+        return tabPopupMenu;
+    }
+    
+    private class TabbedPaneMouseListener extends MouseAdapter
+    {
+        public void mouseClicked(MouseEvent e)
+        {
+            if (SwingUtilities.isRightMouseButton(e))
+            {
+                Point pt = e.getPoint();
+                for (int i = 0; i < tabbedPane.getTabCount(); i++)
+                {
+                    final Rectangle r = tabbedPane.getBoundsAt(i);
+                    if (r == null || !r.contains(pt)) continue;
+                    getTabPopupMenu().putClientProperty(TAB_INDEX, i);
+                    getTabPopupMenu().show(tabbedPane, pt.x, pt.y);
+                    break;
+                }
+            }
+        }
     }
 }
