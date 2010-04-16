@@ -71,9 +71,11 @@ public class LoadWordNetAction extends AbstractAction
         File file = (p != null) ? new File(p) : FileUtil.getFile("Load Wordnet HyperGraph", FileUtil.LOAD, null,
                 null, null, true);
         if (file != null)
+        {
             loadHyperGraph(file);
-        AppConfig.getInstance().setProperty(
+            AppConfig.getInstance().setProperty(
                 WORDNET_PATH_PROP, file.getAbsolutePath());
+        }
     }
 
     public static void loadHyperGraph(File file)
