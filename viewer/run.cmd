@@ -7,7 +7,16 @@ set VIEWER_CLASSPATH=%VIEWER_HOME%/hgdbviewer.jar
 set HGDB_NATIVE=%HGDB_HOME%\native\windows
 
 set JAVA_EXEC="%JAVA_HOME%/bin/java"
+%JAVA_EXEC% -version 2>&1 | find "64-Bit" >nul:
 
+if errorlevel 1 (
+   REM echo 32-Bit 
+   set HGDB_NATIVE=%HGDB_HOME%\native\windows
+) else (
+   REM  echo 64-Bit
+   set HGDB_NATIVE=%HGDB_HOME%\native\windows\amd64
+)
+REM echo HGDB_NATIVE:  %HGDB_NATIVE%
 set PATH=%HGDB_NATIVE%;%PATH%
 
 cd %HGDB_HOME%
