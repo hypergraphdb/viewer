@@ -78,19 +78,23 @@
 		<target name="dist-zip" depends="dist-prepare" description="Build Windows distribution">
 			<zip zipfile="${dist}/hgviewer-dist.zip">
 				<fileset dir="${build}">
-					<include name="viewer/**" />
 					<include name="javadoc/**" />
 				</fileset>
+				<fileset dir="${build}/viewer">
+					<include name="**/*.*" />
+				</fileset>
+				
 			</zip>
 		</target>
 	
 	 <target name="dist-tar.gz" depends="dist-prepare" description="Build Linux distribution">
 	 	 <tar destfile="${dist}/hgviewer-dist.tar.gz" compression="gzip">	
-	 	   <!-- <zip zipfile="${dist}/hgviewer-dist-lin.zip"> -->
-			 <fileset dir="${build}">
-			 <include name="viewer/**" />
-			 <include name="javadoc/**" />
-			</fileset>
+	 	 	<fileset dir="${build}">
+	 	 		<include name="javadoc/**" />
+	 	 	</fileset>
+	 	 	<fileset dir="${build}/viewer">
+	 	 	    <include name="**/*.*" />
+	 	 	</fileset>
 		</tar>
 	 </target>
 

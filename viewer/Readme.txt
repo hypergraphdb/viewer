@@ -10,7 +10,7 @@ Licensing information may be found in the LicensingInformation file in this dire
 Requirements
 ============
 
-Scriba needs HypergraphDB and  Java 5 to run. It has been tested on Windows and Linux. If you are using 
+HGViewer needs HypergraphDB and  Java 5 to run. It has been tested on Windows and Linux. If you are using 
 on some other platform, please let us know.
 
 
