@@ -22,7 +22,7 @@
 
     <target name="init">
 		<mkdir dir="${build}"/>
-    	<mkdir dir="${build}/javadoc"/>
+    	<mkdir dir="${build}/hgviewer"/>
     	<mkdir dir="${dist}"/>
     	<copy todir="${build}">
     		<fileset dir="src/java">
@@ -54,11 +54,11 @@
 	<target name="doc" depends="init" description="Generate the javadoc for HGViewer.">
 		 <javadoc sourcepath="src/java"
 	               classpathref="viewer-classpath"
-	               destdir="${build}/viewer/javadoc"/>
+	               destdir="${build}/hgviewer/javadoc"/>
 	</target>
 	
 	<target name="dist-prepare" depends="jar,doc" description="Copy distribution files for zip.">
-			<copy todir="${build}/viewer">
+			<copy todir="${build}/hgviewer">
 				<fileset dir=".">
 					<include name="${jar-name}"/>
 					<include name="jars/**" />
@@ -73,7 +73,7 @@
 		<target name="dist-zip" depends="dist-prepare" description="Build Windows distribution">
 			<zip zipfile="${dist}/hgviewer-dist.zip">
 				<fileset dir="${build}">
-					<include name="viewer/**" />
+					<include name="hgviewer**" />
 				</fileset>
 			</zip>
 		</target>
@@ -81,7 +81,7 @@
 	 <target name="dist-tar.gz" depends="dist-prepare" description="Build Linux distribution">
 	 	 <tar destfile="${dist}/hgviewer-dist.tar.gz" compression="gzip">	
 	 	 	<fileset dir="${build}">
-	 	 		<include name="viewer/**" />
+	 	 		<include name="hgviewer**" />
 	 	 	</fileset>
 		</tar>
 	 </target>
