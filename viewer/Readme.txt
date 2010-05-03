@@ -3,29 +3,24 @@ Welcome to HGViewer
 
 HGViewer is a free, open-source viewer for HyperGraph DB-s. 
 
-For more information, please visit http://www.kobrix.com.
+For more information, please visit http://www.hypergraphdb.org
 
 Licensing information may be found in the LicensingInformation file in this directory.
 
 Requirements
 ============
 
-HGViewer needs HypergraphDB and  Java 5 to run. It has been tested on Windows and Linux. If you are using 
-on some other platform, please let us know.
-
+HGViewer needs HypergraphDB and  Java 5 to run. It has been tested on Windows and Linux. It should work anywhere HyperGraphDB itself runs.
 
 Running on Windows
 ==================
 
-Edit the run.cmd file to set the JAVA_HOME environment variable. It may point to a JDK installation 
-or to a JRE installation. Then run the file from anywhere in your computer.
+Edit the run.cmd file to set the HGDB_HOME and JAVA_HOME environment variables. JAVA_HOME may point to a JDK installation or to a JRE installation. Then you can run the file from anywhere in your computer.
 
 Running on Linux
 ================
 
-Edit the run.sh file to set the JAVA_HOME environment variable. It may point to a JDK installation 
-or to a JRE installation. Then run the file from anywhere in your computer. If it's not recognized
-as a program, you may need to set its execute permissions like this:
+Edit the run.sh file to set the HGDB_HOME environment variable. If java is not in your path, then you may need to modify the script further to point to it (just find where it is being called). If run.sh is not recognized as a program, you may need to set its execute permissions like this:
 
 chmod +x run.sh
 
