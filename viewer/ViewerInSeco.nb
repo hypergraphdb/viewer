@@ -1,13 +1,13 @@
-<notebook title="ViewerInSeco.nb">
-    <output-cell-style borderColor="255,255,255" fgColor="0,128,0"/>
+<notebook title="/home/borislav/downloads/hgviewer/ViewerInSeco.nb">
     <cell-style bgColor="255,204,102"/>
+    <output-cell-style borderColor="255,255,255" fgColor="0,128,0"/>
     <cell-group name="CG7">
         <cell html-preview="true">
-            <data><![CDATA[
-<h2 style="text-align:center;">Working with HyperGraph and HGViewer in Seco
+            <data><![CDATA[<h2 style="text-align:center;">Working with HyperGraph and HGViewer in Seco
 </h2>
 <p style="text-align:left;">This is a short step-by-step tutorial describing some uses of HGViewer in Seco. First let's write few import statements that we'll need later on and open an empty HyperGraph.
-</p>]]>            </data>
+</p>
+]]>            </data>
         </cell>
 
     </cell-group>
@@ -29,16 +29,16 @@ type = new HGViewerType();
 type.setHyperGraph(niche);
 niche.getTypeSystem().addPredefinedType(HGViewerType.HGHANDLE, type,  HGViewer.class);
 
-graph = HGEnvironment.get("C:\\Documents and Settings\\Administrator\\.secoRepository");
+graph =HGEnvironment.get(System.getProperty("user.home") + File.separator + ".secoRepository");
 ]]>            </data>
         </cell>
 
     </cell-group>
     <cell-group name="CG9">
         <cell html-preview="true">
-            <data><![CDATA[
-<p>Next we'll create the HGViewer component, the depth of displayed HyperGraph elements and the handle to focus around. In this case this will be the Top handle.
-</p>]]>            </data>
+            <data><![CDATA[<p>Next we'll create the HGViewer component, the depth of displayed HyperGraph elements and the handle to focus around. In this case this will be the Top handle.
+</p>
+]]>            </data>
         </cell>
 
     </cell-group>
@@ -52,8 +52,7 @@ comp = new HGViewer(graph, h, 2, null);
 
     </cell-group>
     <cell html-preview="true">
-        <data><![CDATA[
-<p>
+        <data><![CDATA[<p>
   <span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
 </p>
 <ul>
@@ -69,7 +68,8 @@ comp = new HGViewer(graph, h, 2, null);
   </li>
 </ul>
 <p><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.</span>
-</p>]]>        </data>
+</p>
+]]>        </data>
     </cell>
     <cell>
         <data><![CDATA[node = comp.getView().getSelectedNodeView();
@@ -78,13 +78,13 @@ o = graph.get(hh);
 ]]>        </data>
     </cell>
     <cell html-preview="true">
-        <data><![CDATA[
-<p>At this point the nodes in the viewer should look pretty ugly. So let's make them look better. The easiest way is by invoking the &quot;Add Painter&quot; command from the popup menu on a selected node. This will automaticaly create a painter for all the nodes of this type and will show a dialog with all the painter's properties.
+        <data><![CDATA[<p>At this point the nodes in the viewer should look pretty ugly. So let's make them look better. The easiest way is by invoking the &quot;Add Painter&quot; command from the popup menu on a selected node. This will automaticaly create a painter for all the nodes of this type and will show a dialog with all the painter's properties.
 </p>
 <p>Of course it's possible to define a painter programmatically.
 </p>
 <p>(For more information on painters and styles you could look at &quot;Painters And Styles.nb&quot;). Next we'll define few generic painters which are responsible for drawing the nodes of a given type.
-</p>]]>        </data>
+</p>
+]]>        </data>
     </cell>
     <cell>
         <data><![CDATA[//helper function for adding generic painters  
@@ -109,8 +109,9 @@ comp.getView().redrawGraph();
 ]]>        </data>
     </cell>
     <cell-group name="CG0">
-        <cell html-preview="true" engine="html">
-            <data><![CDATA[Here's an example of an edge painter which is defined inline and will not be persisted. Note the use the general paintEdge() method where we change the background color of the label, which is generally not supported by DefaultEdgePainter. If you wish you could add Image or some other fancy stuff there.]]>            </data>
+        <cell html-preview="true">
+            <data><![CDATA[Here's an example of an edge painter which is defined inline and will not be persisted. Note the use the general paintEdge() method where we change the background color of the label, which is generally not supported by DefaultEdgePainter. If you wish you could add Image or some other fancy stuff there.
+]]>            </data>
         </cell>
         <cell>
             <data><![CDATA[subsumesType = graph.getTypeSystem().getTypeHandle(HGSubsumes.class);
@@ -134,7 +135,8 @@ comp.getView().redrawGraph();
 
     </cell-group>
     <cell html-preview="true">
-        <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.]]>        </data>
+        <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
+]]>        </data>
     </cell>
     <cell-group name="CG0">
         <cell>
@@ -145,8 +147,9 @@ comp.refresh();
 
     </cell-group>
     <cell-group name="CG1">
-        <cell html-preview="true" engine="html">
-            <data><![CDATA[Finally, if you need more space or wish to use HGViewer in a separate Frame, you could execute the following code:]]>            </data>
+        <cell html-preview="true">
+            <data><![CDATA[Finally, if you need more space or wish to use HGViewer in a separate Frame, you could execute the following code:
+]]>            </data>
         </cell>
 
     </cell-group>
@@ -168,7 +171,6 @@ f.addWindowListener(new WindowAdapter()
 } );
 f.setMinimumSize(new Dimension(600, 400));
 f.setVisible(true);
-
 ]]>            </data>
         </cell>
 
