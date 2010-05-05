@@ -1,20 +1,20 @@
 @echo off
- set JAVA_HOME=C:\PROGRA~2\Java\jdk1.6.0_10
- set HGDB_HOME=C:\temp\hg
+ set JAVA_HOME=C:\java6_32
+ set HGDB_HOME=d:\classlib\hypergraphdb-1.0
  
 set VIEWER_HOME=%CD%
 set VIEWER_CLASSPATH=%VIEWER_HOME%/hgdbviewer.jar
-set HGDB_NATIVE=%HGDB_HOME%\native\windows
+set HGDB_NATIVE=%HGDB_HOME%\windows
 
 set JAVA_EXEC="%JAVA_HOME%/bin/java"
 %JAVA_EXEC% -version 2>&1 | find "64-Bit" >nul:
 
 if errorlevel 1 (
    REM echo 32-Bit 
-   set HGDB_NATIVE=%HGDB_HOME%\native\windows
+   set HGDB_NATIVE=%HGDB_HOME%\native
 ) else (
    REM  echo 64-Bit
-   set HGDB_NATIVE=%HGDB_HOME%\native\windows\amd64
+   set HGDB_NATIVE=%HGDB_HOME%\native\amd64
 )
 REM echo HGDB_NATIVE:  %HGDB_NATIVE%
 set PATH=%HGDB_NATIVE%;%PATH%

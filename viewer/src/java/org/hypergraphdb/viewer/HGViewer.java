@@ -190,6 +190,7 @@ public class HGViewer extends JPanel
      */
     public void focus(HGHandle handle)
     {
+        foc_handle = handle;
         HGWNReader reader = new HGWNReader(graph);
         reader.read(handle, depth, getGenerator());
         clearView();
@@ -420,7 +421,7 @@ public class HGViewer extends JPanel
      * @return the last focused HGViewer
      */
     public static final HGViewer getFocusedComponent()
-    {
+    {    	
         return (HGViewer) AppContext.getAppContext().get(FOCUSED_COMPONENT);
     }
 

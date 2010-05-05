@@ -1,4 +1,4 @@
-<notebook title="/home/borislav/downloads/hgviewer/ViewerInSeco.nb">
+<notebook title="D:\work\hg\viewer\ViewerInSeco.nb">
     <cell-style bgColor="255,204,102"/>
     <output-cell-style borderColor="255,255,255" fgColor="0,128,0"/>
     <cell-group name="CG7">
@@ -12,7 +12,7 @@
 
     </cell-group>
     <cell-group name="CG8">
-        <cell initialization="true">
+        <cell>
             <data><![CDATA[import org.hypergraphdb.*;
 import org.hypergraphdb.query.*; 
 import org.hypergraphdb.viewer.*;
@@ -29,12 +29,17 @@ type = new HGViewerType();
 type.setHyperGraph(niche);
 niche.getTypeSystem().addPredefinedType(HGViewerType.HGHANDLE, type,  HGViewer.class);
 
-graph =HGEnvironment.get(System.getProperty("user.home") + File.separator + ".secoRepository");
+graph = niche;
 ]]>            </data>
         </cell>
 
     </cell-group>
     <cell-group name="CG9">
+        <cell html-preview="true">
+            <data><![CDATA[<h3>The HGViewer Swing Component
+</h3>
+]]>            </data>
+        </cell>
         <cell html-preview="true">
             <data><![CDATA[<p>Next we'll create the HGViewer component, the depth of displayed HyperGraph elements and the handle to focus around. In this case this will be the Top handle.
 </p>
@@ -52,24 +57,26 @@ comp = new HGViewer(graph, h, 2, null);
 
     </cell-group>
     <cell html-preview="true">
-        <data><![CDATA[<p>
-  <span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
+        <data><![CDATA[
+<p>
+  <span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">Here's the viewer. Note the dropdown menues in the bottom right corner. Few useful shortcuts to remember while working with the viewer's zoomable interface:</span>
 </p>
 <ul>
-  <li><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">Right Mouse Button Down + Drag Left </span><span style="color:#000000; font-style:normal; font-weight:bold; font-size:14; font-family:Dialog;">OR</span><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;"> Alt + Up = Zoom In</span>  
+  <li><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">Right Mouse Button Down + Drag Left </span><span style="font-size:14; color:#000000; font-weight:bold; font-style:normal; font-family:Dialog;">OR</span><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;"> Alt + Up = Zoom In</span>  
   </li>
-  <li><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">Right Mouse Button Down + Drag Right </span><span style="color:#000000; font-style:normal; font-weight:bold; font-size:14; font-family:Dialog;">OR</span><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;"> Alt + Down = Zoom Out</span>  
+  <li><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">Right Mouse Button Down + Drag Right </span><span style="font-size:14; color:#000000; font-weight:bold; font-style:normal; font-family:Dialog;">OR</span><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;"> Alt + Down = Zoom Out</span>  
   </li>
-  <li><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">Ctrl + F = View is scaled to display all presented nodes</span>  
+  <li><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">Ctrl + F = View is scaled to display all presented nodes</span>  
   </li>
-  <li>Ctrl + L = Layout  
+  <li>Ctrl + L = Switch to a different Layout  
   </li>
   <li>Ctrl + H = Hide selected nodes&#160;  
   </li>
 </ul>
-<p><span style="color:#000000; font-style:normal; font-size:14; font-family:Dialog;">To inspect the node values, you should select some node and execute the following command Next you can use the received value in the previous script to create another view centered around the new value and probably based on a different condition.</span>
+<p><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">The viewer works by displaying all atoms adjacent to a given </span><span style="font-size:14; color:#000000; font-weight:bold; font-style:normal; font-family:Dialog;">focus</span><span style="font-size:14; color:#000000; font-weight:normal; font-style:normal; font-family:Dialog;"> atom to a certain depth. The component's API allows you to change the focus atom, the depth as well as the meaning of &quot;adjacent&quot;. The code just executed focuses on the </span><span style="font-size:14; color:#000000; font-weight:normal; font-style:italic; font-family:Dialog;">Top</span><span style="font-size:14; color:#000000; font-weight:normal; font-style:italic; font-family:Dialog;"> </span><span style="font-size:14; color:#000000; font-weight:normal; font-family:Dialog;">HyperGraphDB</span><span style="font-size:14; color:#000000; font-weight:normal; font-style:italic; font-family:Dialog;"> </span><span style="font-size:14; color:#000000; font-weight:normal; font-family:Dialog;">type. Within the viewer interface you can select an atom (a node or a link) currently being displayed and focus on it by selecting</span><span style="font-size:14; color:#000000; font-weight:normal; font-style:italic; font-family:Dialog;"> </span><span style="font-size:14; color:#000000; font-weight:normal; font-style:italic; font-family:Dialog;">Focus</span><span style="font-size:14; color:#000000; font-weight:normal; font-family:Dialog;"> from the right-click context menu</span><span style="font-size:14; color:#000000; font-weight:normal; font-style:italic; font-family:Dialog;">.</span><span style="font-size:14; color:#000000; font-weight:normal; font-family:Dialog;"> You can also show more atoms branching out of a given atom with the </span><span style="font-size:14; color:#000000; font-weight:normal; font-style:italic; font-family:Dialog;">Expand</span><span style="font-size:14; color:#000000; font-weight:normal; font-family:Dialog;"> command from the context menu.</span>
 </p>
-]]>        </data>
+<p><span style="font-size:14; color:#000000; font-style:normal; font-family:Dialog;">To inspect the node values, you should select some node and execute the following cell. Next you can use the received value in the previous script to create another view focused around the new value and probably based on a different adjancy lists. This way you can complement the viewer's interface with scripting in the language of your choice. </span>
+</p>]]>        </data>
     </cell>
     <cell>
         <data><![CDATA[node = comp.getView().getSelectedNodeView();
@@ -78,11 +85,12 @@ o = graph.get(hh);
 ]]>        </data>
     </cell>
     <cell html-preview="true">
-        <data><![CDATA[<p>At this point the nodes in the viewer should look pretty ugly. So let's make them look better. The easiest way is by invoking the &quot;Add Painter&quot; command from the popup menu on a selected node. This will automaticaly create a painter for all the nodes of this type and will show a dialog with all the painter's properties.
+        <data><![CDATA[<h3>Changing the Look 
+</h3>
+<p>At this point the nodes in the viewer should look pretty ugly. So let's make them look better. The easiest way is by invoking the &quot;Add Painter&quot; command from the popup menu on a selected node. This will automaticaly create a painter for all the nodes of this type and will show a dialog with all the painter's properties.For example, zoom in on the viewer, select one of the subsumes nodes, right click on it, click on 
+  <span style="font-style:italic;">Add Painter-&gt; Node </span>and type in a label property in the dialog box and click ok. Now all subsumes nodes will appear with a shorter label. Note that those &quot;nodes&quot; in the viewer are actually links in the graph. The visualization transforms each hyperedge into a node so that the hypergraph is essentially transformed into a standard directed graph.
 </p>
-<p>Of course it's possible to define a painter programmatically.
-</p>
-<p>(For more information on painters and styles you could look at &quot;Painters And Styles.nb&quot;). Next we'll define few generic painters which are responsible for drawing the nodes of a given type.
+<p>It's possible to define a painter programmatically.The relevant classes and interfaces can be found in the <span style="font-style:italic;">org.hypergraphdb.viewer.layout</span> package, which you can browse from the viewer's javadocs. Essentially, you can associate a node or an edge painter with a given atom type. Here is an example that changes the appearance of a subsumes node:
 </p>
 ]]>        </data>
     </cell>
@@ -135,18 +143,43 @@ comp.getView().redrawGraph();
 
     </cell-group>
     <cell html-preview="true">
-        <data><![CDATA[If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
+        <data><![CDATA[<h3>Defining What Data to Show
+</h3>
+<p>If the nodes are too many we can reduce the depth and refresh the viewer. Note that this is a fully refresh and it reads all the data from the underlying graph, so this method could be used to synchronise the viewer after some changes on the hypergraph.
+</p>
 ]]>        </data>
     </cell>
     <cell-group name="CG0">
         <cell>
-            <data><![CDATA[comp.setDepth(1); 
+            <data><![CDATA[comp.setDepth(2); 
+comp.refresh();
+]]>            </data>
+        </cell>
+        <cell html-preview="true">
+            <data><![CDATA[To change the currently focused on atom programmatically, just call the component's 
+<span style="font-style:italic;">focus </span>method. For example, Seco's notebooks are represented as nested cell structures in HyperGraphDB and their behavior is governed by various link annotations around those structures. So here's a view of the current notebook. If the viewer cell is already out of sight, just drag it somewhere on the canvas to see the result:]]>            </data>
+        </cell>
+        <cell>
+            <data><![CDATA[comp.focus(notebook.doc.bookHandle)
+]]>            </data>
+        </cell>
+        <cell html-preview="true" readonly="true" collapsed="true">
+            <data><![CDATA[By default, the viewer will examine all edges connected to a given atom. But internally it just uses a adjancy list generator (see <a href="http://www.kobrix.com/javadocs/hgcore/org/hypergraphdb/algorithms/HGALGenerator.html">org.hypergraphdb.algorithms.HGALGenerator</a>), which you can change. For example, given the top-level cell group representing our notebook, we can display only the cell tree by restricting the edge type to be a CellGroup:]]>            </data>
+        </cell>
+
+    </cell-group>
+    <cell-group name="CG8">
+        <cell>
+            <data><![CDATA[comp.setGenerator(new org.hypergraphdb.algorithms.DefaultALGenerator(graph, hg.type(CellGroup.class), null));
 comp.refresh();
 ]]>            </data>
         </cell>
 
     </cell-group>
     <cell-group name="CG1">
+        <cell html-preview="true" engine="html">
+            <data><![CDATA[Using the HGViewer Component in Your Own Swing Applications]]>            </data>
+        </cell>
         <cell html-preview="true">
             <data><![CDATA[Finally, if you need more space or wish to use HGViewer in a separate Frame, you could execute the following code:
 ]]>            </data>

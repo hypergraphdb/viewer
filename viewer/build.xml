@@ -3,8 +3,8 @@
 	<description>HyperGraphDB Viewer Build File</description>
     
 	<!--Location of the HypergraphDB jar-->
-	<property name="hgdb_jar" value="../hgdbfull.jar"/>
-		
+	<property name="hgdb_jar" value="../core/hgdbfull.jar"/>
+	
 	<property name="build" value="build"/>
 	<!-- The directory containing distribution jar -->
 	<property name="dist" value="${build}/dist" />
@@ -41,7 +41,7 @@
     </target>
     
 	<target name="compile" depends="init" description="Compile the HyperGraphDB Viewer Sources">
-		<javac source="1.6" classpathref="viewer-classpath" debug="${debug}" destdir="${build}" srcdir="src">
+		<javac source="1.5" classpathref="viewer-classpath" debug="${debug}" destdir="${build}" srcdir="src">
 		</javac>
 	</target>
 

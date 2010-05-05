@@ -93,7 +93,10 @@ public class PNodeView extends PPath
         String tip = "" + view.getHyperGraph().get(node.getHandle());
         this.setToolTip(tip);
         if(tip.length() > 15)
-            tip = view.getHyperGraph().get(node.getHandle()).getClass().getSimpleName();
+        {
+            Object a = view.getHyperGraph().get(node.getHandle()); 
+            tip = a.getClass().getSimpleName();
+        }
         this.setLabelText(tip);
         invalidatePaint();
     }
