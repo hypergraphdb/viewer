@@ -199,7 +199,8 @@ public class ContextMenuHelper extends PBasicInputEventHandler
         DialogDescriptor dd = new DialogDescriptor(
                 GUIUtilities.getFrame(), 
                 new JScrollPane(propsPanel),
-              "Properties: " + obj.getClass().getName());
+              "Properties: " + ((obj == null)? 
+                      "null" : obj.getClass().getName()));
         DialogDisplayer.getDefault().notify(dd);
     }
     

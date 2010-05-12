@@ -85,9 +85,16 @@ public class HGWNReader
                 if (!HGUtils.eq(generator.getCurrentLink(), currLink))
                 {
                     currLink = generator.getCurrentLink();
-                    linkNode = new FNode(currLink);
-                    nodes.add(linkNode);
-                    add_edge(linkNode, node);
+                    if(currLink != null)
+                    {
+                       linkNode = new FNode(currLink);
+                       nodes.add(linkNode);
+                       add_edge(linkNode, node);
+                    }
+                    //else
+                    //{
+                    //    System.err.println("NULL Handle in Generator");
+                    //}
                 }
                 HGHandle a = i.next();
                 FNode an = new FNode(a);

@@ -137,9 +137,9 @@ public class PNodeSelectionHandler extends PDragSequenceEventHandler {
 	}
 
 	public void unselect(PNode node) {
-	    selection.remove(node);
-		if (!isSelected(node)) 	return;
-		if (node instanceof PNodeView)
+	   if (!isSelected(node)) 	return;
+	   selection.remove(node);
+	   if (node instanceof PNodeView)
 			((PNodeView) node).setSelected(false);
 		undecorateSelectedNode(node);
 		graphView.fireSelectionChanged();

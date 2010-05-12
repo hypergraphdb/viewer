@@ -193,7 +193,7 @@ public class HGViewer extends JPanel
         foc_handle = handle;
         HGWNReader reader = new HGWNReader(graph);
         reader.read(handle, depth, getGenerator());
-        clearView();
+        view.removeAll();
         for (FNode n : reader.getNodes())
             view.addNodeView(n);
         for (FEdge e : reader.getEdges())
@@ -216,15 +216,7 @@ public class HGViewer extends JPanel
         //adjust_view();
     }
 
-    void clearView()
-    {
-        for (PEdgeView e : view.getEdgeViewsCopy())
-            view.removeEdgeView(e);
-        for (PNodeView nv : view.getNodeViewsCopy())
-            view.removeNodeView(nv.getNode());
-    }
-
-    /**
+     /**
      * Returns the underlying <code>GraphView</code>
      * @return the underlying <code>GraphView</code>
      */

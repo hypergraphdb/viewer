@@ -795,13 +795,25 @@ public class GraphView
     {
         if (!edgeViewMap.containsKey(e)) return null;
         PEdgeView view = getEdgeView(e);
-        view.removeFromParent();
+        view.removeFromParent(); 
+       
         if(isEdgeSelectionEnabled())
            getEdgeSelectionHandler().unselect(view);
         edgeViewMap.remove(e);
         fireGraphChanged(new GraphViewEdgesRemovedEvent(this, new FEdge[] { e }));
         return view;
     }
+    
+    void removeAll()
+    {
+        getNodeSelectionHandler().unselectAll();
+        getEdgeSelectionHandler().unselectAll();
+        edgeViewMap.clear();
+        edgeLayer.removeAllChildren();
+        nodeViewMap.clear();
+        nodeLayer.removeAllChildren();
+        squiggleLayer.removeAllChildren();
+    } 
 
     /**
      * Adds a PNodeView given a FNode 
