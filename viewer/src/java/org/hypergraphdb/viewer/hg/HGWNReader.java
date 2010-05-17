@@ -11,6 +11,7 @@ import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HGSearchResult;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.IncidenceSet;
+import org.hypergraphdb.algorithms.DefaultALGenerator;
 import org.hypergraphdb.algorithms.HGALGenerator;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.util.HGUtils;
@@ -59,8 +60,10 @@ public class HGWNReader
     {
         nodes.clear();
         edges.clear();
-        //read0(handle, depth, generator);
-        //if(true) return;
+        //TODO: temporary here, while HGALGenerator gets resolved
+       // read0(handle, depth, generator);
+      //  System.out.println("read: " + nodes.size() + ":" + edges.size());
+      //  if(true) return;
         
         LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
         depth--;
@@ -91,10 +94,11 @@ public class HGWNReader
                        nodes.add(linkNode);
                        add_edge(linkNode, node);
                     }
-                    //else
-                    //{
-                    //    System.err.println("NULL Handle in Generator");
-                    //}
+                    else
+                    {
+                        System.err.println("NULL currLink in Generator: " + 
+                                (depth) + ":" + nodes.size());
+                    }
                 }
                 HGHandle a = i.next();
                 FNode an = new FNode(a);
@@ -132,28 +136,35 @@ public class HGWNReader
     public void read0(HGHandle handle, int depth, HGALGenerator generator)
     {
         if(depth < 0)  return;
+        DefaultALGenerator defG = (generator != null && generator instanceof DefaultALGenerator) ?
+                (DefaultALGenerator) generator : null;
         FNode node = new FNode(handle);
         nodes.add(node);
         Set<HGHandle> next_layer = new HashSet<HGHandle>();
-        HGHandle currentLink = null;
-        FNode link_node = null;
-        HGSearchResult<HGHandle> i = generator.generate(handle);
+        HGSearchResult<HGHandle> i = hypergraph.getIncidenceSet(handle).getSearchResult();
         while (i.hasNext())
         {
-            if(!generator.getCurrentLink().equals(currentLink))
-            {
-                currentLink = generator.getCurrentLink();
-                link_node = new FNode(currentLink);
-                nodes.add(link_node);
-                add_edge(link_node, node);
-            } 
+         //  if(defG != null && !defG.getLinkPredicate().satisfies())
            HGHandle a = i.next();
            next_layer.add(a);
            FNode an = new FNode(a);
            nodes.add(an);
-           add_edge(link_node, an);
+           add_edge(an, node);
         }
-        i.close();
+        Object o = hypergraph.get(handle);
+        if(o instanceof HGLink)
+        {
+          //if(!generator.getSiblingPredicate().satisfies())
+            for(int j = 0; j < ((HGLink) o).getArity(); j++)
+            {
+                HGHandle h = ((HGLink) o).getTargetAt(j);
+                next_layer.add(h);
+                FNode an = new FNode(h);
+                nodes.add(an);
+                add_edge(node, an);
+            }
+        }
+        
         for(HGHandle h: next_layer)
             read0(h, depth -1, generator);
     }

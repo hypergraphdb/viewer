@@ -244,9 +244,9 @@ public class GraphView
      */
     public void redrawGraph()
     {
-        getCanvas().setInteracting(true);
-        applyAppearances();
-        getCanvas().setInteracting(false);
+       getCanvas().setInteracting(true);
+       applyAppearances();
+       getCanvas().setInteracting(false);
     }
 
     /**
@@ -678,6 +678,8 @@ public class GraphView
      */
     public VisualStyle getVisualStyle()
     {
+        if(style == null) 
+           style = VisualManager.getInstance().getDefaultVisualStyle();
         return style;
     }
 
@@ -766,11 +768,11 @@ public class GraphView
     {
         if (!nodeViewMap.containsKey(node)) return null;
         PNodeView node_view = getNodeView(node);
-        getNodeView(node).removeFromParent();
-
-        nodeViewMap.remove(node);
         if(isNodeSelectionEnabled())
            getNodeSelectionHandler().unselect(node_view);
+        getNodeLayer().removeChild(node_view);
+        nodeViewMap.remove(node);
+        
         fireGraphChanged(new GraphViewNodesRemovedEvent(this,
                 new FNode[] { node }));
         return node_view;
