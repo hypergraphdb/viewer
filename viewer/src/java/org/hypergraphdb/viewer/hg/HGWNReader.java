@@ -93,16 +93,12 @@ public class HGWNReader
     {
         nodes.clear();
         edges.clear();
-        // TODO: temporary here, while HGALGenerator gets resolved
-        // read0(handle, depth, generator);
-        // System.out.println("read: " + nodes.size() + ":" + edges.size());
-        // if(true) return;
-
+     
         LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
-        depth--;
         FNode node = new FNode(handle);
         nodes.add(node);
-        if(depth == -1) return;
+        if(depth == 0) return;
+        depth--;
         remaining.add(handle);
         while (remaining.size() > 0)
         {
@@ -148,7 +144,7 @@ public class HGWNReader
             }
         }
 
-        System.out.println("focus0: " + nodes.size() + ":" + edges.size());
+        System.out.println("focus: " + nodes.size() + ":" + edges.size());
     }
 
     private void add_edge(FNode source, FNode target)
@@ -167,42 +163,42 @@ public class HGWNReader
         }
     }
 
-    public void read0(HGHandle handle, int depth, HGALGenerator generator)
-    {
-        if (depth < 0) return;
-        DefaultALGenerator defG = (generator != null && generator instanceof DefaultALGenerator) ? (DefaultALGenerator) generator
-                : null;
-        FNode node = new FNode(handle);
-        nodes.add(node);
-        Set<HGHandle> next_layer = new HashSet<HGHandle>();
-        HGSearchResult<HGHandle> i = hypergraph.getIncidenceSet(handle)
-                .getSearchResult();
-        while (i.hasNext())
-        {
-            // if(defG != null && !defG.getLinkPredicate().satisfies())
-            HGHandle a = i.next();
-            next_layer.add(a);
-            FNode an = new FNode(a);
-            nodes.add(an);
-            add_edge(an, node);
-        }
-        Object o = hypergraph.get(handle);
-        if (o instanceof HGLink)
-        {
-            // if(!generator.getSiblingPredicate().satisfies())
-            for (int j = 0; j < ((HGLink) o).getArity(); j++)
-            {
-                HGHandle h = ((HGLink) o).getTargetAt(j);
-                next_layer.add(h);
-                FNode an = new FNode(h);
-                nodes.add(an);
-                add_edge(node, an);
-            }
-        }
-
-        for (HGHandle h : next_layer)
-            read0(h, depth - 1, generator);
-    }
+//    public void read0(HGHandle handle, int depth, HGALGenerator generator)
+//    {
+//        if (depth < 0) return;
+//        DefaultALGenerator defG = (generator != null && generator instanceof DefaultALGenerator) ? (DefaultALGenerator) generator
+//                : null;
+//        FNode node = new FNode(handle);
+//        nodes.add(node);
+//        Set<HGHandle> next_layer = new HashSet<HGHandle>();
+//        HGSearchResult<HGHandle> i = hypergraph.getIncidenceSet(handle)
+//                .getSearchResult();
+//        while (i.hasNext())
+//        {
+//            // if(defG != null && !defG.getLinkPredicate().satisfies())
+//            HGHandle a = i.next();
+//            next_layer.add(a);
+//            FNode an = new FNode(a);
+//            nodes.add(an);
+//            add_edge(an, node);
+//        }
+//        Object o = hypergraph.get(handle);
+//        if (o instanceof HGLink)
+//        {
+//            // if(!generator.getSiblingPredicate().satisfies())
+//            for (int j = 0; j < ((HGLink) o).getArity(); j++)
+//            {
+//                HGHandle h = ((HGLink) o).getTargetAt(j);
+//                next_layer.add(h);
+//                FNode an = new FNode(h);
+//                nodes.add(an);
+//                add_edge(node, an);
+//            }
+//        }
+//
+//        for (HGHandle h : next_layer)
+//            read0(h, depth - 1, generator);
+//    }
 
     // check if such edge is possible and creates one if true
     // source node should be link, and
