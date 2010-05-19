@@ -17,6 +17,7 @@ import javax.swing.KeyStroke;
 
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGHandleFactory;
+import org.hypergraphdb.HGTypeSystem;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.type.Top;
 import org.hypergraphdb.viewer.ActionManager;
@@ -28,7 +29,7 @@ import org.hypergraphdb.viewer.util.FileUtil;
 import org.hypergraphdb.viewer.util.GUIUtilities;
 
 /**
- * Action to choose and load a HyperGraph 
+ * Action to choose and load a HyperGraph
  */
 public class LoadHyperGraphFileAction extends AbstractAction
 {
@@ -39,8 +40,8 @@ public class LoadHyperGraphFileAction extends AbstractAction
     public LoadHyperGraphFileAction()
     {
         super(ActionManager.LOAD_HYPER_GRAPH_ACTION);
-        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-                KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_L,
+                ActionEvent.CTRL_MASK));
     }
 
     /**
@@ -54,12 +55,13 @@ public class LoadHyperGraphFileAction extends AbstractAction
         // Get the file name
         File file = FileUtil.getFile("Load Network File", FileUtil.LOAD, null,
                 null, null, true);
-        if (file != null) loadHyperGraph(file);
+        if (file != null)
+            loadHyperGraph(file);
     }
 
     public static void loadHyperGraph(File file)
     {
-        if (file == null) 
+        if (file == null)
             throw new NullPointerException("HG file is null");
         try
         {
@@ -70,17 +72,17 @@ public class LoadHyperGraphFileAction extends AbstractAction
             e.printStackTrace();
         }
     }
-    
+
     private static HGViewer createHGViewer(File db) throws IOException
     {
         HGWNReader reader = new HGWNReader(db);
         // Have the GraphReader read the given file
         open(reader);
-         HGViewer comp = HGVKit.createHGViewer(reader
-                .getHyperGraph(), reader.getNodes(), reader.getEdges());
-         return comp;
+        HGViewer comp = HGVKit.createHGViewer(reader.getHyperGraph(), reader
+                .getNodes(), reader.getEdges());
+        return comp;
     }
-    
+
     static void open(HGWNReader reader) throws IOException
     {
         NotifyDescriptor d = new NotifyDescriptor.InputLine(GUIUtilities
@@ -90,18 +92,23 @@ public class LoadHyperGraphFileAction extends AbstractAction
         if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION)
         {
             String hh = ((NotifyDescriptor.InputLine) d).getInputText();
-           // if (hh == null || hh.equals("")) return;
+            // if (hh == null || hh.equals("")) return;
             HGHandle h = null;
-            try{
-                h = HGHandleFactory.makeHandle(hh);
-            }catch(Throwable t)
+            try
             {
-                NotifyDescriptor e = new NotifyDescriptor.Exception(GUIUtilities
-                        .getFrame(), t);
+                h = HGHandleFactory.makeHandle(hh);
+            }
+            catch (Throwable t)
+            {
+                NotifyDescriptor e = new NotifyDescriptor.Exception(
+                        GUIUtilities.getFrame(), t);
                 DialogDisplayer.getDefault().notify(e);
-                h = reader.getHyperGraph().getTypeSystem().getTypeHandle(Top.class);
+                h = reader.getHyperGraph().getTypeSystem().getTypeHandle(
+                        Top.class);
             }
             reader.read(h, 2, (HGAtomPredicate) null);
         }
+        else
+            reader.read(HGTypeSystem.TOP_PERSISTENT_HANDLE, 2, (HGAtomPredicate) null);
     }
 }

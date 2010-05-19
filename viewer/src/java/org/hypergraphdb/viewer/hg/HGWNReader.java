@@ -15,6 +15,7 @@ import org.hypergraphdb.algorithms.DefaultALGenerator;
 import org.hypergraphdb.algorithms.HGALGenerator;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.util.HGUtils;
+import org.hypergraphdb.util.Pair;
 import org.hypergraphdb.viewer.FEdge;
 import org.hypergraphdb.viewer.FNode;
 
@@ -79,15 +80,16 @@ public class HGWNReader
                 continue;
             }
             node = new FNode(h);
-            HGSearchResult<HGHandle> i = generator.generate(h);
+            HGSearchResult<Pair<HGHandle, HGHandle>> i = generator.generate(h);
             if (depth > 0) remaining.add(null);
             HGHandle currLink = null;
             FNode linkNode = node;
             while (i.hasNext())
             {
-                if (!HGUtils.eq(generator.getCurrentLink(), currLink))
+                Pair<HGHandle, HGHandle> p = i.next();
+                if (!HGUtils.eq(p.getFirst(), currLink))
                 {
-                    currLink = generator.getCurrentLink();
+                    currLink = p.getFirst();
                     if(currLink != null)
                     {
                        linkNode = new FNode(currLink);
@@ -100,7 +102,7 @@ public class HGWNReader
                                 (depth) + ":" + nodes.size());
                     }
                 }
-                HGHandle a = i.next();
+                HGHandle a = p.getSecond();
                 FNode an = new FNode(a);
                 nodes.add(an);
                 add_edge(linkNode, an);

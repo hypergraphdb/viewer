@@ -3,7 +3,7 @@ Welcome to HGViewer
 
 HGViewer is a free, open-source viewer for HyperGraph DB-s. 
 
-For more information, please visit http://www.hypergraphdb.org
+For more information, please visit http://www.hypergraphdb.org. Introductory documentation on the viewer can be found directly at this links http://code.google.com/p/hypergraphdb/wiki/HGViewer.
 
 Licensing information may be found in the LicensingInformation file in this directory.
 
@@ -11,6 +11,11 @@ Requirements
 ============
 
 HGViewer needs HypergraphDB and  Java 5 to run. It has been tested on Windows and Linux. It should work anywhere HyperGraphDB itself runs.
+
+Running With Seco
+=================
+
+While the viewer runs as a standalone program, not much effort has been put in its UI. To take advantage of its full capabilities, it is best to use it as a component in the Seco environment - please see http://www.kobrix.com/seco.jsp.
 
 Running on Windows
 ==================
