@@ -606,8 +606,6 @@ public class GraphView
      */
     public void applyAppearances()
     {
-        if (getVisualStyle() == null)
-            setVisualStyle(VisualManager.getInstance().getDefaultVisualStyle());
         setBackgroundPaint(getVisualStyle().getBackgroundColor());
         applyNodeAppearances();
         applyEdgeAppearances();

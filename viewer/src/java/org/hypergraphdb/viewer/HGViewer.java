@@ -193,17 +193,23 @@ public class HGViewer extends JPanel
         foc_handle = handle;
         HGWNReader reader = new HGWNReader(graph);
         reader.read(handle, depth, getGenerator());
+        System.out.println("HGViewer - focus1 ");
         view.removeAll();
+        System.out.println("HGViewer - focus2 ");
         for (FNode n : reader.getNodes())
             view.addNodeView(n);
         for (FEdge e : reader.getEdges())
             view.addEdgeView(e);
-        HGVKit.getPreferedLayout().applyLayout(view);
+        System.out.println("HGViewer - focus3 ");
         view.redrawGraph();
-        FNode node = new FNode(handle);
-        view.getNodeView(node).setSelected(true);
+        System.out.println("HGViewer - focus4 ");
+        HGVKit.getPreferedLayout().applyLayout(view);
+        System.out.println("HGViewer - focus5 ");
+        PNodeView nview =   view.getNodeView(new FNode(handle));
+        nview.setSelected(true);
         view.getCanvas().getCamera().animateViewToCenterBounds(
-                view.getNodeView(node).getFullBounds(), false, 1550l);
+                nview.getFullBounds(), false, 1550l);
+        System.out.println("HGViewer - focus6 ");
     }
 
     /**
