@@ -9,6 +9,7 @@ import java.awt.Insets;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Collection;
+import java.util.HashMap;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -19,6 +20,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HyperGraph;
@@ -35,24 +37,25 @@ import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolox.swing.PScrollPane;
 
 /**
- * Swing Component for displaying HyperGraphDB atoms and links.
- * Contains a <link>org.hypergraphdb.viewer.GraphView</link> that actually displays HG stuff
- * in a Piccolo canvas and a combination of status bar and menu bar.
- *   
- * HGViewer has to visual representation: standalone and as part of the HGVDesktop.
- * In the first case viewer contains its own toolbar alongside the status bar at the bottom.
- * In the other case it contains only status bar, because it shares the common HGVDesktop toolbar.
+ * Swing Component for displaying HyperGraphDB atoms and links. Contains a
+ * <link>org.hypergraphdb.viewer.GraphView</link> that actually displays HG
+ * stuff in a Piccolo canvas and a combination of status bar and menu bar.
+ * 
+ * HGViewer has to visual representation: standalone and as part of the
+ * HGVDesktop. In the first case viewer contains its own toolbar alongside the
+ * status bar at the bottom. In the other case it contains only status bar,
+ * because it shares the common HGVDesktop toolbar.
  * 
  * @author Konstantin Vandev
  */
 public class HGViewer extends JPanel
 {
     private static final Object FOCUSED_COMPONENT = new StringBuilder(
-    "HGVComponent");
-    
+            "HGVComponent");
+
     /**
-     * This is the label that shows how many node/edges are 
-     * presented and selected in the GraphView
+     * This is the label that shows how many node/edges are presented and
+     * selected in the GraphView
      */
     protected JLabel statusLabel;
     protected GraphView view;
@@ -64,24 +67,31 @@ public class HGViewer extends JPanel
     private HGHandle foc_handle;
 
     protected HyperGraph graph;
-    
+
     /**
      * Constructor
-     * @param db The HyperGraph to be viewed
-     * @param h The HGHandle to be focused
+     * 
+     * @param db
+     *            The HyperGraph to be viewed
+     * @param h
+     *            The HGHandle to be focused
      */
     public HGViewer(HyperGraph db, HGHandle h)
     {
         this(db, h, 2, null);
     }
 
-    
     /**
      * Constructor
-     * @param db The HyperGraph to be viewed
-     * @param h The HGHandle to be focused
-     * @param depth The depth of displayed nodes : 1 = first neighbours  
-     * @param generator HGALGenerator to filter specific nodes, could be null 
+     * 
+     * @param db
+     *            The HyperGraph to be viewed
+     * @param h
+     *            The HGHandle to be focused
+     * @param depth
+     *            The depth of displayed nodes : 1 = first neighbours
+     * @param generator
+     *            HGALGenerator to filter specific nodes, could be null
      */
     public HGViewer(HyperGraph db, HGHandle h, int depth,
             HGALGenerator generator)
@@ -99,9 +109,13 @@ public class HGViewer extends JPanel
 
     /**
      * Constructor
-     * @param db The HyperGraph to be viewed
-     * @param nodes FNodes to be displayed
-     * @param edges FEdges to be displayed
+     * 
+     * @param db
+     *            The HyperGraph to be viewed
+     * @param nodes
+     *            FNodes to be displayed
+     * @param edges
+     *            FEdges to be displayed
      */
     public HGViewer(HyperGraph db, Collection<FNode> nodes,
             Collection<FEdge> edges)
@@ -132,7 +146,7 @@ public class HGViewer extends JPanel
         PScrollPane scroll = new PScrollPane(view.canvas);
         add(scroll, BorderLayout.CENTER);
         addStatusBar();
-        setPreferredSize(new Dimension(600,400));
+        setPreferredSize(new Dimension(600, 400));
         initKeyBindings();
     }
 
@@ -176,6 +190,7 @@ public class HGViewer extends JPanel
 
     /**
      * Returns the viewed HyperGraph
+     * 
      * @return the viewed HyperGraph
      */
     public HyperGraph getHyperGraph()
@@ -183,47 +198,58 @@ public class HGViewer extends JPanel
         return graph;
     }
 
-    
     /**
      * Focus on specific handle
-     * @param handle The handle to focus on
+     * 
+     * @param handle
+     *            The handle to focus on
      */
     public void focus(HGHandle handle)
     {
         foc_handle = handle;
-        HGWNReader reader = new HGWNReader(graph);
+        final HGWNReader reader = new HGWNReader(graph);
         reader.read(handle, depth, getGenerator());
-        System.out.println("HGViewer - focus1 ");
-        view.removeAll();
-        System.out.println("HGViewer - focus2 ");
-        for (FNode n : reader.getNodes())
-            view.addNodeView(n);
-        for (FEdge e : reader.getEdges())
-            view.addEdgeView(e);
-        System.out.println("HGViewer - focus3 ");
-        view.redrawGraph();
-        System.out.println("HGViewer - focus4 ");
-        HGVKit.getPreferedLayout().applyLayout(view);
-        System.out.println("HGViewer - focus5 ");
-        PNodeView nview =   view.getNodeView(new FNode(handle));
-        nview.setSelected(true);
-        view.getCanvas().getCamera().animateViewToCenterBounds(
-                nview.getFullBounds(), false, 1550l);
-        System.out.println("HGViewer - focus6 ");
-    }
+        try
+        {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run()
+                {
+                    view.removeAll();
+                    for (FNode n : reader.getNodes())
+                        view.addNodeView(n);
+                    for (FEdge e : reader.getEdges())
+                        view.addEdgeView(e);
+
+                    HGVKit.getPreferedLayout().applyLayout(view);
+                    view.redrawGraph();
+                    final PNodeView nview = view.getNodeView(new FNode(
+                            foc_handle));
+                    view.getNodeSelectionHandler().select(nview);
+
+                    view.getCanvas().getCamera().animateViewToCenterBounds(
+                            nview.getFullBounds(), false, 1550l);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+   }
 
     /**
-     * Refreshes viewer - e.g. clears the view and focuses again on the specified 
-     * focus handle
+     * Refreshes viewer - e.g. clears the view and focuses again on the
+     * specified focus handle
      */
     public void refresh()
     {
         focus(foc_handle);
-        //adjust_view();
+        // adjust_view();
     }
 
-     /**
+    /**
      * Returns the underlying <code>GraphView</code>
+     * 
      * @return the underlying <code>GraphView</code>
      */
     public GraphView getView()
@@ -233,6 +259,7 @@ public class HGViewer extends JPanel
 
     /**
      * Sets the depth to focus on
+     * 
      * @param depth
      */
     public void setDepth(int depth)
@@ -240,9 +267,9 @@ public class HGViewer extends JPanel
         this.depth = depth;
     }
 
-    
     /**
-     * Returns the generator 
+     * Returns the generator
+     * 
      * @return the generator
      */
     public HGALGenerator getGenerator()
@@ -252,10 +279,10 @@ public class HGViewer extends JPanel
         return generator;
     }
 
-    
     /**
-     * Sets the generator 
-     * @param generator 
+     * Sets the generator
+     * 
+     * @param generator
      */
     public void setGenerator(HGALGenerator generator)
     {
@@ -265,23 +292,26 @@ public class HGViewer extends JPanel
     }
 
     private boolean first_time = true;
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.awt.Component#setBounds(int, int, int, int)
      */
     @Override
     public void setBounds(int x, int y, int width, int height)
     {
         super.setBounds(x, y, width, height);
-        if(first_time && width > 0 && height > 0){
+        if (first_time && width > 0 && height > 0)
+        {
             adjust_view();
             first_time = false;
-         }
+        }
     }
-
 
     private void adjust_view()
     {
-        final  PCanvas pCanvas = view.getCanvas();
+        final PCanvas pCanvas = view.getCanvas();
         pCanvas.setVisible(false);
         GraphViewU.invokeLater(new Runnable() {
             public void run()
@@ -296,18 +326,20 @@ public class HGViewer extends JPanel
         });
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.swing.JComponent#removeNotify()
      */
     @Override
     public void removeNotify()
     {
         super.removeNotify();
-        //VisualManager.getInstance().save();
+        // VisualManager.getInstance().save();
     }
 
     /**
-     * Returns the toolbar displayed in the bottom. Stand alone version only. 
+     * Returns the toolbar displayed in the bottom. Stand alone version only.
      */
     public JToolBar getBottomToolbar()
     {
@@ -324,9 +356,9 @@ public class HGViewer extends JPanel
                 return popup;
             }
         };
-        
-        toolbar.add(createDropDown(toolbar, dropdown, "hand", "Edit", 
-                man.getAction(ActionManager.SELECTED_FIRST_NEIGHBORS_ACTION)));
+
+        toolbar.add(createDropDown(toolbar, dropdown, "hand", "Edit", man
+                .getAction(ActionManager.SELECTED_FIRST_NEIGHBORS_ACTION)));
         dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
             {
@@ -335,9 +367,9 @@ public class HGViewer extends JPanel
                 return popup;
             }
         };
-        
-        toolbar.add(createDropDown(toolbar, dropdown, "layout", "Layout", 
-                man.getAction(ActionManager.LAYOUT_ACTION)));
+
+        toolbar.add(createDropDown(toolbar, dropdown, "layout", "Layout", man
+                .getAction(ActionManager.LAYOUT_ACTION)));
         dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
             {
@@ -346,9 +378,14 @@ public class HGViewer extends JPanel
                 return popup;
             }
         };
-        toolbar.add(createDropDown(toolbar, dropdown, "visual",
-                "Visual Properties", 
-                man.getAction(ActionManager.NODE_VISUAL_PROPERTIES_ACTION)));
+        toolbar
+                .add(createDropDown(
+                        toolbar,
+                        dropdown,
+                        "visual",
+                        "Visual Properties",
+                        man
+                                .getAction(ActionManager.NODE_VISUAL_PROPERTIES_ACTION)));
         dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
             {
@@ -357,8 +394,8 @@ public class HGViewer extends JPanel
                 return popup;
             }
         };
-        toolbar.add(createDropDown(toolbar, dropdown, "zoom", "Zooming",
-                man.getAction(ActionManager.FIT_ACTION)));
+        toolbar.add(createDropDown(toolbar, dropdown, "zoom", "Zooming", man
+                .getAction(ActionManager.FIT_ACTION)));
 
         dropdown = new DropDownButton() {
             protected JPopupMenu getPopupMenu()
@@ -370,7 +407,7 @@ public class HGViewer extends JPanel
         };
         toolbar.add(createDropDown(toolbar, dropdown, "print", "Print/Export",
                 man.getAction(ActionManager.EXPORT_ACTION)));
-        
+
         return toolbar;
     }
 
@@ -388,44 +425,46 @@ public class HGViewer extends JPanel
                 + " selected)" + " Edges: " + edgeCount + " (" + selectedEdges
                 + " selected)");
     }
-    
-    
+
     /**
-     * Returns the label that shows how many node/edges are presented/selected in a GraphView
+     * Returns the label that shows how many node/edges are presented/selected
+     * in a GraphView
      */
     public JLabel getStatusLabel()
     {
         return statusLabel;
     }
 
-
     private static DropDownButton createDropDown(JToolBar toolbar,
-            final DropDownButton dropdown, final String name, String tooltip, Action defaultAction)
+            final DropDownButton dropdown, final String name, String tooltip,
+            Action defaultAction)
     {
         dropdown.addToToolBar(toolbar);
         dropdown.putClientProperty("hideActionText", Boolean.TRUE);
         defaultAction.putValue(Action.SMALL_ICON, new ImageIcon(
-                HGViewer.class.getResource("/org/hypergraphdb/viewer/images/" + name
-                                + ".gif")));
-        
+                HGViewer.class.getResource("/org/hypergraphdb/viewer/images/"
+                        + name + ".gif")));
+
         dropdown.setAction(defaultAction);
         dropdown.setToolTipText(tooltip);
         return dropdown;
     }
 
-   
     /**
      * Returns the last focused viewer.
+     * 
      * @return the last focused HGViewer
      */
     public static final HGViewer getFocusedComponent()
-    {    	
+    {
         return (HGViewer) AppContext.getAppContext().get(FOCUSED_COMPONENT);
     }
 
     /**
      * Sets the focused viewer
-     * @param ui the focused HGViewer
+     * 
+     * @param ui
+     *            the focused HGViewer
      */
     public static final void setFocusedComponent(HGViewer ui)
     {
