@@ -2,8 +2,10 @@ package org.hypergraphdb.viewer.hg;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 import org.hypergraphdb.HGHandle;
@@ -13,6 +15,7 @@ import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.IncidenceSet;
 import org.hypergraphdb.algorithms.DefaultALGenerator;
 import org.hypergraphdb.algorithms.HGALGenerator;
+import org.hypergraphdb.algorithms.HGBreadthFirstTraversal;
 import org.hypergraphdb.query.HGAtomPredicate;
 import org.hypergraphdb.util.HGUtils;
 import org.hypergraphdb.util.Pair;
@@ -30,7 +33,7 @@ public class HGWNReader
      * The DB to be loaded
      */
     protected File db;
-    Set<FNode> nodes = new HashSet<FNode>();
+    Map<HGHandle, FNode> nodes = new HashMap<HGHandle, FNode>();
     Set<FEdge> edges = new HashSet<FEdge>();
 
     public HGWNReader(File db)
@@ -88,7 +91,7 @@ public class HGWNReader
     // read0(h, depth - 1, generator);
     //       
     // }
-
+    
     public void read(HGHandle handle, int depth, HGALGenerator generator)
     {
         nodes.clear();
@@ -96,46 +99,41 @@ public class HGWNReader
      
         LinkedList<HGHandle> remaining = new LinkedList<HGHandle>();
         FNode node = new FNode(handle);
-        nodes.add(node);
+        nodes.put(handle, node);
         if(depth == 0) return;
         depth--;
         remaining.add(handle);
         while (remaining.size() > 0)
         {
             HGHandle h = remaining.removeLast();
-            if (h == null)
-            {
-                depth++;
-                continue;
-            }
-            node = new FNode(h);
-            HGSearchResult<Pair<HGHandle, HGHandle>> i = generator.generate(h);
-            if (depth > 0) remaining.add(null);
-            HGHandle currLink = null;
-            FNode linkNode = node;
+            node = nodes.get(h);
+            
+            //HGSearchResult<Pair<HGHandle, HGHandle>> i = generator.generate(h);
+            HGSearchResult<HGHandle> i = generator.generate(h);
+            
             while (i.hasNext())
             {
-                Pair<HGHandle, HGHandle> p = i.next();
-                if (!HGUtils.eq(p.getFirst(), currLink))
+//              Pair<HGHandle, HGHandle> p = i.next();
+            	HGHandle theLink = generator.getCurrentLink();
+            	HGHandle theAtom = i.next();
+            	
+                FNode linkNode = nodes.get(theLink);
+                if (linkNode == null)
                 {
-                    currLink = p.getFirst();
-                    if (currLink != null)
-                    {
-                        linkNode = new FNode(currLink);
-                        nodes.add(linkNode);
-                        add_edge(linkNode, node);
-                    }
-                    else 
-                    {
-                        System.err.println("NULL currLink in Generator: "
-                                + (depth) + ":" + nodes.size());
-                    }
+                	linkNode = new FNode(theLink);
+                	nodes.put(theLink, linkNode);
                 }
-                HGHandle a = p.getSecond();
-                FNode an = new FNode(a);
-                nodes.add(an);
+            	
+                FNode an = nodes.get(theAtom);
+                if (an == null)
+                {
+                	an = new FNode(theAtom);
+                	nodes.put(theAtom, an);
+                }
+                add_edge(linkNode, node);
                 add_edge(linkNode, an);
-                if (depth > 0) remaining.add(a);
+                if (depth > 0) 
+                	remaining.add(theAtom);                
             }
             i.close();
             if (depth > 0)
@@ -220,8 +218,12 @@ public class HGWNReader
     // to arrays
     private FNode addNode(HGHandle handle, int level, HGAtomPredicate cond)
     {
-        FNode node = new FNode(handle);
-        nodes.add(node);
+        FNode node = nodes.get(handle);
+        if (node == null)
+        {
+        	node = new FNode(handle);
+        	nodes.put(handle, node);
+        }
         if (level > 0)
         {
             IncidenceSet h_links = hypergraph.getIncidenceSet(handle);
@@ -251,7 +253,7 @@ public class HGWNReader
 
     public Collection<FNode> getNodes()
     {
-        return nodes;
+        return nodes.values();
     }
 
     public Collection<FEdge> getEdges()

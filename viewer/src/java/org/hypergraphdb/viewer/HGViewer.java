@@ -3,6 +3,7 @@ package org.hypergraphdb.viewer;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -211,7 +212,7 @@ public class HGViewer extends JPanel
         reader.read(handle, depth, getGenerator());
         try
         {
-            SwingUtilities.invokeAndWait(new Runnable() {
+            Runnable task = new Runnable() {
                 public void run()
                 {
                     view.removeAll();
@@ -229,7 +230,11 @@ public class HGViewer extends JPanel
                     view.getCanvas().getCamera().animateViewToCenterBounds(
                             nview.getFullBounds(), false, 1550l);
                 }
-            });
+            };
+            if (EventQueue.isDispatchThread())
+            	task.run();
+            else
+            	SwingUtilities.invokeAndWait(task);
         }
         catch (Exception ex)
         {
