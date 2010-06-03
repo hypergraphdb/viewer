@@ -108,14 +108,14 @@ public class HGWNReader
             HGHandle h = remaining.removeLast();
             node = nodes.get(h);
             
-            //HGSearchResult<Pair<HGHandle, HGHandle>> i = generator.generate(h);
-            HGSearchResult<HGHandle> i = generator.generate(h);
+            HGSearchResult<Pair<HGHandle, HGHandle>> i = generator.generate(h);
+            //HGSearchResult<HGHandle> i = generator.generate(h);
             
             while (i.hasNext())
             {
-//              Pair<HGHandle, HGHandle> p = i.next();
-            	HGHandle theLink = generator.getCurrentLink();
-            	HGHandle theAtom = i.next();
+                Pair<HGHandle, HGHandle> p = i.next();
+            	HGHandle theLink = p.getFirst();//generator.getCurrentLink();
+            	HGHandle theAtom = p.getSecond();//i.next();
             	
                 FNode linkNode = nodes.get(theLink);
                 if (linkNode == null)
