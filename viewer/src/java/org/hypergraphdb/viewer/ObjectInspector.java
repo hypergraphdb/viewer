@@ -22,7 +22,6 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.hypergraphdb.type.BonesOfBeans;
 import org.netbeans.swing.outline.DefaultOutlineCellRenderer;
 import org.netbeans.swing.outline.DefaultOutlineModel;
 import org.netbeans.swing.outline.Outline;
@@ -211,7 +210,7 @@ public class ObjectInspector extends Outline
                     children = new PropNode[len];
                     for(int i = 0; i < len; i++)
                         children[i] = new PropNode("[" + i + "]", Array.get(value, i));
-                    Arrays.sort(children);
+                    //Arrays.sort(children);
                 }
             };
         }
@@ -439,8 +438,7 @@ public class ObjectInspector extends Outline
     private static final Field[] EMPTY = new Field[0];
     static synchronized Field[] getFieldsForTypeArray(Class<?> type)
     {
-        if(BonesOfBeans.primitiveEquivalentOf(type) != null ||
-                String.class.equals(type))
+        if(primitiveEquivalentOf(type) != null) //|| String.class.equals(type))
             return EMPTY;
         Set<Field> set  = getInspector(type).getSlots();
         return set.toArray(new Field[set.size()]);
@@ -627,7 +625,36 @@ public class ObjectInspector extends Outline
         return null;
     }
 
+    /**
+     * Mapping from primitive wrapper Classes to their
+     * corresponding primitive Classes.
+     */
+    private static final Map<Class<?>, Class<?>> objectToPrimitiveMap = new HashMap<Class<?>, Class<?>>(13);
     
+    static
+    { 
+        objectToPrimitiveMap.put(Boolean.class, Boolean.TYPE);
+        objectToPrimitiveMap.put(Byte.class, Byte.TYPE);
+        objectToPrimitiveMap.put(Character.class, Character.TYPE);
+        objectToPrimitiveMap.put(Double.class, Double.TYPE);
+        objectToPrimitiveMap.put(Float.class, Float.TYPE);
+        objectToPrimitiveMap.put(Integer.class, Integer.TYPE);
+        objectToPrimitiveMap.put(Long.class, Long.TYPE);
+        objectToPrimitiveMap.put(Short.class, Short.TYPE);
+    }
+    
+    /**
+     * @param  aClass  a Class
+     * @return  the class's primitive equivalent, if aClass is a
+     * primitive wrapper.  If aClass is primitive, returns aClass.
+     * Otherwise, returns null.
+     */
+    static Class<?> primitiveEquivalentOf(Class<?> aClass)
+    {
+        return aClass.isPrimitive()
+        ? aClass
+        : (Class<?>) objectToPrimitiveMap.get(aClass);
+    }
     
     public static void main(String[] args)
     {
