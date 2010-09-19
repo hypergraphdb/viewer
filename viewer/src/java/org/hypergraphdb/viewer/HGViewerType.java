@@ -28,8 +28,8 @@ import org.hypergraphdb.viewer.phoebe.PNodeView;
  */
 public class HGViewerType extends HGAtomTypeBase 
 {
-    public static final HGPersistentHandle HGHANDLE = 
-        HGHandleFactory.makeHandle("f7c68999-f9b6-11dc-a7b2-19766bcee0fa");
+//    public static final HGPersistentHandle HGHANDLE = 
+//        HGHandleFactory.makeHandle("f7c68999-f9b6-11dc-a7b2-19766bcee0fa");
     
     public Object make(HGPersistentHandle valueHandle, LazyRef<HGHandle[]> targetSet, IncidenceSetRef incidenceSet) 
     {

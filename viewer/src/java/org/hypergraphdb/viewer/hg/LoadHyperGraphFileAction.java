@@ -96,7 +96,7 @@ public class LoadHyperGraphFileAction extends AbstractAction
             HGHandle h = null;
             try
             {
-                h = HGHandleFactory.makeHandle(hh);
+                h = reader.getHyperGraph().getHandleFactory().makeHandle(hh);
             }
             catch (Throwable t)
             {
@@ -109,6 +109,6 @@ public class LoadHyperGraphFileAction extends AbstractAction
             reader.read(h, 2, (HGAtomPredicate) null);
         }
         else
-            reader.read(HGTypeSystem.TOP_PERSISTENT_HANDLE, 2, (HGAtomPredicate) null);
+            reader.read(reader.getHyperGraph().getTypeSystem().getTop(), 2, (HGAtomPredicate) null);
     }
 }

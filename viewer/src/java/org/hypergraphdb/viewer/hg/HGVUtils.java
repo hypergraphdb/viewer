@@ -174,7 +174,7 @@ public class HGVUtils
 		AtomTypeCondition cond = new AtomTypeCondition(hg.getPersistentHandle(sHandle)); */
 		HGHandle sHandle = hg.getHandle(HGTypeStructuralInfo.class);
 		//TODO: ??? after last major HG changes this throws NPE
-		if(sHandle == null || sHandle.equals(HGHandleFactory.nullHandle()))
+		if(sHandle == null || sHandle.equals(hg.getHandleFactory().nullHandle()))
 			return dir_links;
 	    AtomTypeCondition cond = new AtomTypeCondition(hg.getPersistentHandle(sHandle));
 		HGQuery query = HGQuery.make(hg, cond);
