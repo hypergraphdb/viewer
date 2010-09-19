@@ -1,11 +1,11 @@
 package org.hypergraphdb.viewer;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
 
 import org.hypergraphdb.HGEnvironment;
 import org.hypergraphdb.HGHandle;
-import org.hypergraphdb.HGHandleFactory;
 import org.hypergraphdb.HGPersistentHandle;
 import org.hypergraphdb.HyperGraph;
 import org.hypergraphdb.IncidenceSetRef;
@@ -31,7 +31,8 @@ public class HGViewerType extends HGAtomTypeBase
 //    public static final HGPersistentHandle HGHANDLE = 
 //        HGHandleFactory.makeHandle("f7c68999-f9b6-11dc-a7b2-19766bcee0fa");
     
-    public Object make(HGPersistentHandle valueHandle, LazyRef<HGHandle[]> targetSet, IncidenceSetRef incidenceSet) 
+    @SuppressWarnings("unchecked")
+	public Object make(HGPersistentHandle valueHandle, LazyRef<HGHandle[]> targetSet, IncidenceSetRef incidenceSet) 
     {
         HGPersistentHandle [] layout = graph.getStore().getLink(valueHandle);
         HGAtomType stype = graph.getTypeSystem().getAtomType(String.class);
