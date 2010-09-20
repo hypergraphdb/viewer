@@ -69,7 +69,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
      * The HGVMenus object provides access to the all of the menus and toolbars
      * that will be needed.
      */
-    protected HGVMenus cyMenus;
+    protected HGVMenus hgvMenus;
 
     protected JTabbedPane tabbedPane;
 
@@ -123,7 +123,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
         // Set up the Panels, Menus, and Event Firing
         networkPanel = new NetworkPanel();
        
-        cyMenus = HGVMenus.getInstance();
+        hgvMenus = HGVMenus.getInstance();
        
 
         // Listener Setup
@@ -175,10 +175,11 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
                 sp,// networkPanel,
                 scroll_tab);
         split.setOneTouchExpandable(true);
+        split.setDividerLocation(200);
          main_panel.add(split, BorderLayout.CENTER);
         // split.setDividerLocation(0.2);
-        main_panel.add(cyMenus.getToolBar(), BorderLayout.NORTH);
-        setJMenuBar(cyMenus.getMenuBar());
+        main_panel.add(hgvMenus.getToolBar(), BorderLayout.NORTH);
+        setJMenuBar(hgvMenus.getMenuBar());
         setupStyleSelector(main_panel);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we)
@@ -243,7 +244,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
                 .getPreferredSize().getHeight());
         styleBox.setMaximumSize(newSize);
         styleBox.setPreferredSize(newSize);
-        JToolBar toolBar = cyMenus.getToolBar();
+        JToolBar toolBar = hgvMenus.getToolBar();
         toolBar.add(styleBox);
         toolBar.addSeparator();
     }
@@ -253,7 +254,7 @@ public class HGVDesktop extends JFrame implements PropertyChangeListener, GraphV
         // deal with the new Network
         VisualStyle new_style = view.getVisualStyle(true);
         styleBox.setSelectedItem(new_style);
-        cyMenus.setNodesRequiredItemsEnabled();
+        hgvMenus.setNodesRequiredItemsEnabled();
         updatePropsPanel();
     }
 

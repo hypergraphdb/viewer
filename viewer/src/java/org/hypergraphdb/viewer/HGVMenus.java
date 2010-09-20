@@ -273,27 +273,32 @@ public class HGVMenus implements GraphViewChangeListener
         vizMenu.add(menu);
     }
 
-    /**
+     /**
      * Returns the toolbar object constructed by this class.
      */
     public JToolBar getToolBar()
     {
+        boolean big = new Boolean(
+                (String) AppConfig.getInstance().getProperty(
+                        AppConfig.BIG_ICONS, "false"));
+        String size = big ? "36" : "16";
         if (toolBar != null) return toolBar;
         ActionManager man = ActionManager.getInstance();
         toolBar = new JToolBar();
+        toolBar.setFloatable(false);
 
         JButton loadButton = toolBar.add(man
                 .getAction(ActionManager.LOAD_HYPER_GRAPH_ACTION));
-        loadButton.setIcon(new ImageIcon(getImgResource("new/load36.gif")));
+        loadButton.setIcon(new ImageIcon(getImgResource("new/load" + size + ".gif")));
         loadButton.setToolTipText("Load Network");
         loadButton.setBorderPainted(false);
         loadButton.setRolloverEnabled(true);
         loadButton.setText("");
-
+       
         JButton hideSelectedButton = toolBar.add(man
                 .getAction(ActionManager.HIDE_SELECTED_ACTION));
         hideSelectedButton.setIcon(new ImageIcon(
-                getImgResource("new/delete36.gif")));
+                getImgResource("new/delete" + size + ".gif")));
         hideSelectedButton.setToolTipText("Hide Selected Region");
         hideSelectedButton.setText("");
         hideSelectedButton.setBorderPainted(false);
@@ -303,7 +308,7 @@ public class HGVMenus implements GraphViewChangeListener
                 .getAction(ActionManager.ZOOM_IN_ACTION));
         toolBar.add(zoomInButton);
         zoomInButton
-                .setIcon(new ImageIcon(getImgResource("new/zoom_in36.gif")));
+                .setIcon(new ImageIcon(getImgResource("new/zoom_in" + size + ".gif")));
         zoomInButton.setToolTipText("Zoom In");
         zoomInButton.setBorderPainted(false);
         zoomInButton.setRolloverEnabled(true);
@@ -313,7 +318,7 @@ public class HGVMenus implements GraphViewChangeListener
                 .getAction(ActionManager.ZOOM_OUT_ACTION));
         toolBar.add(zoomOutButton);
         zoomOutButton.setIcon(new ImageIcon(
-                getImgResource("new/zoom_out36.gif")));
+                getImgResource("new/zoom_out" + size + ".gif")));
         zoomOutButton.setToolTipText("Zoom Out");
         zoomOutButton.setBorderPainted(false);
         zoomOutButton.setRolloverEnabled(true);
@@ -322,14 +327,14 @@ public class HGVMenus implements GraphViewChangeListener
         JButton zoomSelectedButton = toolBar.add(man
                 .getAction(ActionManager.ZOOM_SELECTED_ACTION));
         zoomSelectedButton.setIcon(new ImageIcon(
-                getImgResource("new/crop36.gif")));
+                getImgResource("new/crop" + size + ".gif")));
         zoomSelectedButton.setToolTipText("Zoom Selected Region");
         zoomSelectedButton.setBorderPainted(false);
         zoomSelectedButton.setText("");
         JButton zoomDisplayAllButton = toolBar.add(man
                 .getAction(ActionManager.FIT_ACTION));
         zoomDisplayAllButton.setIcon(new ImageIcon(
-                getImgResource("new/fit36.gif")));
+                getImgResource("new/fit" + size + ".gif")));
         zoomDisplayAllButton
                 .setToolTipText("Zoom out to display all of current Network");
         zoomDisplayAllButton.setBorderPainted(false);
@@ -338,7 +343,7 @@ public class HGVMenus implements GraphViewChangeListener
         JButton vizButton = toolBar.add(man
                 .getAction(ActionManager.NODE_VISUAL_PROPERTIES_ACTION));
         vizButton
-                .setIcon(new ImageIcon(getImgResource("new/color_wheel36.gif")));
+                .setIcon(new ImageIcon(getImgResource("new/color_wheel" + size + ".gif")));
         vizButton.setToolTipText("Set Visual Properties");
         vizButton.setBorderPainted(false);
         vizButton.setText("");

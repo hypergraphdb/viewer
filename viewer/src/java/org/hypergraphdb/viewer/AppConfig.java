@@ -18,6 +18,7 @@ public class AppConfig
 {
 	private static final String APP_CONFIG_HG_NAME = "hgviewer_config";
 	public static final String VIEW_THRESHOLD = "viewThreshold"; 
+	public static final String BIG_ICONS = "bigIcons"; 
 		
 	private static AppConfig instance;
 	private static HyperGraph graph;
@@ -32,6 +33,7 @@ public class AppConfig
 		if (instance != null)
 			throw new RuntimeException(
 					"Can't construct AppConfig twice...it's a singleton.");
+		setProperty(BIG_ICONS, false);
 	}
 
 	public static AppConfig getInstance()
