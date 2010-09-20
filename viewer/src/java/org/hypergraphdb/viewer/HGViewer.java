@@ -10,7 +10,6 @@ import java.awt.Insets;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Collection;
-import java.util.HashMap;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -29,10 +28,9 @@ import org.hypergraphdb.algorithms.DefaultALGenerator;
 import org.hypergraphdb.algorithms.HGALGenerator;
 import org.hypergraphdb.util.CloseMe;
 import org.hypergraphdb.viewer.hg.HGWNReader;
+import org.hypergraphdb.viewer.phoebe.PNodeView;
 import org.hypergraphdb.viewer.visual.ui.DropDownButton;
 
-import org.hypergraphdb.viewer.phoebe.PEdgeView;
-import org.hypergraphdb.viewer.phoebe.PNodeView;
 import sun.awt.AppContext;
 import edu.umd.cs.piccolo.PCanvas;
 import edu.umd.cs.piccolox.swing.PScrollPane;

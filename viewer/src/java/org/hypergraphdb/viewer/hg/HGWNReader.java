@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import org.hypergraphdb.HGEnvironment;
 import org.hypergraphdb.HGHandle;
 import org.hypergraphdb.HGLink;
 import org.hypergraphdb.HGSearchResult;
@@ -36,7 +37,7 @@ public class HGWNReader
     public HGWNReader(File db)
     {
         this.db = db;
-        hypergraph = new HyperGraph(db.getAbsolutePath());
+        hypergraph = HGEnvironment.get(db.getAbsolutePath());
     }
 
     public HGWNReader(HyperGraph hg)
