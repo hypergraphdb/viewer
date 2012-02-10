@@ -3,7 +3,7 @@
 	<description>HyperGraphDB Viewer Build File</description>
     
 	<!--Location of the HypergraphDB jar-->
-	<property name="hgdb_jar" value="../../release/hg1.0/hgdbfull.jar"/>
+	<property name="hgdb_jar" value="c:/classlib/hgdb1.0/core/hgdbfull.jar"/>
 	
 	<property name="build" value="build"/>
 	<!-- The directory containing distribution jar -->
